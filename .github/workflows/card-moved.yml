@@ -1,0 +1,35 @@
+name: "Card moved"
+
+on:
+    project_card:
+        types:
+            - created
+            - moved
+    workflow_run:
+        workflows:
+            [
+                "Pull request or issue created",
+                "Pull request is ready for review",
+            ]
+        types:
+            - completed
+
+jobs:
+    triage:
+        name: Apply a label based on project card column
+        runs-on: ubuntu-latest
+        steps:
+            - name: Run the auto-card-labeler action
+              uses: technote-space/auto-card-labeler@v1
+              with:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    state:
+        name: "Change state based on column"
+        runs-on: ubuntu-latest
+        steps:
+            - name: "Run the issue-states action"
+              uses: dessant/issue-states@v2
+              with:
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+                  open-issue-columns: "To do, In progress, Ready for review, Review in progress, Reviewer approved"
+                  closed-issue-columns: "Done"

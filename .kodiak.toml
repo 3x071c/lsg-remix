@@ -1,0 +1,44 @@
+# Configuration for: https://kodiakhq.com/docs/config-reference
+
+# required field
+version = 1
+
+[merge]
+# Require that the automerge label (`merge.automerge_label`) be set for Kodiak to merge a PR.
+require_automerge_label = false
+# If a PR's title matches this regex, Kodiak will not merge the PR. This is useful to prevent merging work-in-progress PRs.
+blocking_title_regex = ""
+# Choose merge method for Kodiak to use.
+method = "squash"
+# Once a PR is merged, delete the branch. This option behaves like the GitHub repository setting "Automatically delete head branches", which automatically deletes head branches after pull requests are merged.
+delete_branch_on_merge = true
+# If a PR is passing all checks and is able to be merged, merge it without placing it in the merge queue. This option adds some unfairness where PRs waiting in the queue the longest are not served first.
+prioritize_ready_to_merge = true
+
+[merge.message]
+# By default (`"github_default"`), GitHub uses the title of a PR's first commit for the merge commit title. `"pull_request_title"` uses the PR title for the merge commit.
+title = "pull_request_title"
+# By default (`"github_default"`), GitHub combines the titles of a PR's commits to create the body text of a merge commit. `"pull_request_body"` uses the content of the PR to generate the body content while `"empty"` sets an empty body.
+body = "pull_request_body"
+# Add the PR number to the merge commit title. This setting replicates GitHub's behavior of automatically adding the PR number to the title of merges created through the UI. This option only applies when `merge.message.title` does not equal `"github_default"`.
+include_pr_number = true
+# Control the text used in the merge commit. The GitHub default is markdown, but `"plain_text"` or `"html"` can be used to render the pull request body as text or HTML. This option only applies when `merge.message.body = "pull_request_body"`.
+body_type = "markdown"
+# Strip HTML comments (`<!-- some HTML comment -->`) from merge commit body. This setting is useful for stripping HTML comments created by PR templates. This option only applies when `merge.message.body_type = "markdown"`.
+strip_html_comments = true
+# Remove all content after the configured string in the pull request body. This setting is useful when we want to include only a part of the pull request description as the commit message.
+cut_body_after = "---"
+# If a PR includes commits authored by other users, add those users as coauthors to the pull request
+include_coauthors = true
+
+[update]
+# Update a PR whenever out of date with the base branch. The PR will be updated regardless of merge requirements (e.g. failing status checks, missing reviews, blacklist labels).
+always = true
+# When enabled, Kodiak will only update PRs that have an automerge label (configured via `merge.automerge_label`). When disable, Kodiak will update any PR.
+require_automerge_label = false
+# When a pull request's author matches this, Kodiak will never update the pull request, unless update.autoupdate_label is applied to the pull request.
+ignored_usernames = ["dependabot"]
+
+[approve]
+# If a PR is opened by a user with a username in this list, Kodiak will automatically add an approval to the PR.
+auto_approve_usernames = ["dependabot"]

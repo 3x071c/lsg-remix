@@ -18,15 +18,21 @@
 	"language": "en,de",
 	"version": "0.2",
 	"words": [
+		"alex",
 		"chakra",
-		"Linkify",
-		"prisma",
-		"pnpm",
-		"tsbuildinfo",
+		"commitizen",
+		"dessant",
 		"homic",
-		"pnpx",
-		"pcss",
+		"Linkify",
 		"musin",
-		"unspaced"
+		"pcss",
+		"pnpm",
+		"pnpx",
+		"prisma",
+		"tsbuildinfo",
+		"unspaced",
+		"bkeepers",
+		"hubot",
+		"hmarr"
 	]
 }

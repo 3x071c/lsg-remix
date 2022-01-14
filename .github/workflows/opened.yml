@@ -1,0 +1,33 @@
+name: Pull request or issue created
+
+on:
+    pull_request:
+        types:
+            - opened
+    issues:
+        types:
+            - opened
+
+jobs:
+    onboard:
+        name: Onboard
+        runs-on: ubuntu-latest
+        steps:
+            - name: Add new issues to the To do column
+              if: github.event_name == 'issues'
+              uses: alex-page/github-project-automation-plus@v0.8.1
+              with:
+                  project: Development
+                  column: To do
+                  repo-token: "${{ secrets.WORKFLOW_TOKEN }}"
+            - name: Add new pull requests to the In progress column
+              if: github.event_name == 'pull_request'
+              uses: alex-page/github-project-automation-plus@v0.8.1
+              with:
+                  project: Development
+                  column: In progress
+                  repo-token: "${{ secrets.WORKFLOW_TOKEN }}"
+            - uses: hmarr/auto-approve-action@v2.1.0
+              if: github.actor == 'dependabot[bot]'
+              with:
+                  github-token: "${{ secrets.WORKFLOW_TOKEN }}"

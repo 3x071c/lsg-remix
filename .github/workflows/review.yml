@@ -1,0 +1,18 @@
+name: Pull request is ready for review
+
+on:
+    pull_request:
+        types:
+            - ready_for_review
+
+jobs:
+    move:
+        name: Move the card to the 'ready for review' column
+        runs-on: ubuntu-latest
+        steps:
+            - name: Move the card
+              uses: alex-page/github-project-automation-plus@v0.8.1
+              with:
+                  project: Development
+                  column: Ready for review
+                  repo-token: ${{ secrets.WORKFLOW_TOKEN }}
