@@ -1,0 +1,18 @@
+{
+	"blame": true,
+	"ignore": [
+		"node_modules",
+		".git",
+		".vscode",
+		"pnpm-lock.yaml",
+		".*cache",
+		".*ignore",
+		".next",
+		".husky",
+		"*.tsbuildinfo",
+		"db",
+		"__generated__"
+	],
+	"reporters": ["console"],
+	"threshold": 0
+}

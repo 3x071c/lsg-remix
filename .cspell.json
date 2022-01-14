@@ -1,0 +1,32 @@
+{
+	"allowCompoundWords": true,
+	"flagWords": [],
+	"ignorePaths": [
+		"node_modules",
+		".git",
+		".vscode",
+		"pnpm-lock.yaml",
+		".*cache",
+		".*ignore",
+		".next",
+		".husky",
+		"*.tsbuildinfo",
+		"db",
+		"__generated__"
+	],
+	"import": ["@cspell/dict-de-de/cspell-ext.json"],
+	"language": "en,de",
+	"version": "0.2",
+	"words": [
+		"chakra",
+		"Linkify",
+		"prisma",
+		"pnpm",
+		"tsbuildinfo",
+		"homic",
+		"pnpx",
+		"pcss",
+		"musin",
+		"unspaced"
+	]
+}

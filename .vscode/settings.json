@@ -1,0 +1,39 @@
+{
+	"[dotenv]": {
+		"editor.defaultFormatter": "foxundermoon.shell-format"
+	},
+	"[gitignore]": {
+		"editor.defaultFormatter": "foxundermoon.shell-format"
+	},
+	"editor.codeActionsOnSave": {
+		"source.fixAll": true
+	},
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"editor.insertSpaces": false,
+	"eslint.onIgnoredFiles": "warn",
+	"eslint.packageManager": "pnpm",
+	"eslint.validate": [
+		"typescriptreact",
+		"typescript",
+		"javascriptreact",
+		"javascript"
+	],
+	"files.associations": {
+		".*ignore": "gitignore"
+	},
+	"files.exclude": {
+		"**/.DS_Store": true,
+		"**/.git": true,
+		"**/node_modules": true,
+		"**/.next": true,
+		"**/pnpm-lock.yaml": true
+	},
+	"npm.packageManager": "pnpm",
+	"prettier.requireConfig": true,
+	"prettier.useEditorConfig": true,
+	"prettier.withNodeModules": false,
+	"stylelint.packageManager": "pnpm",
+	"stylelint.reportInvalidScopeDisables": true,
+	"stylelint.reportNeedlessDisables": true,
+	"typescript.tsdk": "node_modules/typescript/lib"
+}

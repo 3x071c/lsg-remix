@@ -1,0 +1,67 @@
+/* eslint-disable no-console */
+import type { RequestHandler } from "micro";
+import type { NextApiHandler } from "next";
+import { ApolloServer } from "apollo-server-micro";
+import cors from "micro-cors";
+import context from "$graphql/context";
+import schema from "$graphql/schema";
+import apiAuth from "$lib/auth";
+
+const apolloServer = new ApolloServer({ context, schema });
+let apolloServerHandler: NextApiHandler;
+
+// types: https://nextjs.org/docs/basic-features/typescript#api-routes
+// headers: https://github.com/vercel/next.js/blob/canary/examples/api-routes-graphql/pages/api/graphql.js
+const endpoint: NextApiHandler = async (req, res) => {
+	/* start to finish processing time during development */
+	const startTime = process.env.NODE_ENV === "development" && Date.now();
+
+	if (!apolloServerHandler) {
+		console.log("⚠️ Starting Apollo Server...");
+		await apolloServer.start();
+		apolloServerHandler = apolloServer.createHandler({
+			path: "/api",
+		});
+		console.log("Server handler started ✅");
+	}
+
+	res.setHeader("Access-Control-Allow-Credentials", "true");
+	res.setHeader(
+		"Access-Control-Allow-Origin",
+		"https://studio.apollographql.com",
+	);
+	res.setHeader(
+		"Access-Control-Allow-Headers",
+		"Origin, X-Requested-With, Content-Type, Accept",
+	);
+	res.setHeader("Access-Control-Allow-Methods", "Post");
+	console.log(
+		`ℹ️ method: ${req.method ?? "❌"} / referer: ${
+			req.headers.referer ?? "❌"
+		} / host: ${req.headers.host ?? "❌"}`,
+	);
+
+	/* Show load times during development */
+	if (startTime)
+		console.info(
+			`[/api@${new Date().toLocaleTimeString()}] ⏲️ Load: ${
+				Date.now() - startTime
+			}ms.`,
+		);
+
+	if (req.method === "OPTIONS") {
+		res.end();
+		return undefined;
+	}
+
+	return apolloServerHandler(req, res);
+};
+export default cors()(apiAuth(endpoint) as RequestHandler);
+
+export const config = {
+	api: {
+		bodyParser: false,
+	},
+};
+
+// based on: https://github.com/prisma/prisma-examples/tree/latest/typescript/graphql-nextjs
