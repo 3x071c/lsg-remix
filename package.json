@@ -18,7 +18,7 @@
 	"license": "AGPL-3.0-or-later",
 	"private": true,
 	"engines": {
-		"node": ">= 16.13.2"
+		"node": ">= 14"
 	},
 	"os": [
 		"linux",

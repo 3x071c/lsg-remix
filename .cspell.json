@@ -19,10 +19,13 @@
 	"version": "0.2",
 	"words": [
 		"alex",
+		"bkeepers",
 		"chakra",
 		"commitizen",
 		"dessant",
+		"hmarr",
 		"homic",
+		"hubot",
 		"Linkify",
 		"musin",
 		"pcss",
@@ -30,9 +33,7 @@
 		"pnpx",
 		"prisma",
 		"tsbuildinfo",
-		"unspaced",
-		"bkeepers",
-		"hubot",
-		"hmarr"
+		"turborepo",
+		"unspaced"
 	]
 }

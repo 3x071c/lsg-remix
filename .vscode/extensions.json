@@ -1,0 +1,30 @@
+{
+	"recommendations": [
+		"mgmcdermott.vscode-language-babel",
+		"webben.browserslist",
+		"streetsidesoftware.code-spell-checker",
+		"mikestead.dotenv",
+		"editorconfig.editorconfig",
+		"dbaeumer.vscode-eslint",
+		"tamasfe.even-better-toml",
+		"adrianwilczynski.format-selection-as-html",
+		"streetsidesoftware.code-spell-checker-german",
+		"mhutchie.git-graph",
+		"bierner.github-markdown-preview",
+		"codezombiech.gitignore",
+		"graphql.vscode-graphql",
+		"bierner.markdown-checkbox",
+		"bierner.markdown-emoji",
+		"bierner.markdown-preview-github-styles",
+		"bierner.markdown-yaml-preamble",
+		"eg2.vscode-npm-script",
+		"christian-kohler.npm-intellisense",
+		"christian-kohler.path-intellisense",
+		"csstools.postcss",
+		"esbenp.prettier-vscode",
+		"prisma.prisma",
+		"foxundermoon.shell-format",
+		"stylelint.vscode-stylelint",
+		"redhat.vscode-yaml"
+	]
+}
