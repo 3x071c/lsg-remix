@@ -17,9 +17,9 @@ jobs:
               with:
                   node-version: 16
             - name: Install pnpm
-              run: npm i -g pnpm
+              run: npm i -g pnpm@latest
             - name: Install dependencies
-              run: pnpm ci:dev
+              run: pnpm i --frozen-lockfile
             - name: Run Tests
               run: pnpm ci
               env:
