@@ -4,7 +4,8 @@
 
 **Blocked**:
 
--   Enable `noPropertyAccessFromIndexSignature` in `tsconfig.json` again ([after this issue is fixed](https://github.com/chakra-ui/chakra-ui/issues/5317))
+-   Enable type checking (calling `check` in `ci`) again ([blocked](https://github.com/chakra-ui/chakra-ui/issues/5317))
+-   Increment `engines->node` in `package.json` to 16 (LTS) ([blocked](https://github.com/vercel/community/discussions/37))
 
 ## Mid term
 
