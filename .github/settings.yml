@@ -5,7 +5,7 @@ repository:
     # The name of the repository. Changing this will rename the repository
     name: "lsg-stack"
     # A short description of the repository that will show up on GitHub
-    description: "The new LSG homepage"
+    description: "Overhyped™ full-stack school homepage / TypeScript, Next.js (React), GraphQL (Apollo + Nexus), Prisma"
     # A URL with more information about the repository
     homepage: "https://lsg.musin.de"
     # A comma-separated list of topics to set on the repository
