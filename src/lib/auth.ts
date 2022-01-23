@@ -2,10 +2,6 @@ import type { IronSessionOptions } from "iron-session";
 import type { NextApiHandler } from "next";
 import { withIronSessionApiRoute } from "iron-session/next";
 
-/* Security check */
-if (!process.env["API_AUTH_SECRET"])
-	throw new Error("[$lib/auth] !!! NO API_AUTH_SECRET DEFINED !!!");
-
 const config: IronSessionOptions = {
 	cookieName: "cms_auth",
 	cookieOptions: {

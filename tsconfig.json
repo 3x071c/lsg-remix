@@ -1,4 +1,3 @@
-/* eslint-disable jsonc/auto */
 {
 	"compilerOptions": {
 		/* Projects */
@@ -118,5 +117,8 @@
 		"skipLibCheck": true /* Skip type checking all .d.ts files. */
 	},
 	"exclude": ["node_modules"],
-	"include": ["next-env.d.ts", "**/*", "**/.*"]
+	"include": ["next-env.d.ts", "**/*", "**/.*"],
+	"ts-node": {
+		"files": true
+	}
 }

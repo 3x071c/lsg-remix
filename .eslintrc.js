@@ -29,6 +29,7 @@ const config = {
 	plugins: ["@typescript-eslint", "react"],
 	root: true,
 	rules: {
+		"@typescript-eslint/no-non-null-assertion": "off",
 		"@typescript-eslint/prefer-readonly-parameter-types": "off",
 		"import/order": [
 			"warn",
@@ -76,6 +77,7 @@ const config = {
 		"react/jsx-props-no-spreading": "off",
 		"react/require-default-props":
 			"off" /* Better: https://react-typescript-cheatsheet.netlify.app/docs/basic/getting-started/default_props/ */,
+		"require-await": "error",
 		"sort-keys": "warn" /* sort object keys */,
 		"sort-vars": "warn" /* sort variable declarations */,
 	},

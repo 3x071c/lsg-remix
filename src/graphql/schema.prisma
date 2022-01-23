@@ -2,20 +2,68 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:../../db/main.db"
+    provider = "sqlite"
+    url      = "file:../../db/main.db"
+}
+
+model User {
+    id                  Int                  @id @default(autoincrement())
+    name                String
+    short               String               @unique
+    permissions         PermissionsOnUsers[] @relation("UserPermissions")
+    permissionsAssigned PermissionsOnUsers[] @relation("UserPermissionsAssigned")
+    pages               PagesOnUsers[]
 }
 
 model Page {
-  id       Int     @id @default(autoincrement())
-  isHero   Boolean @default(false)
-  title    String
-  content  String
-  parentId Int?
-  parent   Page?   @relation("PageParentChildren", fields: [parentId], references: [id])
-  children Page[]  @relation("PageParentChildren")
+    id         Int            @id @default(autoincrement())
+    title      String
+    content    String
+    parentId   Int?
+    parent     Page?          @relation("PageParentChildren", fields: [parentId], references: [id])
+    children   Page[]         @relation("PageParentChildren")
+    lastEdited DateTime       @default(now())
+    authors    PagesOnUsers[]
+    history    PageHistory[]
+}
+
+model PageHistory {
+    id         Int      @id @default(autoincrement())
+    title      String
+    content    String
+    lastEdited DateTime @default(now())
+    page       Page     @relation(fields: [pageId], references: [id])
+    pageId     Int
+}
+
+model PagesOnUsers {
+    user       User     @relation(fields: [userId], references: [id])
+    userId     Int
+    page       Page     @relation(fields: [pageId], references: [id])
+    pageId     Int
+    assignedAt DateTime @default(now())
+
+    @@id([userId, pageId])
+}
+
+model Permission {
+    id    Int                  @id @default(autoincrement())
+    name  String
+    users PermissionsOnUsers[]
+}
+
+model PermissionsOnUsers {
+    user         User       @relation("UserPermissions", fields: [userId], references: [id])
+    userId       Int
+    permission   Permission @relation(fields: [permissionId], references: [id])
+    permissionId Int
+    assignedAt   DateTime   @default(now())
+    assignedBy   User       @relation("UserPermissionsAssigned", fields: [assignedById], references: [id])
+    assignedById Int
+
+    @@id([userId, permissionId])
 }

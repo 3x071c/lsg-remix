@@ -30,11 +30,10 @@ export const PageMutation = extendType({
 				isHero: booleanArg(),
 				title: nonNull(stringArg()),
 			},
-			resolve: (_root, { content, isHero, title }, ctx) =>
+			resolve: (_root, { content, title }, ctx) =>
 				ctx.prisma.page.create({
 					data: {
 						content,
-						isHero: isHero || false,
 						title,
 					},
 				}),
