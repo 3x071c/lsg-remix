@@ -14,21 +14,21 @@ model User {
     id                  Int                  @id @default(autoincrement())
     name                String
     short               String               @unique
+    pages               PagesOnUsers[]
     permissions         PermissionsOnUsers[] @relation("UserPermissions")
     permissionsAssigned PermissionsOnUsers[] @relation("UserPermissionsAssigned")
-    pages               PagesOnUsers[]
 }
 
 model Page {
     id         Int            @id @default(autoincrement())
     title      String
     content    String
-    parentId   Int?
-    parent     Page?          @relation("PageParentChildren", fields: [parentId], references: [id])
-    children   Page[]         @relation("PageParentChildren")
     lastEdited DateTime       @default(now())
-    authors    PagesOnUsers[]
     history    PageHistory[]
+    authors    PagesOnUsers[]
+    parent     Page?          @relation("PageParentChildren", fields: [parentId], references: [id])
+    parentId   Int?
+    children   Page[]         @relation("PageParentChildren")
 }
 
 model PageHistory {
@@ -41,11 +41,11 @@ model PageHistory {
 }
 
 model PagesOnUsers {
+    assignedAt DateTime @default(now())
     user       User     @relation(fields: [userId], references: [id])
     userId     Int
     page       Page     @relation(fields: [pageId], references: [id])
     pageId     Int
-    assignedAt DateTime @default(now())
 
     @@id([userId, pageId])
 }
@@ -57,13 +57,13 @@ model Permission {
 }
 
 model PermissionsOnUsers {
+    assignedAt   DateTime   @default(now())
+    assignedBy   User       @relation("UserPermissionsAssigned", fields: [assignedById], references: [id])
+    assignedById Int
     user         User       @relation("UserPermissions", fields: [userId], references: [id])
     userId       Int
     permission   Permission @relation(fields: [permissionId], references: [id])
     permissionId Int
-    assignedAt   DateTime   @default(now())
-    assignedBy   User       @relation("UserPermissionsAssigned", fields: [assignedById], references: [id])
-    assignedById Int
 
     @@id([userId, permissionId])
 }

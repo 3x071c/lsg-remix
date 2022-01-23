@@ -57,6 +57,7 @@ const config = {
 				],
 			},
 		] /* Custom settings */,
+		"import/prefer-default-export": "off",
 		"no-dupe-else-if": "warn" /* airbnb: not enabled yet */,
 		"no-empty": [
 			"error",

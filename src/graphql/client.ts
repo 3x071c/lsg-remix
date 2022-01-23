@@ -1,5 +1,4 @@
 import type contextType from "$graphql/context";
-import type schemaType from "$graphql/schema";
 import type { NEXT_DATA } from "next/dist/shared/lib/utils";
 import {
 	ApolloClient,
@@ -8,6 +7,7 @@ import {
 	NormalizedCacheObject,
 } from "@apollo/client";
 import { SchemaLink } from "@apollo/client/link/schema";
+import type schemaType from "$schema";
 
 interface ExtendedWindow extends Window {
 	__NEXT_DATA__: NEXT_DATA & {

@@ -53,6 +53,7 @@ specifiers:
   faker: 5.5.3
   framer-motion: ^5.x.x
   graphql: ^15.x.x
+  graphql-scalars: ^1.14.1
   html-webpack-plugin: ^5.5.0
   husky: ^7.0.4
   iron-session: ^6.0.5
@@ -91,6 +92,7 @@ specifiers:
   stylelint-config-standard: ^24.0.0
   ts-node: ^10.4.0
   ts-node-dev: ^1.1.8
+  tsconfig-paths: ^3.12.0
   typescript: ^4.5.5
   webpack: ^5.67.0
   webpack-dev-server: ^4.7.3
@@ -113,6 +115,7 @@ dependencies:
   apollo-server-micro: 3.6.2_graphql@15.8.0+micro@9.3.4
   framer-motion: 5.6.0_react-dom@17.0.2+react@17.0.2
   graphql: 15.8.0
+  graphql-scalars: 1.14.1_graphql@15.8.0
   iron-session: 6.0.5_next@12.0.8
   lodash: 4.17.21
   micro: 9.3.4
@@ -190,6 +193,7 @@ devDependencies:
   stylelint-config-standard: 24.0.0_stylelint@14.2.0
   ts-node: 10.4.0_9d6cd740eceb93d711351e2e9548d1bd
   ts-node-dev: 1.1.8_typescript@4.5.5
+  tsconfig-paths: 3.12.0
   typescript: 4.5.5
   webpack: 5.67.0
   webpack-dev-server: 4.7.3_webpack@5.67.0
@@ -6821,6 +6825,16 @@ packages:
   /graceful-fs/4.2.9:
     resolution: {integrity: sha512-NtNxqUcXgpW2iMrfqSfR73Glt39K+BLwWsPs94yR63v45T0Wbej7eRmL5cWfwEgqXnmjQp3zaJTshdRW/qC2ZQ==}
     dev: true
+
+  /graphql-scalars/1.14.1_graphql@15.8.0:
+    resolution: {integrity: sha512-IrJ2SI9IkCmWHyr7yIvtPNGWTWF3eTS+iNnw1DQMmEtsOgs1dUmT0ge+8M1+1xm+q3/5ZqB95yUYyThDyOTE+Q==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+    dependencies:
+      graphql: 15.8.0
+      tslib: 2.3.1
+    dev: false
 
   /graphql-tag/2.12.4_graphql@15.8.0:
     resolution: {integrity: sha512-VV1U4O+9x99EkNpNmCUV5RZwq6MnK4+pGbRYWG+lA/m3uo7TSqJF81OkcOP148gFP6fzdl7JWYBrwWVTS9jXww==}
