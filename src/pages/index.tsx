@@ -1,8 +1,9 @@
 import type { GetPages } from "$generated/apollo";
 import { gql, useQuery } from "@apollo/client";
-import { Heading, Container, Center, Text, VStack } from "@chakra-ui/react";
+import { Heading, Center, Text, VStack } from "@chakra-ui/react";
 import { Hero } from "$app/hero";
 import { Loading, Error } from "$app/indicators";
+import { Container, useBreakpoints } from "$app/layout";
 
 const GET_PAGES = gql`
 	query GetPages {
@@ -14,22 +15,21 @@ const GET_PAGES = gql`
 `;
 
 export default function Index(): JSX.Element {
+	const spacing = useBreakpoints((k, _v, i) => [k, `${(i + 1) ** 2}px`]);
 	const { data, loading, error } = useQuery<GetPages>(GET_PAGES);
 	if (loading) return <Loading />;
 	if (error || !data) return <Error message={error?.message} />;
+
 	return (
 		<>
 			<Hero />
 			<Container>
 				<Center>
-					<VStack spacing="3vh">
-						<Heading as="h1" size="3xl">
-							Louise-Schroeder-Gymnasium
+					<VStack spacing={spacing}>
+						<Heading as="h1" size="xl">
+							Epic Heading 😎
 						</Heading>
-						<Text fontSize="xl">
-							Naturwissenschaftlich-technologisches und
-							sprachliches Gymnasium in München 🍺
-						</Text>
+						<Text fontSize="md">Noch epischerer Text 🔫</Text>
 					</VStack>
 				</Center>
 			</Container>
