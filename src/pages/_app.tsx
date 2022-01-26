@@ -4,6 +4,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { CacheProvider, EmotionCache } from "@emotion/react";
 import Head from "next/head";
 import createEmotionCache from "$app/createEmotionCache";
+import { Container } from "$app/layout";
 import theme from "$app/theme";
 import getApollo from "$graphql/client";
 
@@ -30,11 +31,13 @@ export default function App({
 					content="initial-scale=1, width=device-width"
 				/>
 			</Head>
-			<ChakraProvider theme={theme}>
-				<ApolloProvider client={apolloClient}>
-					<Component {...pageProps} />
-				</ApolloProvider>
-			</ChakraProvider>
+			<ApolloProvider client={apolloClient}>
+				<ChakraProvider theme={theme}>
+					<Container>
+						<Component {...pageProps} />
+					</Container>
+				</ChakraProvider>
+			</ApolloProvider>
 		</CacheProvider>
 	);
 }

@@ -2,16 +2,15 @@ import { ExternalLinkIcon } from "@chakra-ui/icons";
 import {
 	Button as ChakraButton,
 	ButtonProps as ChakraButtonProps,
+	forwardRef,
 } from "@chakra-ui/react";
 import Linkify from "./Linkify";
 
-export default function Link({
-	href,
-	...props
-}: Overwrite<
-	ChakraButtonProps,
-	Pick<Parameters<typeof Linkify>[0], "href">
->): JSX.Element {
+/* jscpd:ignore-start */
+export default forwardRef<
+	Overwrite<ChakraButtonProps, Pick<Parameters<typeof Linkify>[0], "href">>,
+	"a"
+>(({ href, ...props }, ref): JSX.Element => {
 	const hrefString = href.toString();
 	return (
 		<Linkify
@@ -22,9 +21,11 @@ export default function Link({
 					as="a"
 					href={hrefString}
 					rightIcon={<ExternalLinkIcon />}
+					ref={ref}
 				/>
 			}>
-			<ChakraButton {...props} as="a" />
+			<ChakraButton {...props} as="a" ref={ref} />
 		</Linkify>
 	);
-}
+});
+/* jscpd:ignore-end */

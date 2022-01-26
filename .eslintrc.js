@@ -68,13 +68,6 @@ const config = {
 			"error",
 			{ allowAsStatement: true },
 		] /* allowAsStatement not enabled */,
-		"react/function-component-definition": [
-			"error",
-			{
-				namedComponents: "function-declaration",
-				unnamedComponents: "arrow-function",
-			},
-		],
 		"react/jsx-props-no-spreading": "off",
 		"react/require-default-props":
 			"off" /* Better: https://react-typescript-cheatsheet.netlify.app/docs/basic/getting-started/default_props/ */,

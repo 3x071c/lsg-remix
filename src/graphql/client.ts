@@ -22,7 +22,7 @@ let apolloClient: ApolloClient<NormalizedCacheObject> | undefined;
 const createIsomorphLink = () => {
 	if (typeof window === "undefined") {
 		// eslint-disable-next-line global-require, @typescript-eslint/no-var-requires
-		const { default: schema } = require("$graphql/schema") as {
+		const { default: schema } = require("$schema") as {
 			default: typeof schemaType;
 		};
 		// eslint-disable-next-line global-require, @typescript-eslint/no-var-requires
