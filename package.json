@@ -22,7 +22,9 @@
 	},
 	"os": [
 		"linux",
-		"darwin"
+		"darwin",
+		"win64",
+		"win32"
 	],
 	"scripts": {
 		"apollo:generate": "apollo client:codegen --includes=src/** --localSchemaFile=__generated__/schema.graphql --outputFlat --tagName=gql --target=typescript --tsFileExtension=d.ts --useReadOnlyTypes __generated__/apollo.d.ts",
@@ -30,7 +32,7 @@
 		"build": "cross-env NODE_ENV=production run-s clean generate next:build",
 		"check": "tsc --noEmit || echo 'Type checking failed, skipping due to blocking issue in chakra-ui' && true",
 		"ci": "run-s new lint check build",
-		"clean": "run-s 'clean:*'",
+		"clean": "run-s \"clean:*\"",
 		"clean:1": "rimraf .next",
 		"commit": "run-s stage cz",
 		"cspell:individual": "cspell",
@@ -65,7 +67,7 @@
 		"prisma:deploy": "prisma migrate deploy",
 		"prisma:format": "prisma format",
 		"prisma:generate": "prisma generate",
-		"prisma:migrate": "prisma migrate dev --skip-generate --skip-seed --name",
+		"prisma:migrate": "prisma migrate dev --skip-generate --skip-seed --name \"name\"",
 		"prisma:push": "prisma db push --skip-generate",
 		"prisma:reset": "prisma migrate reset --skip-generate --skip-seed --force",
 		"prisma:seed": "prisma db seed",
