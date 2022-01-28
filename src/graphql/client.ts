@@ -14,7 +14,7 @@ interface ExtendedWindow extends Window {
 		apolloState: NormalizedCacheObject | undefined;
 	};
 }
-declare let window: ExtendedWindow;
+declare let window: ExtendedWindow & typeof globalThis;
 
 let apolloClient: ApolloClient<NormalizedCacheObject> | undefined;
 
@@ -42,7 +42,7 @@ const createClient = () =>
 		cache: new InMemoryCache().restore(
 			(typeof window !== "undefined" &&
 				// eslint-disable-next-line no-underscore-dangle
-				window.__NEXT_DATA__.apolloState) ||
+				window?.__NEXT_DATA__?.apolloState) ||
 				{},
 		),
 

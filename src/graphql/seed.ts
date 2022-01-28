@@ -1,7 +1,7 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-console */
-/* eslint-disable import/no-extraneous-dependencies */
+
 import faker from "@faker-js/faker/locale/de";
 import {
 	Prisma,
@@ -221,16 +221,18 @@ export default async function main(): Promise<void> {
 			},
 		},
 	});
+
+	const canMutatePagesPermission = await prisma.permission.create({
+		data: seedCanMutatePagesPermission(canMutateUserUsers),
+	});
+	console.log(
+		`👍 Created ${canMutatePagesPermission.name} permission with id ${canMutatePagesPermission.id}`,
+	);
+
 	const canMutatePagePermissionData = seedCanMutatePagePermissions(
 		canMutateUserUsers,
 		pages,
 	);
-
-	const canMutatePagesPermissionData =
-		seedCanMutatePagesPermission(canMutateUserUsers);
-
-	await prisma.permission.create({ data: canMutatePagesPermissionData });
-
 	for (const p of canMutatePagePermissionData) {
 		const canMutatePagePermission = await prisma.permission.create({
 			data: p,
