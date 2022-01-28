@@ -120,6 +120,27 @@ const seedCanMutateUserPermission = (
 		},
 	};
 };
+const seedCanMutatePagesPermission = (
+	canMutateUserUsers: User[],
+): Prisma.PermissionCreateInput => {
+	return {
+		name: "canMutatePages",
+		users: {
+			create: canMutateUserUsers.map((user) => ({
+				assignedBy: {
+					connect: {
+						id: user.id,
+					},
+				},
+				user: {
+					connect: {
+						id: user.id,
+					},
+				},
+			})),
+		},
+	};
+};
 const seedCanMutatePagePermissions = (
 	canMutateUserUsers: User[],
 	pages: PageWithRelations[],
@@ -189,20 +210,27 @@ export default async function main(): Promise<void> {
 		`👍 Created ${canMutateUserPermission.name} permission with id ${canMutateUserPermission.id}`,
 	);
 	permissions.push(canMutateUserPermission);
-	const canMutatePagePermissionData = seedCanMutatePagePermissions(
-		await prisma.user.findMany({
-			where: {
-				permissions: {
-					some: {
-						permission: {
-							name: "canMutateUsers",
-						},
+	const canMutateUserUsers = await prisma.user.findMany({
+		where: {
+			permissions: {
+				some: {
+					permission: {
+						name: "canMutateUsers",
 					},
 				},
 			},
-		}),
+		},
+	});
+	const canMutatePagePermissionData = seedCanMutatePagePermissions(
+		canMutateUserUsers,
 		pages,
 	);
+
+	const canMutatePagesPermissionData =
+		seedCanMutatePagesPermission(canMutateUserUsers);
+
+	await prisma.permission.create({ data: canMutatePagesPermissionData });
+
 	for (const p of canMutatePagePermissionData) {
 		const canMutatePagePermission = await prisma.permission.create({
 			data: p,

@@ -33,6 +33,11 @@ const endpoint: NextApiHandler = async (req, res) => {
 	);
 	res.setHeader("Access-Control-Allow-Methods", "Post");
 
+	if (req.method === "OPTIONS") {
+		res.end();
+		return undefined;
+	}
+
 	return apolloServerHandler(req, res);
 };
 export default cors()(apiAuth(endpoint) as RequestHandler);
