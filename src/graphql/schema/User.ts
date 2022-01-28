@@ -47,3 +47,5 @@ export const UserQuery = extendType({
 	},
 	type: "Query",
 });
+
+// TODO implement auth
