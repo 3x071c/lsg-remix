@@ -11,13 +11,12 @@ datasource db {
 }
 
 model User {
-  id                  Int                  @id @default(autoincrement())
-  name                String
-  short               String               @unique
-  password            String
-  pages               PagesOnUsers[]
-  permissions         PermissionsOnUsers[] @relation("UserPermissions")
-  permissionsAssigned PermissionsOnUsers[] @relation("UserPermissionsAssigned")
+    id                  Int                  @id @default(autoincrement())
+    name                String
+    short               String               @unique
+    pages               PagesOnUsers[]
+    permissions         PermissionsOnUsers[] @relation("UserPermissions")
+    permissionsAssigned PermissionsOnUsers[] @relation("UserPermissionsAssigned")
 }
 
 model Page {

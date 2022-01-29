@@ -12,9 +12,7 @@
 		".husky",
 		"*.tsbuildinfo",
 		"db",
-		"__generated__",
-		"src/graphql/migrations",
-		".env"
+		"__generated__"
 	],
 	"import": ["@cspell/dict-de-de/cspell-ext.json"],
 	"language": "en,de",
