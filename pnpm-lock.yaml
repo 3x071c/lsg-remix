@@ -18,7 +18,7 @@ specifiers:
   '@prisma/client': ^3.8.1
   '@secretlint/secretlint-rule-preset-recommend': ^4.1.4
   '@stylelint/postcss-css-in-js': ^0.37.2
-  '@types/faker': 5.5.3
+  '@types/faker': 5.5.9
   '@types/lodash': ^4.14.178
   '@types/micro': ^7.3.6
   '@types/micro-cors': ^0.1.2
@@ -130,7 +130,7 @@ devDependencies:
   '@faker-js/faker': 6.0.0-alpha.5
   '@secretlint/secretlint-rule-preset-recommend': 4.1.4
   '@stylelint/postcss-css-in-js': 0.37.2_8143638ceb7d0d47a7ad2c329d589c11
-  '@types/faker': 5.5.3
+  '@types/faker': 5.5.9
   '@types/lodash': 4.14.178
   '@types/micro': 7.3.6
   '@types/micro-cors': 0.1.2
@@ -2867,8 +2867,8 @@ packages:
       '@types/serve-static': 1.13.10
     dev: false
 
-  /@types/faker/5.5.3:
-    resolution: {integrity: sha512-InxkM6sCFQTI6YQl29M/XGlO19ecv/EHH5X5zLEFdge2/qya8oIT0XkJUKTqheVYWJtGi+FBAfP7hbbunDiOmg==}
+  /@types/faker/5.5.9:
+    resolution: {integrity: sha512-uCx6mP3UY5SIO14XlspxsGjgaemrxpssJI0Ol+GfhxtcKpv9pgRZYsS4eeKeHVLje6Qtc8lGszuBI461+gVZBA==}
     dev: true
 
   /@types/json-schema/7.0.9:
