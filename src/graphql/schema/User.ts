@@ -1,12 +1,4 @@
-import * as argon2 from "argon2";
-import {
-	extendType,
-	objectType,
-	nonNull,
-	intArg,
-	mutationField,
-	stringArg,
-} from "nexus";
+import { extendType, objectType, nonNull, intArg } from "nexus";
 
 export const User = objectType({
 	definition: (t) => {
@@ -49,14 +41,6 @@ export const UserQuery = extendType({
 			type: "User",
 		});
 		t.list.field("users", {
-			authorize: (_root, _args, ctx) => {
-				const map = ctx.req.session.user!.permissions!.map(
-					(permOnUsers) => permOnUsers.permission.name,
-				);
-				// only if a user can mutate all users he should be able
-				// to read all users
-				return map.includes("canMutateUsers");
-			},
 			resolve: (_root, _args, ctx) => ctx.prisma.user.findMany(),
 			type: "User",
 		});
@@ -64,67 +48,4 @@ export const UserQuery = extendType({
 	type: "Query",
 });
 
-export const LoginMutation = mutationField("login", {
-	args: {
-		password: nonNull(stringArg()),
-		username: nonNull(stringArg()),
-	},
-	resolve: async (_root, { username, password }, ctx) => {
-		const user = await ctx.prisma.user.findFirst({
-			include: {
-				pages: {
-					include: {
-						page: true,
-					},
-				},
-				permissions: {
-					include: {
-						assignedBy: true,
-						permission: true,
-					},
-				},
-				permissionsAssigned: {
-					include: {
-						permission: true,
-						user: true,
-					},
-				},
-			},
-			where: {
-				short: username,
-			},
-		});
-
-		if (!user) {
-			return null;
-		}
-		// compare hash and password
-		if (!(await argon2.verify(user.password, password))) {
-			return null;
-		}
-		// only save the id of the user in the cookie
-		ctx.req.session.user = {
-			id: user.id,
-		};
-
-		await ctx.req.session.save();
-
-		return user;
-	},
-	type: "User",
-});
-
-export const LogoutMutation = mutationField("logout", {
-	resolve: (_root, _args, ctx) => {
-		if (!ctx.req.session.user) {
-			return null;
-		}
-
-		const { user } = ctx.req.session;
-
-		ctx.req.session.destroy();
-
-		return user;
-	},
-	type: "User",
-});
+// TODO implement auth
