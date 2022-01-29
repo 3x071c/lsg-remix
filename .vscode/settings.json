@@ -5,6 +5,8 @@
 	"[gitignore]": {
 		"editor.defaultFormatter": "foxundermoon.shell-format"
 	},
+	"cSpell.enabled": true,
+	"cSpell.language": "en,de",
 	"editor.codeActionsOnSave": {
 		"source.fixAll": true
 	},
@@ -24,8 +26,8 @@
 	"files.exclude": {
 		"**/.DS_Store": true,
 		"**/.git": true,
-		"**/node_modules": true,
 		"**/.next": true,
+		"**/node_modules": true,
 		"**/pnpm-lock.yaml": true
 	},
 	"npm.packageManager": "pnpm",

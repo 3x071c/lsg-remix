@@ -1,5 +1,6 @@
 {
 	"recommendations": [
+		"apollographql.vscode-apollo",
 		"mgmcdermott.vscode-language-babel",
 		"webben.browserslist",
 		"streetsidesoftware.code-spell-checker",

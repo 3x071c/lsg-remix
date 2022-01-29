@@ -11,8 +11,8 @@
 		"url": "https://github.com/3x071c/lsg-stack/issues"
 	},
 	"author": {
-		"name": "Victor Homic",
 		"email": "dev@3x071c.com",
+		"name": "Victor Homic",
 		"url": "https://3x071c.com"
 	},
 	"license": "AGPL-3.0-or-later",
@@ -199,9 +199,9 @@
 			"pnpm cspell:individual",
 			"pnpm jscpd:individual"
 		],
-		"*.{tsx,ts,jsx,js,mjs,cjs}": "pnpm eslint:individual",
+		"*.prisma": "pnpm prisma:format -- --schema",
 		"*.{tsx,jsx,html,pcss,css}": "pnpm stylelint:individual",
-		"*.prisma": "pnpm prisma:format -- --schema"
+		"*.{tsx,ts,jsx,js,mjs,cjs}": "pnpm eslint:individual"
 	},
 	"prisma": {
 		"schema": "src/graphql/schema.prisma",
