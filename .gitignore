@@ -272,5 +272,5 @@ __generated__/
 !.env
 !.env.development
 !.env.production
-
+src/graphql/migrations/
 # === End of specific rules ===
