@@ -2,12 +2,12 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:../../db/main.db"
+    provider = "sqlite"
+    url      = "file:../../db/main.db"
 }
 
 model User {
@@ -20,50 +20,50 @@ model User {
 }
 
 model Page {
-  id         Int            @id @default(autoincrement())
-  title      String
-  content    String
-  lastEdited DateTime       @default(now())
-  history    PageHistory[]
-  authors    PagesOnUsers[]
-  parent     Page?          @relation("PageParentChildren", fields: [parentId], references: [id])
-  parentId   Int?
-  children   Page[]         @relation("PageParentChildren")
+    id         Int            @id @default(autoincrement())
+    title      String
+    content    String
+    lastEdited DateTime       @default(now())
+    history    PageHistory[]
+    authors    PagesOnUsers[]
+    parent     Page?          @relation("PageParentChildren", fields: [parentId], references: [id])
+    parentId   Int?
+    children   Page[]         @relation("PageParentChildren")
 }
 
 model PageHistory {
-  id         Int      @id @default(autoincrement())
-  title      String
-  content    String
-  lastEdited DateTime @default(now())
-  page       Page     @relation(fields: [pageId], references: [id])
-  pageId     Int
+    id         Int      @id @default(autoincrement())
+    title      String
+    content    String
+    lastEdited DateTime @default(now())
+    page       Page     @relation(fields: [pageId], references: [id])
+    pageId     Int
 }
 
 model PagesOnUsers {
-  assignedAt DateTime @default(now())
-  user       User     @relation(fields: [userId], references: [id])
-  userId     Int
-  page       Page     @relation(fields: [pageId], references: [id])
-  pageId     Int
+    assignedAt DateTime @default(now())
+    user       User     @relation(fields: [userId], references: [id])
+    userId     Int
+    page       Page     @relation(fields: [pageId], references: [id])
+    pageId     Int
 
-  @@id([userId, pageId])
+    @@id([userId, pageId])
 }
 
 model Permission {
-  id    Int                  @id @default(autoincrement())
-  name  String
-  users PermissionsOnUsers[]
+    id    Int                  @id @default(autoincrement())
+    name  String
+    users PermissionsOnUsers[]
 }
 
 model PermissionsOnUsers {
-  assignedAt   DateTime   @default(now())
-  assignedBy   User       @relation("UserPermissionsAssigned", fields: [assignedById], references: [id])
-  assignedById Int
-  user         User       @relation("UserPermissions", fields: [userId], references: [id])
-  userId       Int
-  permission   Permission @relation(fields: [permissionId], references: [id])
-  permissionId Int
+    assignedAt   DateTime   @default(now())
+    assignedBy   User       @relation("UserPermissionsAssigned", fields: [assignedById], references: [id])
+    assignedById Int
+    user         User       @relation("UserPermissions", fields: [userId], references: [id])
+    userId       Int
+    permission   Permission @relation(fields: [permissionId], references: [id])
+    permissionId Int
 
-  @@id([userId, permissionId])
+    @@id([userId, permissionId])
 }
