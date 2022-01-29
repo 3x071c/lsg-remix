@@ -11,6 +11,7 @@ import {
 	Permission,
 	PagesOnUsers,
 } from "@prisma/client";
+import * as argon2 from "argon2";
 import { sample, sampleSize, random, times, flatten, clamp } from "lodash";
 
 type PageWithRelations = Page & {
@@ -33,17 +34,21 @@ const distort = (str: string, progress: number) =>
 
 const prisma = new PrismaClient();
 
-const seedUsers = (): Prisma.UserCreateInput[] =>
-	times(random(5, 8), () => {
+const seedUsers = async (): Promise<Prisma.UserCreateInput[]> => {
+	const passwordHash = await argon2.hash("password");
+
+	return times(random(5, 8), () => {
 		const firstName = faker.name.firstName();
 		const lastName = faker.name.lastName();
 		return {
 			name: `${firstName} ${lastName}`,
+			password: passwordHash,
 			short: `${firstName
 				.charAt(0)
 				.toLowerCase()}.${lastName.toLowerCase()}`,
 		};
 	});
+};
 
 const seedPageAuthors = (users: User[]): Prisma.PageCreateInput["authors"] => {
 	const authors = sampleSize(users, random(1, users.length));
@@ -167,7 +172,7 @@ export default async function main(): Promise<void> {
 	console.log(`Start seeding ...`);
 
 	// 1. Create some users 🦭
-	const userData = seedUsers();
+	const userData = await seedUsers();
 	for (const u of userData) {
 		const user = await prisma.user.create({
 			data: u,
