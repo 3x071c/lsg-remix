@@ -100,7 +100,6 @@
 		"@emotion/styled": "^11.6.0",
 		"@prisma/client": "^3.8.1",
 		"apollo-server-micro": "^3.6.2",
-		"argon2": "^0.28.3",
 		"framer-motion": "^5.x.x",
 		"graphql": "^15.x.x",
 		"graphql-scalars": "^1.14.1",
