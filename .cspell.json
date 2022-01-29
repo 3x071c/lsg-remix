@@ -36,6 +36,10 @@
 		"prisma",
 		"tsbuildinfo",
 		"turborepo",
-		"unspaced"
+		"unspaced",
+		"fira",
+		"monokai",
+		"quokka",
+		"intelli"
 	]
 }
