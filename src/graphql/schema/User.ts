@@ -54,7 +54,7 @@ export const UserQuery = extendType({
 					(permOnUsers) => permOnUsers.permission.name,
 				);
 				// only if a user can mutate all users he should be able
-				// to read all users
+				// to query all users
 				return map.includes("canMutateUsers");
 			},
 			resolve: (_root, _args, ctx) => ctx.prisma.user.findMany(),
