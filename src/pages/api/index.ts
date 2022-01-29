@@ -6,6 +6,7 @@ import cors from "micro-cors";
 import schema from "$schema";
 import context from "$graphql/context";
 import apiAuth from "$lib/auth";
+import prisma from "$lib/prisma";
 
 const apolloServer = new ApolloServer({ context, schema });
 let apolloServerHandler: NextApiHandler;
@@ -19,7 +20,43 @@ const endpoint: NextApiHandler = async (req, res) => {
 		apolloServerHandler = apolloServer.createHandler({
 			path: "/api",
 		});
-		console.log("Server handler started ✅");
+	}
+	if (req.session.user) {
+		/*
+		By default the session.user objects only contains the id
+		but usually we need more, especially the permission when deciding
+		whether or not the user is authorized to see/content.
+		For this reason, when a user is authorized we query the user object
+		with all its relations and replace the session.user object with it.
+		*/
+		const user = await prisma.user.findFirst({
+			include: {
+				pages: {
+					include: {
+						page: true,
+					},
+				},
+				permissions: {
+					include: {
+						assignedBy: true,
+						permission: true,
+					},
+				},
+				permissionsAssigned: {
+					include: {
+						permission: true,
+						user: true,
+					},
+				},
+			},
+			where: {
+				short: req.session.user.short,
+			},
+		});
+
+		console.log("querying user", user);
+
+		req.session.user = user!;
 	}
 
 	res.setHeader("Access-Control-Allow-Credentials", "true");
