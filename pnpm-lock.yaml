@@ -48,10 +48,9 @@ specifiers:
   eslint-plugin-react: ^7.28.0
   eslint-plugin-react-hooks: ^4.3.0
   faker: 5.5.3
-  framer-motion: ^5.x.x
-  graphql: ^15.x.x
+  framer-motion: ^5.6.0
+  graphql: ^15.8.0
   graphql-scalars: ^1.14.1
-  html-webpack-plugin: ^5.5.0
   husky: ^7.0.4
   iron-session: ^6.0.5
   jscpd: ^3.4.5
@@ -117,7 +116,7 @@ dependencies:
   nexus: 1.2.0_graphql@15.8.0
   react: 17.0.2
   react-dom: 17.0.2_react@17.0.2
-  react-hook-form: 7.25.1_react@17.0.2
+  react-hook-form: 7.25.3_react@17.0.2
   react-icons: 4.3.1_react@17.0.2
   react-table: 7.7.0_react@17.0.2
   sharp: 0.29.3
@@ -160,7 +159,6 @@ devDependencies:
   eslint-plugin-react: 7.28.0_eslint@8.8.0
   eslint-plugin-react-hooks: 4.3.0_eslint@8.8.0
   faker: 5.5.3
-  html-webpack-plugin: 5.5.0_webpack@5.67.0
   husky: 7.0.4
   jscpd: 3.4.5
   lint-staged: 12.3.2
@@ -2873,10 +2871,6 @@ packages:
     resolution: {integrity: sha512-InxkM6sCFQTI6YQl29M/XGlO19ecv/EHH5X5zLEFdge2/qya8oIT0XkJUKTqheVYWJtGi+FBAfP7hbbunDiOmg==}
     dev: true
 
-  /@types/html-minifier-terser/6.1.0:
-    resolution: {integrity: sha512-oh/6byDPnL1zeNXFrDXFLyZjkr1MsBG667IM792caf1L2UPOOMf65NFzjUH/ltyfwjAGfs1rsX1eftK0jC/KIg==}
-    dev: true
-
   /@types/json-schema/7.0.9:
     resolution: {integrity: sha512-qcUXuemtEu+E5wZSJHNxUXeCZhAfXKQ41D+duX+VYPde7xyEVZci+/oXKJL13tnRs9lR2pr4fod59GT6/X1/yQ==}
     dev: true
@@ -3983,7 +3977,7 @@ packages:
       postcss: ^8.1.0
     dependencies:
       browserslist: 4.19.1
-      caniuse-lite: 1.0.30001303
+      caniuse-lite: 1.0.30001304
       fraction.js: 4.1.2
       normalize-range: 0.1.2
       picocolors: 1.0.0
@@ -4104,7 +4098,7 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001303
+      caniuse-lite: 1.0.30001304
       electron-to-chromium: 1.4.57
       escalade: 3.1.1
       node-releases: 2.0.1
@@ -4201,13 +4195,13 @@ packages:
     resolution: {integrity: sha512-bsTwuIg/BZZK/vreVTYYbSWoe2F+71P7K5QGEX+pT250DZbfU1MQ5prOKpPR+LL6uWKK3KMwMCAS74QB3Um1uw==}
     dependencies:
       browserslist: 4.19.1
-      caniuse-lite: 1.0.30001303
+      caniuse-lite: 1.0.30001304
       lodash.memoize: 4.1.2
       lodash.uniq: 4.5.0
     dev: true
 
-  /caniuse-lite/1.0.30001303:
-    resolution: {integrity: sha512-/Mqc1oESndUNszJP0kx0UaQU9kEv9nNtJ7Kn8AdA0mNnH8eR1cj0kG+NbNuC1Wq/b21eA8prhKRA3bbkjONegQ==}
+  /caniuse-lite/1.0.30001304:
+    resolution: {integrity: sha512-bdsfZd6K6ap87AGqSHJP/s1V+U6Z5lyrcbBu3ovbCCf8cSYpwTtGrCBObMpJqwxfTbLW6YTIdbb1jEeTelcpYQ==}
 
   /capital-case/1.0.4:
     resolution: {integrity: sha512-ds37W8CytHgwnhGGTi88pcPyR15qoNkOpYwmMMfnWqqWgESapLqvDx6huFjQ5vqWSn2Z06173XNA7LtMOeUh1A==}
@@ -4309,13 +4303,6 @@ packages:
   /chrome-trace-event/1.0.3:
     resolution: {integrity: sha512-p3KULyQg4S7NIHixdwbGX+nFHkoBiA4YQmyWtjb8XngSKV124nJmRysgAeujbUVb15vh+RvFUfCPqU7rXk+hZg==}
     engines: {node: '>=6.0'}
-    dev: true
-
-  /clean-css/5.2.4:
-    resolution: {integrity: sha512-nKseG8wCzEuji/4yrgM/5cthL9oTDc5UOQyFMvW/Q53oP6gLH690o1NbuTh6Y18nujr7BxlsFuS7gXLnLzKJGg==}
-    engines: {node: '>= 10.0'}
-    dependencies:
-      source-map: 0.6.1
     dev: true
 
   /clean-stack/2.2.0:
@@ -5272,12 +5259,6 @@ packages:
 
   /doctypes/1.1.0:
     resolution: {integrity: sha1-6oCxBqh1OHdOijpKWv4pPeSJ4Kk=}
-    dev: true
-
-  /dom-converter/0.2.0:
-    resolution: {integrity: sha512-gd3ypIPfOMr9h5jIKq8E3sHOTCjeirnl0WK5ZdS1AW0Odt0b1PaWaHdJ4Qk4klv+YB9aJBS7mESXjFoDQPu6DA==}
-    dependencies:
-      utila: 0.4.0
     dev: true
 
   /dom-serializer/1.3.2:
@@ -6511,11 +6492,6 @@ packages:
     dependencies:
       function-bind: 1.1.1
 
-  /he/1.2.0:
-    resolution: {integrity: sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==}
-    hasBin: true
-    dev: true
-
   /header-case/2.0.4:
     resolution: {integrity: sha512-H/vuk5TEEVZwrR0lp2zed9OCo1uAILMlx0JEMgC26rzyJJ3N1v6XkwHHXJQdR2doSjcGPM6OKPYoJgf0plJ11Q==}
     dependencies:
@@ -6551,22 +6527,6 @@ packages:
       lru-cache: 6.0.0
     dev: true
 
-  /html-minifier-terser/6.1.0:
-    resolution: {integrity: sha512-YXxSlJBZTP7RS3tWnQw74ooKa6L9b9i9QYXY21eUEvhZ3u9XLfv6OnFsQq6RxkhHygsaUMvYsZRV5rU/OVNZxw==}
-    engines: {node: '>=12'}
-    hasBin: true
-    dependencies:
-      camel-case: 4.1.2
-      clean-css: 5.2.4
-      commander: 8.3.0
-      he: 1.2.0
-      param-case: 3.0.4
-      relateurl: 0.2.7
-      terser: 5.10.0
-    transitivePeerDependencies:
-      - acorn
-    dev: true
-
   /html-tags/3.1.0:
     resolution: {integrity: sha512-1qYz89hW3lFDEazhjW0yVAV87lw8lVkrJocr72XmBkMKsoSVJCQx3W8BXsC7hO2qAt8BoVjYjtAcZ9perqGnNg==}
     engines: {node: '>=8'}
@@ -6582,31 +6542,6 @@ packages:
       readable-stream: 1.0.34
       through2: 0.4.2
     dev: false
-
-  /html-webpack-plugin/5.5.0_webpack@5.67.0:
-    resolution: {integrity: sha512-sy88PC2cRTVxvETRgUHFrL4No3UxvcH8G1NepGhqaTT+GXN2kTamqasot0inS5hXeg1cMbFDt27zzo9p35lZVw==}
-    engines: {node: '>=10.13.0'}
-    peerDependencies:
-      webpack: ^5.20.0
-    dependencies:
-      '@types/html-minifier-terser': 6.1.0
-      html-minifier-terser: 6.1.0
-      lodash: 4.17.21
-      pretty-error: 4.0.0
-      tapable: 2.2.1
-      webpack: 5.67.0
-    transitivePeerDependencies:
-      - acorn
-    dev: true
-
-  /htmlparser2/6.1.0:
-    resolution: {integrity: sha512-gyyPk6rgonLFEDGoeRgQNaEUvdJ4ktTmmUh/h2t7s+M8oPpIPxgNACWa+6ESR57kXstwqPiCut0V8NRpcwgU7A==}
-    dependencies:
-      domelementtype: 2.2.0
-      domhandler: 4.3.0
-      domutils: 2.8.0
-      entities: 2.2.0
-    dev: true
 
   /http-call/5.3.0:
     resolution: {integrity: sha512-ahwimsC23ICE4kPl9xTBjKB4inbRaeLyZeRunC/1Jy/Z6X8tv22MEAjK+KBOMSVLaqXPTTmd8638waVIKLGx2w==}
@@ -7838,7 +7773,7 @@ packages:
         optional: true
     dependencies:
       '@next/env': 12.0.9
-      caniuse-lite: 1.0.30001303
+      caniuse-lite: 1.0.30001304
       postcss: 8.4.5
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
@@ -8875,7 +8810,7 @@ packages:
     dependencies:
       autoprefixer: 10.4.2_postcss@8.4.5
       browserslist: 4.19.1
-      caniuse-lite: 1.0.30001303
+      caniuse-lite: 1.0.30001304
       css-blank-pseudo: 3.0.2_postcss@8.4.5
       css-has-pseudo: 3.0.3_postcss@8.4.5
       css-prefers-color-scheme: 6.0.2_postcss@8.4.5
@@ -9110,13 +9045,6 @@ packages:
     resolution: {integrity: sha512-vBZcPRUR5MZJwoyi3ZoyQlc1rXeEck8KgeC9AwwOn+exuxLxq5toTRDTSaVrXHxelDMHy9zlicw8u66yxoSUFg==}
     engines: {node: '>=10.13.0'}
     hasBin: true
-    dev: true
-
-  /pretty-error/4.0.0:
-    resolution: {integrity: sha512-AoJ5YMAcXKYxKhuJGdcvse+Voc6v1RgnsR3nWcYU7q4t6z0Q6T86sv5Zq8VIRbOWWFpvdGE83LtdSMNd+6Y0xw==}
-    dependencies:
-      lodash: 4.17.21
-      renderkid: 3.0.0
     dev: true
 
   /prisma/3.8.1:
@@ -9363,8 +9291,8 @@ packages:
       - '@types/react'
     dev: false
 
-  /react-hook-form/7.25.1_react@17.0.2:
-    resolution: {integrity: sha512-AVE/kFtOQ6GEC5TBDNzZrVO8k4QRMi5RNhUWeBq6Koc9V/luBrP1xybWByl4n1yLFL8/2H3p0VM7wp3CW7t8JQ==}
+  /react-hook-form/7.25.3_react@17.0.2:
+    resolution: {integrity: sha512-jL4SByMaC8U3Vhu9s7CwgJBP4M6I3Kpwxib9LrCwWSRPnXDrNQL4uihSTqLLoDICqSUhwwvian9uVYfv+ITtGg==}
     engines: {node: '>=12.22.0'}
     peerDependencies:
       react: ^16.8.0 || ^17
@@ -9593,21 +9521,6 @@ packages:
 
   /regx/1.0.4:
     resolution: {integrity: sha1-oO4ywwiRCQIBnKERftQbnd0EGy8=}
-    dev: true
-
-  /relateurl/0.2.7:
-    resolution: {integrity: sha1-VNvzd+UUQKypCkzSdGANP/LYiKk=}
-    engines: {node: '>= 0.10'}
-    dev: true
-
-  /renderkid/3.0.0:
-    resolution: {integrity: sha512-q/7VIQA8lmM1hF+jn+sFSPWGlMkSAeNYcPLmDQx2zzuiDfaLrOmumR8iaUKlenFgh0XRPIUeSPlH3A+AW3Z5pg==}
-    dependencies:
-      css-select: 4.2.1
-      dom-converter: 0.2.0
-      htmlparser2: 6.1.0
-      lodash: 4.17.21
-      strip-ansi: 6.0.1
     dev: true
 
   /repeat-string/1.6.1:
@@ -10550,21 +10463,6 @@ packages:
       - acorn
     dev: true
 
-  /terser/5.10.0:
-    resolution: {integrity: sha512-AMmF99DMfEDiRJfxfY5jj5wNH/bYO09cniSqhfoyxc8sFoYIgkJy86G04UoZU5VjlpnplVu0K6Tx6E9b5+DlHA==}
-    engines: {node: '>=10'}
-    hasBin: true
-    peerDependencies:
-      acorn: ^8.5.0
-    peerDependenciesMeta:
-      acorn:
-        optional: true
-    dependencies:
-      commander: 2.20.3
-      source-map: 0.7.3
-      source-map-support: 0.5.21
-    dev: true
-
   /terser/5.10.0_acorn@8.7.0:
     resolution: {integrity: sha512-AMmF99DMfEDiRJfxfY5jj5wNH/bYO09cniSqhfoyxc8sFoYIgkJy86G04UoZU5VjlpnplVu0K6Tx6E9b5+DlHA==}
     engines: {node: '>=10'}
@@ -10982,10 +10880,6 @@ packages:
       for-each: 0.3.3
       has-symbols: 1.0.2
       object.getownpropertydescriptors: 2.1.3
-    dev: true
-
-  /utila/0.4.0:
-    resolution: {integrity: sha1-ihagXURWV6Oupe7MWxKk+lN5dyw=}
     dev: true
 
   /uuid/8.3.2:

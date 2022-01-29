@@ -4,6 +4,9 @@
 version = 1
 
 [merge]
+# By default, Kodiak will only act on PRs that have this label. You can disable
+# this requirement via `merge.require_automerge_label`.
+automerge_label=[]
 # Require that the automerge label (`merge.automerge_label`) be set for Kodiak to merge a PR.
 require_automerge_label = false
 # If a PR's title matches this regex, Kodiak will not merge the PR. This is useful to prevent merging work-in-progress PRs.
@@ -37,8 +40,8 @@ always = true
 # When enabled, Kodiak will only update PRs that have an automerge label (configured via `merge.automerge_label`). When disable, Kodiak will update any PR.
 require_automerge_label = false
 # When a pull request's author matches this, Kodiak will never update the pull request, unless update.autoupdate_label is applied to the pull request.
-ignored_usernames = ["dependabot"]
+ignored_usernames = ["dependabot", "renovate"]
 
 [approve]
 # If a PR is opened by a user with a username in this list, Kodiak will automatically add an approval to the PR.
-auto_approve_usernames = ["dependabot"]
+auto_approve_usernames = ["dependabot", "renovate"]
