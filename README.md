@@ -8,7 +8,7 @@
 <hr style="height: 2px; margin: 5px;" />
 <p align="center">
   <a href="#introduction">Introduction</a> •
-  <a href="#get-started">Get Started</a> •
+  <a href="#get-started-">Get Started</a> •
     <a href="#recommendations-for-vscode">Recommendations</a> •
   <a href="#documentation">Documentation</a> •
   <a href="#contributing">Contributing</a> •
@@ -180,6 +180,10 @@ See [Docs](DOCS.md)
 ## Todo
 
 See [Todo](TODO.md)
+
+## Contributing
+
+See [Contributing](CONTRIBUTING.md)
 
 ## Tech Stack
 
