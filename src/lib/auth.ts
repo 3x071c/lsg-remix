@@ -9,7 +9,7 @@ const config: IronSessionOptions = {
 		secure: process.env.NODE_ENV === "production",
 	},
 	password: {
-		1: process.env["API_AUTH_SECRET"],
+		1: process.env["API_AUTH_SECRET"]!,
 	},
 };
 
