@@ -125,7 +125,7 @@
 		"@faker-js/faker": "^6.0.0-alpha.5",
 		"@secretlint/secretlint-rule-preset-recommend": "^4.1.4",
 		"@stylelint/postcss-css-in-js": "^0.37.2",
-		"@types/faker": "5.5.3",
+		"@types/faker": "5.5.9",
 		"@types/lodash": "^4.14.178",
 		"@types/micro": "^7.3.6",
 		"@types/micro-cors": "^0.1.2",
