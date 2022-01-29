@@ -15,6 +15,20 @@ blocking_title_regex = ""
 method = "squash"
 # Once a PR is merged, delete the branch. This option behaves like the GitHub repository setting "Automatically delete head branches", which automatically deletes head branches after pull requests are merged.
 delete_branch_on_merge = true
+# Due to limitations with the GitHub API this feature is fundamentally broken
+# and cannot be fixed. Prefer the GitHub branch protection "required reviewers"
+# setting instead.
+#
+# When a user leaves a comment on a PR, GitHub counts that as satisfying a
+# review request, so the PR will be allowed to merge, even though a reviewer was
+# likely just starting a review.
+#
+# See this issue comment for more information:
+# https://github.com/chdsbd/kodiak/issues/153#issuecomment-523057332
+#
+# If you request review from a user, don't merge until that user provides a
+# review, even if the PR is passing all status checks.
+block_on_reviews_requested = true
 # If a PR is passing all checks and is able to be merged, merge it without placing it in the merge queue. This option adds some unfairness where PRs waiting in the queue the longest are not served first.
 prioritize_ready_to_merge = true
 
