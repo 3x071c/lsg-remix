@@ -4,6 +4,9 @@
 version = 1
 
 [merge]
+# By default, Kodiak will only act on PRs that have this label. You can disable
+# this requirement via `merge.require_automerge_label`.
+automerge_label=[]
 # Require that the automerge label (`merge.automerge_label`) be set for Kodiak to merge a PR.
 require_automerge_label = false
 # If a PR's title matches this regex, Kodiak will not merge the PR. This is useful to prevent merging work-in-progress PRs.
@@ -12,6 +15,20 @@ blocking_title_regex = ""
 method = "squash"
 # Once a PR is merged, delete the branch. This option behaves like the GitHub repository setting "Automatically delete head branches", which automatically deletes head branches after pull requests are merged.
 delete_branch_on_merge = true
+# Due to limitations with the GitHub API this feature is fundamentally broken
+# and cannot be fixed. Prefer the GitHub branch protection "required reviewers"
+# setting instead.
+#
+# When a user leaves a comment on a PR, GitHub counts that as satisfying a
+# review request, so the PR will be allowed to merge, even though a reviewer was
+# likely just starting a review.
+#
+# See this issue comment for more information:
+# https://github.com/chdsbd/kodiak/issues/153#issuecomment-523057332
+#
+# If you request review from a user, don't merge until that user provides a
+# review, even if the PR is passing all status checks.
+block_on_reviews_requested = true
 # If a PR is passing all checks and is able to be merged, merge it without placing it in the merge queue. This option adds some unfairness where PRs waiting in the queue the longest are not served first.
 prioritize_ready_to_merge = true
 
@@ -37,8 +54,8 @@ always = true
 # When enabled, Kodiak will only update PRs that have an automerge label (configured via `merge.automerge_label`). When disable, Kodiak will update any PR.
 require_automerge_label = false
 # When a pull request's author matches this, Kodiak will never update the pull request, unless update.autoupdate_label is applied to the pull request.
-ignored_usernames = ["dependabot"]
+ignored_usernames = ["dependabot", "renovate"]
 
 [approve]
 # If a PR is opened by a user with a username in this list, Kodiak will automatically add an approval to the PR.
-auto_approve_usernames = ["dependabot"]
+auto_approve_usernames = ["dependabot", "renovate"]
