@@ -23,6 +23,7 @@
 		"alex",
 		"bkeepers",
 		"chakra",
+		"codeql",
 		"commitizen",
 		"dessant",
 		"epischerer",
@@ -37,6 +38,10 @@
 		"prisma",
 		"tsbuildinfo",
 		"turborepo",
-		"unspaced"
+		"unspaced",
+		"fira",
+		"monokai",
+		"quokka",
+		"intelli"
 	]
 }
