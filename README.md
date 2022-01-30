@@ -51,7 +51,7 @@ Generate TypeScript types (this is mostly needed to type-check GraphQL operation
 $ pnpm new
 ```
 
-Store an encryption password for the CMS authentication cookie in `.env.local`. It will not be committed via git. Make sure to keep it **secret** (in production):
+Store an encryption password for the CMS authentication cookie in `.env.local` ([**never put secrets in .env!**](https://nextjs.org/docs/basic-features/environment-variables)). Make sure to keep it **secret** (in production):
 
 ```console
 # /.env.local
@@ -71,7 +71,7 @@ Before you start working:
 ```console
 $ git status # Check you're on the default branch (trunk), if not:
 $ git checkout trunk
-$ pnpm pull # Make sure you're up-to-date
+$ git pull --all --rebase # Make sure you're up-to-date
 $ git checkout -b <build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test>/<your idea>
 # examples:
 $ git checkout -b feat/add-cat-gifs
@@ -90,7 +90,7 @@ $ pnpm commit # Make sure to always commit using conventional commit messages if
 Push your changes to GitHub so others can follow your progress (you will need repository access):
 
 ```console
-$ pnpm push # Authenticate with your GitHub credentials (See here for how to save them: https://git-scm.com/book/en/v2/Git-Tools-Credential-Storage)
+$ git push --prune -u origin HEAD # Authenticate with your GitHub credentials (See here for how to save them: https://git-scm.com/book/en/v2/Git-Tools-Credential-Storage)
 ```
 
 Open a `draft` pull request (PR) on GitHub from your branch to the default branch (trunk) and watch the status checks complete. The title of the PR should follow the [same format](https://www.conventionalcommits.org/) as your commits, the body should include all necessary information for others to understand what the PR changes. Vercel will build a live preview of your branch!
