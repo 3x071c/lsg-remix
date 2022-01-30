@@ -1,32 +1,20 @@
-name: "Lock Closed"
+name: Lock Closed
 
 on:
     schedule:
-        - cron: "0 0 * * *"
-
-permissions:
-    issues: write
-    pull-requests: write
+        - cron: 0 0 * * *
+    workflow_dispatch:
 
 jobs:
     lock:
-        name: "Lock after timeout if closed"
+        name: Lock after timeout if closed
         runs-on: ubuntu-latest
         steps:
-            - name: "Run the lock-threads action"
+            - name: Run the lock-threads action
               uses: dessant/lock-threads@v3
               with:
-                  github-token: ${{ secrets.GITHUB_TOKEN }}
-                  issue-lock-inactive-days: "7"
-                  issue-exclude-created-before: ""
-                  issue-exclude-labels: ""
-                  issue-lock-labels: "lock"
-                  issue-lock-comment: ""
-                  issue-lock-reason: "resolved"
-                  pr-lock-inactive-days: "7"
-                  pr-exclude-created-before: ""
-                  pr-exclude-labels: ""
-                  pr-lock-labels: "lock"
-                  pr-lock-comment: ""
-                  pr-lock-reason: "resolved"
-                  process-only: ""
+                  issue-inactive-days: 7
+                  add-issue-labels: lock
+                  issue-lock-reason: resolved
+                  pr-inactive-days: 7
+                  add-pr-labels: lock

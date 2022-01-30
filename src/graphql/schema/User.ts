@@ -7,18 +7,20 @@ export const User = objectType({
 		t.string("short");
 		t.list.field("pages", {
 			resolve: ({ id }, _args, ctx) =>
-				ctx.prisma.user.findUnique({ where: { id } }).pages(),
+				ctx.prisma.user.findUnique({ where: { id: id! } }).pages(),
 			type: "PagesOnUsers",
 		});
 		t.list.field("permissions", {
 			resolve: ({ id }, _args, ctx) =>
-				ctx.prisma.user.findUnique({ where: { id } }).permissions(),
+				ctx.prisma.user
+					.findUnique({ where: { id: id! } })
+					.permissions(),
 			type: "PermissionsOnUsers",
 		});
 		t.list.field("permissionsAssigned", {
 			resolve: ({ id }, _args, ctx) =>
 				ctx.prisma.user
-					.findUnique({ where: { id } })
+					.findUnique({ where: { id: id! } })
 					.permissionsAssigned(),
 			type: "PermissionsOnUsers",
 		});

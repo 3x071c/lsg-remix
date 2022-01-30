@@ -11,7 +11,6 @@
 		"source.fixAll": true
 	},
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
-	"editor.insertSpaces": false,
 	"eslint.onIgnoredFiles": "warn",
 	"eslint.packageManager": "pnpm",
 	"eslint.validate": [
@@ -28,7 +27,9 @@
 		"**/.git": true,
 		"**/.next": true,
 		"**/node_modules": true,
-		"**/pnpm-lock.yaml": true
+		"**/pnpm-lock.yaml": true,
+		"**/*.tsbuildinfo": true,
+		"**/.*cache": true
 	},
 	"npm.packageManager": "pnpm",
 	"prettier.requireConfig": true,

@@ -1,13 +1,15 @@
-name: "CodeQL"
+name: CodeQL
 
 on:
     push:
-        branches: [trunk]
+        branches:
+            - trunk
     pull_request:
         # The branches below must be a subset of the branches above
-        branches: [trunk]
+        branches:
+            - trunk
     schedule:
-        - cron: "41 9 * * 5"
+        - cron: 41 9 * * 5
 
 jobs:
     analyze:
@@ -21,7 +23,8 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                language: ["javascript"]
+                language:
+                    - javascript
                 # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python', 'ruby' ]
                 # Learn more about CodeQL language support at https://git.io/codeql-language-support
 

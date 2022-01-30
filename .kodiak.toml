@@ -58,4 +58,4 @@ ignored_usernames = ["dependabot", "renovate"]
 
 [approve]
 # If a PR is opened by a user with a username in this list, Kodiak will automatically add an approval to the PR.
-auto_approve_usernames = ["dependabot", "renovate"]
+#auto_approve_usernames = ["dependabot", "renovate"]
