@@ -19,6 +19,7 @@
 	"version": "0.2",
 	"words": [
 		"alex",
+		"Atlassian",
 		"bkeepers",
 		"chakra",
 		"codeql",
@@ -31,6 +32,7 @@
 		"homic",
 		"hubot",
 		"intelli",
+		"kodiak",
 		"Linkify",
 		"monokai",
 		"musin",
@@ -43,7 +45,6 @@
 		"turborepo",
 		"unspaced",
 		"Vercel",
-		"zalgo",
-		"kodiak"
+		"zalgo"
 	]
 }

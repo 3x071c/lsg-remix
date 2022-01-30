@@ -74,8 +74,6 @@
 		"prisma:watch": "pnpm prisma:generate -- --watch",
 		"prod": "pnpm production",
 		"production": "cross-env NODE_ENV=production run-s build start",
-		"pull": "git pull --all --rebase",
-		"push": "git push --prune -u origin HEAD",
 		"report": "pnpm lint",
 		"secretlint:individual": "secretlint",
 		"secretlint:report": "pnpm secretlint:individual -- \".\"",
