@@ -1,0 +1,28 @@
+{
+	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
+	"branchPrefix": "chore/renovate_",
+	"commitBodyTable": true,
+	"commitMessageAction": "Bump",
+	"commitMessageTopic": "{{depName}}",
+	"configWarningReuseIssue": false,
+	"dependencyDashboard": true,
+	"dependencyDashboardAutoclose": true,
+	"dependencyDashboardLabels": ["neverstale", "dependencies"],
+	"dependencyDashboardTitle": "Dependency Dashboard (Renovate)",
+	"labels": ["dependencies"],
+	"lockFileMaintenance": {
+		"enabled": true
+	},
+	"packageRules": [
+		{
+			"matchDepTypes": ["dependencies"],
+			"prPriority": -1
+		}
+	],
+	"prCreation": "not-pending",
+	"prNotPendingHours": 1,
+	"rangeStrategy": "auto",
+	"semanticCommits": "enabled",
+	"stabilityDays": 7,
+	"timezone": "Europe/Berlin"
+}

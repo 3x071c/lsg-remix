@@ -2,79 +2,72 @@
 
 # Labels: define labels for Issues and Pull Requests
 labels:
-    - name: "approved"
+    - name: approved
       color: "#f9fcb0"
       description: "( ͡° ͜ °)"
-    - name: "bug"
+    - name: bug
       color: "#d93f0b"
       description: "•`_´•"
-    - name: "dependencies"
+    - name: dependencies
       color: "#AD1F93"
       description: "┬─┬ ノ( ゜-゜ノ)"
-    - name: "documentation"
+    - name: documentation
       color: "#0075ca"
       description: "♥"
-    - name: "done"
+    - name: done
       color: "#ededed"
       description: "⊂(◉‿◉)つ"
-    - name: "duplicate"
+    - name: duplicate
       color: "#cfd3d7"
       description: "(づ｡◕‿‿◕｡)づ"
-    - name: "enhancement"
+    - name: enhancement
       color: "#a2eeef"
       description: "٩( ๑╹ ꇴ╹)۶"
-    - name: "feature"
+    - name: feature
       color: "#1d76db"
       description: "(͡ ° ͜ʖ ͡ °)"
-    - name: "good first issue"
+    - name: good first issue
       color: "#7057ff"
       description: '※\(^o^)/※'
-    - name: "help"
+    - name: help
       color: "#d876e3"
       description: "☉ ‿ ⚆"
-    - name: "help wanted"
+    - name: help wanted
       color: "#008672"
       description: "ಠ_ಠ"
-    - name: "in progress"
+    - name: in progress
       color: "#fbca04"
       description: "(✿◠‿◠)"
-    - name: "in review"
+    - name: in review
       color: "#006b75"
       description: '\(°^°)/'
-    - name: "invalid"
+    - name: invalid
       color: "#fbca04"
       description: "(҂◡_◡) ᕤ"
-    - name: "merge conflict"
+    - name: merge conflict
       color: "#d93f0b"
       description: '/o\'
-    - name: "more information needed"
+    - name: more information needed
       color: "#0052cc"
       description: '¯\(O_o)/¯'
-    - name: "neverstale"
+    - name: neverstale
       color: "#D5863B"
       description: "ʕ·͡ᴥ·ʔ"
-    - name: "ready for review"
+    - name: ready for review
       color: "#5319e7"
       description: "(☞ﾟヮﾟ)☞"
-    - name: "stale"
+    - name: stale
       color: "#d4c5f9"
       description: "(-_-)"
-    - name: "support"
+    - name: support
       color: "#b60205"
       description: '\(°Ω°)/'
-    - name: "to do"
+    - name: to do
       color: "#30baa0"
       description: "(ʘ‿ʘ)╯"
-    - name: "wontfix"
+    - name: wontfix
       color: "#bfd4f2"
       description: "(⌐■_■)"
-    - name: "lock"
+    - name: lock
       color: "#B60205"
       description: "ε(´סּ︵סּ`)з"
-
-# Milestones: define milestones for Issues and Pull Requests
-milestones:
-    - title: "Production"
-      description: "Get on board!"
-      # The state of the milestone. Either `open` or `closed`
-      state: "open"
