@@ -8,9 +8,7 @@ const config: IronSessionOptions = {
 		sameSite: process.env.NODE_ENV === "production" ? "strict" : "none",
 		secure: process.env.NODE_ENV === "production",
 	},
-	password: {
-		1: process.env["API_AUTH_SECRET"],
-	},
+	password: process.env["API_AUTH_SECRET"]!,
 };
 
 export default function apiAuth(
