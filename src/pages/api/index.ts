@@ -54,8 +54,6 @@ const endpoint: NextApiHandler = async (req, res) => {
 			},
 		});
 
-		console.log("querying user", user);
-
 		req.session.user = user!;
 	}
 
