@@ -1,21 +1,21 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@apollo/client': ^3.5.8
+  '@apollo/client': 3.5.8
   '@babel/core': 7.16.12
-  '@chakra-ui/icons': ^1.1.1
-  '@chakra-ui/react': ^1.8.1
-  '@chakra-ui/system': ^1.10.1
+  '@chakra-ui/icons': 1.1.1
+  '@chakra-ui/react': 1.8.1
+  '@chakra-ui/system': 1.10.1
   '@commitlint/cli': 16.1.0
   '@commitlint/config-conventional': 16.0.0
   '@cspell/dict-de-de': 2.1.0
-  '@emotion/cache': ^11.7.1
-  '@emotion/css': ^11.7.1
-  '@emotion/react': ^11.7.1
-  '@emotion/server': ^11.4.0
-  '@emotion/styled': ^11.6.0
+  '@emotion/cache': 11.7.1
+  '@emotion/css': 11.7.1
+  '@emotion/react': 11.7.1
+  '@emotion/server': 11.4.0
+  '@emotion/styled': 11.6.0
   '@faker-js/faker': 6.0.0-alpha.5
-  '@prisma/client': ^3.8.1
+  '@prisma/client': 3.8.1
   '@secretlint/secretlint-rule-preset-recommend': 4.1.4
   '@stylelint/postcss-css-in-js': 0.37.2
   '@types/faker': 5.5.9
@@ -28,8 +28,8 @@ specifiers:
   '@typescript-eslint/eslint-plugin': 5.10.1
   '@typescript-eslint/parser': 5.10.1
   apollo: 2.33.9
-  apollo-server-micro: ^3.6.2
-  argon2: ^0.28.3
+  apollo-server-micro: 3.6.2
+  argon2: 0.28.3
   autoprefixer: 10.4.2
   browserslist: 4.19.1
   commitizen: 4.2.4
@@ -49,18 +49,18 @@ specifiers:
   eslint-plugin-react: 7.28.0
   eslint-plugin-react-hooks: 4.3.0
   faker: 5.5.3
-  framer-motion: ^5.x.x
-  graphql: ^15.x.x
-  graphql-scalars: ^1.14.1
+  framer-motion: 5.6.0
+  graphql: 15.8.0
+  graphql-scalars: 1.14.1
   husky: 7.0.4
-  iron-session: ^6.0.5
+  iron-session: 6.0.5
   jscpd: 3.4.5
   lint-staged: 12.3.2
-  lodash: ^4.17.21
-  micro: ^9.3.4
-  micro-cors: ^0.1.1
-  next: ^12.0.9
-  nexus: ^1.2.0
+  lodash: 4.17.21
+  micro: 9.3.4
+  micro-cors: 0.1.1
+  next: 12.0.9
+  nexus: 1.2.0
   npm-run-all: 4.1.5
   only-allow: 1.0.0
   postcss: 8.4.5
@@ -75,14 +75,14 @@ specifiers:
   prettier-plugin-sh: 0.8.1
   prettier-plugin-sort-json: 0.0.2
   prisma: 3.8.1
-  react: ^17.0.2
-  react-dom: ^17.0.2
-  react-hook-form: ^7.25.1
-  react-icons: ^4.3.1
-  react-table: ^7.7.0
+  react: 17.0.2
+  react-dom: 17.0.2
+  react-hook-form: 7.25.3
+  react-icons: 4.3.1
+  react-table: 7.7.0
   rimraf: 3.0.2
   secretlint: 4.1.4
-  sharp: ^0.29.3
+  sharp: 0.29.3
   stylelint: 14.3.0
   stylelint-config-prettier: 9.0.3
   stylelint-config-recommended: 6.0.0
@@ -92,7 +92,7 @@ specifiers:
   tsconfig-paths: 3.12.0
   typescript: 4.5.5
   webpack: 5.67.0
-  yup: ^0.32.11
+  yup: 0.32.11
 
 dependencies:
   '@apollo/client': 3.5.8_graphql@15.8.0+react@17.0.2
@@ -346,7 +346,7 @@ packages:
     resolution: {integrity: sha512-RR8hUCfRQn9j9RPKEVXo9LiwoxLPYn6hNZlvUOR8tSnaxlD0p0+la00ZP9/SnRt6HchKr+X0fO2r8vrETiJGew==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@babel/types': 7.16.8
+      '@babel/types': 7.16.0
       jsesc: 2.5.2
       source-map: 0.5.7
     dev: true
@@ -3616,7 +3616,7 @@ packages:
       dotenv: 8.6.0
       glob: 7.2.0
       graphql: 15.8.0
-      graphql-tag: 2.12.6_graphql@15.8.0
+      graphql-tag: 2.12.4_graphql@15.8.0
       lodash.debounce: 4.0.8
       lodash.merge: 4.6.2
       minimatch: 3.0.4
@@ -3873,6 +3873,10 @@ packages:
 
   /aproba/1.2.0:
     resolution: {integrity: sha512-Y9J6ZjXtoYh8RnXVCMOU/ttDmk1aBjunq9vO0ta5x85WDQiQfUF9sIPBITdbiiIVcBo03Hi3jMxigBtsddlXRw==}
+    dev: false
+
+  /aproba/2.0.0:
+    resolution: {integrity: sha512-lYe4Gx7QT+MKGbDsA+Z+he/Wtef0BiwDOlK/XkBrdfsh9J/jPPXbX0tE9x9cl27Tmu5gg3QUbUrQYa/y+KOHPQ==}
     dev: false
 
   /are-we-there-yet/1.1.7:
@@ -6203,7 +6207,7 @@ packages:
     resolution: {integrity: sha512-+5J6MS/5XksCuXq++uFRsnUd7Ovu1XenbeuIuNRJxYWjgQbPuFhT14lAvsWfqfAmnwluf1OwMjz39HjfLPci0Q==}
     engines: {node: '>=10'}
     dependencies:
-      aproba: 1.2.0
+      aproba: 2.0.0
       color-support: 1.1.3
       console-control-strings: 1.1.0
       has-unicode: 2.0.1
@@ -6513,6 +6517,7 @@ packages:
     dependencies:
       graphql: 15.8.0
       tslib: 2.3.1
+    dev: false
 
   /graphql/15.8.0:
     resolution: {integrity: sha512-5gghUc24tP9HRznNpV2+FIoq3xKkj5dTQqf4v0CpdPbFVwFkWoxOM+o+2OC9ZSvjEMTjfmG9QT+gcvggTwW1zw==}

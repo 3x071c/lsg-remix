@@ -1,6 +1,17 @@
 import type { IronSessionOptions } from "iron-session";
-import type { NextApiHandler } from "next";
-import { withIronSessionApiRoute } from "iron-session/next";
+import type {
+	NextApiHandler,
+	GetServerSidePropsResult,
+	GetServerSidePropsContext,
+} from "next";
+import {
+	hash,
+	verify,
+	Options as ArgonOptions,
+	argon2id,
+	needsRehash,
+} from "argon2";
+import { withIronSessionApiRoute, withIronSessionSsr } from "iron-session/next";
 
 const config: IronSessionOptions = {
 	cookieName: "cms_auth",
@@ -8,15 +19,13 @@ const config: IronSessionOptions = {
 		sameSite: process.env.NODE_ENV === "production" ? "strict" : "none",
 		secure: process.env.NODE_ENV === "production",
 	},
-	password: {
-		1: process.env["API_AUTH_SECRET"]!,
-	},
+	password: process.env["API_AUTH_SECRET"]!,
 };
 
-export default function apiAuth(
+export const apiAuth = (
 	handler: Parameters<typeof withIronSessionApiRoute>[0],
-): NextApiHandler {
-	return process.env["API_AUTH_SECRET"]
+): NextApiHandler =>
+	process.env["API_AUTH_SECRET"]
 		? withIronSessionApiRoute(handler, config)
 		: (_req, res) =>
 				res.status(500).send({
@@ -27,4 +36,34 @@ export default function apiAuth(
 						},
 					],
 				});
-}
+
+export const ssrAuth = <
+	P extends { [key: string]: unknown } = { [key: string]: unknown },
+>(
+	handler: (
+		context: GetServerSidePropsContext,
+	) => GetServerSidePropsResult<P> | Promise<GetServerSidePropsResult<P>>,
+): ((
+	context: GetServerSidePropsContext,
+) => Promise<GetServerSidePropsResult<P>>) =>
+	process.env["API_AUTH_SECRET"]
+		? withIronSessionSsr(handler, config)
+		: // eslint-disable-next-line require-await
+		  async () => ({
+				notFound: true,
+		  });
+
+const argonOptions: ArgonOptions & { raw?: false } = {
+	hashLength: 32,
+	memoryCost: 4096,
+	parallelism: 2,
+	saltLength: 16,
+	timeCost: 3,
+	type: argon2id,
+};
+
+export const hashPassword = (password: string) => hash(password, argonOptions);
+export const verifyPassword = (password: string, passwordHash: string) =>
+	verify(passwordHash, password, argonOptions);
+export const shouldRehashPassword = (passwordHash: string) =>
+	needsRehash(passwordHash, argonOptions);

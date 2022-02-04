@@ -1,67 +1,79 @@
-import * as argon2 from "argon2";
 import {
-	extendType,
 	objectType,
 	nonNull,
 	intArg,
 	mutationField,
 	stringArg,
+	queryField,
 } from "nexus";
+import { verifyPassword } from "$lib/auth";
 
 export const User = objectType({
 	definition: (t) => {
 		t.int("id");
-		t.string("name");
-		t.string("short");
+		t.string("firstname");
+		t.string("lastname");
+		t.string("username");
 		t.list.field("pages", {
 			resolve: ({ id }, _args, ctx) =>
 				ctx.prisma.user.findUnique({ where: { id: id! } }).pages(),
 			type: "PagesOnUsers",
 		});
-		t.list.field("permissions", {
+		t.list.field("canBeMutatedBy", {
 			resolve: ({ id }, _args, ctx) =>
 				ctx.prisma.user
 					.findUnique({ where: { id: id! } })
-					.permissions(),
-			type: "PermissionsOnUsers",
+					.canBeMutatedBy(),
+			type: "CanMutateUsersOnUsers",
 		});
-		t.list.field("permissionsAssigned", {
+		t.list.field("canMutateUsers", {
 			resolve: ({ id }, _args, ctx) =>
 				ctx.prisma.user
 					.findUnique({ where: { id: id! } })
-					.permissionsAssigned(),
-			type: "PermissionsOnUsers",
+					.canMutateUsers(),
+			type: "CanMutateUsersOnUsers",
 		});
+		t.boolean("canMutateUsersSubscription");
+		t.list.field("canMutateUsersAssigned", {
+			resolve: ({ id }, _args, ctx) =>
+				ctx.prisma.user
+					.findUnique({ where: { id: id! } })
+					.canMutateUsersAssigned(),
+			type: "CanMutateUsersOnUsers",
+		});
+		t.list.field("canMutatePages", {
+			resolve: ({ id }, _args, ctx) =>
+				ctx.prisma.user
+					.findUnique({ where: { id: id! } })
+					.canMutatePages(),
+			type: "CanMutatePagesOnUsers",
+		});
+		t.boolean("canMutatePagesSubscription");
+		t.list.field("canMutatePagesAssigned", {
+			resolve: ({ id }, _args, ctx) =>
+				ctx.prisma.user
+					.findUnique({ where: { id: id! } })
+					.canMutatePagesAssigned(),
+			type: "CanMutatePagesOnUsers",
+		});
+		t.date("lastMutatedAt");
+		t.date("createdAt");
 	},
-	description:
-		"The user model contains information about an authorized CMS user account",
 	name: "User",
 });
 
-export const UserQuery = extendType({
-	definition(t) {
-		t.field("user", {
-			args: {
-				id: nonNull(intArg()),
-			},
-			resolve: (_root, { id }, ctx) =>
-				ctx.prisma.user.findUnique({ where: { id } }),
-			type: "User",
-		});
-		t.list.field("users", {
-			authorize: (_root, _args, ctx) => {
-				const map = ctx.req.session.user!.permissions!.map(
-					(permOnUsers) => permOnUsers.permission.name,
-				);
-				// only if a user can mutate all users he should be able
-				// to query all users
-				return map.includes("canMutateUsers");
-			},
-			resolve: (_root, _args, ctx) => ctx.prisma.user.findMany(),
-			type: "User",
-		});
+export const UserQuery = queryField("user", {
+	args: {
+		id: nonNull(intArg()),
 	},
-	type: "Query",
+	resolve: (_root, { id }, ctx) =>
+		ctx.prisma.user.findUnique({ where: { id } }),
+	type: "User",
+});
+export const UsersQuery = queryField("users", {
+	authorize: (_root, _args, ctx) => !!ctx.req.session.user,
+	resolve: (_root, _args, ctx) => ctx.prisma.user.findMany(),
+	type: "User",
 });
 
 export const LoginMutation = mutationField("login", {
@@ -70,58 +82,35 @@ export const LoginMutation = mutationField("login", {
 		username: nonNull(stringArg()),
 	},
 	resolve: async (_root, { username, password }, ctx) => {
-		const user = await ctx.prisma.user.findFirst({
-			include: {
-				pages: {
-					include: {
-						page: true,
-					},
-				},
-				permissions: {
-					include: {
-						assignedBy: true,
-						permission: true,
-					},
-				},
-				permissionsAssigned: {
-					include: {
-						permission: true,
-						user: true,
-					},
-				},
-			},
+		const user = await ctx.prisma.user.findUnique({
 			where: {
-				short: username,
+				username,
 			},
 		});
 
-		if (!user) {
-			return null;
-		}
-		// compare hash and password
-		if (!(await argon2.verify(user.password, password))) {
-			return null;
-		}
-		// only save the id of the user in the cookie
+		if (
+			!(await verifyPassword(
+				password,
+				user?.password ?? "preventTimingAttacks123",
+			)) ||
+			!user
+		)
+			throw new Error("Invalid username or password");
+
 		ctx.req.session.user = {
 			id: user.id,
 		};
-
 		await ctx.req.session.save();
 
 		return user;
 	},
 	type: "User",
 });
-
 export const LogoutMutation = mutationField("logout", {
 	resolve: (_root, _args, ctx) => {
-		if (!ctx.req.session.user) {
-			return null;
-		}
+		if (!ctx.req.session.user) throw new Error("Not signed in");
 
 		const { user } = ctx.req.session;
-
 		ctx.req.session.destroy();
 
 		return user;
