@@ -72,6 +72,7 @@ export const UserQuery = queryField("user", {
 });
 export const UsersQuery = queryField("users", {
 	authorize: (_root, _args, ctx) => !!ctx.req.session.user,
+	list: true,
 	resolve: (_root, _args, ctx) => ctx.prisma.user.findMany(),
 	type: "User",
 });

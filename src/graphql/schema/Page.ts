@@ -44,6 +44,7 @@ export const PageQuery = queryField("page", {
 	type: "Page",
 });
 export const PagesQuery = queryField("pages", {
+	list: true,
 	resolve: (_root, _args, ctx) => ctx.prisma.page.findMany(),
 	type: "Page",
 });

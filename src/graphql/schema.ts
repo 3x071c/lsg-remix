@@ -1,5 +1,9 @@
 import { resolve } from "path";
-import { makeSchema, fieldAuthorizePlugin } from "nexus";
+import {
+	makeSchema,
+	fieldAuthorizePlugin,
+	declarativeWrappingPlugin,
+} from "nexus";
 import * as types from "$schema/index";
 
 export default makeSchema({
@@ -11,7 +15,7 @@ export default makeSchema({
 		schema: resolve("__generated__/schema.graphql"),
 		typegen: resolve("node_modules/@types/nexus-typegen/index.d.ts"),
 	},
-	plugins: [fieldAuthorizePlugin()],
+	plugins: [fieldAuthorizePlugin(), declarativeWrappingPlugin()],
 	prettierConfig: resolve(".prettierrc.json"),
 	shouldExitAfterGenerateArtifacts: process.argv.includes("--nexus-exit"),
 	sourceTypes: {
