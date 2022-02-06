@@ -5,11 +5,12 @@
 	"[gitignore]": {
 		"editor.defaultFormatter": "foxundermoon.shell-format"
 	},
+	"cSpell.enabled": true,
+	"cSpell.language": "en,de",
 	"editor.codeActionsOnSave": {
 		"source.fixAll": true
 	},
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
-	"editor.insertSpaces": false,
 	"eslint.onIgnoredFiles": "warn",
 	"eslint.packageManager": "pnpm",
 	"eslint.validate": [
@@ -24,9 +25,11 @@
 	"files.exclude": {
 		"**/.DS_Store": true,
 		"**/.git": true,
-		"**/node_modules": true,
 		"**/.next": true,
-		"**/pnpm-lock.yaml": true
+		"**/node_modules": true,
+		"**/pnpm-lock.yaml": true,
+		"**/*.tsbuildinfo": true,
+		"**/.*cache": true
 	},
 	"npm.packageManager": "pnpm",
 	"prettier.requireConfig": true,

@@ -21,22 +21,32 @@
 	"version": "0.2",
 	"words": [
 		"alex",
+		"Atlassian",
 		"bkeepers",
 		"chakra",
+		"codeql",
 		"commitizen",
 		"dessant",
 		"epischerer",
+		"fira",
+		"gifs",
 		"hmarr",
 		"homic",
 		"hubot",
+		"intelli",
+		"kodiak",
 		"Linkify",
+		"monokai",
 		"musin",
 		"pcss",
 		"pnpm",
 		"pnpx",
 		"prisma",
+		"quokka",
 		"tsbuildinfo",
 		"turborepo",
-		"unspaced"
+		"unspaced",
+		"Vercel",
+		"zalgo"
 	]
 }

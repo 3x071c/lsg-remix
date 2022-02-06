@@ -1,34 +1,21 @@
-name: "Reaction Comments"
+name: Reaction Comments
 
 on:
     issue_comment:
-        types: [created, edited]
+        types:
+            - created
+            - edited
     pull_request_review_comment:
-        types: [created, edited]
+        types:
+            - created
+            - edited
     schedule:
-        - cron: "0 0 * * *"
-
-permissions:
-    issues: write
-    pull-requests: write
+        - cron: 0 0 * * *
 
 jobs:
     reaction:
-        name: "Remove reaction comments"
+        name: Remove reaction comments
         runs-on: ubuntu-latest
         steps:
-            - name: "Run the reaction-comments action"
+            - name: Run the reaction-comments action
               uses: dessant/reaction-comments@v2
-              with:
-                  github-token: ${{ secrets.GITHUB_TOKEN }}
-                  exempt-issue-labels: ""
-                  issue-comment: >
-                      :wave: @{comment-author}, would you like to leave a [reaction](https://git.io/JUJYX) instead?
-
-
-                  exempt-pr-labels: ""
-                  pr-comment: >
-                      :wave: @{comment-author}, would you like to leave a [reaction](https://git.io/JUJYX) instead?
-
-
-                  process-only: ""
