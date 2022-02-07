@@ -1,4 +1,4 @@
-name: Pull request or issue created
+name: Opened
 
 on:
     pull_request:
@@ -7,11 +7,13 @@ on:
     issues:
         types:
             - opened
+            - transferred
 
 jobs:
     onboard:
         name: Onboard
         runs-on: ubuntu-latest
+        timeout-minutes: 10
         steps:
             - name: Add new issues to the To do column
               if: github.event_name == 'issues'
@@ -27,3 +29,5 @@ jobs:
                   project: Development
                   column: In progress
                   repo-token: ${{ secrets.WORKFLOW_TOKEN }}
+            - name: Close if opened by non-stargazer
+              uses: uhyo/please-star-first@v1.0.0
