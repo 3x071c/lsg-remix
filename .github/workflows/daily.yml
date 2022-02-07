@@ -1,4 +1,4 @@
-name: Lock Closed
+name: Daily
 
 on:
     schedule:
@@ -6,9 +6,17 @@ on:
     workflow_dispatch:
 
 jobs:
+    reaction:
+        name: Remove reaction comments
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        steps:
+            - name: Run the reaction-comments action
+              uses: dessant/reaction-comments@v2
     lock:
         name: Lock after timeout if closed
         runs-on: ubuntu-latest
+        timeout-minutes: 10
         steps:
             - name: Run the lock-threads action
               uses: dessant/lock-threads@v3
