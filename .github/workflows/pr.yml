@@ -1,0 +1,26 @@
+name: PR
+
+on: pull_request
+
+jobs:
+    pr:
+        name: PR Checks
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        steps:
+            - uses: deepakputhraya/action-branch-name@v1.0.0
+              with:
+                  regex: '([a-z])+\/([a-zA-Z0-9_.\-])+'
+                  allowed_prefixes: build,chore,ci,docs,feat,fix,perf,refactor,style,test
+                  ignore: trunk
+                  min_length: 5
+                  max_length: 40
+            - name: Get branch name
+              id: branch-name
+              uses: tj-actions/branch-names@v5.1
+            - name: Fail if target is not default branch
+              if: steps.branch-name.outputs.base_ref_branch != 'trunk'
+              run: exit 2
+            - name: Fail if source is default branch
+              if: steps.branch-name.outputs.head_ref_branch == 'trunk'
+              run: exit 3

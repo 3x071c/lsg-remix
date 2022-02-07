@@ -1,4 +1,4 @@
-name: Support Requests
+name: Labeled
 
 on:
     issues:
@@ -9,6 +9,7 @@ jobs:
     support:
         name: Close support requests
         runs-on: ubuntu-latest
+        timeout-minutes: 10
         steps:
             - name: Run the support-requests action
               uses: dessant/support-requests@v2
