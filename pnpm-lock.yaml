@@ -90,7 +90,7 @@ specifiers:
   ts-node-dev: 1.1.8
   tsconfig-paths: 3.12.0
   typescript: 4.5.5
-  webpack: 5.67.0
+  webpack: 5.68.0
   yup: 0.32.11
 
 dependencies:
@@ -186,7 +186,7 @@ devDependencies:
   ts-node-dev: 1.1.8_typescript@4.5.5
   tsconfig-paths: 3.12.0
   typescript: 4.5.5
-  webpack: 5.67.0
+  webpack: 5.68.0
 
 packages:
 
@@ -10427,7 +10427,7 @@ packages:
       supports-hyperlinks: 2.2.0
     dev: true
 
-  /terser-webpack-plugin/5.3.1_acorn@8.7.0+webpack@5.67.0:
+  /terser-webpack-plugin/5.3.1_acorn@8.7.0+webpack@5.68.0:
     resolution: {integrity: sha512-GvlZdT6wPQKbDNW/GDQzZFg/j4vKU96yl2q6mcUkzKOgW4gwf1Z8cZToUCrz31XHlPWH8MVb1r2tFtdDtTGJ7g==}
     engines: {node: '>= 10.13.0'}
     peerDependencies:
@@ -10448,7 +10448,7 @@ packages:
       serialize-javascript: 6.0.0
       source-map: 0.6.1
       terser: 5.10.0_acorn@8.7.0
-      webpack: 5.67.0
+      webpack: 5.68.0
     transitivePeerDependencies:
       - acorn
     dev: true
@@ -10952,8 +10952,8 @@ packages:
     engines: {node: '>=10.13.0'}
     dev: true
 
-  /webpack/5.67.0:
-    resolution: {integrity: sha512-LjFbfMh89xBDpUMgA1W9Ur6Rn/gnr2Cq1jjHFPo4v6a79/ypznSYbAyPgGhwsxBtMIaEmDD1oJoA7BEYw/Fbrw==}
+  /webpack/5.68.0:
+    resolution: {integrity: sha512-zUcqaUO0772UuuW2bzaES2Zjlm/y3kRBQDVFVCge+s2Y8mwuUTdperGaAv65/NtRL/1zanpSJOq/MD8u61vo6g==}
     engines: {node: '>=10.13.0'}
     hasBin: true
     peerDependencies:
@@ -10983,7 +10983,7 @@ packages:
       neo-async: 2.6.2
       schema-utils: 3.1.1
       tapable: 2.2.1
-      terser-webpack-plugin: 5.3.1_acorn@8.7.0+webpack@5.67.0
+      terser-webpack-plugin: 5.3.1_acorn@8.7.0+webpack@5.68.0
       watchpack: 2.3.1
       webpack-sources: 3.2.3
     transitivePeerDependencies:
