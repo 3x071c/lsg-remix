@@ -14,7 +14,7 @@ jobs:
                   allowed_prefixes: build,chore,ci,docs,feat,fix,perf,refactor,style,test
                   ignore: trunk
                   min_length: 5
-                  max_length: 20
+                  max_length: 40
             - name: Get branch name
               id: branch-name
               uses: tj-actions/branch-names@v5.1

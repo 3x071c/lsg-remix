@@ -30,4 +30,4 @@ jobs:
                   column: In progress
                   repo-token: ${{ secrets.WORKFLOW_TOKEN }}
             - name: Close if opened by non-stargazer
-              uses: uhyo/please-star-first@v1.0.0
+              uses: uhyo/please-star-first@master
