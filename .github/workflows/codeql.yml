@@ -10,11 +10,13 @@ on:
             - trunk
     schedule:
         - cron: 41 9 * * 5
+    workflow_dispatch:
 
 jobs:
     analyze:
         name: Analyze
         runs-on: ubuntu-latest
+        timeout-minutes: 10
         permissions:
             actions: read
             contents: read

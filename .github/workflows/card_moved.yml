@@ -2,13 +2,10 @@ name: Card moved
 
 on:
     project_card:
-        types:
-            - created
-            - moved
     workflow_run:
         workflows:
-            - Pull request or issue created
-            - Pull request is ready for review
+            - Opened
+            - Ready for review
         types:
             - completed
 
@@ -16,12 +13,14 @@ jobs:
     triage:
         name: Apply a label based on project card column
         runs-on: ubuntu-latest
+        timeout-minutes: 10
         steps:
             - name: Run the auto-card-labeler action
               uses: technote-space/auto-card-labeler@v2
     state:
         name: Change state based on column
         runs-on: ubuntu-latest
+        timeout-minutes: 10
         steps:
             - name: Run the issue-states action
               uses: dessant/issue-states@v2

@@ -24,6 +24,7 @@
 		"chakra",
 		"codeql",
 		"commitizen",
+		"deepakputhraya",
 		"dessant",
 		"epischerer",
 		"fira",
@@ -41,8 +42,10 @@
 		"pnpx",
 		"prisma",
 		"quokka",
+		"reboard",
 		"tsbuildinfo",
 		"turborepo",
+		"uhyo",
 		"unspaced",
 		"Vercel",
 		"zalgo"
