@@ -15,7 +15,7 @@ specifiers:
   '@emotion/server': 11.4.0
   '@emotion/styled': 11.6.0
   '@faker-js/faker': 6.0.0-alpha.5
-  '@prisma/client': 3.8.1
+  '@prisma/client': 3.9.1
   '@secretlint/secretlint-rule-preset-recommend': 4.1.4
   '@stylelint/postcss-css-in-js': 0.37.2
   '@types/faker': 5.5.9
@@ -104,7 +104,7 @@ dependencies:
   '@emotion/react': 11.7.1_91de5bc04873a2ecfed8879f8166219d
   '@emotion/server': 11.4.0_@emotion+css@11.7.1
   '@emotion/styled': 11.6.0_5e8f57678a77e349831a88361eba8fdc
-  '@prisma/client': 3.8.1_prisma@3.8.1
+  '@prisma/client': 3.9.1_prisma@3.8.1
   apollo-server-micro: 3.6.2_graphql@15.8.0+micro@9.3.4
   argon2: 0.28.3
   framer-motion: 5.6.0_react-dom@17.0.2+react@17.0.2
@@ -2431,8 +2431,8 @@ packages:
     resolution: {integrity: sha512-92FRmppjjqz29VMJ2dn+xdyXZBrMlE42AV6Kq6BwjWV7CNUW1hs2FtxSNLQE+gJhaZ6AAmYuO9y8dshhcBl7vA==}
     dev: false
 
-  /@prisma/client/3.8.1_prisma@3.8.1:
-    resolution: {integrity: sha512-NxD1Xbkx1eT1mxSwo1RwZe665mqBETs0VxohuwNfFIxMqcp0g6d4TgugPxwZ4Jb4e5wCu8mQ9quMedhNWIWcZQ==}
+  /@prisma/client/3.9.1_prisma@3.8.1:
+    resolution: {integrity: sha512-aLwfXKLvL+loQ0IuPPCXkcq8cXBg1IeoHHa5lqQu3dJHdj45wnislA/Ny4UxRQjD5FXqrfAb8sWtF+jhdmjFTg==}
     engines: {node: '>=12.6'}
     requiresBuild: true
     peerDependencies:
@@ -2441,12 +2441,12 @@ packages:
       prisma:
         optional: true
     dependencies:
-      '@prisma/engines-version': 3.8.0-43.34df67547cf5598f5a6cd3eb45f14ee70c3fb86f
+      '@prisma/engines-version': 3.9.0-58.bcc2ff906db47790ee902e7bbc76d7ffb1893009
       prisma: 3.8.1
     dev: false
 
-  /@prisma/engines-version/3.8.0-43.34df67547cf5598f5a6cd3eb45f14ee70c3fb86f:
-    resolution: {integrity: sha512-G2JH6yWt6ixGKmsRmVgaQYahfwMopim0u/XLIZUo2o/mZ5jdu7+BL+2V5lZr7XiG1axhyrpvlyqE/c0OgYSl3g==}
+  /@prisma/engines-version/3.9.0-58.bcc2ff906db47790ee902e7bbc76d7ffb1893009:
+    resolution: {integrity: sha512-5Dh+qTDhpPR66w6NNAnPs+/W/Qt4r1DSd+qhfPFcDThUK4uxoZKGlPb2IYQn5LL+18aIGnmteDf7BnVMmvBNSQ==}
     dev: false
 
   /@prisma/engines/3.8.0-43.34df67547cf5598f5a6cd3eb45f14ee70c3fb86f:
