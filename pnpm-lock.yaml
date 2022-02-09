@@ -82,7 +82,7 @@ specifiers:
   react-table: 7.7.0
   rimraf: 3.0.2
   secretlint: 4.1.4
-  sharp: 0.29.3
+  sharp: 0.30.0
   stylelint: 14.3.0
   stylelint-config-prettier: 9.0.3
   stylelint-config-recommended: 6.0.0
@@ -121,7 +121,7 @@ dependencies:
   react-hook-form: 7.25.3_react@17.0.2
   react-icons: 4.3.1_react@17.0.2
   react-table: 7.7.0_react@17.0.2
-  sharp: 0.29.3
+  sharp: 0.30.0
   yup: 0.32.11
 
 devDependencies:
@@ -5277,12 +5277,6 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /detect-libc/1.0.3:
-    resolution: {integrity: sha1-+hN8S9aY7fVc1c0CrFWfkaTEups=}
-    engines: {node: '>=0.10'}
-    hasBin: true
-    dev: false
-
   /detect-libc/2.0.0:
     resolution: {integrity: sha512-S55LzUl8HUav8l9E2PBTlC5PAJrHK7tkM+XXFGD+fbsbkTzhCpG6K05LxJcUOEWzMa4v6ptcMZ9s3fOdJDu0Zw==}
     engines: {node: '>=8'}
@@ -9917,13 +9911,13 @@ packages:
       inherits: 2.0.4
       safe-buffer: 5.2.1
 
-  /sharp/0.29.3:
-    resolution: {integrity: sha512-fKWUuOw77E4nhpyzCCJR1ayrttHoFHBT2U/kR/qEMRhvPEcluG4BKj324+SCO1e84+knXHwhJ1HHJGnUt4ElGA==}
+  /sharp/0.30.0:
+    resolution: {integrity: sha512-L3m/l6yQFr3oGBUzcSAlN/R9yGFPYqM9FpMUe6Z4nHg4sWtP3hW1rcz+aaHklhD4wX5Jqh5PY9z+A1d4Qt3Hfg==}
     engines: {node: '>=12.13.0'}
     requiresBuild: true
     dependencies:
       color: 4.2.0
-      detect-libc: 1.0.3
+      detect-libc: 2.0.0
       node-addon-api: 4.3.0
       prebuild-install: 7.0.1
       semver: 7.3.5
