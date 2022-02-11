@@ -1,10 +1,10 @@
 import { objectType } from "nexus";
 
-export const PagesOnUsers = objectType({
+export const CanMutatePagesOnUsers = objectType({
 	definition: (t) => {
 		t.field("user", {
 			resolve: ({ userId, pageId }, _args, ctx) =>
-				ctx.prisma.pagesOnUsers
+				ctx.prisma.canMutatePagesOnUsers
 					.findUnique({
 						where: {
 							userId_pageId: {
@@ -19,7 +19,7 @@ export const PagesOnUsers = objectType({
 		t.int("userId");
 		t.field("page", {
 			resolve: ({ userId, pageId }, _args, ctx) =>
-				ctx.prisma.pagesOnUsers
+				ctx.prisma.canMutatePagesOnUsers
 					.findUnique({
 						where: {
 							userId_pageId: {
@@ -32,7 +32,22 @@ export const PagesOnUsers = objectType({
 			type: "Page",
 		});
 		t.int("pageId");
+		t.field("createdBy", {
+			resolve: ({ userId, pageId }, _args, ctx) =>
+				ctx.prisma.canMutatePagesOnUsers
+					.findUnique({
+						where: {
+							userId_pageId: {
+								pageId: pageId!,
+								userId: userId!,
+							},
+						},
+					})
+					.createdBy(),
+			type: "User",
+		});
+		t.int("createdById");
 		t.date("createdAt");
 	},
-	name: "PagesOnUsers",
+	name: "CanMutatePagesOnUsers",
 });

@@ -5,7 +5,7 @@ import { ApolloServer } from "apollo-server-micro";
 import cors from "micro-cors";
 import schema from "$schema";
 import context from "$graphql/context";
-import apiAuth from "$lib/auth";
+import { apiAuth } from "$lib/auth";
 
 const apolloServer = new ApolloServer({ context, schema });
 let apolloServerHandler: NextApiHandler;
@@ -14,12 +14,11 @@ let apolloServerHandler: NextApiHandler;
 // headers: https://github.com/vercel/next.js/blob/canary/examples/api-routes-graphql/pages/api/graphql.js
 const endpoint: NextApiHandler = async (req, res) => {
 	if (!apolloServerHandler) {
-		console.log("⚠️ Starting Apollo Server...");
+		console.log("⚠️ Restarted Apollo Server!");
 		await apolloServer.start();
 		apolloServerHandler = apolloServer.createHandler({
 			path: "/api",
 		});
-		console.log("Server handler started ✅");
 	}
 
 	res.setHeader("Access-Control-Allow-Credentials", "true");

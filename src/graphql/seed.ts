@@ -2,248 +2,326 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-console */
 
+import { randomUUID } from "crypto";
 import faker from "@faker-js/faker/locale/de";
-import {
-	Prisma,
-	PrismaClient,
-	User,
-	Page,
-	Permission,
-	PagesOnUsers,
-} from "@prisma/client";
-import { sample, sampleSize, random, times, flatten, clamp } from "lodash";
-
-type PageWithRelations = Page & {
-	authors: PagesOnUsers[];
-	children: Page[];
-};
-const partial = (i: number) => (1 / (i + 1)) * i;
-const distort = (str: string, progress: number) =>
-	sampleSize(
-		str.split(/\s+/g),
-		Math.round(
-			str.split(/\s+/g).length *
-				clamp(
-					random(partial(progress), partial(progress) * 2, true),
-					0,
-					1,
-				),
-		),
-	).join(" ");
+import { Prisma, PrismaClient, User, Page } from "@prisma/client";
+import { sample, sampleSize, random, camelCase } from "lodash";
+import { hashPassword } from "$lib/auth";
 
 const prisma = new PrismaClient();
+const seedDate = (start: Date, end: Date) =>
+	new Date(
+		start.getTime() +
+			Math.max(Math.random() * (end.getTime() - start.getTime()), 0),
+	);
+const uniqueData: string[] = [];
+const getUnique = (length?: number, format?: "string" | "number") => {
+	const len = length ?? 36;
+	const cast = format ?? "string";
+	let u: string;
+	if (cast === "string") {
+		do {
+			u = Array.from({ length: Math.ceil(len / 36) }, () => randomUUID())
+				.join("")
+				.substring(0, len);
+		} while (uniqueData.includes(u));
+	} else {
+		do {
+			u = [
+				random(1, 9),
+				...Array.from({ length: Math.ceil(len - 1) }, () =>
+					random(0, 9),
+				),
+			].join("");
+		} while (uniqueData.includes(u));
+	}
+	uniqueData.push(u);
+	return cast === "number" ? Number(u) : u;
+};
+const start = new Date("2020");
+const end = new Date();
 
-const seedUsers = (): Prisma.UserCreateInput[] =>
-	times(random(5, 8), () => {
-		const firstName = faker.name.firstName();
-		const lastName = faker.name.lastName();
-		return {
-			name: `${firstName} ${lastName}`,
-			short: `${firstName
-				.charAt(0)
-				.toLowerCase()}.${lastName.toLowerCase()}`,
-		};
-	});
+const seedUser = async (
+	_start?: Date,
+	admin?: boolean,
+): Promise<Prisma.UserCreateInput> => {
+	const firstname = faker.name.firstName();
+	const lastname = faker.name.lastName();
+	const username = `${firstname
+		.charAt(0)
+		.toLowerCase()}.${lastname.toLowerCase()}${getUnique(2, "number")}`;
+	const canMutateUsersSubscription =
+		admin ?? sample([true, ...(Array(9).fill(false) as boolean[])])!;
+	const createdAt = seedDate(_start ?? start, end);
 
-const seedPageAuthors = (users: User[]): Prisma.PageCreateInput["authors"] => {
-	const authors = sampleSize(users, random(1, users.length));
 	return {
-		create: authors.map((author) => ({
-			user: {
-				connect: {
-					id: author.id,
-				},
-			},
-		})),
+		canMutatePagesSubscription:
+			canMutateUsersSubscription ||
+			sample([true, ...(Array(19).fill(false) as boolean[])])!,
+		canMutateUsersSubscription,
+		createdAt,
+		firstname,
+		lastMutatedAt: seedDate(createdAt, end),
+		lastname,
+		password: await hashPassword(`${username}1234`),
+		username,
 	};
 };
-const seedPageChildren = (
+
+const seedPage = async (
 	users: User[],
-): Prisma.PageCreateInput["children"] => ({
-	create: times(random(3, 10), () => {
-		const title = faker.commerce.product();
+	canMutateUsersSubscriptionUsers: User[],
+): Promise<Prisma.PageCreateInput> => {
+	const seedAuthors = async (): Promise<
+		Required<
+			Pick<
+				Prisma.PageCreateInput,
+				"users" | "lastMutatedAt" | "canBeMutatedBy" | "createdAt"
+			>
+		>
+	> => {
+		const authors = sampleSize(users, random(1, users.length));
+		const createdAt = seedDate(start, end);
+		const lastMutatedAt = seedDate(
+			new Date(
+				Math.max(
+					...authors.map((author) => author.createdAt.getTime()),
+					createdAt.getTime(),
+				),
+			),
+			end,
+		);
+
+		const canBeMutatedBy: Prisma.PageCreateInput["canBeMutatedBy"] = {
+			create: await Promise.all(
+				authors.map(async ({ id, createdAt: authorCreatedAt }) => {
+					const canBeMutatedByCreatedAt = seedDate(
+						new Date(
+							Math.max(
+								createdAt.getTime(),
+								authorCreatedAt.getTime(),
+							),
+						),
+						end,
+					);
+
+					const canBeMutatedByCreatedBy =
+						canMutateUsersSubscriptionUsers.filter(
+							(user) =>
+								user.createdAt.getTime() <
+								canBeMutatedByCreatedAt.getTime(),
+						);
+
+					return {
+						createdAt: canBeMutatedByCreatedAt,
+						createdBy: canBeMutatedByCreatedBy.length
+							? {
+									connect: {
+										id: sample(canBeMutatedByCreatedBy)!.id,
+									},
+							  }
+							: {
+									create: {
+										...(await seedUser(
+											canBeMutatedByCreatedAt,
+											true,
+										)),
+									},
+							  },
+						user: {
+							connect: { id },
+						},
+					};
+				}),
+			),
+		};
+
 		return {
-			authors: seedPageAuthors(users),
+			canBeMutatedBy,
+			createdAt,
+			lastMutatedAt,
+			users: {
+				create: (
+					canBeMutatedBy.create! as Prisma.CanMutatePagesOnUsersCreateWithoutPageInput[]
+				).map(({ createdAt: canBeMutatedByCreatedAt, user }) => ({
+					createdAt: seedDate(
+						canBeMutatedByCreatedAt as Date,
+						lastMutatedAt,
+					),
+					user,
+				})),
+			},
+		};
+	};
+
+	const title = faker.commerce.department();
+
+	const children: Prisma.PageCreateWithoutParentInput[] = [];
+	for (let i = 0; i < random(3, 10); i += 1) {
+		const childTitle = faker.commerce.product();
+		children.push({
+			...(await seedAuthors()),
 			content: `**${faker.commerce.productName()}** - *${faker.commerce.productDescription()}*. ${faker.lorem.paragraphs(
 				random(2, 4),
 			)}`,
-			title,
-		};
-	}),
-});
-const seedPages = (users: User[]) =>
-	times(random(5, 8), () => {
-		const title = faker.commerce.department();
-		return {
-			authors: seedPageAuthors(users),
-			children: seedPageChildren(users),
-			content: `This is a wonderful description for **${title}**. Here you will find *${faker.commerce.productName()}* and similar pages! As the legend once said: ${faker.lorem.paragraphs(
-				random(2, 4),
-			)}`,
-			title,
-		};
-	});
-const seedPagesHistory = (pages: Page[]): Prisma.PageHistoryCreateInput[] =>
-	flatten(
-		pages.map(({ title, content, id }) =>
-			times(random(1, 10), (i) => ({
-				content: distort(content, i),
-				page: {
-					connect: {
-						id,
-					},
-				},
-				title: distort(title, i),
-			})),
-		),
-	);
+			path: `${camelCase(childTitle)}${getUnique(8)}`,
+			title: childTitle,
+		});
+	}
 
-const seedCanMutateUserPermission = (
+	return {
+		...(await seedAuthors()),
+		children: {
+			create: children,
+		},
+		content: `This is a wonderful description for **${title}**. Here you will find *${faker.commerce.productName()}* and similar pages! As the legend once said: ${faker.lorem.paragraphs(
+			random(2, 4),
+		)}`,
+		path: `${camelCase(title)}${getUnique(8)}`,
+		title,
+	};
+};
+
+const seedUsersCanMutateUsers = (users: User[]): Prisma.UserUpdateArgs[] =>
+	users.map(({ id, canMutateUsersSubscription, createdAt }) => ({
+		data: {
+			canMutateUsers: {
+				connectOrCreate: (canMutateUsersSubscription
+					? users
+					: sampleSize(users, random(1, users.length))
+				).map(({ createdAt: _createdAt, id: _id }) => ({
+					create: {
+						child: {
+							connect: {
+								id: _id,
+							},
+						},
+						createdAt: seedDate(
+							new Date(
+								Math.max(
+									createdAt.getTime(),
+									_createdAt.getTime(),
+								),
+							),
+							end,
+						),
+						createdBy: {
+							connect: {
+								id,
+							},
+						},
+					},
+					where: {
+						parentId_childId: {
+							childId: _id,
+							parentId: id,
+						},
+					},
+				})),
+			},
+		},
+		where: {
+			id,
+		},
+	}));
+
+const seedUsersCanMutatePages = (
 	users: User[],
-): Prisma.PermissionCreateInput => {
-	const selected = sampleSize(users, random(1, users.length));
-	return {
-		name: "canMutateUsers",
-		users: {
-			create: selected.map((user) => ({
-				assignedBy: {
-					connect: {
-						id: user.id,
+	pages: Page[],
+): Prisma.UserUpdateArgs[] =>
+	users.map(({ id, canMutatePagesSubscription, createdAt }) => ({
+		data: {
+			canMutatePages: {
+				connectOrCreate: (canMutatePagesSubscription
+					? pages
+					: sampleSize(pages, random(1, pages.length))
+				).map(({ createdAt: _createdAt, id: _id }) => ({
+					create: {
+						createdAt: seedDate(
+							new Date(
+								Math.max(
+									createdAt.getTime(),
+									_createdAt.getTime(),
+								),
+							),
+							end,
+						),
+						createdBy: {
+							connect: {
+								id,
+							},
+						},
+						page: {
+							connect: {
+								id: _id,
+							},
+						},
 					},
-				},
-				user: {
-					connect: {
-						id: user.id,
+					where: {
+						userId_pageId: {
+							pageId: _id,
+							userId: id,
+						},
 					},
-				},
-			})),
+				})),
+			},
 		},
-	};
-};
-const seedCanMutatePagesPermission = (
-	canMutateUserUsers: User[],
-): Prisma.PermissionCreateInput => {
-	return {
-		name: "canMutatePages",
-		users: {
-			create: canMutateUserUsers.map((user) => ({
-				assignedBy: {
-					connect: {
-						id: user.id,
-					},
-				},
-				user: {
-					connect: {
-						id: user.id,
-					},
-				},
-			})),
-		},
-	};
-};
-const seedCanMutatePagePermissions = (
-	canMutateUserUsers: User[],
-	pages: PageWithRelations[],
-): Prisma.PermissionCreateInput[] =>
-	pages.map(({ id, authors }) => ({
-		name: `canMutatePage${id}`,
-		users: {
-			create: authors.map((author) => ({
-				assignedBy: {
-					connect: {
-						id: sample(canMutateUserUsers)!.id,
-					},
-				},
-				user: {
-					connect: {
-						id: author.userId,
-					},
-				},
-			})),
+		where: {
+			id,
 		},
 	}));
 
 export default async function main(): Promise<void> {
-	console.log(`Start seeding ...`);
+	console.log(`Start seeding ✨`);
 
 	// 1. Create some users 🦭
-	const userData = seedUsers();
-	for (const u of userData) {
+	for (let i = 0; i < random(20, 50); i += 1) {
 		const user = await prisma.user.create({
-			data: u,
+			data: await seedUser(),
 		});
 		console.log(
-			`👋 Created user ${user.name} (${user.short}) with id ${user.id}`,
+			`👋 Created user ${user.firstname} ${user.lastname} (${user.username}) with id ${user.id}`,
 		);
 	}
-	const users: User[] = await prisma.user.findMany();
+	const users = await prisma.user.findMany();
+	const canMutateUsersSubscriptionUsers = await prisma.user.findMany({
+		where: {
+			canMutateUsersSubscription: true,
+		},
+	});
 
 	// 2. Create pages ✍️
-	const pageData = seedPages(users);
-	for (const p of pageData) {
-		console.log(`📟 Creating page ${p.title}`);
+	for (let i = 0; i < random(5, 8); i += 1) {
 		const page = await prisma.page.create({
-			data: p,
+			data: await seedPage(users, canMutateUsersSubscriptionUsers),
 		});
-		console.log(`📟 Created page ${page.title} with id ${page.id}`);
-	}
-	const pages: PageWithRelations[] = await prisma.page.findMany({
-		include: {
-			authors: true,
-			children: true,
-		},
-	});
-	const pageHistoryData = seedPagesHistory(pages);
-	for (const p of pageHistoryData) {
-		const pageHistory = await prisma.pageHistory.create({ data: p });
 		console.log(
-			`🔄 Created history ${pageHistory.title} with id ${pageHistory.id}`,
+			`📟 Created page ${page.title} (${page.path}) with id ${page.id}`,
 		);
 	}
+	const pages = await prisma.page.findMany();
 
 	// 3. Tie permissions together 👀
-	const permissions: Permission[] = [];
-	const canMutateUserPermission = await prisma.permission.create({
-		data: seedCanMutateUserPermission(users),
-	});
-	console.log(
-		`👍 Created ${canMutateUserPermission.name} permission with id ${canMutateUserPermission.id}`,
-	);
-	permissions.push(canMutateUserPermission);
-	const canMutateUserUsers = await prisma.user.findMany({
-		where: {
-			permissions: {
-				some: {
-					permission: {
-						name: "canMutateUsers",
-					},
-				},
-			},
-		},
-	});
-
-	const canMutatePagesPermission = await prisma.permission.create({
-		data: seedCanMutatePagesPermission(canMutateUserUsers),
-	});
-	console.log(
-		`👍 Created ${canMutatePagesPermission.name} permission with id ${canMutatePagesPermission.id}`,
-	);
-
-	const canMutatePagePermissionData = seedCanMutatePagePermissions(
-		canMutateUserUsers,
-		pages,
-	);
-	for (const p of canMutatePagePermissionData) {
-		const canMutatePagePermission = await prisma.permission.create({
-			data: p,
-		});
-		console.log(
-			`👍 Created ${canMutatePagePermission.name} permission with id ${canMutatePagePermission.id}`,
+	const canMutateUsersUsersData = seedUsersCanMutateUsers(users);
+	for (const canMutateUsersUserData of canMutateUsersUsersData) {
+		const canMutateUsersUser = await prisma.user.update(
+			canMutateUsersUserData,
 		);
-		permissions.push(canMutatePagePermission);
+		console.log(
+			`💻 Gave ${canMutateUsersUser.firstname} ${canMutateUsersUser.lastname} (${canMutateUsersUser.username}) his permissions`,
+		);
+	}
+	const canMutatePagesUsersData = seedUsersCanMutatePages(users, pages);
+	for (const canMutatePagesUserData of canMutatePagesUsersData) {
+		const canMutatePagesUser = await prisma.user.update(
+			canMutatePagesUserData,
+		);
+		console.log(
+			`📝 Gave ${canMutatePagesUser.firstname} ${canMutatePagesUser.lastname} (${canMutatePagesUser.username}) his permissions`,
+		);
 	}
 
-	console.log(`Seeding finished.`);
+	console.log(`✨ Seeding finished.`);
 }
 
 void main();

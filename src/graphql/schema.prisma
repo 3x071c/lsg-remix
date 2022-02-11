@@ -11,59 +11,67 @@ datasource db {
 }
 
 model User {
-    id                  Int                  @id @default(autoincrement())
-    name                String
-    short               String               @unique
-    pages               PagesOnUsers[]
-    permissions         PermissionsOnUsers[] @relation("UserPermissions")
-    permissionsAssigned PermissionsOnUsers[] @relation("UserPermissionsAssigned")
+    id                         Int                     @id @default(autoincrement())
+    firstname                  String
+    lastname                   String
+    username                   String                  @unique
+    password                   String
+    pages                      PagesOnUsers[]
+    canBeMutatedBy             CanMutateUsersOnUsers[] @relation("UserCanBeMutatedBy")
+    canMutateUsers             CanMutateUsersOnUsers[] @relation("UserCanMutateUsers")
+    canMutateUsersSubscription Boolean
+    canMutateUsersAssigned     CanMutateUsersOnUsers[] @relation("UserCanMutateUsersAssigned")
+    canMutatePages             CanMutatePagesOnUsers[] @relation("UserCanMutatePages")
+    canMutatePagesSubscription Boolean
+    canMutatePagesAssigned     CanMutatePagesOnUsers[] @relation("UserCanMutatePagesAssigned")
+    lastMutatedAt              DateTime                @default(now()) @updatedAt
+    createdAt                  DateTime                @default(now())
+}
+
+model CanMutateUsersOnUsers {
+    parent      User     @relation("UserCanMutateUsers", fields: [parentId], references: [id])
+    parentId    Int
+    child       User     @relation("UserCanBeMutatedBy", fields: [childId], references: [id])
+    childId     Int
+    createdBy   User     @relation("UserCanMutateUsersAssigned", fields: [createdById], references: [id])
+    createdById Int
+    createdAt   DateTime @default(now())
+
+    @@id([parentId, childId])
 }
 
 model Page {
-    id         Int            @id @default(autoincrement())
-    title      String
-    content    String
-    lastEdited DateTime       @default(now())
-    history    PageHistory[]
-    authors    PagesOnUsers[]
-    parent     Page?          @relation("PageParentChildren", fields: [parentId], references: [id])
-    parentId   Int?
-    children   Page[]         @relation("PageParentChildren")
-}
-
-model PageHistory {
-    id         Int      @id @default(autoincrement())
-    title      String
-    content    String
-    lastEdited DateTime @default(now())
-    page       Page     @relation(fields: [pageId], references: [id])
-    pageId     Int
+    id             Int                     @id @default(autoincrement())
+    path           String                  @unique
+    title          String
+    content        String
+    users          PagesOnUsers[]
+    parent         Page?                   @relation("PageParentChildren", fields: [parentId], references: [id])
+    parentId       Int?
+    children       Page[]                  @relation("PageParentChildren")
+    canBeMutatedBy CanMutatePagesOnUsers[]
+    lastMutatedAt  DateTime                @default(now()) @updatedAt
+    createdAt      DateTime                @default(now())
 }
 
 model PagesOnUsers {
-    assignedAt DateTime @default(now())
-    user       User     @relation(fields: [userId], references: [id])
-    userId     Int
-    page       Page     @relation(fields: [pageId], references: [id])
-    pageId     Int
+    user      User     @relation(fields: [userId], references: [id])
+    userId    Int
+    page      Page     @relation(fields: [pageId], references: [id])
+    pageId    Int
+    createdAt DateTime @default(now())
 
     @@id([userId, pageId])
 }
 
-model Permission {
-    id    Int                  @id @default(autoincrement())
-    name  String
-    users PermissionsOnUsers[]
-}
+model CanMutatePagesOnUsers {
+    user        User     @relation("UserCanMutatePages", fields: [userId], references: [id])
+    userId      Int
+    page        Page     @relation(fields: [pageId], references: [id])
+    pageId      Int
+    createdBy   User     @relation("UserCanMutatePagesAssigned", fields: [createdById], references: [id])
+    createdById Int
+    createdAt   DateTime @default(now())
 
-model PermissionsOnUsers {
-    assignedAt   DateTime   @default(now())
-    assignedBy   User       @relation("UserPermissionsAssigned", fields: [assignedById], references: [id])
-    assignedById Int
-    user         User       @relation("UserPermissions", fields: [userId], references: [id])
-    userId       Int
-    permission   Permission @relation(fields: [permissionId], references: [id])
-    permissionId Int
-
-    @@id([userId, permissionId])
+    @@id([userId, pageId])
 }

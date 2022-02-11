@@ -1,19 +1,14 @@
-import { extendType, intArg, nonNull, objectType, stringArg } from "nexus";
+import { intArg, nonNull, objectType, queryField } from "nexus";
 
 export const Page = objectType({
 	definition: (t) => {
 		t.int("id");
+		t.string("path");
 		t.string("title");
 		t.string("content");
-		t.date("lastEdited");
-		t.list.field("history", {
+		t.list.field("users", {
 			resolve: ({ id }, _args, ctx) =>
-				ctx.prisma.page.findUnique({ where: { id: id! } }).history(),
-			type: "PageHistory",
-		});
-		t.list.field("authors", {
-			resolve: ({ id }, _args, ctx) =>
-				ctx.prisma.page.findUnique({ where: { id: id! } }).authors(),
+				ctx.prisma.page.findUnique({ where: { id: id! } }).users(),
 			type: "PagesOnUsers",
 		});
 		t.field("parent", {
@@ -27,46 +22,29 @@ export const Page = objectType({
 				ctx.prisma.page.findUnique({ where: { id: id! } }).children(),
 			type: "Page",
 		});
+		t.list.field("canBeMutatedBy", {
+			resolve: ({ id }, _args, ctx) =>
+				ctx.prisma.page
+					.findUnique({ where: { id: id! } })
+					.canBeMutatedBy(),
+			type: "CanMutatePagesOnUsers",
+		});
+		t.date("lastMutatedAt");
+		t.date("createdAt");
 	},
-	description:
-		"The page model represents a webpage which may be edited in the cms",
 	name: "Page",
 });
 
-export const PageQuery = extendType({
-	definition(t) {
-		t.field("page", {
-			args: {
-				id: nonNull(intArg()),
-			},
-			resolve: (_root, { id }, ctx) =>
-				ctx.prisma.page.findUnique({ where: { id } }),
-			type: "Page",
-		});
-		t.list.field("pages", {
-			resolve: (_root, _args, ctx) => ctx.prisma.page.findMany(),
-			type: "Page",
-		});
+export const PageQuery = queryField("page", {
+	args: {
+		id: nonNull(intArg()),
 	},
-	type: "Query",
+	resolve: (_root, { id }, ctx) =>
+		ctx.prisma.page.findUnique({ where: { id } }),
+	type: "Page",
 });
-
-export const PageMutation = extendType({
-	definition(t) {
-		t.field("createPage", {
-			args: {
-				content: nonNull(stringArg()),
-				title: nonNull(stringArg()),
-			},
-			resolve: (_root, { content, title }, ctx) =>
-				ctx.prisma.page.create({
-					data: {
-						content,
-						title,
-					},
-				}),
-			type: "Page",
-		});
-	},
-	type: "Mutation",
+export const PagesQuery = queryField("pages", {
+	list: true,
+	resolve: (_root, _args, ctx) => ctx.prisma.page.findMany(),
+	type: "Page",
 });
