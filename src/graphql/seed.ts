@@ -80,8 +80,11 @@ const seedPage = async (
 			>
 		>
 	> => {
+		console.log("sampleSize");
 		const authors = sampleSize(users, random(1, users.length));
+		console.log("createdAt");
 		const createdAt = seedDate(start, end);
+		console.log("lastMutatedAt");
 		const lastMutatedAt = seedDate(
 			new Date(
 				Math.max(
@@ -91,6 +94,7 @@ const seedPage = async (
 			),
 			end,
 		);
+		console.log("canBeMutatedBy");
 		const canBeMutatedBy: Prisma.PageCreateInput["canBeMutatedBy"] = {
 			create: await Promise.all(
 				authors.map(async ({ id, createdAt: authorCreatedAt }) => {
@@ -134,6 +138,7 @@ const seedPage = async (
 			),
 		};
 
+		console.log("return authors");
 		return {
 			canBeMutatedBy,
 			createdAt,
@@ -151,8 +156,10 @@ const seedPage = async (
 			},
 		};
 	};
+	console.log("title");
 	const title = faker.commerce.department();
 
+	console.log("children");
 	const children: Prisma.PageCreateWithoutParentInput[] = [];
 	for (let i = 0; i < random(3, 10); i += 1) {
 		const childTitle = faker.commerce.product();
@@ -166,6 +173,7 @@ const seedPage = async (
 		});
 	}
 
+	console.log("return pages");
 	return {
 		...(await seedAuthors()),
 		children: {

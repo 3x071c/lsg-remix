@@ -1,4 +1,4 @@
-import { Heading, Wrap, WrapItem, Text, VStack } from "@chakra-ui/react";
+import { Heading, Wrap, WrapItem, Text, VStack, Box } from "@chakra-ui/react";
 import { Image } from "$app/image";
 import { useBreakpoints, useHeadingSize, useSubHeadingSize } from "$app/layout";
 import backgroundImage from "./bg.jpg";
@@ -27,11 +27,14 @@ export default function Hero() {
 				</VStack>
 			</WrapItem>
 			<WrapItem flex="1 1 0" minW="270px">
-				<Image
-					src={backgroundImage}
-					alt="Louise-Schroeder-Gymnasium Außenansicht"
-					priority
-				/>
+				<Box boxShadow="2xl" d="flex">
+					<Image
+						src={backgroundImage}
+						alt="Louise-Schroeder-Gymnasium Außenansicht"
+						priority
+						borderRadius="2xl"
+					/>
+				</Box>
 			</WrapItem>
 		</Wrap>
 	);
