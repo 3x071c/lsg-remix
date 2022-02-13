@@ -92,9 +92,21 @@ const seedPage = async (
 			end,
 		);
 
+		console.log("🪵 [1/9] seedAuthors->authors:", authors);
+		console.log("🪵 [2/9] seedAuthors->createdAt:", createdAt);
 		const canBeMutatedBy: Prisma.PageCreateInput["canBeMutatedBy"] = {
 			create: await Promise.all(
-				authors.map(async ({ id, createdAt: authorCreatedAt }) => {
+				authors.map(async ({ id, createdAt: authorCreatedAt }, i) => {
+					console.log(
+						"🪵 [3/9] seedAuthors->canBeMutatedBy... (",
+						i,
+						")",
+					);
+					console.log("🪵 [4/9] seedAuthors->canBeMutatedBy->id:", id);
+					console.log(
+						"🪵 [5/9] seedAuthors->canBeMutatedBy->createdAt:",
+						authorCreatedAt,
+					);
 					const canBeMutatedByCreatedAt = seedDate(
 						new Date(
 							Math.max(
@@ -104,6 +116,10 @@ const seedPage = async (
 						),
 						end,
 					);
+					console.log(
+						"🪵 [6/9] seedAuthors->canBeMutatedBy->canBeMutatedByCreatedAt:",
+						canBeMutatedByCreatedAt,
+					);
 
 					const canBeMutatedByCreatedBy =
 						canMutateUsersSubscriptionUsers.filter(
@@ -111,8 +127,12 @@ const seedPage = async (
 								user.createdAt.getTime() <
 								canBeMutatedByCreatedAt.getTime(),
 						);
+					console.log(
+						"🪵 [7/9] seedAuthors->canBeMutatedBy->canBeMutatedByCreatedBy:",
+						canBeMutatedByCreatedBy,
+					);
 
-					return {
+					const ret = {
 						createdAt: canBeMutatedByCreatedAt,
 						createdBy: canBeMutatedByCreatedBy.length
 							? {
@@ -132,9 +152,12 @@ const seedPage = async (
 							connect: { id },
 						},
 					};
+					console.log("🪵 [8/9] seedAuthors->canBeMutatedBy:", ret);
+					return ret;
 				}),
 			),
 		};
+		console.log("🪵 [9/9] canBeMutatedBy:", canBeMutatedBy);
 
 		return {
 			canBeMutatedBy,
