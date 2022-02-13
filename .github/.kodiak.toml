@@ -49,8 +49,6 @@ cut_body_after = "---"
 include_coauthors = true
 
 [update]
-# Update a PR whenever out of date with the base branch. The PR will be updated regardless of merge requirements (e.g. failing status checks, missing reviews, blacklist labels).
-always = true
 # When enabled, Kodiak will only update PRs that have an automerge label (configured via `merge.automerge_label`). When disable, Kodiak will update any PR.
 require_automerge_label = false
 # When a pull request's author matches this, Kodiak will never update the pull request, unless update.autoupdate_label is applied to the pull request.
