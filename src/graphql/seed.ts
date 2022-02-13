@@ -72,7 +72,10 @@ const seedPage = async (
 	users: User[],
 	canMutateUsersSubscriptionUsers: User[],
 ): Promise<Prisma.PageCreateInput> => {
-	const seedAuthors = async (): Promise<
+	const seedAuthors = async (
+		lastIteration: number,
+		totalIterations: number,
+	): Promise<
 		Required<
 			Pick<
 				Prisma.PageCreateInput,
@@ -80,6 +83,7 @@ const seedPage = async (
 			>
 		>
 	> => {
+		const logTemplate = `${lastIteration}/${totalIterations}`;
 		const authors = sampleSize(users, random(1, users.length));
 		const createdAt = seedDate(start, end);
 		const lastMutatedAt = seedDate(
@@ -92,22 +96,23 @@ const seedPage = async (
 			end,
 		);
 
-		console.log("🪵 [1/4] seedAuthors->authors:", authors);
-		console.log("🪵 [2/4] seedAuthors->createdAt:", createdAt);
-		const authorsLength = authors.length;
+		console.log(`🪵 [${logTemplate}] [1/4] seedAuthors->authors:`, authors);
+		console.log(
+			`🪵 [${logTemplate}] [2/4] seedAuthors->createdAt:`,
+			createdAt,
+		);
 		const canBeMutatedBy: Prisma.PageCreateInput["canBeMutatedBy"] = {
 			create: await Promise.all(
 				authors.map(async ({ id, createdAt: authorCreatedAt }, i) => {
+					const iteration = `seedAuthors(${
+						authors.length
+					})->canBeMutatedBy(${i + 1})`;
 					console.log(
-						`🪵 [3/4] [1/5] seedAuthors->canBeMutatedBy(${
-							i + 1
-						}/${authorsLength})->id:`,
+						`🪵 [${logTemplate}] [3/4] [1/5] ${iteration}->id:`,
 						id,
 					);
 					console.log(
-						`🪵 [3/4] [2/5] seedAuthors->canBeMutatedBy(${
-							i + 1
-						}/${authorsLength})->createdAt:`,
+						`🪵 [${logTemplate}] [3/4] [2/5] ${iteration}->createdAt:`,
 						authorCreatedAt,
 					);
 					const canBeMutatedByCreatedAt = seedDate(
@@ -120,9 +125,7 @@ const seedPage = async (
 						end,
 					);
 					console.log(
-						`🪵 [3/4] [3/5] seedAuthors->canBeMutatedBy(${
-							i + 1
-						}/${authorsLength})->canBeMutatedByCreatedAt:`,
+						`🪵 [${logTemplate}] [3/4] [3/5] ${iteration}->canBeMutatedByCreatedAt:`,
 						canBeMutatedByCreatedAt,
 					);
 
@@ -133,9 +136,7 @@ const seedPage = async (
 								canBeMutatedByCreatedAt.getTime(),
 						);
 					console.log(
-						`🪵 [3/4] [4/5] seedAuthors->canBeMutatedBy(${
-							i + 1
-						}/${authorsLength})->canBeMutatedByCreatedBy:`,
+						`🪵 [${logTemplate}] [3/4] [4/5] ${iteration}->canBeMutatedByCreatedBy:`,
 						canBeMutatedByCreatedBy,
 					);
 
@@ -160,16 +161,14 @@ const seedPage = async (
 						},
 					};
 					console.log(
-						`🪵 [3/4] [5/5] seedAuthors->canBeMutatedBy(${
-							i + 1
-						}/${authorsLength}):`,
+						`🪵 [${logTemplate}] [3/4] [5/5] ${iteration}:`,
 						ret,
 					);
 					return ret;
 				}),
 			),
 		};
-		console.log("🪵 [4/4] canBeMutatedBy:", canBeMutatedBy);
+		console.log(`🪵 [${logTemplate}] [4/4] canBeMutatedBy:`, canBeMutatedBy);
 
 		return {
 			canBeMutatedBy,
@@ -192,10 +191,11 @@ const seedPage = async (
 	const title = faker.commerce.department();
 
 	const children: Prisma.PageCreateWithoutParentInput[] = [];
-	for (let i = 0; i < random(3, 10); i += 1) {
+	const totalIterations = random(3, 10) + 1;
+	for (let i = 1; i <= totalIterations - 1; i += 1) {
 		const childTitle = faker.commerce.product();
 		children.push({
-			...(await seedAuthors()),
+			...(await seedAuthors(i, totalIterations)),
 			content: `**${faker.commerce.productName()}** - *${faker.commerce.productDescription()}*. ${faker.lorem.paragraphs(
 				random(2, 4),
 			)}`,
@@ -205,7 +205,7 @@ const seedPage = async (
 	}
 
 	return {
-		...(await seedAuthors()),
+		...(await seedAuthors(totalIterations, totalIterations)),
 		children: {
 			create: children,
 		},
