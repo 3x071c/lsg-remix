@@ -8,7 +8,10 @@ import { Prisma, PrismaClient, User, Page } from "@prisma/client";
 import { sample, sampleSize, random, camelCase } from "lodash";
 import { hashPassword } from "$lib/auth";
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+	errorFormat: "pretty",
+	log: ["query", "info", "warn", "error"],
+});
 const seedDate = (start: Date, end: Date) =>
 	new Date(
 		start.getTime() +
@@ -103,53 +106,67 @@ const seedPage = async (
 			end,
 		);
 
-		const canBeMutatedBy: Prisma.PageCreateInput["canBeMutatedBy"] = {
-			create: await Promise.all(
-				authors.map(async ({ id, createdAt: authorCreatedAt }, i) => {
-					const logPrefix3 = () =>
-						`${logPrefix2()} [${i + 1}/${authors.length}]`;
-					const canBeMutatedByCreatedAt = seedDate(
-						new Date(
-							Math.max(
-								createdAt.getTime(),
-								authorCreatedAt.getTime(),
-							),
+		const canBeMutatedByData = authors.map(
+			async ({ id, createdAt: authorCreatedAt }, i) => {
+				const logPrefix3 = () =>
+					`${logPrefix2()} [${i + 1}/${authors.length}]`;
+				console.log(logPrefix3(), `canBeMutatedByData[]...`);
+				const canBeMutatedByCreatedAt = seedDate(
+					new Date(
+						Math.max(
+							createdAt.getTime(),
+							authorCreatedAt.getTime(),
 						),
-						end,
+					),
+					end,
+				);
+				console.log(
+					logPrefix3(),
+					`canBeMutatedByCreatedAt:`,
+					canBeMutatedByCreatedAt,
+				);
+				const canBeMutatedByCreatedBy =
+					canMutateUsersSubscriptionUsers.filter(
+						(user) =>
+							user.createdAt.getTime() <
+							canBeMutatedByCreatedAt.getTime(),
 					);
+				console.log(
+					logPrefix3(),
+					`canBeMutatedByCreatedBy:`,
+					canBeMutatedByCreatedBy,
+				);
+				const ret = {
+					createdAt: canBeMutatedByCreatedAt,
+					createdBy: canBeMutatedByCreatedBy.length
+						? {
+								connect: {
+									id: sample(canBeMutatedByCreatedBy)!.id,
+								},
+						  }
+						: {
+								create: {
+									...(await seedUser(
+										canBeMutatedByCreatedAt,
+										true,
+									)),
+								},
+						  },
+					user: {
+						connect: { id },
+					},
+				};
+				console.log(logPrefix3(), `canBeMutatedByData[]:`, ret);
+				return ret;
+			},
+		);
+		console.log(logPrefix(), `canBeMutatedByData:`, canBeMutatedByData);
 
-					const canBeMutatedByCreatedBy =
-						canMutateUsersSubscriptionUsers.filter(
-							(user) =>
-								user.createdAt.getTime() <
-								canBeMutatedByCreatedAt.getTime(),
-						);
-
-					const ret = {
-						createdAt: canBeMutatedByCreatedAt,
-						createdBy: canBeMutatedByCreatedBy.length
-							? {
-									connect: {
-										id: sample(canBeMutatedByCreatedBy)!.id,
-									},
-							  }
-							: {
-									create: {
-										...(await seedUser(
-											canBeMutatedByCreatedAt,
-											true,
-										)),
-									},
-							  },
-						user: {
-							connect: { id },
-						},
-					};
-					console.log(logPrefix3(), `canBeMutatedBy[]`);
-					return ret;
-				}),
-			),
+		console.log(logPrefix(), `canBeMutatedBy...`);
+		const canBeMutatedBy: Prisma.PageCreateInput["canBeMutatedBy"] = {
+			create: await Promise.all(canBeMutatedByData),
 		};
+		console.log(logPrefix(), `canBeMutatedBy:`, canBeMutatedBy);
 
 		const ret = {
 			canBeMutatedBy,
@@ -176,6 +193,7 @@ const seedPage = async (
 	const totalIterations = random(3, 10) + 1;
 	for (let i = 1; i <= totalIterations - 1; i += 1) {
 		const logPrefix2 = () => `${logPrefix()} [${i}/${totalIterations}]`;
+		console.log(logPrefix2(), `children[]...`);
 		const childTitle = faker.commerce.product();
 		children.push({
 			...(await seedAuthors(i, totalIterations)),
@@ -188,6 +206,7 @@ const seedPage = async (
 		console.log(logPrefix2(), `children[]`);
 	}
 
+	console.log(logPrefix(), `seedPage -`);
 	const ret = {
 		...(await seedAuthors(totalIterations, totalIterations)),
 		children: {
@@ -322,7 +341,7 @@ export default async function main(): Promise<void> {
 			i,
 			totalPages,
 		);
-		console.log(`📟 Received page data:`, data, logSuffix);
+		console.log(`📟 Received page data`, logSuffix);
 		const page = await prisma.page.create({
 			data,
 		});
