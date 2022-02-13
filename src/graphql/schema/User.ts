@@ -1,3 +1,6 @@
+import type { UserWithPermissions } from "$types/auth";
+import type { Context } from "../context";
+
 import {
 	objectType,
 	nonNull,
@@ -118,3 +121,23 @@ export const LogoutMutation = mutationField("logout", {
 	},
 	type: "User",
 });
+
+export const getAuthenticatedUserWithPermissions = async (
+	ctx: Context,
+): Promise<UserWithPermissions | null> => {
+	if (ctx.req.session.user == null) {
+		return null;
+	}
+
+	const user = await ctx.prisma.user.findUnique({
+		include: {
+			canMutatePages: true,
+			canMutateUsers: true,
+		},
+		where: {
+			id: ctx.req.session.user.id,
+		},
+	});
+
+	return user;
+};
