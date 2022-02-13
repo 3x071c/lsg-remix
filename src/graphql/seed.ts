@@ -314,16 +314,21 @@ export default async function main(): Promise<void> {
 	// 2. Create pages ✍️
 	const totalPages = random(5, 8);
 	for (let i = 1; i <= totalPages; i += 1) {
+		const logSuffix = `(${i}/${totalPages})`;
+		console.log(`📟 Creating page...`, logSuffix);
+		const data = await seedPage(
+			users,
+			canMutateUsersSubscriptionUsers,
+			i,
+			totalPages,
+		);
+		console.log(`📟 Received page data:`, data, logSuffix);
 		const page = await prisma.page.create({
-			data: await seedPage(
-				users,
-				canMutateUsersSubscriptionUsers,
-				i,
-				totalPages,
-			),
+			data,
 		});
 		console.log(
 			`📟 Created page ${page.title} (${page.path}) with id ${page.id}`,
+			logSuffix,
 		);
 	}
 	const pages = await prisma.page.findMany();
