@@ -29,8 +29,6 @@ delete_branch_on_merge = true
 # If you request review from a user, don't merge until that user provides a
 # review, even if the PR is passing all status checks.
 block_on_reviews_requested = true
-# If a PR is passing all checks and is able to be merged, merge it without placing it in the merge queue. This option adds some unfairness where PRs waiting in the queue the longest are not served first.
-prioritize_ready_to_merge = true
 
 [merge.message]
 # By default (`"github_default"`), GitHub uses the title of a PR's first commit for the merge commit title. `"pull_request_title"` uses the PR title for the merge commit.
