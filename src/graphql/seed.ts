@@ -92,19 +92,22 @@ const seedPage = async (
 			end,
 		);
 
-		console.log("🪵 [1/9] seedAuthors->authors:", authors);
-		console.log("🪵 [2/9] seedAuthors->createdAt:", createdAt);
+		console.log("🪵 [1/4] seedAuthors->authors:", authors);
+		console.log("🪵 [2/4] seedAuthors->createdAt:", createdAt);
+		const authorsLength = authors.length;
 		const canBeMutatedBy: Prisma.PageCreateInput["canBeMutatedBy"] = {
 			create: await Promise.all(
 				authors.map(async ({ id, createdAt: authorCreatedAt }, i) => {
 					console.log(
-						"🪵 [3/9] seedAuthors->canBeMutatedBy... (",
-						i,
-						")",
+						`🪵 [3/4] [1/5] seedAuthors->canBeMutatedBy(${
+							i + 1
+						}/${authorsLength})->id:`,
+						id,
 					);
-					console.log("🪵 [4/9] seedAuthors->canBeMutatedBy->id:", id);
 					console.log(
-						"🪵 [5/9] seedAuthors->canBeMutatedBy->createdAt:",
+						`🪵 [3/4] [2/5] seedAuthors->canBeMutatedBy(${
+							i + 1
+						}/${authorsLength})->createdAt:`,
 						authorCreatedAt,
 					);
 					const canBeMutatedByCreatedAt = seedDate(
@@ -117,7 +120,9 @@ const seedPage = async (
 						end,
 					);
 					console.log(
-						"🪵 [6/9] seedAuthors->canBeMutatedBy->canBeMutatedByCreatedAt:",
+						`🪵 [3/4] [3/5] seedAuthors->canBeMutatedBy(${
+							i + 1
+						}/${authorsLength})->canBeMutatedByCreatedAt:`,
 						canBeMutatedByCreatedAt,
 					);
 
@@ -128,7 +133,9 @@ const seedPage = async (
 								canBeMutatedByCreatedAt.getTime(),
 						);
 					console.log(
-						"🪵 [7/9] seedAuthors->canBeMutatedBy->canBeMutatedByCreatedBy:",
+						`🪵 [3/4] [4/5] seedAuthors->canBeMutatedBy(${
+							i + 1
+						}/${authorsLength})->canBeMutatedByCreatedBy:`,
 						canBeMutatedByCreatedBy,
 					);
 
@@ -152,12 +159,17 @@ const seedPage = async (
 							connect: { id },
 						},
 					};
-					console.log("🪵 [8/9] seedAuthors->canBeMutatedBy:", ret);
+					console.log(
+						`🪵 [3/4] [5/5] seedAuthors->canBeMutatedBy(${
+							i + 1
+						}/${authorsLength}):`,
+						ret,
+					);
 					return ret;
 				}),
 			),
 		};
-		console.log("🪵 [9/9] canBeMutatedBy:", canBeMutatedBy);
+		console.log("🪵 [4/4] canBeMutatedBy:", canBeMutatedBy);
 
 		return {
 			canBeMutatedBy,
