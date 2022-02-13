@@ -76,13 +76,7 @@ const seedPage = async (
 ): Promise<Prisma.PageCreateInput> => {
 	const logPrefix = () =>
 		`🪵 [${new Date().getTime()}] [${currentPage}/${totalPages}]`;
-	console.log(
-		logPrefix(),
-		`users`,
-		`canMutateUsersSubscriptionUsers`,
-		`currentPage`,
-		`totalPages`,
-	);
+	console.log(logPrefix(), `seedPage...`);
 	const seedAuthors = async (
 		currentAuthor: number,
 		totalAuthors: number,
@@ -96,6 +90,7 @@ const seedPage = async (
 	> => {
 		const logPrefix2 = () =>
 			`${logPrefix()} [${currentAuthor}/${totalAuthors}]`;
+		console.log(logPrefix2(), `seedAuthors...`);
 		const authors = sampleSize(users, random(1, users.length));
 		const createdAt = seedDate(start, end);
 		const lastMutatedAt = seedDate(
@@ -107,8 +102,6 @@ const seedPage = async (
 			),
 			end,
 		);
-
-		console.log(logPrefix2(), `authors`, `createdAt`, `lastMutatedAt`);
 
 		const canBeMutatedBy: Prisma.PageCreateInput["canBeMutatedBy"] = {
 			create: await Promise.all(
@@ -181,7 +174,6 @@ const seedPage = async (
 	const title = faker.commerce.department();
 	const children: Prisma.PageCreateWithoutParentInput[] = [];
 	const totalIterations = random(3, 10) + 1;
-	console.log(logPrefix(), `title`, `children`, `totalIterations`);
 	for (let i = 1; i <= totalIterations - 1; i += 1) {
 		const logPrefix2 = () => `${logPrefix()} [${i}/${totalIterations}]`;
 		const childTitle = faker.commerce.product();
@@ -193,7 +185,7 @@ const seedPage = async (
 			path: `${camelCase(childTitle)}${getUnique(8)}`,
 			title: childTitle,
 		});
-		console.log(logPrefix2(), `childTitle`, `children`);
+		console.log(logPrefix2(), `children[]`);
 	}
 
 	const ret = {
