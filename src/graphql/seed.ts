@@ -80,6 +80,13 @@ const seedPage = async (
 	const logPrefix = () =>
 		`🪵 [${new Date().getTime()}] [${currentPage}/${totalPages}]`;
 	console.log(logPrefix(), `seedPage...`);
+	console.log(
+		logPrefix(),
+		`users:`,
+		users,
+		`canMutateUsersSubscriptionUsers`,
+		canMutateUsersSubscriptionUsers,
+	);
 	const seedAuthors = async (
 		currentAuthor: number,
 		totalAuthors: number,
@@ -104,6 +111,15 @@ const seedPage = async (
 				),
 			),
 			end,
+		);
+		console.log(
+			logPrefix2(),
+			`authors:`,
+			authors,
+			`createdAt:`,
+			createdAt,
+			`lastMutatedAt:`,
+			lastMutatedAt,
 		);
 
 		const canBeMutatedByData = authors.map(
