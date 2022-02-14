@@ -1,5 +1,5 @@
 import type { UserWithPermissions } from "$types/auth";
-import type { PagesOnUsers } from "@prisma/client";
+import type { CanMutatePagesOnUsers, PagesOnUsers } from "@prisma/client";
 import {
 	intArg,
 	mutationField,
@@ -113,14 +113,14 @@ export const EditPageMutation = mutationField("editPage", {
 		title: stringArg(),
 	},
 	authorize: async (_root, { id }, ctx) => {
-		const user: UserWithPermissions | null =
-			await getAuthenticatedUserWithPermissions(ctx);
+		const user = await getAuthenticatedUserWithPermissions(ctx);
 
 		if (user == null) return false;
 
 		return (
-			user.canMutatePages.filter((p: PagesOnUsers) => p.pageId === id)
-				.length > 0
+			user.canMutatePages.filter(
+				(p: CanMutatePagesOnUsers) => p.pageId === id,
+			).length > 0
 		);
 	},
 	resolve: async (_root, { content, id, parentId, path, title }, ctx) => {
@@ -131,10 +131,31 @@ export const EditPageMutation = mutationField("editPage", {
 				path: undefinedOrValue(path),
 				title: undefinedOrValue(title),
 			},
+			include: {
+				users: true,
+			},
 			where: {
 				id,
 			},
 		});
+
+		/*
+		If the user who edited this page is not yet in the users
+		list of the page, than we will make a new PagesOnUsers Entry
+		to add him
+		*/
+		if (
+			!page.users.find(
+				(p: PagesOnUsers) => p.userId === ctx.req.session.user!.id,
+			)
+		) {
+			await ctx.prisma.pagesOnUsers.create({
+				data: {
+					pageId: page.id,
+					userId: ctx.req.session.user!.id,
+				},
+			});
+		}
 
 		return page;
 	},
@@ -145,14 +166,14 @@ export const DeletePageMutation = mutationField("deletePage", {
 		id: nonNull(intArg()),
 	},
 	authorize: async (_root, { id }, ctx) => {
-		const user: UserWithPermissions | null =
-			await getAuthenticatedUserWithPermissions(ctx);
+		const user = await getAuthenticatedUserWithPermissions(ctx);
 
 		if (user == null) return false;
 
 		return (
-			user.canMutatePages.filter((p: PagesOnUsers) => p.pageId === id)
-				.length > 0
+			user.canMutatePages.filter(
+				(p: CanMutatePagesOnUsers) => p.pageId === id,
+			).length > 0
 		);
 	},
 	resolve: async (_root, { id }, ctx) => {
@@ -163,7 +184,7 @@ export const DeletePageMutation = mutationField("deletePage", {
 		});
 
 		// delete all canMutatePagesOnUsers entries with this pageId
-		const deletePagePermission =
+		const deletePagePermissions =
 			ctx.prisma.canMutatePagesOnUsers.deleteMany({
 				where: {
 					pageId: id,
@@ -178,7 +199,7 @@ export const DeletePageMutation = mutationField("deletePage", {
 		});
 
 		const transaction = await ctx.prisma.$transaction([
-			deletePagePermission,
+			deletePagePermissions,
 			deletePageOnUser,
 			deletePage,
 		]);

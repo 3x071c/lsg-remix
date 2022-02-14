@@ -1,6 +1,7 @@
 import type { UserWithPermissions } from "$types/auth";
 import type { Context } from "../context";
 
+import type { CanMutateUsersOnUsers } from "@prisma/client";
 import {
 	objectType,
 	nonNull,
@@ -8,8 +9,10 @@ import {
 	mutationField,
 	stringArg,
 	queryField,
+	booleanArg,
 } from "nexus";
-import { verifyPassword } from "$lib/auth";
+import { hashPassword, verifyPassword } from "$lib/auth";
+import { undefinedOrValue } from "$lib/prisma";
 
 export const User = objectType({
 	definition: (t) => {
@@ -121,7 +124,6 @@ export const LogoutMutation = mutationField("logout", {
 	},
 	type: "User",
 });
-
 export const getAuthenticatedUserWithPermissions = async (
 	ctx: Context,
 ): Promise<UserWithPermissions | null> => {
@@ -141,3 +143,223 @@ export const getAuthenticatedUserWithPermissions = async (
 
 	return user;
 };
+
+const createUsername = (firstname: string, lastname: string): string => {
+	return `${
+		firstname.length > 0 ? firstname.charAt(0).toLowerCase() : ""
+	}.${lastname.toLowerCase()}`;
+};
+
+export const CreateUserMutation = mutationField("createUser", {
+	args: {
+		canMutatePagesSubscription: nonNull(booleanArg()),
+		canMutateUsersSubscription: nonNull(booleanArg()),
+		firstname: nonNull(stringArg()),
+		lastname: nonNull(stringArg()),
+		password: nonNull(stringArg()),
+	},
+	authorize: async (_root, _args, ctx) => {
+		const user = await getAuthenticatedUserWithPermissions(ctx);
+
+		return user != null && user.canMutateUsersSubscription;
+	},
+	resolve: async (
+		_root,
+		{
+			canMutatePagesSubscription,
+			canMutateUsersSubscription,
+			firstname,
+			lastname,
+			password,
+		},
+		ctx,
+	) => {
+		const hash = await hashPassword(password);
+
+		const user = await ctx.prisma.user.create({
+			data: {
+				canMutatePagesSubscription,
+				canMutateUsersSubscription,
+				firstname,
+				lastname,
+				password: hash,
+				username: createUsername(firstname, lastname),
+			},
+		});
+
+		/*
+		Give the user who created this user the permission to edit
+		him
+		*/
+		await ctx.prisma.canMutateUsersOnUsers.create({
+			data: {
+				childId: user.id,
+				createdById: ctx.req.session.user!.id,
+				parentId: ctx.req.session.user!.id,
+			},
+		});
+
+		return user;
+	},
+	type: "User",
+});
+export const EditUserMutation = mutationField("editUser", {
+	args: {
+		canMutatePagesSubscription: booleanArg(),
+		canMutateUsersSubscription: booleanArg(),
+		firstname: stringArg(),
+		id: nonNull(intArg()),
+		lastname: stringArg(),
+		password: stringArg(),
+	},
+	authorize: async (
+		_root,
+		{ id, canMutatePagesSubscription, canMutateUsersSubscription },
+		ctx,
+	) => {
+		// every user can edit himself but not change permission attributes
+		if (
+			id === ctx.req.session.user?.id &&
+			canMutatePagesSubscription == null &&
+			canMutateUsersSubscription == null
+		) {
+			return true;
+		}
+
+		const user = await getAuthenticatedUserWithPermissions(ctx);
+
+		if (user == null) return false;
+
+		return (
+			user.canMutateUsers.filter(
+				(p: CanMutateUsersOnUsers) => p.childId === id,
+			).length > 0
+		);
+	},
+	resolve: async (
+		_root,
+		{
+			canMutatePagesSubscription,
+			canMutateUsersSubscription,
+			firstname,
+			id,
+			lastname,
+			password,
+		},
+		ctx,
+	) => {
+		let username: string | undefined;
+
+		// reCreate the username if either firstname or lastname will be changed
+		if (firstname && lastname) {
+			username = createUsername(firstname, lastname);
+		} else if (firstname || lastname) {
+			const user = await ctx.prisma.user.findUnique({
+				where: {
+					id,
+				},
+			});
+
+			if (user != null) {
+				username = createUsername(
+					firstname || user.firstname,
+					lastname || user.lastname,
+				);
+			}
+		}
+
+		let newPassword: string | undefined;
+		// If the user wants to set a new password --> hash it
+		if (password) {
+			newPassword = await hashPassword(password);
+		}
+
+		const user = await ctx.prisma.user.update({
+			data: {
+				canMutatePagesSubscription: undefinedOrValue(
+					canMutatePagesSubscription,
+				),
+				canMutateUsersSubscription: undefinedOrValue(
+					canMutateUsersSubscription,
+				),
+				firstname: undefinedOrValue(firstname),
+				lastname: undefinedOrValue(lastname),
+				password: newPassword,
+				username,
+			},
+			where: {
+				id,
+			},
+		});
+
+		return user;
+	},
+	type: "User",
+});
+export const DeleteUserMutation = mutationField("deleteUser", {
+	args: {
+		id: nonNull(intArg()),
+	},
+	authorize: async (_root, { id }, ctx) => {
+		const user = await getAuthenticatedUserWithPermissions(ctx);
+
+		if (user == null) return false;
+
+		return (
+			user.canMutateUsers.filter(
+				(p: CanMutateUsersOnUsers) => p.childId === id,
+			).length > 0
+		);
+	},
+	resolve: async (_root, { id }, ctx) => {
+		const deleteUser = ctx.prisma.user.delete({
+			where: {
+				id,
+			},
+		});
+
+		/*
+		delete all user permissions that belong to this user (parentId) or
+		where this user is referenced (childId)
+		*/
+		const deleteUserPermissions =
+			ctx.prisma.canMutateUsersOnUsers.deleteMany({
+				where: {
+					OR: [
+						{
+							childId: id,
+						},
+						{
+							parentId: id,
+						},
+					],
+				},
+			});
+
+		/*
+		Delete all pagePermissions this user has
+		*/
+		const deletePagePermissions =
+			ctx.prisma.canMutatePagesOnUsers.deleteMany({
+				where: {
+					userId: id,
+				},
+			});
+
+		const deletePageOnUser = ctx.prisma.pagesOnUsers.deleteMany({
+			where: {
+				userId: id,
+			},
+		});
+
+		const transaction = await ctx.prisma.$transaction([
+			deletePageOnUser,
+			deletePagePermissions,
+			deleteUserPermissions,
+			deleteUser,
+		]);
+
+		return transaction[3];
+	},
+	type: "User",
+});
