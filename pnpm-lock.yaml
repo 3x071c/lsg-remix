@@ -36,7 +36,7 @@ specifiers:
   cross-env: 7.0.3
   cspell: 5.17.0
   cssnano: 5.0.16
-  cssnano-preset-advanced: 5.1.11
+  cssnano-preset-advanced: 5.1.12
   cz-conventional-changelog: 3.3.0
   eslint: 8.8.0
   eslint-config-airbnb: 19.0.4
@@ -148,7 +148,7 @@ devDependencies:
   cross-env: 7.0.3
   cspell: 5.17.0
   cssnano: 5.0.16_postcss@8.4.6
-  cssnano-preset-advanced: 5.1.11_postcss@8.4.6
+  cssnano-preset-advanced: 5.1.12_postcss@8.4.6
   cz-conventional-changelog: 3.3.0_@types+node@17.0.13
   eslint: 8.8.0
   eslint-config-airbnb: 19.0.4_ec013a4f5565ab8a5d7f7a6ae5e9cc8a
@@ -5072,8 +5072,8 @@ packages:
     resolution: {integrity: sha1-xtJnJjKi5cg+AT5oZKQs6N79IK4=}
     dev: false
 
-  /cssnano-preset-advanced/5.1.11_postcss@8.4.6:
-    resolution: {integrity: sha512-M9f/4oRh5oxVUOtpKztACqtwAtcvHoWpEIB7axIxnLwhndvEMi7MtwPAOnKdSPBvH3RDGE80AL2JJ/e3Ruv2Qg==}
+  /cssnano-preset-advanced/5.1.12_postcss@8.4.6:
+    resolution: {integrity: sha512-5WWV9mbqVNwH4nRjs5UbhNl7eKo+16eYNzGogmz0Sa6iqWUeLdN8oo83WuTTqz5vjEKhTbRM5oX6WV1i6ees6g==}
     engines: {node: ^10 || ^12 || >=14.0}
     peerDependencies:
       postcss: ^8.2.15
