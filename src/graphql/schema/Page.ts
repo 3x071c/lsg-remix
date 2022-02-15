@@ -1,5 +1,5 @@
 import type { UserWithPermissions } from "$types/auth";
-import type { CanMutatePagesOnUsers, PagesOnUsers } from "@prisma/client";
+import type { PagesOnUsers } from "@prisma/client";
 import {
 	intArg,
 	mutationField,
@@ -8,8 +8,8 @@ import {
 	queryField,
 	stringArg,
 } from "nexus";
+import { canMutatePage, getAuthenticatedUserWithPermissions } from "$lib/auth";
 import { undefinedOrValue } from "$lib/prisma";
-import { getAuthenticatedUserWithPermissions } from "./User";
 
 export const Page = objectType({
 	definition: (t) => {
@@ -71,7 +71,7 @@ export const CreatePageMutation = mutationField("createPage", {
 		const user: UserWithPermissions | null =
 			await getAuthenticatedUserWithPermissions(ctx);
 
-		return user != null && user.canMutatePagesSubscription;
+		return !!user?.canMutatePagesSubscription;
 	},
 	resolve: async (_root, { content, parentId, path, title }, ctx) => {
 		const page = await ctx.prisma.page.create({
@@ -113,15 +113,8 @@ export const EditPageMutation = mutationField("editPage", {
 		title: stringArg(),
 	},
 	authorize: async (_root, { id }, ctx) => {
-		const user = await getAuthenticatedUserWithPermissions(ctx);
-
-		if (user == null) return false;
-
-		return (
-			user.canMutatePages.filter(
-				(p: CanMutatePagesOnUsers) => p.pageId === id,
-			).length > 0
-		);
+		const authorized = await canMutatePage(id, ctx);
+		return authorized;
 	},
 	resolve: async (_root, { content, id, parentId, path, title }, ctx) => {
 		const page = await ctx.prisma.page.update({
@@ -166,15 +159,8 @@ export const DeletePageMutation = mutationField("deletePage", {
 		id: nonNull(intArg()),
 	},
 	authorize: async (_root, { id }, ctx) => {
-		const user = await getAuthenticatedUserWithPermissions(ctx);
-
-		if (user == null) return false;
-
-		return (
-			user.canMutatePages.filter(
-				(p: CanMutatePagesOnUsers) => p.pageId === id,
-			).length > 0
-		);
+		const authorized = await canMutatePage(id, ctx);
+		return authorized;
 	},
 	resolve: async (_root, { id }, ctx) => {
 		const deletePage = ctx.prisma.page.delete({

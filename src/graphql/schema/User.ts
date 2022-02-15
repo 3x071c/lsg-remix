@@ -1,7 +1,3 @@
-import type { UserWithPermissions } from "$types/auth";
-import type { Context } from "../context";
-
-import type { CanMutateUsersOnUsers } from "@prisma/client";
 import {
 	objectType,
 	nonNull,
@@ -11,7 +7,12 @@ import {
 	queryField,
 	booleanArg,
 } from "nexus";
-import { hashPassword, verifyPassword } from "$lib/auth";
+import {
+	hashPassword,
+	verifyPassword,
+	getAuthenticatedUserWithPermissions,
+	canMutateUser,
+} from "$lib/auth";
 import { undefinedOrValue } from "$lib/prisma";
 
 export const User = objectType({
@@ -124,25 +125,6 @@ export const LogoutMutation = mutationField("logout", {
 	},
 	type: "User",
 });
-export const getAuthenticatedUserWithPermissions = async (
-	ctx: Context,
-): Promise<UserWithPermissions | null> => {
-	if (ctx.req.session.user == null) {
-		return null;
-	}
-
-	const user = await ctx.prisma.user.findUnique({
-		include: {
-			canMutatePages: true,
-			canMutateUsers: true,
-		},
-		where: {
-			id: ctx.req.session.user.id,
-		},
-	});
-
-	return user;
-};
 
 const createUsername = (firstname: string, lastname: string): string => {
 	return `${
@@ -161,7 +143,7 @@ export const CreateUserMutation = mutationField("createUser", {
 	authorize: async (_root, _args, ctx) => {
 		const user = await getAuthenticatedUserWithPermissions(ctx);
 
-		return user != null && user.canMutateUsersSubscription;
+		return !!user?.canMutateUsersSubscription;
 	},
 	resolve: async (
 		_root,
@@ -226,15 +208,8 @@ export const EditUserMutation = mutationField("editUser", {
 			return true;
 		}
 
-		const user = await getAuthenticatedUserWithPermissions(ctx);
-
-		if (user == null) return false;
-
-		return (
-			user.canMutateUsers.filter(
-				(p: CanMutateUsersOnUsers) => p.childId === id,
-			).length > 0
-		);
+		const authorized = await canMutateUser(id, ctx);
+		return authorized;
 	},
 	resolve: async (
 		_root,
@@ -301,15 +276,8 @@ export const DeleteUserMutation = mutationField("deleteUser", {
 		id: nonNull(intArg()),
 	},
 	authorize: async (_root, { id }, ctx) => {
-		const user = await getAuthenticatedUserWithPermissions(ctx);
-
-		if (user == null) return false;
-
-		return (
-			user.canMutateUsers.filter(
-				(p: CanMutateUsersOnUsers) => p.childId === id,
-			).length > 0
-		);
+		const authorized = await canMutateUser(id, ctx);
+		return authorized;
 	},
 	resolve: async (_root, { id }, ctx) => {
 		const deleteUser = ctx.prisma.user.delete({
