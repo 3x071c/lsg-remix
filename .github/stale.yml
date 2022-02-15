@@ -11,3 +11,7 @@ exemptMilestones: true
 staleLabel: stale
 # Comment to post when closing a stale issue. Set to `false` to disable
 closeComment: false
+# Optionally, specify configuration settings that are specific to just 'issues' or 'pulls':
+issues:
+    daysUntilStale: 30
+    daysUntilClose: 7
