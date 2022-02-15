@@ -73,6 +73,12 @@ export const UserQuery = queryField("user", {
 	args: {
 		id: nonNull(intArg()),
 	},
+	authorize: async (_root, { id }, ctx) => {
+		const authorized =
+			ctx.req.session.user?.id === id || (await canMutateUser(id, ctx));
+
+		return authorized;
+	},
 	resolve: (_root, { id }, ctx) =>
 		ctx.prisma.user.findUnique({ where: { id } }),
 	type: "User",
@@ -80,7 +86,19 @@ export const UserQuery = queryField("user", {
 export const UsersQuery = queryField("users", {
 	authorize: (_root, _args, ctx) => !!ctx.req.session.user,
 	list: true,
-	resolve: (_root, _args, ctx) => ctx.prisma.user.findMany(),
+	resolve: async (_root, _args, ctx) => {
+		const users = await ctx.prisma.user.findMany({
+			where: {
+				canBeMutatedBy: {
+					some: {
+						parentId: ctx.req.session.user!.id,
+					},
+				},
+			},
+		});
+
+		return users;
+	},
 	type: "User",
 });
 
@@ -160,24 +178,20 @@ export const CreateUserMutation = mutationField("createUser", {
 
 		const user = await ctx.prisma.user.create({
 			data: {
+				/* Give the user who created this user the permission to edit
+				him */
+				canBeMutatedBy: {
+					create: {
+						createdById: ctx.req.session.user!.id,
+						parentId: ctx.req.session.user!.id,
+					},
+				},
 				canMutatePagesSubscription,
 				canMutateUsersSubscription,
 				firstname,
 				lastname,
 				password: hash,
 				username: createUsername(firstname, lastname),
-			},
-		});
-
-		/*
-		Give the user who created this user the permission to edit
-		him
-		*/
-		await ctx.prisma.canMutateUsersOnUsers.create({
-			data: {
-				childId: user.id,
-				createdById: ctx.req.session.user!.id,
-				parentId: ctx.req.session.user!.id,
 			},
 		});
 

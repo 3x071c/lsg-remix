@@ -1,5 +1,4 @@
 import type { UserWithPermissions } from "$types/auth";
-import type { PagesOnUsers } from "@prisma/client";
 import {
 	intArg,
 	mutationField,
@@ -76,27 +75,27 @@ export const CreatePageMutation = mutationField("createPage", {
 	resolve: async (_root, { content, parentId, path, title }, ctx) => {
 		const page = await ctx.prisma.page.create({
 			data: {
+				/* give the user who created the page the permission
+		 		to edit the page */
+				canBeMutatedBy: {
+					create: [
+						{
+							createdById: ctx.req.session.user!.id,
+							userId: ctx.req.session.user!.id,
+						},
+					],
+				},
 				content,
 				parentId,
 				path,
 				title,
-			},
-		});
-
-		/* give the user who created the page the permission
-		 to edit the page */
-		await ctx.prisma.canMutatePagesOnUsers.create({
-			data: {
-				createdById: ctx.req.session.user!.id,
-				pageId: page.id,
-				userId: ctx.req.session.user!.id,
-			},
-		});
-
-		await ctx.prisma.pagesOnUsers.create({
-			data: {
-				pageId: page.id,
-				userId: ctx.req.session.user!.id,
+				users: {
+					create: [
+						{
+							userId: ctx.req.session.user!.id,
+						},
+					],
+				},
 			},
 		});
 
@@ -123,6 +122,24 @@ export const EditPageMutation = mutationField("editPage", {
 				parentId: undefinedOrValue(parentId),
 				path: undefinedOrValue(path),
 				title: undefinedOrValue(title),
+				/*
+				If the user has not yet edited this page, create a new
+				PagesOnUsers entry
+				*/
+				users: {
+					upsert: {
+						create: {
+							userId: ctx.req.session.user!.id,
+						},
+						update: {},
+						where: {
+							userId_pageId: {
+								pageId: id,
+								userId: ctx.req.session.user!.id,
+							},
+						},
+					},
+				},
 			},
 			include: {
 				users: true,
@@ -131,24 +148,6 @@ export const EditPageMutation = mutationField("editPage", {
 				id,
 			},
 		});
-
-		/*
-		If the user who edited this page is not yet in the users
-		list of the page, than we will make a new PagesOnUsers Entry
-		to add him
-		*/
-		if (
-			!page.users.find(
-				(p: PagesOnUsers) => p.userId === ctx.req.session.user!.id,
-			)
-		) {
-			await ctx.prisma.pagesOnUsers.create({
-				data: {
-					pageId: page.id,
-					userId: ctx.req.session.user!.id,
-				},
-			});
-		}
 
 		return page;
 	},
