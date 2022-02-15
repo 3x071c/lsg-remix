@@ -10,7 +10,7 @@ import { hashPassword } from "$lib/auth";
 
 const prisma = new PrismaClient({
 	errorFormat: "pretty",
-	log: ["query", "info", "warn", "error"],
+	// log: ["query", "info", "warn", "error"],
 });
 const seedDate = (start: Date, end: Date) =>
 	new Date(
@@ -82,8 +82,8 @@ const seedPage = async (
 	console.log(logPrefix(), `seedPage...`);
 	console.log(
 		logPrefix(),
-		`users:`,
-		users,
+		// `users:`,
+		// users,
 		`canMutateUsersSubscriptionUsers`,
 		canMutateUsersSubscriptionUsers,
 	);
@@ -200,7 +200,7 @@ const seedPage = async (
 				})),
 			},
 		};
-		console.log(logPrefix2(), `seedAuthors`);
+		console.log(logPrefix2(), `seedAuthors:`, ret);
 		return ret;
 	};
 
@@ -211,15 +211,16 @@ const seedPage = async (
 		const logPrefix2 = () => `${logPrefix()} [${i}/${totalIterations}]`;
 		console.log(logPrefix2(), `children[]...`);
 		const childTitle = faker.commerce.product();
-		children.push({
+		const ret = {
 			...(await seedAuthors(i, totalIterations)),
 			content: `**${faker.commerce.productName()}** - *${faker.commerce.productDescription()}*. ${faker.lorem.paragraphs(
 				random(2, 4),
 			)}`,
 			path: `${camelCase(childTitle)}${getUnique(8)}`,
 			title: childTitle,
-		});
-		console.log(logPrefix2(), `children[]`);
+		};
+		children.push(ret);
+		console.log(logPrefix2(), `children[]:`, ret);
 	}
 
 	console.log(logPrefix(), `seedPage -`);
@@ -234,7 +235,7 @@ const seedPage = async (
 		path: `${camelCase(title)}${getUnique(8)}`,
 		title,
 	};
-	console.log(logPrefix(), `seedPage`);
+	console.log(logPrefix(), `seedPage:`, ret);
 	return ret;
 };
 
