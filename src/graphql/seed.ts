@@ -76,6 +76,7 @@ const seedPage = async (
 	canMutateUsersSubscriptionUsers: User[],
 	currentPage: number,
 	totalPages: number,
+	minUserCount: number,
 ): Promise<Prisma.PageCreateInput> => {
 	const logPrefix = () =>
 		`🪵 [${new Date().getTime()}] [${currentPage}/${totalPages}]`;
@@ -101,12 +102,12 @@ const seedPage = async (
 		const logPrefix2 = () =>
 			`${logPrefix()} [${currentAuthor}/${totalAuthors}]`;
 		console.log(logPrefix2(), `seedAuthors...`);
-		const authors = sampleSize(users, random(1, users.length));
+		const selection = sampleSize(users, random(minUserCount, users.length));
 		const createdAt = seedDate(start, end);
 		const lastMutatedAt = seedDate(
 			new Date(
 				Math.max(
-					...authors.map((author) => author.createdAt.getTime()),
+					...selection.map((author) => author.createdAt.getTime()),
 					createdAt.getTime(),
 				),
 			),
@@ -114,18 +115,18 @@ const seedPage = async (
 		);
 		console.log(
 			logPrefix2(),
-			`authors:`,
-			authors,
+			`selection:`,
+			selection,
 			`createdAt:`,
 			createdAt,
 			`lastMutatedAt:`,
 			lastMutatedAt,
 		);
 
-		const canBeMutatedByData = authors.map(
+		const canBeMutatedByData = selection.map(
 			async ({ id, createdAt: authorCreatedAt }, i) => {
 				const logPrefix3 = () =>
-					`${logPrefix2()} [${i + 1}/${authors.length}]`;
+					`${logPrefix2()} [${i + 1}/${selection.length}]`;
 				console.log(logPrefix3(), `canBeMutatedByData[]...`);
 				const canBeMutatedByCreatedAt = seedDate(
 					new Date(
@@ -176,29 +177,35 @@ const seedPage = async (
 				return ret;
 			},
 		);
-		console.log(logPrefix(), `canBeMutatedByData:`, canBeMutatedByData);
+		console.log(logPrefix2(), `canBeMutatedByData:`, canBeMutatedByData);
 
-		console.log(logPrefix(), `canBeMutatedBy...`);
+		console.log(logPrefix2(), `canBeMutatedBy...`);
 		const canBeMutatedBy: Prisma.PageCreateInput["canBeMutatedBy"] = {
 			create: await Promise.all(canBeMutatedByData),
 		};
-		console.log(logPrefix(), `canBeMutatedBy:`, canBeMutatedBy);
+		console.log(logPrefix2(), `canBeMutatedBy:`, canBeMutatedBy);
+
+		const possibleAuthors =
+			canBeMutatedBy.create! as Prisma.CanMutatePagesOnUsersCreateWithoutPageInput[];
+		const authors = {
+			create: sampleSize(
+				possibleAuthors,
+				random(minUserCount / 2, possibleAuthors.length),
+			).map(({ createdAt: canBeMutatedByCreatedAt, user }) => ({
+				createdAt: seedDate(
+					canBeMutatedByCreatedAt as Date,
+					lastMutatedAt,
+				),
+				user,
+			})),
+		};
+		console.log(logPrefix2(), `authors:`, authors);
 
 		const ret = {
 			canBeMutatedBy,
 			createdAt,
 			lastMutatedAt,
-			users: {
-				create: (
-					canBeMutatedBy.create! as Prisma.CanMutatePagesOnUsersCreateWithoutPageInput[]
-				).map(({ createdAt: canBeMutatedByCreatedAt, user }) => ({
-					createdAt: seedDate(
-						canBeMutatedByCreatedAt as Date,
-						lastMutatedAt,
-					),
-					user,
-				})),
-			},
+			users: authors,
 		};
 		console.log(logPrefix2(), `seedAuthors:`, ret);
 		return ret;
@@ -332,7 +339,8 @@ export default async function main(): Promise<void> {
 	console.log(`Start seeding ✨`);
 
 	// 1. Create some users 🦭
-	for (let i = 0; i < random(20, 50); i += 1) {
+	const minUserCount = 20;
+	for (let i = 0; i < random(minUserCount, 50); i += 1) {
 		const user = await prisma.user.create({
 			data: await seedUser(),
 		});
@@ -357,6 +365,7 @@ export default async function main(): Promise<void> {
 			canMutateUsersSubscriptionUsers,
 			i,
 			totalPages,
+			minUserCount,
 		);
 		console.log(`📟 Received page data`, logSuffix);
 		const page = await prisma.page.create({
