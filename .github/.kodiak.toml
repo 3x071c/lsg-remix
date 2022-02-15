@@ -29,8 +29,6 @@ delete_branch_on_merge = true
 # If you request review from a user, don't merge until that user provides a
 # review, even if the PR is passing all status checks.
 block_on_reviews_requested = true
-# If a PR is passing all checks and is able to be merged, merge it without placing it in the merge queue. This option adds some unfairness where PRs waiting in the queue the longest are not served first.
-prioritize_ready_to_merge = true
 
 [merge.message]
 # By default (`"github_default"`), GitHub uses the title of a PR's first commit for the merge commit title. `"pull_request_title"` uses the PR title for the merge commit.
@@ -49,8 +47,6 @@ cut_body_after = "---"
 include_coauthors = true
 
 [update]
-# Update a PR whenever out of date with the base branch. The PR will be updated regardless of merge requirements (e.g. failing status checks, missing reviews, blacklist labels).
-always = true
 # When enabled, Kodiak will only update PRs that have an automerge label (configured via `merge.automerge_label`). When disable, Kodiak will update any PR.
 require_automerge_label = false
 # When a pull request's author matches this, Kodiak will never update the pull request, unless update.autoupdate_label is applied to the pull request.
