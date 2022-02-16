@@ -4183,8 +4183,8 @@ packages:
     resolution: {integrity: sha1-aN/1++YMUes3cl6p4+0xDcwed24=}
     dev: true
 
-  /boolean/3.1.4:
-    resolution: {integrity: sha512-3hx0kwU3uzG6ReQ3pnaFQPSktpBw6RHN3/ivDKEuU8g1XSfafowyvDnadjv1xp8IZqhtSukxlwv9bF6FhX8m0w==}
+  /boolean/3.2.0:
+    resolution: {integrity: sha512-d0II/GO9uf9lfUHH2BQsjxzRJZBdsjgsBiW4BvhWk/3qoKwQFjIDVN19PfX8F2D/r9PCMTtLWjYVCFrpeYUzsw==}
     dev: true
 
   /boundary/1.0.1:
@@ -5072,8 +5072,8 @@ packages:
     engines: {node: '>= 6'}
     dev: true
 
-  /cssdb/6.3.0:
-    resolution: {integrity: sha512-U/nJSGsM0NIEsVPwat6r6QrvtqZ8m+eYb8qLoSFXXWNghy5x3z6ftubzbb6AMFcvaYVVRXKAmgD1I1e2A31qug==}
+  /cssdb/6.3.1:
+    resolution: {integrity: sha512-Ho3gIkGY4O8S3J54fHu7RP5GHWz85McDhimaXEwf7qV0MSPhLM0jdd61zqs1kkadIVDAvfqoku0kArbWaMYolw==}
     dev: true
 
   /cssesc/3.0.0:
@@ -6442,7 +6442,7 @@ packages:
     resolution: {integrity: sha512-+20KpaW6DDLqhG7JDiJpD1JvNvb8ts+TNl7BPOYcURqCrXqnN1Vf+XVOrkKJAFPqfX+oEhsdzOj1hLWkBTdNJg==}
     engines: {node: '>=10.0'}
     dependencies:
-      boolean: 3.1.4
+      boolean: 3.2.0
       core-js: 3.21.0
       es6-error: 4.1.1
       matcher: 3.0.0
@@ -9025,7 +9025,7 @@ packages:
       css-blank-pseudo: 3.0.3_postcss@8.4.6
       css-has-pseudo: 3.0.4_postcss@8.4.6
       css-prefers-color-scheme: 6.0.3_postcss@8.4.6
-      cssdb: 6.3.0
+      cssdb: 6.3.1
       postcss: 8.4.6
       postcss-attribute-case-insensitive: 5.0.0_postcss@8.4.6
       postcss-clamp: 3.0.0_postcss@8.4.6
@@ -9846,7 +9846,7 @@ packages:
     resolution: {integrity: sha512-CHhPh+UNHD2GTXNYhPWLnU8ONHdI+5DI+4EYIAOaiD63rHeYlZvyh8P+in5999TTSFgUYuKUAjzRI4mdh/p+2A==}
     engines: {node: '>=8.0'}
     dependencies:
-      boolean: 3.1.4
+      boolean: 3.2.0
       detect-node: 2.1.0
       globalthis: 1.0.2
       json-stringify-safe: 5.0.1
