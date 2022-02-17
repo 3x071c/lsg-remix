@@ -35,7 +35,7 @@ specifiers:
   commitizen: 4.2.4
   cross-env: 7.0.3
   cspell: 5.17.0
-  cssnano: 5.0.16
+  cssnano: 5.0.17
   cssnano-preset-advanced: 5.1.12
   cz-conventional-changelog: 3.3.0
   eslint: 8.8.0
@@ -147,7 +147,7 @@ devDependencies:
   commitizen: 4.2.4_@types+node@17.0.13
   cross-env: 7.0.3
   cspell: 5.17.0
-  cssnano: 5.0.16_postcss@8.4.6
+  cssnano: 5.0.17_postcss@8.4.6
   cssnano-preset-advanced: 5.1.12_postcss@8.4.6
   cz-conventional-changelog: 3.3.0_@types+node@17.0.13
   eslint: 8.8.0
@@ -5134,8 +5134,8 @@ packages:
       postcss: 8.4.6
     dev: true
 
-  /cssnano/5.0.16_postcss@8.4.6:
-    resolution: {integrity: sha512-ryhRI9/B9VFCwPbb1z60LLK5/ldoExi7nwdnJzpkLZkm2/r7j2X3jfY+ZvDVJhC/0fPZlrAguYdHNFg0iglPKQ==}
+  /cssnano/5.0.17_postcss@8.4.6:
+    resolution: {integrity: sha512-fmjLP7k8kL18xSspeXTzRhaFtRI7DL9b8IcXR80JgtnWBpvAzHT7sCR/6qdn0tnxIaINUN6OEQu83wF57Gs3Xw==}
     engines: {node: ^10 || ^12 || >=14.0}
     peerDependencies:
       postcss: ^8.2.15
