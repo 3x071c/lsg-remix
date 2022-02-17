@@ -74,7 +74,7 @@ specifiers:
   prettier-plugin-prisma: 3.9.0
   prettier-plugin-sh: 0.8.1
   prettier-plugin-sort-json: 0.0.2
-  prisma: 3.9.1
+  prisma: 3.9.2
   react: 17.0.2
   react-dom: 17.0.2
   react-hook-form: 7.25.3
@@ -104,7 +104,7 @@ dependencies:
   '@emotion/react': 11.7.1_4c43f11de5d0fbfeadbc3db3e83bf822
   '@emotion/server': 11.4.0_@emotion+css@11.7.1
   '@emotion/styled': 11.6.0_e3f27ad4bb9a5f954441799b3f2e99fa
-  '@prisma/client': 3.9.1_prisma@3.9.1
+  '@prisma/client': 3.9.1_prisma@3.9.2
   apollo-server-micro: 3.6.2_graphql@15.8.0+micro@9.3.4
   argon2: 0.28.4
   framer-motion: 6.2.3_react-dom@17.0.2+react@17.0.2
@@ -177,7 +177,7 @@ devDependencies:
   prettier-plugin-prisma: 3.9.0_prettier@2.5.1
   prettier-plugin-sh: 0.8.1_prettier@2.5.1
   prettier-plugin-sort-json: 0.0.2_prettier@2.5.1
-  prisma: 3.9.1
+  prisma: 3.9.2
   rimraf: 3.0.2
   secretlint: 4.1.4
   stylelint: 14.3.0
@@ -2489,7 +2489,7 @@ packages:
     resolution: {integrity: sha512-92FRmppjjqz29VMJ2dn+xdyXZBrMlE42AV6Kq6BwjWV7CNUW1hs2FtxSNLQE+gJhaZ6AAmYuO9y8dshhcBl7vA==}
     dev: false
 
-  /@prisma/client/3.9.1_prisma@3.9.1:
+  /@prisma/client/3.9.1_prisma@3.9.2:
     resolution: {integrity: sha512-aLwfXKLvL+loQ0IuPPCXkcq8cXBg1IeoHHa5lqQu3dJHdj45wnislA/Ny4UxRQjD5FXqrfAb8sWtF+jhdmjFTg==}
     engines: {node: '>=12.6'}
     requiresBuild: true
@@ -2500,7 +2500,7 @@ packages:
         optional: true
     dependencies:
       '@prisma/engines-version': 3.9.0-58.bcc2ff906db47790ee902e7bbc76d7ffb1893009
-      prisma: 3.9.1
+      prisma: 3.9.2
     dev: false
 
   /@prisma/engines-version/3.9.0-58.bcc2ff906db47790ee902e7bbc76d7ffb1893009:
@@ -9250,8 +9250,8 @@ packages:
     hasBin: true
     dev: true
 
-  /prisma/3.9.1:
-    resolution: {integrity: sha512-IGcJAu5LzlFv+i+NNhOEh1J1xVVttsVdRBxmrMN7eIH+7mRN6L89Hz1npUAiz4jOpNlHC7n9QwaOYZGxTqlwQw==}
+  /prisma/3.9.2:
+    resolution: {integrity: sha512-i9eK6cexV74OgeWaH3+e6S07kvC9jEZTl6BqtBH398nlCU0tck7mE9dicY6YQd+euvMjjCtY89q4NgmaPnUsSg==}
     engines: {node: '>=12.6'}
     hasBin: true
     requiresBuild: true
