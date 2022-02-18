@@ -1,8 +1,6 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-console */
-
-import { randomUUID } from "crypto";
 import faker from "@faker-js/faker/locale/de";
 import { Prisma, PrismaClient, User, Page } from "@prisma/client";
 import { sample, sampleSize, random, camelCase } from "lodash";
@@ -12,35 +10,41 @@ const prisma = new PrismaClient({
 	errorFormat: "pretty",
 	// log: ["query", "info", "warn", "error"],
 });
+
 const seedDate = (start: Date, end: Date) =>
 	new Date(
 		start.getTime() +
 			Math.max(Math.random() * (end.getTime() - start.getTime()), 0),
 	);
+
 const uniqueData: string[] = [];
-const getUnique = (length?: number, format?: "string" | "number") => {
-	const len = length ?? 36;
-	const cast = format ?? "string";
-	let u: string;
-	if (cast === "string") {
-		do {
-			u = Array.from({ length: Math.ceil(len / 36) }, () => randomUUID())
-				.join("")
-				.substring(0, len);
-		} while (uniqueData.includes(u));
-	} else {
-		do {
-			u = [
-				random(1, 9),
-				...Array.from({ length: Math.ceil(len - 1) }, () =>
-					random(0, 9),
-				),
-			].join("");
-		} while (uniqueData.includes(u));
-	}
-	uniqueData.push(u);
-	return cast === "number" ? Number(u) : u;
+const getUniqueUser = (): [
+	firstname: string,
+	lastname: string,
+	username: string,
+] => {
+	let firstname: string;
+	let lastname: string;
+	let username: string;
+	do {
+		firstname = faker.name.firstName();
+		lastname = faker.name.lastName();
+		username = `${firstname
+			.charAt(0)
+			.toLowerCase()}.${lastname.toLowerCase()}`;
+	} while (uniqueData.includes(username));
+	uniqueData.push(username);
+	return [firstname, lastname, username];
 };
+const getUnique = (fn: () => string) => {
+	let u: string;
+	do {
+		u = fn();
+	} while (uniqueData.includes(u));
+	uniqueData.push(u);
+	return u;
+};
+
 const start = new Date("2020");
 const end = new Date();
 
@@ -48,11 +52,7 @@ const seedUser = async (
 	_start?: Date,
 	admin?: boolean,
 ): Promise<Prisma.UserCreateInput> => {
-	const firstname = faker.name.firstName();
-	const lastname = faker.name.lastName();
-	const username = `${firstname
-		.charAt(0)
-		.toLowerCase()}.${lastname.toLowerCase()}${getUnique(2, "number")}`;
+	const [firstname, lastname, username] = getUniqueUser();
 	const canMutateUsersSubscription =
 		admin ?? sample([true, ...(Array(9).fill(false) as boolean[])])!;
 	const createdAt = seedDate(_start ?? start, end);
@@ -71,39 +71,19 @@ const seedUser = async (
 	};
 };
 
-const seedPage = async (
+const seedPage = (
 	users: User[],
 	canMutateUsersSubscriptionUsers: User[],
-	currentPage: number,
-	totalPages: number,
-	minUserCount: number,
-): Promise<Prisma.PageCreateInput> => {
-	const logPrefix = () =>
-		`🪵 [${new Date().getTime()}] [${currentPage}/${totalPages}]`;
-	console.log(logPrefix(), `seedPage...`);
-	console.log(
-		logPrefix(),
-		// `users:`,
-		// users,
-		`canMutateUsersSubscriptionUsers`,
-		canMutateUsersSubscriptionUsers,
-	);
-	const seedAuthors = async (
-		currentAuthor: number,
-		totalAuthors: number,
-	): Promise<
-		Required<
-			Pick<
-				Prisma.PageCreateInput,
-				"users" | "lastMutatedAt" | "canBeMutatedBy" | "createdAt"
-			>
+): Prisma.PageCreateInput => {
+	const seedAuthors = (): Required<
+		Pick<
+			Prisma.PageCreateInput,
+			"users" | "lastMutatedAt" | "canBeMutatedBy" | "createdAt"
 		>
 	> => {
-		const logPrefix2 = () =>
-			`${logPrefix()} [${currentAuthor}/${totalAuthors}]`;
-		console.log(logPrefix2(), `seedAuthors...`);
-		const selection = sampleSize(users, random(minUserCount, users.length));
+		const selection = sampleSize(users, random(1, users.length));
 		const createdAt = seedDate(start, end);
+
 		const lastMutatedAt = seedDate(
 			new Date(
 				Math.max(
@@ -113,84 +93,42 @@ const seedPage = async (
 			),
 			end,
 		);
-		console.log(
-			logPrefix2(),
-			`selection:`,
-			selection,
-			`createdAt:`,
-			createdAt,
-			`lastMutatedAt:`,
-			lastMutatedAt,
-		);
 
-		const canBeMutatedByData = selection.map(
-			async ({ id, createdAt: authorCreatedAt }, i) => {
-				const logPrefix3 = () =>
-					`${logPrefix2()} [${i + 1}/${selection.length}]`;
-				console.log(logPrefix3(), `canBeMutatedByData[]...`);
+		const canBeMutatedBy: Prisma.PageCreateInput["canBeMutatedBy"] = {
+			create: selection.map(({ id, createdAt: authorCreatedAt }) => {
+				const canMutateUsersSubscriptionUsersUser = sample(
+					canMutateUsersSubscriptionUsers,
+				)!;
 				const canBeMutatedByCreatedAt = seedDate(
 					new Date(
 						Math.max(
 							createdAt.getTime(),
 							authorCreatedAt.getTime(),
+							canMutateUsersSubscriptionUsersUser.createdAt.getTime(),
 						),
 					),
 					end,
 				);
-				console.log(
-					logPrefix3(),
-					`canBeMutatedByCreatedAt:`,
-					canBeMutatedByCreatedAt,
-				);
-				const canBeMutatedByCreatedBy =
-					canMutateUsersSubscriptionUsers.filter(
-						(user) =>
-							user.createdAt.getTime() <
-							canBeMutatedByCreatedAt.getTime(),
-					);
-				console.log(
-					logPrefix3(),
-					`canBeMutatedByCreatedBy:`,
-					canBeMutatedByCreatedBy,
-				);
-				const ret = {
+				return {
 					createdAt: canBeMutatedByCreatedAt,
-					createdBy: canBeMutatedByCreatedBy.length
-						? {
-								connect: {
-									id: sample(canBeMutatedByCreatedBy)!.id,
-								},
-						  }
-						: {
-								create: {
-									...(await seedUser(
-										canBeMutatedByCreatedAt,
-										true,
-									)),
-								},
-						  },
+					createdBy: {
+						connect: {
+							id: canMutateUsersSubscriptionUsersUser.id,
+						},
+					},
 					user: {
 						connect: { id },
 					},
 				};
-				console.log(logPrefix3(), `canBeMutatedByData[]:`, ret);
-				return ret;
-			},
-		);
-		console.log(logPrefix2(), `canBeMutatedByData:`, canBeMutatedByData);
-
-		console.log(logPrefix2(), `canBeMutatedBy...`);
-		const canBeMutatedBy: Prisma.PageCreateInput["canBeMutatedBy"] = {
-			create: await Promise.all(canBeMutatedByData),
+			}),
 		};
-		console.log(logPrefix2(), `canBeMutatedBy:`, canBeMutatedBy);
 
 		const possibleAuthors =
 			canBeMutatedBy.create! as Prisma.CanMutatePagesOnUsersCreateWithoutPageInput[];
 		const authors = {
 			create: sampleSize(
 				possibleAuthors,
-				random(minUserCount / 2, possibleAuthors.length),
+				random(1, possibleAuthors.length),
 			).map(({ createdAt: canBeMutatedByCreatedAt, user }) => ({
 				createdAt: seedDate(
 					canBeMutatedByCreatedAt as Date,
@@ -199,51 +137,40 @@ const seedPage = async (
 				user,
 			})),
 		};
-		console.log(logPrefix2(), `authors:`, authors);
 
-		const ret = {
+		return {
 			canBeMutatedBy,
 			createdAt,
 			lastMutatedAt,
 			users: authors,
 		};
-		console.log(logPrefix2(), `seedAuthors:`, ret);
-		return ret;
 	};
 
-	const title = faker.commerce.department();
+	const title = getUnique(() => faker.commerce.department());
 	const children: Prisma.PageCreateWithoutParentInput[] = [];
-	const totalIterations = random(3, 10) + 1;
-	for (let i = 1; i <= totalIterations - 1; i += 1) {
-		const logPrefix2 = () => `${logPrefix()} [${i}/${totalIterations}]`;
-		console.log(logPrefix2(), `children[]...`);
-		const childTitle = faker.commerce.product();
-		const ret = {
-			...(await seedAuthors(i, totalIterations)),
+	for (let i = 1; i <= random(3, 10); i += 1) {
+		const childTitle = getUnique(() => faker.commerce.product());
+		children.push({
+			...seedAuthors(),
 			content: `**${faker.commerce.productName()}** - *${faker.commerce.productDescription()}*. ${faker.lorem.paragraphs(
 				random(2, 4),
 			)}`,
-			path: `${camelCase(childTitle)}${getUnique(8)}`,
+			path: `${camelCase(childTitle)}`,
 			title: childTitle,
-		};
-		children.push(ret);
-		console.log(logPrefix2(), `children[]:`, ret);
+		});
 	}
 
-	console.log(logPrefix(), `seedPage -`);
-	const ret = {
-		...(await seedAuthors(totalIterations, totalIterations)),
+	return {
+		...seedAuthors(),
 		children: {
 			create: children,
 		},
 		content: `This is a wonderful description for **${title}**. Here you will find *${faker.commerce.productName()}* and similar pages! As the legend once said: ${faker.lorem.paragraphs(
 			random(2, 4),
 		)}`,
-		path: `${camelCase(title)}${getUnique(8)}`,
+		path: `${camelCase(title)}`,
 		title,
 	};
-	console.log(logPrefix(), `seedPage:`, ret);
-	return ret;
 };
 
 const seedUsersCanMutateUsers = (users: User[]): Prisma.UserUpdateArgs[] =>
@@ -339,8 +266,7 @@ export default async function main(): Promise<void> {
 	console.log(`Start seeding ✨`);
 
 	// 1. Create some users 🦭
-	const minUserCount = 20;
-	for (let i = 0; i < random(minUserCount, 50); i += 1) {
+	for (let i = 0; i < random(5, 20); i += 1) {
 		const user = await prisma.user.create({
 			data: await seedUser(),
 		});
@@ -356,24 +282,12 @@ export default async function main(): Promise<void> {
 	});
 
 	// 2. Create pages ✍️
-	const totalPages = random(5, 8);
-	for (let i = 1; i <= totalPages; i += 1) {
-		const logSuffix = `(${i}/${totalPages})`;
-		console.log(`📟 Creating page...`, logSuffix);
-		const data = await seedPage(
-			users,
-			canMutateUsersSubscriptionUsers,
-			i,
-			totalPages,
-			minUserCount,
-		);
-		console.log(`📟 Received page data`, logSuffix);
+	for (let i = 1; i <= random(5, 8); i += 1) {
 		const page = await prisma.page.create({
-			data,
+			data: seedPage(users, canMutateUsersSubscriptionUsers),
 		});
 		console.log(
 			`📟 Created page ${page.title} (${page.path}) with id ${page.id}`,
-			logSuffix,
 		);
 	}
 	const pages = await prisma.page.findMany();
