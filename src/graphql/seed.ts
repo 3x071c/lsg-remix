@@ -11,6 +11,8 @@ const prisma = new PrismaClient({
 	// log: ["query", "info", "warn", "error"],
 });
 
+process.exit(1);
+
 const seedDate = (start: Date, end: Date) =>
 	new Date(
 		start.getTime() +
@@ -18,6 +20,27 @@ const seedDate = (start: Date, end: Date) =>
 	);
 
 const uniqueData: string[] = [];
+const getUniqueNumber = (length: number) => {
+	if (length < 1) return 0;
+	const min = (length - 1) ** 10;
+	let u: number;
+	do {
+		u = Math.floor(min + Math.random() * min * 9);
+	} while (uniqueData.includes(u.toString()));
+	uniqueData.push(u.toString());
+	return u;
+};
+// const getUniqueString = (length?: number) => {
+// 	const len = length ?? 36;
+// 	let u: string;
+// 	do {
+// 		u = Array.from({ length: Math.ceil(len / 36) }, () => randomUUID())
+// 			.join("")
+// 			.substring(0, len);
+// 	} while (uniqueData.includes(u));
+// 	uniqueData.push(u);
+// 	return u;
+// };
 const getUniqueUser = (): [
 	firstname: string,
 	lastname: string,
@@ -26,20 +49,24 @@ const getUniqueUser = (): [
 	let firstname: string;
 	let lastname: string;
 	let username: string;
+	let i = 0;
 	do {
 		firstname = faker.name.firstName();
 		lastname = faker.name.lastName();
 		username = `${firstname
 			.charAt(0)
-			.toLowerCase()}.${lastname.toLowerCase()}`;
+			.toLowerCase()}.${lastname.toLowerCase()}${getUniqueNumber(i)}`;
+		i += 1;
 	} while (uniqueData.includes(username));
 	uniqueData.push(username);
 	return [firstname, lastname, username];
 };
 const getUnique = (fn: () => string) => {
 	let u: string;
+	let i = 0;
 	do {
-		u = fn();
+		u = `${fn()}${getUniqueNumber(i)}`;
+		i += 1;
 	} while (uniqueData.includes(u));
 	uniqueData.push(u);
 	return u;
@@ -83,7 +110,6 @@ const seedPage = (
 	> => {
 		const selection = sampleSize(users, random(1, users.length));
 		const createdAt = seedDate(start, end);
-
 		const lastMutatedAt = seedDate(
 			new Date(
 				Math.max(
@@ -96,15 +122,16 @@ const seedPage = (
 
 		const canBeMutatedBy: Prisma.PageCreateInput["canBeMutatedBy"] = {
 			create: selection.map(({ id, createdAt: authorCreatedAt }) => {
-				const canMutateUsersSubscriptionUsersUser = sample(
-					canMutateUsersSubscriptionUsers,
-				)!;
+				const {
+					createdAt: canMutateUsersSubscriptionUserCreatedAt,
+					id: canMutateUsersSubscriptionUserAdminId,
+				} = sample(canMutateUsersSubscriptionUsers)!;
 				const canBeMutatedByCreatedAt = seedDate(
 					new Date(
 						Math.max(
 							createdAt.getTime(),
 							authorCreatedAt.getTime(),
-							canMutateUsersSubscriptionUsersUser.createdAt.getTime(),
+							canMutateUsersSubscriptionUserCreatedAt.getTime(),
 						),
 					),
 					end,
@@ -113,7 +140,7 @@ const seedPage = (
 					createdAt: canBeMutatedByCreatedAt,
 					createdBy: {
 						connect: {
-							id: canMutateUsersSubscriptionUsersUser.id,
+							id: canMutateUsersSubscriptionUserAdminId,
 						},
 					},
 					user: {
@@ -148,7 +175,7 @@ const seedPage = (
 
 	const title = getUnique(() => faker.commerce.department());
 	const children: Prisma.PageCreateWithoutParentInput[] = [];
-	for (let i = 1; i <= random(3, 10); i += 1) {
+	for (let i = 0; i < random(3, 10); i += 1) {
 		const childTitle = getUnique(() => faker.commerce.product());
 		children.push({
 			...seedAuthors(),
@@ -282,7 +309,7 @@ export default async function main(): Promise<void> {
 	});
 
 	// 2. Create pages ✍️
-	for (let i = 1; i <= random(5, 8); i += 1) {
+	for (let i = 0; i < random(5, 8); i += 1) {
 		const page = await prisma.page.create({
 			data: seedPage(users, canMutateUsersSubscriptionUsers),
 		});
