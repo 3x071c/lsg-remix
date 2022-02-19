@@ -89,11 +89,18 @@ export const UsersQuery = queryField("users", {
 	resolve: async (_root, _args, ctx) => {
 		const users = await ctx.prisma.user.findMany({
 			where: {
-				canBeMutatedBy: {
-					some: {
-						parentId: ctx.req.session.user!.id,
+				OR: [
+					{
+						canBeMutatedBy: {
+							some: {
+								parentId: ctx.req.session.user!.id,
+							},
+						},
 					},
-				},
+					{
+						id: ctx.req.session.user!.id,
+					},
+				],
 			},
 		});
 
