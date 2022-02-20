@@ -17,7 +17,7 @@ jobs:
 
         name: Continuous Integration (${{ matrix.runner }} / Node ${{ matrix.node }})
         runs-on: ${{ matrix.runner }}
-        timeout-minutes: 30
+        timeout-minutes: 10
         steps:
             - name: Git Checkout
               uses: actions/checkout@v2
