@@ -9,7 +9,8 @@ declare global {
 export default global.prisma ||
 	(process.env.NODE_ENV === "production" && new PrismaClient()) ||
 	(global.prisma = new PrismaClient({
-		log: ["query"],
+		errorFormat: "pretty",
+		log: ["query", "info", "warn", "error"],
 	}));
 
 export function undefinedOrValue<Type>(
