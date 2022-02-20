@@ -28,7 +28,7 @@ specifiers:
   '@typescript-eslint/eslint-plugin': 5.10.1
   '@typescript-eslint/parser': 5.10.1
   apollo: 2.33.9
-  apollo-server-micro: 3.6.2
+  apollo-server-micro: 3.6.3
   argon2: 0.28.4
   autoprefixer: 10.4.2
   browserslist: 4.19.1
@@ -104,7 +104,7 @@ dependencies:
   '@emotion/server': 11.4.0_@emotion+css@11.7.1
   '@emotion/styled': 11.6.0_e3f27ad4bb9a5f954441799b3f2e99fa
   '@prisma/client': 3.9.1_prisma@3.9.2
-  apollo-server-micro: 3.6.2_graphql@15.8.0+micro@9.3.4
+  apollo-server-micro: 3.6.3_graphql@15.8.0+micro@9.3.4
   argon2: 0.28.4
   framer-motion: 6.2.3_react-dom@17.0.2+react@17.0.2
   graphql: 15.8.0
@@ -3604,7 +3604,7 @@ packages:
       dotenv: 8.6.0
       glob: 7.2.0
       graphql: 15.8.0
-      graphql-tag: 2.12.4_graphql@15.8.0
+      graphql-tag: 2.12.6_graphql@15.8.0
       lodash.debounce: 4.0.8
       lodash.merge: 4.6.2
       minimatch: 3.1.2
@@ -3757,8 +3757,8 @@ packages:
       graphql: 15.8.0
     dev: false
 
-  /apollo-server-micro/3.6.2_graphql@15.8.0+micro@9.3.4:
-    resolution: {integrity: sha512-eRb/ei+O+WA7mJZP7VLL6XVf1uMX8O8lnTXsW8G1/henyqUlCJ5WjxmoaJcyF1+jDIyqoSIP0n7gqhiIf/j3Ww==}
+  /apollo-server-micro/3.6.3_graphql@15.8.0+micro@9.3.4:
+    resolution: {integrity: sha512-gY7c7kwSC/XcO3s4bdHZo/hUCTNCTBakOXjJEb1OQ6KMiMAusH/2qQOtSc+D0LHU3g8DLT035VBouqQm7x7DSA==}
     peerDependencies:
       micro: ^9.3.4
     dependencies:
@@ -6473,7 +6473,6 @@ packages:
     dependencies:
       graphql: 15.8.0
       tslib: 2.3.1
-    dev: false
 
   /graphql/15.8.0:
     resolution: {integrity: sha512-5gghUc24tP9HRznNpV2+FIoq3xKkj5dTQqf4v0CpdPbFVwFkWoxOM+o+2OC9ZSvjEMTjfmG9QT+gcvggTwW1zw==}
