@@ -89,7 +89,7 @@
 		"@apollo/client": "3.5.8",
 		"@chakra-ui/icons": "1.1.5",
 		"@chakra-ui/react": "1.8.1",
-		"@chakra-ui/system": "1.10.1",
+		"@chakra-ui/system": "1.11.1",
 		"@emotion/cache": "11.7.1",
 		"@emotion/css": "11.7.1",
 		"@emotion/react": "11.7.1",
