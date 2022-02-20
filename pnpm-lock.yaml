@@ -3,7 +3,7 @@ lockfileVersion: 5.3
 specifiers:
   '@apollo/client': 3.5.8
   '@babel/core': 7.16.12
-  '@chakra-ui/icons': 1.1.1
+  '@chakra-ui/icons': 1.1.5
   '@chakra-ui/react': 1.8.1
   '@chakra-ui/system': 1.10.1
   '@commitlint/cli': 16.1.0
@@ -35,7 +35,7 @@ specifiers:
   commitizen: 4.2.4
   cross-env: 7.0.3
   cspell: 5.17.0
-  cssnano: 5.0.16
+  cssnano: 5.0.17
   cssnano-preset-advanced: 5.1.12
   cz-conventional-changelog: 3.3.0
   eslint: 8.8.0
@@ -74,7 +74,7 @@ specifiers:
   prettier-plugin-prisma: 3.9.0
   prettier-plugin-sh: 0.8.1
   prettier-plugin-sort-json: 0.0.2
-  prisma: 3.9.1
+  prisma: 3.9.2
   react: 17.0.2
   react-dom: 17.0.2
   react-hook-form: 7.25.3
@@ -95,7 +95,7 @@ specifiers:
 
 dependencies:
   '@apollo/client': 3.5.8_graphql@15.8.0+react@17.0.2
-  '@chakra-ui/icons': 1.1.1_85b49cb3d86ed476e527aa1f4e0cad01
+  '@chakra-ui/icons': 1.1.5_85b49cb3d86ed476e527aa1f4e0cad01
   '@chakra-ui/react': 1.8.1_88034fc2b4952240f4541bcaed1eccf6
   '@chakra-ui/system': 1.10.1_922a85da57e3646a57465b7970b0de85
   '@emotion/cache': 11.7.1
@@ -103,7 +103,7 @@ dependencies:
   '@emotion/react': 11.7.1_4c43f11de5d0fbfeadbc3db3e83bf822
   '@emotion/server': 11.4.0_@emotion+css@11.7.1
   '@emotion/styled': 11.6.0_e3f27ad4bb9a5f954441799b3f2e99fa
-  '@prisma/client': 3.9.1_prisma@3.9.1
+  '@prisma/client': 3.9.1_prisma@3.9.2
   apollo-server-micro: 3.6.2_graphql@15.8.0+micro@9.3.4
   argon2: 0.28.4
   framer-motion: 6.2.3_react-dom@17.0.2+react@17.0.2
@@ -146,7 +146,7 @@ devDependencies:
   commitizen: 4.2.4
   cross-env: 7.0.3
   cspell: 5.17.0
-  cssnano: 5.0.16_postcss@8.4.6
+  cssnano: 5.0.17_postcss@8.4.6
   cssnano-preset-advanced: 5.1.12_postcss@8.4.6
   cz-conventional-changelog: 3.3.0
   eslint: 8.8.0
@@ -176,7 +176,7 @@ devDependencies:
   prettier-plugin-prisma: 3.9.0_prettier@2.5.1
   prettier-plugin-sh: 0.8.1_prettier@2.5.1
   prettier-plugin-sort-json: 0.0.2_prettier@2.5.1
-  prisma: 3.9.1
+  prisma: 3.9.2
   rimraf: 3.0.2
   secretlint: 4.1.4
   stylelint: 14.3.0
@@ -760,17 +760,6 @@ packages:
       react: 17.0.2
     dev: false
 
-  /@chakra-ui/icon/1.2.1_85b49cb3d86ed476e527aa1f4e0cad01:
-    resolution: {integrity: sha512-uZxFsiY4Tld+LvGIX7cky0H6oMRac8udPMQRzIk/UQeNZcsWisGetatbQsew3y1lWV/iH/8+TlDuW13GWGyGGQ==}
-    peerDependencies:
-      '@chakra-ui/system': '>=1.0.0'
-      react: '>=16.8.6'
-    dependencies:
-      '@chakra-ui/system': 1.10.1_922a85da57e3646a57465b7970b0de85
-      '@chakra-ui/utils': 1.9.1
-      react: 17.0.2
-    dev: false
-
   /@chakra-ui/icon/2.0.1_85b49cb3d86ed476e527aa1f4e0cad01:
     resolution: {integrity: sha512-5/xmEeteWvIf6ELuP2VKxqcR3kAQkXWZDqNOcExvfi0yustJ3XY1Q/yPKUfdjt0MkUS1qZlNCycoZdF52Rwz2g==}
     peerDependencies:
@@ -782,13 +771,24 @@ packages:
       react: 17.0.2
     dev: false
 
-  /@chakra-ui/icons/1.1.1_85b49cb3d86ed476e527aa1f4e0cad01:
-    resolution: {integrity: sha512-/+u6euCOFw6J1DZW7NcVFtib4mygJBoqRdsKiU1Z3uiTC+zQTBzcCt54NQ+kK8rhuNzJ+odahnt/AbjBJgZ+5A==}
+  /@chakra-ui/icon/2.0.3_85b49cb3d86ed476e527aa1f4e0cad01:
+    resolution: {integrity: sha512-G2rB5DeeNM4VlsUv49OYGyRJhr6fKkSRDskOHE9yV9QmaIatnYmGZCnvrSALe1EmzJYD0g9wessEyPHId5KtaQ==}
     peerDependencies:
       '@chakra-ui/system': '>=1.0.0'
       react: '>=16.8.6'
     dependencies:
-      '@chakra-ui/icon': 1.2.1_85b49cb3d86ed476e527aa1f4e0cad01
+      '@chakra-ui/system': 1.10.1_922a85da57e3646a57465b7970b0de85
+      '@chakra-ui/utils': 1.10.2
+      react: 17.0.2
+    dev: false
+
+  /@chakra-ui/icons/1.1.5_85b49cb3d86ed476e527aa1f4e0cad01:
+    resolution: {integrity: sha512-UjTexT3SXCNu6XbAjyHFTkYAMSq5MFTf1b5WSmvI6Bt4PZ5hYXGKGeFVaZi4jH58WCWD/HKsEq+MrHBDaaeUnA==}
+    peerDependencies:
+      '@chakra-ui/system': '>=1.0.0'
+      react: '>=16.8.6'
+    dependencies:
+      '@chakra-ui/icon': 2.0.3_85b49cb3d86ed476e527aa1f4e0cad01
       '@chakra-ui/system': 1.10.1_922a85da57e3646a57465b7970b0de85
       '@types/react': 17.0.39
       react: 17.0.2
@@ -1030,7 +1030,7 @@ packages:
     peerDependencies:
       react: '>=16.8.6'
     dependencies:
-      '@chakra-ui/utils': 1.10.0
+      '@chakra-ui/utils': 1.10.2
       react: 17.0.2
     dev: false
 
@@ -1335,8 +1335,8 @@ packages:
       lodash.mergewith: 4.6.2
     dev: false
 
-  /@chakra-ui/utils/1.9.1:
-    resolution: {integrity: sha512-Tue8JfpzOqeHd8vSqAnX1l/Y3Gg456+BXFP/TH6mCIeqMAMbrvv25vDskds0wlXRjMYdmpqHxCEzkalFrscGHA==}
+  /@chakra-ui/utils/1.10.2:
+    resolution: {integrity: sha512-V4nGBkebZpz6P7AgbZBiXi2Pn3RNSuzR1A6VsQCzAvxYU2+csqZGLqmC07pvCSACNB75sT1en+Xd3XT0QKr0sA==}
     dependencies:
       '@types/lodash.mergewith': 4.6.6
       css-box-model: 1.2.1
@@ -2501,7 +2501,7 @@ packages:
     resolution: {integrity: sha512-92FRmppjjqz29VMJ2dn+xdyXZBrMlE42AV6Kq6BwjWV7CNUW1hs2FtxSNLQE+gJhaZ6AAmYuO9y8dshhcBl7vA==}
     dev: false
 
-  /@prisma/client/3.9.1_prisma@3.9.1:
+  /@prisma/client/3.9.1_prisma@3.9.2:
     resolution: {integrity: sha512-aLwfXKLvL+loQ0IuPPCXkcq8cXBg1IeoHHa5lqQu3dJHdj45wnislA/Ny4UxRQjD5FXqrfAb8sWtF+jhdmjFTg==}
     engines: {node: '>=12.6'}
     requiresBuild: true
@@ -2512,7 +2512,7 @@ packages:
         optional: true
     dependencies:
       '@prisma/engines-version': 3.9.0-58.bcc2ff906db47790ee902e7bbc76d7ffb1893009
-      prisma: 3.9.1
+      prisma: 3.9.2
     dev: false
 
   /@prisma/engines-version/3.9.0-58.bcc2ff906db47790ee902e7bbc76d7ffb1893009:
@@ -4994,8 +4994,8 @@ packages:
       postcss: 8.4.6
     dev: true
 
-  /cssnano/5.0.16_postcss@8.4.6:
-    resolution: {integrity: sha512-ryhRI9/B9VFCwPbb1z60LLK5/ldoExi7nwdnJzpkLZkm2/r7j2X3jfY+ZvDVJhC/0fPZlrAguYdHNFg0iglPKQ==}
+  /cssnano/5.0.17_postcss@8.4.6:
+    resolution: {integrity: sha512-fmjLP7k8kL18xSspeXTzRhaFtRI7DL9b8IcXR80JgtnWBpvAzHT7sCR/6qdn0tnxIaINUN6OEQu83wF57Gs3Xw==}
     engines: {node: ^10 || ^12 || >=14.0}
     peerDependencies:
       postcss: ^8.2.15
@@ -9077,8 +9077,8 @@ packages:
     hasBin: true
     dev: true
 
-  /prisma/3.9.1:
-    resolution: {integrity: sha512-IGcJAu5LzlFv+i+NNhOEh1J1xVVttsVdRBxmrMN7eIH+7mRN6L89Hz1npUAiz4jOpNlHC7n9QwaOYZGxTqlwQw==}
+  /prisma/3.9.2:
+    resolution: {integrity: sha512-i9eK6cexV74OgeWaH3+e6S07kvC9jEZTl6BqtBH398nlCU0tck7mE9dicY6YQd+euvMjjCtY89q4NgmaPnUsSg==}
     engines: {node: '>=12.6'}
     hasBin: true
     requiresBuild: true
