@@ -56,8 +56,8 @@
 		"next:dev": "next dev",
 		"next:export": "next export",
 		"next:start": "next start",
-		"nexus:generate": "cross-env NODE_ENV=development ts-node --transpile-only --compiler-options \"{\\\"module\\\":\\\"CommonJS\\\"}\" src/graphql/schema",
-		"nexus:watch": "cross-env NODE_ENV=development ts-node-dev --transpile-only --compiler-options \"{\\\"module\\\":\\\"CommonJS\\\"}\" src/graphql/schema",
+		"nexus:generate": "cross-env NODE_ENV=development ts-node --transpile-only src/graphql/schema",
+		"nexus:watch": "cross-env NODE_ENV=development ts-node-dev --transpile-only src/graphql/schema",
 		"preinstall": "pnpx -y only-allow pnpm",
 		"prepare": "pnpx -y husky install",
 		"prettier:fix": "pnpm prettier:individual -- .",
@@ -178,8 +178,7 @@
 		"ts-node": "10.4.0",
 		"ts-node-dev": "1.1.8",
 		"tsconfig-paths": "3.12.0",
-		"typescript": "4.5.5",
-		"webpack": "5.68.0"
+		"typescript": "4.5.5"
 	},
 	"browserslist": [
 		"defaults"
@@ -201,6 +200,6 @@
 	},
 	"prisma": {
 		"schema": "src/graphql/schema.prisma",
-		"seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} src/graphql/seed.ts"
+		"seed": "ts-node src/graphql/seed.ts"
 	}
 }
