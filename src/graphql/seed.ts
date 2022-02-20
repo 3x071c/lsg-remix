@@ -6,12 +6,7 @@ import { Prisma, PrismaClient, User, Page } from "@prisma/client";
 import { sample, sampleSize, random, camelCase } from "lodash";
 import { hashPassword } from "$lib/auth";
 
-const prisma = new PrismaClient({
-	errorFormat: "pretty",
-	// log: ["query", "info", "warn", "error"],
-});
-
-process.exit(1);
+const prisma = new PrismaClient();
 
 const seedDate = (start: Date, end: Date) =>
 	new Date(
@@ -20,52 +15,24 @@ const seedDate = (start: Date, end: Date) =>
 	);
 
 const uniqueData: string[] = [];
-const getUniqueNumber = (length: number) => {
-	if (length < 1) return 0;
-	const min = (length - 1) ** 10;
-	let u: number;
-	do {
-		u = Math.floor(min + Math.random() * min * 9);
-	} while (uniqueData.includes(u.toString()));
-	uniqueData.push(u.toString());
-	return u;
+const getNumber = (length: number) => {
+	return random(10 ** (length - 1), 10 ** length - 1);
 };
-// const getUniqueString = (length?: number) => {
-// 	const len = length ?? 36;
-// 	let u: string;
-// 	do {
-// 		u = Array.from({ length: Math.ceil(len / 36) }, () => randomUUID())
-// 			.join("")
-// 			.substring(0, len);
-// 	} while (uniqueData.includes(u));
-// 	uniqueData.push(u);
-// 	return u;
-// };
-const getUniqueUser = (): [
-	firstname: string,
-	lastname: string,
-	username: string,
-] => {
-	let firstname: string;
-	let lastname: string;
-	let username: string;
+const makeUnique = (arg: string | number) => {
 	let i = 0;
+	let computed = "";
 	do {
-		firstname = faker.name.firstName();
-		lastname = faker.name.lastName();
-		username = `${firstname
-			.charAt(0)
-			.toLowerCase()}.${lastname.toLowerCase()}${getUniqueNumber(i)}`;
 		i += 1;
-	} while (uniqueData.includes(username));
-	uniqueData.push(username);
-	return [firstname, lastname, username];
+		computed = `${arg}${(i && getNumber(Math.floor(i / 10))) || ""}`;
+	} while (uniqueData.includes(computed));
+	return computed;
 };
 const getUnique = (fn: () => string) => {
 	let u: string;
 	let i = 0;
 	do {
-		u = `${fn()}${getUniqueNumber(i)}`;
+		u = fn();
+		if (i >= 10) u = makeUnique(u);
 		i += 1;
 	} while (uniqueData.includes(u));
 	uniqueData.push(u);
@@ -75,14 +42,17 @@ const getUnique = (fn: () => string) => {
 const start = new Date("2020");
 const end = new Date();
 
-const seedUser = async (
-	_start?: Date,
-	admin?: boolean,
-): Promise<Prisma.UserCreateInput> => {
-	const [firstname, lastname, username] = getUniqueUser();
+const seedUser = async (admin?: boolean): Promise<Prisma.UserCreateInput> => {
+	let firstname = "";
+	let lastname = "";
+	const username = getUnique(() => {
+		firstname = faker.name.firstName();
+		lastname = faker.name.lastName();
+		return `${firstname.charAt(0).toLowerCase()}.${lastname.toLowerCase()}`;
+	});
 	const canMutateUsersSubscription =
 		admin ?? sample([true, ...(Array(9).fill(false) as boolean[])])!;
-	const createdAt = seedDate(_start ?? start, end);
+	const createdAt = seedDate(start, end);
 
 	return {
 		canMutatePagesSubscription:
@@ -293,7 +263,7 @@ export default async function main(): Promise<void> {
 	console.log(`Start seeding ✨`);
 
 	// 1. Create some users 🦭
-	for (let i = 0; i < random(5, 20); i += 1) {
+	for (let i = 0; i < random(10, 30); i += 1) {
 		const user = await prisma.user.create({
 			data: await seedUser(),
 		});
@@ -301,6 +271,16 @@ export default async function main(): Promise<void> {
 			`👋 Created user ${user.firstname} ${user.lastname} (${user.username}) with id ${user.id}`,
 		);
 	}
+	// 1b. Create some admins 😎
+	for (let i = 0; i < random(1, 5); i += 1) {
+		const admin = await prisma.user.create({
+			data: await seedUser(true),
+		});
+		console.log(
+			`👋 Created admin ${admin.firstname} ${admin.lastname} (${admin.username}) with id ${admin.id}`,
+		);
+	}
+	// 1c. Fetch the created entries for later
 	const users = await prisma.user.findMany();
 	const canMutateUsersSubscriptionUsers = await prisma.user.findMany({
 		where: {
@@ -342,4 +322,8 @@ export default async function main(): Promise<void> {
 	console.log(`✨ Seeding finished.`);
 }
 
-void main();
+main().finally(() => {
+	void (async () => {
+		await prisma.$disconnect();
+	})();
+});
