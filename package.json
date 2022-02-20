@@ -118,7 +118,7 @@
 	"devDependencies": {
 		"@babel/core": "7.16.12",
 		"@commitlint/cli": "16.1.0",
-		"@commitlint/config-conventional": "16.0.0",
+		"@commitlint/config-conventional": "16.2.1",
 		"@cspell/dict-de-de": "2.1.0",
 		"@faker-js/faker": "6.0.0-alpha.5",
 		"@secretlint/secretlint-rule-preset-recommend": "4.1.4",
