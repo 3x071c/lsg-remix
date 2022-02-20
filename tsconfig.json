@@ -122,6 +122,9 @@
 	"include": ["next-env.d.ts", "**/*", "**/.*"],
 	"ts-node": {
 		"files": true,
-		"require": ["tsconfig-paths/register"]
+		"require": ["tsconfig-paths/register"],
+		"compilerOptions": {
+			"module": "CommonJS"
+		}
 	}
 }
