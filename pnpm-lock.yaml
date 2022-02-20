@@ -6,7 +6,7 @@ specifiers:
   '@chakra-ui/icons': 1.1.5
   '@chakra-ui/react': 1.8.1
   '@chakra-ui/system': 1.11.1
-  '@commitlint/cli': 16.1.0
+  '@commitlint/cli': 16.2.1
   '@commitlint/config-conventional': 16.2.1
   '@cspell/dict-de-de': 2.1.0
   '@emotion/cache': 11.7.1
@@ -125,7 +125,7 @@ dependencies:
 
 devDependencies:
   '@babel/core': 7.16.12
-  '@commitlint/cli': 16.1.0
+  '@commitlint/cli': 16.2.1
   '@commitlint/config-conventional': 16.2.1
   '@cspell/dict-de-de': 2.1.0
   '@faker-js/faker': 6.0.0-alpha.5
@@ -1429,8 +1429,8 @@ packages:
       react: 17.0.2
     dev: false
 
-  /@commitlint/cli/16.1.0:
-    resolution: {integrity: sha512-x5L1knvA3isRWBRVQx+Q6D45pA9139a2aZQYpxkljMG0dj4UHZkCnsYWpnGalxPxASI7nrI0KedKfS2YeQ55cQ==}
+  /@commitlint/cli/16.2.1:
+    resolution: {integrity: sha512-zfKf+B9osuiDbxGMJ7bWFv7XFCW8wlQYPtCffNp7Ukdb7mdrep5R9e03vPUZysnwp8NX6hg05kPEvnD/wRIGWw==}
     engines: {node: '>=v12'}
     hasBin: true
     dependencies:
