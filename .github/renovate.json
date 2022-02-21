@@ -13,9 +13,8 @@
 		"enabled": true
 	},
 	"prCreation": "not-pending",
-	"prNotPendingHours": 1,
+	"prNotPendingHours": 24,
 	"rangeStrategy": "auto",
 	"semanticCommits": "enabled",
-	"stabilityDays": 7,
 	"timezone": "Europe/Berlin"
 }
