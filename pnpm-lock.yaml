@@ -3,7 +3,7 @@ lockfileVersion: 5.3
 specifiers:
   '@apollo/client': 3.5.9
   '@babel/core': 7.16.12
-  '@chakra-ui/icons': 1.1.5
+  '@chakra-ui/icons': 1.1.7
   '@chakra-ui/react': 1.8.1
   '@chakra-ui/system': 1.11.1
   '@commitlint/cli': 16.2.1
@@ -95,7 +95,7 @@ specifiers:
 
 dependencies:
   '@apollo/client': 3.5.9_graphql@15.8.0+react@17.0.2
-  '@chakra-ui/icons': 1.1.5_2cf554a55fbc8fab29aee8384baf68a3
+  '@chakra-ui/icons': 1.1.7_2cf554a55fbc8fab29aee8384baf68a3
   '@chakra-ui/react': 1.8.1_a9b32b166268f09deeff15683b6b21ef
   '@chakra-ui/system': 1.11.1_922a85da57e3646a57465b7970b0de85
   '@emotion/cache': 11.7.1
@@ -794,24 +794,24 @@ packages:
       react: 17.0.2
     dev: false
 
-  /@chakra-ui/icon/2.0.3_2cf554a55fbc8fab29aee8384baf68a3:
-    resolution: {integrity: sha512-G2rB5DeeNM4VlsUv49OYGyRJhr6fKkSRDskOHE9yV9QmaIatnYmGZCnvrSALe1EmzJYD0g9wessEyPHId5KtaQ==}
+  /@chakra-ui/icon/2.0.5_2cf554a55fbc8fab29aee8384baf68a3:
+    resolution: {integrity: sha512-ZrqRvCCIxGr4qFd/r1pmtd9tobRmv8KAxV7ygFoc/t4vOSKTcVIjhE12gsI3FzgvXM15ZFVwsxa1zodwgo5neQ==}
     peerDependencies:
       '@chakra-ui/system': '>=1.0.0'
       react: '>=16.8.6'
     dependencies:
       '@chakra-ui/system': 1.11.1_922a85da57e3646a57465b7970b0de85
-      '@chakra-ui/utils': 1.10.2
+      '@chakra-ui/utils': 1.10.4
       react: 17.0.2
     dev: false
 
-  /@chakra-ui/icons/1.1.5_2cf554a55fbc8fab29aee8384baf68a3:
-    resolution: {integrity: sha512-UjTexT3SXCNu6XbAjyHFTkYAMSq5MFTf1b5WSmvI6Bt4PZ5hYXGKGeFVaZi4jH58WCWD/HKsEq+MrHBDaaeUnA==}
+  /@chakra-ui/icons/1.1.7_2cf554a55fbc8fab29aee8384baf68a3:
+    resolution: {integrity: sha512-YIHxey/B4M2PyFASlHXtAWFyW+tsAtGAChOJ8dsM2kpu1MbVUqm/6nMI1KIFd7Te5IWuNYA75rAHBdLI0Yu61A==}
     peerDependencies:
       '@chakra-ui/system': '>=1.0.0'
       react: '>=16.8.6'
     dependencies:
-      '@chakra-ui/icon': 2.0.3_2cf554a55fbc8fab29aee8384baf68a3
+      '@chakra-ui/icon': 2.0.5_2cf554a55fbc8fab29aee8384baf68a3
       '@chakra-ui/system': 1.11.1_922a85da57e3646a57465b7970b0de85
       '@types/react': 17.0.39
       react: 17.0.2
@@ -1393,15 +1393,6 @@ packages:
 
   /@chakra-ui/utils/1.10.0:
     resolution: {integrity: sha512-Zm0RoZRBDXEhDCuj2oPeLyGTEH+SwCgbFPTSuwpKSVXOXCtjvA2zWC7cY6Fk1RDcMCVbL2cPlQTTgKnKPh79Lg==}
-    dependencies:
-      '@types/lodash.mergewith': 4.6.6
-      css-box-model: 1.2.1
-      framesync: 5.3.0
-      lodash.mergewith: 4.6.2
-    dev: false
-
-  /@chakra-ui/utils/1.10.2:
-    resolution: {integrity: sha512-V4nGBkebZpz6P7AgbZBiXi2Pn3RNSuzR1A6VsQCzAvxYU2+csqZGLqmC07pvCSACNB75sT1en+Xd3XT0QKr0sA==}
     dependencies:
       '@types/lodash.mergewith': 4.6.6
       css-box-model: 1.2.1
