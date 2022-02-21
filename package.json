@@ -95,7 +95,7 @@
 		"@emotion/react": "11.7.1",
 		"@emotion/server": "11.4.0",
 		"@emotion/styled": "11.6.0",
-		"@prisma/client": "3.9.1",
+		"@prisma/client": "3.9.2",
 		"apollo-server-micro": "3.6.3",
 		"argon2": "0.28.4",
 		"framer-motion": "6.2.7",
