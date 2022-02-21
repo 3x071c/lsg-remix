@@ -86,7 +86,7 @@
 		"watch": "run-p apollo:watch prisma:watch"
 	},
 	"dependencies": {
-		"@apollo/client": "3.5.8",
+		"@apollo/client": "3.5.9",
 		"@chakra-ui/icons": "1.1.5",
 		"@chakra-ui/react": "1.8.1",
 		"@chakra-ui/system": "1.11.1",

@@ -1,7 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@apollo/client': 3.5.8
+  '@apollo/client': 3.5.9
   '@babel/core': 7.16.12
   '@chakra-ui/icons': 1.1.5
   '@chakra-ui/react': 1.8.1
@@ -94,7 +94,7 @@ specifiers:
   yup: 0.32.11
 
 dependencies:
-  '@apollo/client': 3.5.8_graphql@15.8.0+react@17.0.2
+  '@apollo/client': 3.5.9_graphql@15.8.0+react@17.0.2
   '@chakra-ui/icons': 1.1.5_2cf554a55fbc8fab29aee8384baf68a3
   '@chakra-ui/react': 1.8.1_62a1f0adae34171ee3d250394ea52770
   '@chakra-ui/system': 1.11.1_922a85da57e3646a57465b7970b0de85
@@ -190,8 +190,8 @@ devDependencies:
 
 packages:
 
-  /@apollo/client/3.5.8_graphql@15.8.0+react@17.0.2:
-    resolution: {integrity: sha512-MAm05+I1ullr64VLpZwon/ISnkMuNLf6vDqgo9wiMhHYBGT4yOAbAIseRdjCHZwfSx/7AUuBgaTNOssZPIr6FQ==}
+  /@apollo/client/3.5.9_graphql@15.8.0+react@17.0.2:
+    resolution: {integrity: sha512-Qq3OE3GpyPG2fYXBzi1n4QXcKZ11c6jHdrXK2Kkn9SD+vUymSrllXsldqnKUK9tslxKqkKzNrkCXkLv7PxwfSQ==}
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
       react: ^16.8.0 || ^17.0.0
