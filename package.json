@@ -168,7 +168,7 @@
 		"prettier-plugin-prisma": "3.9.0",
 		"prettier-plugin-sh": "0.8.1",
 		"prettier-plugin-sort-json": "0.0.2",
-		"prisma": "3.9.2",
+		"prisma": "3.10.0",
 		"rimraf": "3.0.2",
 		"secretlint": "4.1.4",
 		"stylelint": "14.5.2",
