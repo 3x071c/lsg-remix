@@ -116,7 +116,7 @@
 		"yup": "0.32.11"
 	},
 	"devDependencies": {
-		"@babel/core": "7.16.12",
+		"@babel/core": "7.17.5",
 		"@commitlint/cli": "16.2.1",
 		"@commitlint/config-conventional": "16.2.1",
 		"@cspell/dict-de-de": "2.1.0",
