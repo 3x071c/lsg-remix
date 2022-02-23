@@ -31,7 +31,7 @@ specifiers:
   apollo-server-micro: 3.6.3
   argon2: 0.28.4
   autoprefixer: 10.4.2
-  browserslist: 4.19.1
+  browserslist: 4.19.3
   commitizen: 4.2.4
   cross-env: 7.0.3
   cspell: 5.17.0
@@ -142,7 +142,7 @@ devDependencies:
   '@typescript-eslint/parser': 5.10.1_eslint@8.9.0+typescript@4.5.5
   apollo: 2.33.9_typescript@4.5.5
   autoprefixer: 10.4.2_postcss@8.4.6
-  browserslist: 4.19.1
+  browserslist: 4.19.3
   commitizen: 4.2.4
   cross-env: 7.0.3
   cspell: 5.17.0
@@ -367,7 +367,7 @@ packages:
       '@babel/compat-data': 7.17.0
       '@babel/core': 7.16.12
       '@babel/helper-validator-option': 7.16.7
-      browserslist: 4.19.1
+      browserslist: 4.19.3
       semver: 6.3.0
     dev: true
 
@@ -3937,7 +3937,7 @@ packages:
     peerDependencies:
       postcss: ^8.1.0
     dependencies:
-      browserslist: 4.19.1
+      browserslist: 4.19.3
       caniuse-lite: 1.0.30001312
       fraction.js: 4.1.3
       normalize-range: 0.1.2
@@ -4052,8 +4052,8 @@ packages:
       fill-range: 7.0.1
     dev: true
 
-  /browserslist/4.19.1:
-    resolution: {integrity: sha512-u2tbbG5PdKRTUoctO3NBD8FQ5HdPh1ZXPHzp1rwaa5jTc+RV9/+RlWiAIKmjRPQF+xbGM9Kklj5bZQFa2s/38A==}
+  /browserslist/4.19.3:
+    resolution: {integrity: sha512-XK3X4xtKJ+Txj8G5c30B4gsm71s69lqXlkYui4s6EkKxuv49qjYlY6oVd+IFJ73d4YymtM3+djvvt/R/iJwwDg==}
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
@@ -4153,7 +4153,7 @@ packages:
   /caniuse-api/3.0.0:
     resolution: {integrity: sha512-bsTwuIg/BZZK/vreVTYYbSWoe2F+71P7K5QGEX+pT250DZbfU1MQ5prOKpPR+LL6uWKK3KMwMCAS74QB3Um1uw==}
     dependencies:
-      browserslist: 4.19.1
+      browserslist: 4.19.3
       caniuse-lite: 1.0.30001312
       lodash.memoize: 4.1.2
       lodash.uniq: 4.5.0
@@ -8342,7 +8342,7 @@ packages:
     peerDependencies:
       postcss: ^8.2.15
     dependencies:
-      browserslist: 4.19.1
+      browserslist: 4.19.3
       caniuse-api: 3.0.0
       colord: 2.9.2
       postcss: 8.4.6
@@ -8610,7 +8610,7 @@ packages:
     peerDependencies:
       postcss: ^8.2.15
     dependencies:
-      browserslist: 4.19.1
+      browserslist: 4.19.3
       caniuse-api: 3.0.0
       cssnano-utils: 3.0.2_postcss@8.4.6
       postcss: 8.4.6
@@ -8645,7 +8645,7 @@ packages:
     peerDependencies:
       postcss: ^8.2.15
     dependencies:
-      browserslist: 4.19.1
+      browserslist: 4.19.3
       cssnano-utils: 3.0.2_postcss@8.4.6
       postcss: 8.4.6
       postcss-value-parser: 4.2.0
@@ -8736,7 +8736,7 @@ packages:
     peerDependencies:
       postcss: ^8.2.15
     dependencies:
-      browserslist: 4.19.1
+      browserslist: 4.19.3
       postcss: 8.4.6
       postcss-value-parser: 4.2.0
     dev: true
@@ -8816,7 +8816,7 @@ packages:
       '@csstools/postcss-is-pseudo-class': 2.0.0_postcss@8.4.6
       '@csstools/postcss-normalize-display-values': 1.0.0_postcss@8.4.6
       autoprefixer: 10.4.2_postcss@8.4.6
-      browserslist: 4.19.1
+      browserslist: 4.19.3
       css-blank-pseudo: 3.0.3_postcss@8.4.6
       css-has-pseudo: 3.0.4_postcss@8.4.6
       css-prefers-color-scheme: 6.0.3_postcss@8.4.6
@@ -8878,7 +8878,7 @@ packages:
     peerDependencies:
       postcss: ^8.2.15
     dependencies:
-      browserslist: 4.19.1
+      browserslist: 4.19.3
       caniuse-api: 3.0.0
       postcss: 8.4.6
     dev: true
@@ -10187,7 +10187,7 @@ packages:
     peerDependencies:
       postcss: ^8.2.15
     dependencies:
-      browserslist: 4.19.1
+      browserslist: 4.19.3
       postcss: 8.4.6
       postcss-selector-parser: 6.0.9
     dev: true
