@@ -1,4 +1,3 @@
-import type { Context } from "../context";
 import type { CanMutateUsersOnUsers } from "@prisma/client";
 import {
 	objectType,
@@ -10,7 +9,7 @@ import {
 	booleanArg,
 } from "nexus";
 import { hashPassword, verifyPassword } from "$lib/auth";
-import { undefinedOrValue } from "$lib/prisma";
+import { undefinedOrValue } from "$lib/util";
 
 export const User = objectType({
 	definition: (t) => {
@@ -66,39 +65,23 @@ export const User = objectType({
 	name: "User",
 });
 
-export const canMutateUser = async (
-	userId: number,
-	ctx: Context,
-): Promise<boolean> => {
-	if (ctx.req.session.user == null) return false;
-
-	const user = await ctx.prisma.user.findUnique({
-		include: {
-			canMutateUsers: true,
-		},
-		where: {
-			id: ctx.req.session.user.id,
-		},
-	});
-
-	if (!user) return false;
-
-	return (
-		user.canMutateUsers.filter(
-			(u: CanMutateUsersOnUsers) => u.childId === userId,
-		).length > 0
-	);
-};
-
 export const UserQuery = queryField("user", {
 	args: {
 		id: nonNull(intArg()),
 	},
-	authorize: async (_root, { id }, ctx) => {
-		return (
-			ctx.req.session.user?.id === id || (await canMutateUser(id, ctx))
-		);
-	},
+	authorize: async (_root, { id }, ctx) =>
+		!!(await ctx.prisma.user.findFirst({
+			where: {
+				id: ctx.req.session.user?.id ?? 0,
+				canMutateUsers: {
+					some: {
+						child: {
+							id,
+						},
+					},
+				},
+			},
+		})),
 	resolve: (_root, { id }, ctx) =>
 		ctx.prisma.user.findUnique({ where: { id } }),
 	type: "User",
@@ -106,26 +89,16 @@ export const UserQuery = queryField("user", {
 export const UsersQuery = queryField("users", {
 	authorize: (_root, _args, ctx) => !!ctx.req.session.user,
 	list: true,
-	resolve: async (_root, _args, ctx) => {
-		const users = await ctx.prisma.user.findMany({
+	resolve: async (_root, _args, ctx) =>
+		await ctx.prisma.user.findMany({
 			where: {
-				OR: [
-					{
-						canBeMutatedBy: {
-							some: {
-								parentId: ctx.req.session.user!.id,
-							},
-						},
+				canBeMutatedBy: {
+					some: {
+						parentId: ctx.req.session.user!.id,
 					},
-					{
-						id: ctx.req.session.user!.id,
-					},
-				],
+				},
 			},
-		});
-
-		return users;
-	},
+		}),
 	type: "User",
 });
 
@@ -134,6 +107,7 @@ export const LoginMutation = mutationField("login", {
 		password: nonNull(stringArg()),
 		username: nonNull(stringArg()),
 	},
+	authorize: (_root, _args, ctx) => !ctx.req.session,
 	resolve: async (_root, { username, password }, ctx) => {
 		const user = await ctx.prisma.user.findUnique({
 			where: {
@@ -185,17 +159,14 @@ export const CreateUserMutation = mutationField("createUser", {
 		lastname: nonNull(stringArg()),
 		password: nonNull(stringArg()),
 	},
-	authorize: async (_root, _args, ctx) => {
-		if (!ctx.req.session.user) return false;
-
-		const user = await ctx.prisma.user.findUnique({
-			where: {
-				id: ctx.req.session.user?.id,
-			},
-		});
-
-		return !!user?.canMutateUsersSubscription;
-	},
+	authorize: async (_root, _args, ctx) =>
+		(
+			await ctx.prisma.user.findUnique({
+				where: {
+					id: ctx.req.session.user?.id,
+				},
+			})
+		)?.canMutateUsersSubscription ?? false,
 	resolve: async (
 		_root,
 		{
@@ -207,26 +178,51 @@ export const CreateUserMutation = mutationField("createUser", {
 		},
 		ctx,
 	) => {
-		const hash = await hashPassword(password);
-
-		return ctx.prisma.user.create({
+		const { id } = await ctx.prisma.user.create({
 			data: {
-				/* Give the user who created this user the permission to edit
-				him */
-				canBeMutatedBy: {
-					create: {
-						createdById: ctx.req.session.user!.id,
-						parentId: ctx.req.session.user!.id,
-					},
-				},
 				canMutatePagesSubscription,
 				canMutateUsersSubscription,
 				firstname,
 				lastname,
-				password: hash,
+				password: await hashPassword(password),
 				username: createUsername(firstname, lastname),
 			},
 		});
+		await ctx.prisma.$transaction([
+			(
+				await ctx.prisma.user.findMany({
+					OR: [
+						{
+							canMutateUsersSubscription: true,
+						},
+						{
+							id,
+						},
+					],
+				})
+			).map(({ id: userId }) => {
+				return ctx.prisma.user.update({
+					data: {
+						canMutateUsers: {
+							connectOrCreate: {
+								create: {
+									childId: id,
+								},
+								where: {
+									parentId_childId: {
+										childId: id,
+										parentId: userId,
+									},
+								},
+							},
+						},
+					},
+					where: {
+						id: userId,
+					},
+				});
+			}),
+		]);
 	},
 	type: "User",
 });

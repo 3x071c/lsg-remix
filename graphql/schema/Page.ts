@@ -8,7 +8,7 @@ import {
 	queryField,
 	stringArg,
 } from "nexus";
-import { undefinedOrValue } from "$lib/prisma";
+import { undefinedOrValue } from "$lib/util";
 
 export const Page = objectType({
 	definition: (t) => {
@@ -137,9 +137,19 @@ export const EditPageMutation = mutationField("editPage", {
 		path: stringArg(),
 		title: stringArg(),
 	},
-	authorize: (_root, { id }, ctx) => {
-		return canMutatePage(id, ctx);
-	},
+	authorize: async (_root, { id }, ctx) =>
+		!!(await ctx.prisma.page.findFirst({
+			where: {
+				id,
+				canBeMutatedBy: {
+					some: {
+						user: {
+							id: ctx.req.session.user?.id ?? 0,
+						},
+					},
+				},
+			},
+		})),
 	resolve: (_root, { content, id, parentId, path, title }, ctx) => {
 		return ctx.prisma.page.update({
 			data: {
@@ -177,38 +187,38 @@ export const DeletePageMutation = mutationField("deletePage", {
 	args: {
 		id: nonNull(intArg()),
 	},
-	authorize: (_root, { id }, ctx) => {
-		return canMutatePage(id, ctx);
-	},
-	resolve: async (_root, { id }, ctx) => {
-		const deletePage = ctx.prisma.page.delete({
+	authorize: async (_root, { id }, ctx) =>
+		!!(await ctx.prisma.page.findFirst({
 			where: {
 				id,
-			},
-		});
-
-		// delete all canMutatePagesOnUsers entries with this pageId
-		const deletePagePermissions =
-			ctx.prisma.canMutatePagesOnUsers.deleteMany({
-				where: {
-					pageId: id,
+				canBeMutatedBy: {
+					some: {
+						user: {
+							id: ctx.req.session.user?.id ?? 0,
+						},
+					},
 				},
-			});
-
-		// delete all pagesOnUsers entries
-		const deletePageOnUser = ctx.prisma.pagesOnUsers.deleteMany({
-			where: {
-				pageId: id,
 			},
-		});
-
-		const transaction = await ctx.prisma.$transaction([
-			deletePagePermissions,
-			deletePageOnUser,
-			deletePage,
-		]);
-
-		return transaction[2];
-	},
+		})),
+	resolve: async (_root, { id }, ctx) =>
+		(
+			await ctx.prisma.$transaction([
+				ctx.prisma.canMutatePagesOnUsers.deleteMany({
+					where: {
+						pageId: id,
+					},
+				}),
+				ctx.prisma.pagesOnUsers.deleteMany({
+					where: {
+						pageId: id,
+					},
+				}),
+				ctx.prisma.page.delete({
+					where: {
+						id,
+					},
+				}),
+			])
+		)[2],
 	type: "Page",
 });
