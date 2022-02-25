@@ -72,8 +72,8 @@ export const CreatePageMutation = mutationField("createPage", {
 
 		return !!user?.canMutatePagesSubscription;
 	},
-	resolve: async (_root, { content, parentId, path, title }, ctx) => {
-		const page = await ctx.prisma.page.create({
+	resolve: (_root, { content, parentId, path, title }, ctx) => {
+		return ctx.prisma.page.create({
 			data: {
 				/* give the user who created the page the permission
 		 		to edit the page */
@@ -98,8 +98,6 @@ export const CreatePageMutation = mutationField("createPage", {
 				},
 			},
 		});
-
-		return page;
 	},
 	type: "Page",
 });
@@ -115,8 +113,8 @@ export const EditPageMutation = mutationField("editPage", {
 		const authorized = await canMutatePage(id, ctx);
 		return authorized;
 	},
-	resolve: async (_root, { content, id, parentId, path, title }, ctx) => {
-		const page = await ctx.prisma.page.update({
+	resolve: (_root, { content, id, parentId, path, title }, ctx) => {
+		return ctx.prisma.page.update({
 			data: {
 				content: undefinedOrValue(content),
 				parentId: undefinedOrValue(parentId),
@@ -148,8 +146,6 @@ export const EditPageMutation = mutationField("editPage", {
 				id,
 			},
 		});
-
-		return page;
 	},
 	type: "Page",
 });
@@ -157,9 +153,8 @@ export const DeletePageMutation = mutationField("deletePage", {
 	args: {
 		id: nonNull(intArg()),
 	},
-	authorize: async (_root, { id }, ctx) => {
-		const authorized = await canMutatePage(id, ctx);
-		return authorized;
+	authorize: (_root, { id }, ctx) => {
+		return canMutatePage(id, ctx);
 	},
 	resolve: async (_root, { id }, ctx) => {
 		const deletePage = ctx.prisma.page.delete({
