@@ -11,7 +11,7 @@
 		".next",
 		".husky",
 		"*.tsbuildinfo",
-		"db",
+		"db/one.db",
 		"__generated__"
 	],
 	"reporters": ["console"]

@@ -9,7 +9,7 @@ import * as types from "$schema/index";
 export default makeSchema({
 	contextType: {
 		export: "Context",
-		module: resolve("src/graphql/context.ts"),
+		module: resolve("graphql/context.ts"),
 	},
 	outputs: {
 		schema: resolve("__generated__/schema.graphql"),
