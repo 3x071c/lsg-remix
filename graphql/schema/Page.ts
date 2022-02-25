@@ -1,4 +1,5 @@
-import type { UserWithPermissions } from "$types/auth";
+import type { Context } from "../context";
+import type { CanMutatePagesOnUsers } from "@prisma/client";
 import {
 	intArg,
 	mutationField,
@@ -7,7 +8,6 @@ import {
 	queryField,
 	stringArg,
 } from "nexus";
-import { canMutatePage, getAuthenticatedUserWithPermissions } from "$lib/auth";
 import { undefinedOrValue } from "$lib/prisma";
 
 export const Page = objectType({
@@ -67,8 +67,11 @@ export const CreatePageMutation = mutationField("createPage", {
 		title: nonNull(stringArg()),
 	},
 	authorize: async (_root, _args, ctx) => {
-		const user: UserWithPermissions | null =
-			await getAuthenticatedUserWithPermissions(ctx);
+		if (!ctx.req.session.user) return false;
+
+		const user = await ctx.prisma.user.findUnique({
+			where: { id: ctx.req.session.user.id },
+		});
 
 		return !!user?.canMutatePagesSubscription;
 	},
@@ -101,6 +104,31 @@ export const CreatePageMutation = mutationField("createPage", {
 	},
 	type: "Page",
 });
+
+export const canMutatePage = async (
+	pageId: number,
+	ctx: Context,
+): Promise<boolean> => {
+	if (ctx.req.session.user == null) return false;
+
+	const user = await ctx.prisma.user.findUnique({
+		include: {
+			canMutatePages: true,
+		},
+		where: {
+			id: ctx.req.session.user.id,
+		},
+	});
+
+	if (!user) return false;
+
+	return (
+		user.canMutatePages.filter(
+			(p: CanMutatePagesOnUsers) => p.pageId === pageId,
+		).length > 0
+	);
+};
+
 export const EditPageMutation = mutationField("editPage", {
 	args: {
 		content: stringArg(),
@@ -109,9 +137,8 @@ export const EditPageMutation = mutationField("editPage", {
 		path: stringArg(),
 		title: stringArg(),
 	},
-	authorize: async (_root, { id }, ctx) => {
-		const authorized = await canMutatePage(id, ctx);
-		return authorized;
+	authorize: (_root, { id }, ctx) => {
+		return canMutatePage(id, ctx);
 	},
 	resolve: (_root, { content, id, parentId, path, title }, ctx) => {
 		return ctx.prisma.page.update({

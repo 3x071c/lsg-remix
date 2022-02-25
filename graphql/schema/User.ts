@@ -1,3 +1,5 @@
+import type { Context } from "../context";
+import type { CanMutateUsersOnUsers } from "@prisma/client";
 import {
 	objectType,
 	nonNull,
@@ -7,12 +9,7 @@ import {
 	queryField,
 	booleanArg,
 } from "nexus";
-import {
-	hashPassword,
-	verifyPassword,
-	getAuthenticatedUserWithPermissions,
-	canMutateUser,
-} from "$lib/auth";
+import { hashPassword, verifyPassword } from "$lib/auth";
 import { undefinedOrValue } from "$lib/prisma";
 
 export const User = objectType({
@@ -68,6 +65,30 @@ export const User = objectType({
 	},
 	name: "User",
 });
+
+export const canMutateUser = async (
+	userId: number,
+	ctx: Context,
+): Promise<boolean> => {
+	if (ctx.req.session.user == null) return false;
+
+	const user = await ctx.prisma.user.findUnique({
+		include: {
+			canMutateUsers: true,
+		},
+		where: {
+			id: ctx.req.session.user.id,
+		},
+	});
+
+	if (!user) return false;
+
+	return (
+		user.canMutateUsers.filter(
+			(u: CanMutateUsersOnUsers) => u.childId === userId,
+		).length > 0
+	);
+};
 
 export const UserQuery = queryField("user", {
 	args: {
@@ -165,7 +186,13 @@ export const CreateUserMutation = mutationField("createUser", {
 		password: nonNull(stringArg()),
 	},
 	authorize: async (_root, _args, ctx) => {
-		const user = await getAuthenticatedUserWithPermissions(ctx);
+		if (!ctx.req.session.user) return false;
+
+		const user = await ctx.prisma.user.findUnique({
+			where: {
+				id: ctx.req.session.user?.id,
+			},
+		});
 
 		return !!user?.canMutateUsersSubscription;
 	},
@@ -203,6 +230,7 @@ export const CreateUserMutation = mutationField("createUser", {
 	},
 	type: "User",
 });
+
 export const EditUserMutation = mutationField("editUser", {
 	args: {
 		canMutatePagesSubscription: booleanArg(),

@@ -1,9 +1,3 @@
-import type { UserWithPermissions } from "$types/auth";
-import type { Context } from "../graphql/context";
-import type {
-	CanMutatePagesOnUsers,
-	CanMutateUsersOnUsers,
-} from "@prisma/client";
 import type { IronSessionOptions } from "iron-session";
 import type {
 	NextApiHandler,
@@ -73,53 +67,3 @@ export const verifyPassword = (password: string, passwordHash: string) =>
 	verify(passwordHash, password, argonOptions);
 export const shouldRehashPassword = (passwordHash: string) =>
 	needsRehash(passwordHash, argonOptions);
-
-export const getAuthenticatedUserWithPermissions = async (
-	ctx: Context,
-): Promise<UserWithPermissions | null> => {
-	if (ctx.req.session.user == null) {
-		return null;
-	}
-
-	const user = await ctx.prisma.user.findUnique({
-		include: {
-			canMutatePages: true,
-			canMutateUsers: true,
-		},
-		where: {
-			id: ctx.req.session.user.id,
-		},
-	});
-
-	return user;
-};
-
-export const canMutatePage = async (
-	pageId: number,
-	ctx: Context,
-): Promise<boolean> => {
-	const user = await getAuthenticatedUserWithPermissions(ctx);
-
-	if (user == null) return false;
-
-	return (
-		user.canMutatePages.filter(
-			(p: CanMutatePagesOnUsers) => p.pageId === pageId,
-		).length > 0
-	);
-};
-
-export const canMutateUser = async (
-	userId: number,
-	ctx: Context,
-): Promise<boolean> => {
-	const user = await getAuthenticatedUserWithPermissions(ctx);
-
-	if (user == null) return false;
-
-	return (
-		user.canMutateUsers.filter(
-			(p: CanMutateUsersOnUsers) => p.childId === userId,
-		).length > 0
-	);
-};

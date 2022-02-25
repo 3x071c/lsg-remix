@@ -5,8 +5,3 @@ declare module "iron-session" {
 		user?: Pick<User, "id">;
 	}
 }
-
-type UserWithPermissions = User & {
-	canMutatePages: CanMutatePagesOnUsers[];
-	canMutateUsers: CanMutateUsersOnUsers[];
-};
