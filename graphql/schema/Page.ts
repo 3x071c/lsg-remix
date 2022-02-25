@@ -139,9 +139,6 @@ export const EditPageMutation = mutationField("editPage", {
 					},
 				},
 			},
-			include: {
-				users: true,
-			},
 			where: {
 				id,
 			},
