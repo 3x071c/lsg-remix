@@ -31,6 +31,8 @@ const endpoint: NextApiHandler = async (req, res) => {
 		"Origin, X-Requested-With, Content-Type, Accept",
 	);
 	res.setHeader("Access-Control-Allow-Methods", "Post");
+	if (process.env.NODE_ENV === "development")
+		res.setHeader("Access-Control-Expose-Headers", "*");
 
 	if (req.method === "OPTIONS") {
 		res.end();

@@ -17,7 +17,7 @@ const config: IronSessionOptions = {
 	cookieName: "cms_auth",
 	cookieOptions: {
 		sameSite: process.env.NODE_ENV === "production" ? "strict" : "none",
-		secure: process.env.NODE_ENV === "production",
+		secure: true,
 	},
 	password: process.env["API_AUTH_SECRET"]!,
 };
