@@ -14,7 +14,7 @@ specifiers:
   '@emotion/react': 11.7.1
   '@emotion/server': 11.4.0
   '@emotion/styled': 11.8.1
-  '@faker-js/faker': 6.0.0-alpha.5
+  '@faker-js/faker': 6.0.0-alpha.7
   '@prisma/client': 3.10.0
   '@secretlint/secretlint-rule-preset-recommend': 4.1.4
   '@stylelint/postcss-css-in-js': 0.37.2
@@ -128,7 +128,7 @@ devDependencies:
   '@commitlint/cli': 16.2.1
   '@commitlint/config-conventional': 16.2.1
   '@cspell/dict-de-de': 2.1.0
-  '@faker-js/faker': 6.0.0-alpha.5
+  '@faker-js/faker': 6.0.0-alpha.7
   '@secretlint/secretlint-rule-preset-recommend': 4.1.4
   '@stylelint/postcss-css-in-js': 0.37.2_f6e873fec3b28ce03e6db69cb781ad2c
   '@types/faker': 5.5.9
@@ -1981,9 +1981,9 @@ packages:
       - supports-color
     dev: true
 
-  /@faker-js/faker/6.0.0-alpha.5:
-    resolution: {integrity: sha512-8Is/xFxNgricqmhQR/AJ4Vi0cKzSR7FcpE0ImG9dWciuSxUkyCiK+B5/hTQP8jrVbtgTjpFC1AaTCnALJOBDmw==}
-    engines: {node: '>=12.0.0', npm: '>=7.0.0'}
+  /@faker-js/faker/6.0.0-alpha.7:
+    resolution: {integrity: sha512-T2nYE8+EfzfkRMLMSm7UvgC7fZ2KkKEyCMeyPVS0q2cuvENbt1SjWyu0bOJ0JqBbTs1g+gYMWMFMXspWlzNVmQ==}
+    engines: {node: '>=14.0.0', npm: '>=7.0.0'}
     dev: true
 
   /@graphql-tools/merge/8.2.2_graphql@15.8.0:
