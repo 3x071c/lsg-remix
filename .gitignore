@@ -262,6 +262,7 @@ $RECYCLE.BIN/
 .husky/_/
 .*cache
 db/one.db
+db/main.db
 __generated__/
 
 # === End of generic rules ===

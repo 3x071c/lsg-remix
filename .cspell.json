@@ -12,6 +12,7 @@
 		".husky",
 		"*.tsbuildinfo",
 		"db/one.db",
+		"db/main.db",
 		"__generated__"
 	],
 	"import": ["@cspell/dict-de-de/cspell-ext.json"],
