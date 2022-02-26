@@ -46,7 +46,7 @@ specifiers:
   eslint-plugin-import: 2.25.4
   eslint-plugin-jsx-a11y: 6.5.1
   eslint-plugin-prettier: 4.0.0
-  eslint-plugin-react: 7.28.0
+  eslint-plugin-react: 7.29.2
   eslint-plugin-react-hooks: 4.3.0
   faker: 5.5.3
   framer-motion: 6.2.8
@@ -150,14 +150,14 @@ devDependencies:
   cssnano-preset-advanced: 5.1.12_postcss@8.4.7
   cz-conventional-changelog: 3.3.0
   eslint: 8.9.0
-  eslint-config-airbnb: 19.0.4_cded826960a6a3d1bba2e72d77d93106
+  eslint-config-airbnb: 19.0.4_89605efdf48122e408dbd1e17e314746
   eslint-config-airbnb-typescript: 16.1.0_6e3067845dc1d0845e21237146039183
   eslint-config-next: 12.0.10_05da38aa0d7c6b76490c613c98841282
   eslint-config-prettier: 8.3.0_eslint@8.9.0
   eslint-plugin-import: 2.25.4_eslint@8.9.0
   eslint-plugin-jsx-a11y: 6.5.1_eslint@8.9.0
   eslint-plugin-prettier: 4.0.0_07b422646bb75d3db791621d4fdbc992
-  eslint-plugin-react: 7.28.0_eslint@8.9.0
+  eslint-plugin-react: 7.29.2_eslint@8.9.0
   eslint-plugin-react-hooks: 4.3.0_eslint@8.9.0
   faker: 5.5.3
   husky: 7.0.4
@@ -5439,7 +5439,7 @@ packages:
       - eslint-plugin-import
     dev: true
 
-  /eslint-config-airbnb/19.0.4_cded826960a6a3d1bba2e72d77d93106:
+  /eslint-config-airbnb/19.0.4_89605efdf48122e408dbd1e17e314746:
     resolution: {integrity: sha512-T75QYQVQX57jiNgpF9r1KegMICE94VYwoFQyMGhrvc+lB8YF2E/M/PYDaQe1AJcWaEgqLE+ErXV1Og/+6Vyzew==}
     engines: {node: ^10.12.0 || ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
@@ -5453,7 +5453,7 @@ packages:
       eslint-config-airbnb-base: 15.0.0_1326372bbd2fe519ed5ba5fca843a914
       eslint-plugin-import: 2.25.4_eslint@8.9.0
       eslint-plugin-jsx-a11y: 6.5.1_eslint@8.9.0
-      eslint-plugin-react: 7.28.0_eslint@8.9.0
+      eslint-plugin-react: 7.29.2_eslint@8.9.0
       eslint-plugin-react-hooks: 4.3.0_eslint@8.9.0
       object.assign: 4.1.2
       object.entries: 1.1.5
@@ -5477,7 +5477,7 @@ packages:
       eslint-import-resolver-typescript: 2.5.0_1326372bbd2fe519ed5ba5fca843a914
       eslint-plugin-import: 2.25.4_eslint@8.9.0
       eslint-plugin-jsx-a11y: 6.5.1_eslint@8.9.0
-      eslint-plugin-react: 7.28.0_eslint@8.9.0
+      eslint-plugin-react: 7.29.2_eslint@8.9.0
       eslint-plugin-react-hooks: 4.3.0_eslint@8.9.0
       next: 12.1.0_33bdac975a6e334c49640fab91e2abb4
       typescript: 4.5.5
@@ -5596,8 +5596,8 @@ packages:
       eslint: 8.9.0
     dev: true
 
-  /eslint-plugin-react/7.28.0_eslint@8.9.0:
-    resolution: {integrity: sha512-IOlFIRHzWfEQQKcAD4iyYDndHwTQiCMcJVJjxempf203jnNLUnW34AXLrV33+nEXoifJE2ZEGmcjKPL8957eSw==}
+  /eslint-plugin-react/7.29.2_eslint@8.9.0:
+    resolution: {integrity: sha512-ypEBTKOy5liFQXZWMchJ3LN0JX1uPI6n7MN7OPHKacqXAxq5gYC30TdO7wqGYQyxD1OrzpobdHC3hDmlRWDg9w==}
     engines: {node: '>=4'}
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8
