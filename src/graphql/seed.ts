@@ -1,6 +1,7 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-console */
+/* eslint-disable import/no-extraneous-dependencies */
 
 import { randomUUID } from "crypto";
 import faker from "@faker-js/faker/locale/de";
