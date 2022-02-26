@@ -1,6 +1,7 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-console */
+/* eslint-disable import/no-extraneous-dependencies */
 import faker from "@faker-js/faker/locale/de";
 import { Prisma, PrismaClient, User, Page } from "@prisma/client";
 import { sample, sampleSize, random, camelCase } from "lodash";
