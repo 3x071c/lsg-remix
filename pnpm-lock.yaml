@@ -34,7 +34,7 @@ specifiers:
   browserslist: 4.19.3
   commitizen: 4.2.4
   cross-env: 7.0.3
-  cspell: 5.17.0
+  cspell: 5.18.5
   cssnano: 5.0.17
   cssnano-preset-advanced: 5.1.12
   cz-conventional-changelog: 3.3.0
@@ -145,7 +145,7 @@ devDependencies:
   browserslist: 4.19.3
   commitizen: 4.2.4
   cross-env: 7.0.3
-  cspell: 5.17.0
+  cspell: 5.18.5
   cssnano: 5.0.17_postcss@8.4.7
   cssnano-preset-advanced: 5.1.12_postcss@8.4.7
   cz-conventional-changelog: 3.3.0
@@ -4538,6 +4538,11 @@ packages:
     engines: {node: '>= 12'}
     dev: true
 
+  /commander/9.0.0:
+    resolution: {integrity: sha512-JJfP2saEKbQqvW+FI93OYUB4ByV5cizMpFMiiJI8xDbBvQvSkIk0VvQdn1CZ8mqAO8Loq2h0gYTYtDFUZUeERw==}
+    engines: {node: ^12.20.0 || >=14}
+    dev: true
+
   /comment-json/4.2.2:
     resolution: {integrity: sha512-H8T+kl3nZesZu41zO2oNXIJWojNeK3mHxCLrsBNu6feksBXsgb+PtYz5daP5P86A0F3sz3840KVYehr04enISQ==}
     engines: {node: '>= 6'}
@@ -4832,13 +4837,14 @@ packages:
       gensequence: 3.1.1
     dev: true
 
-  /cspell/5.17.0:
-    resolution: {integrity: sha512-LpXMpXVRp6V9Id2WRJ4y3pDRqYhDyJrLERbeGIESnLv8zMovGC7ZYTo648YZ1l+OLw5gUKB857DGT01muqCwqA==}
+  /cspell/5.18.5:
+    resolution: {integrity: sha512-rfk7sSZO304olxBXUFfec3YZL0gIyvjggwicGEgsweuh0Efdeq0zMmUV2sMckSOH9TVJdxW/DxTqjG+DLz8w+A==}
     engines: {node: '>=12.13.0'}
     hasBin: true
     dependencies:
+      '@cspell/cspell-pipe': 5.18.5
       chalk: 4.1.2
-      commander: 8.3.0
+      commander: 9.0.0
       comment-json: 4.2.2
       cspell-gitignore: 5.18.5
       cspell-glob: 5.18.5

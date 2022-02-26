@@ -137,7 +137,7 @@
 		"browserslist": "4.19.3",
 		"commitizen": "4.2.4",
 		"cross-env": "7.0.3",
-		"cspell": "5.17.0",
+		"cspell": "5.18.5",
 		"cssnano": "5.0.17",
 		"cssnano-preset-advanced": "5.1.12",
 		"cz-conventional-changelog": "3.3.0",
