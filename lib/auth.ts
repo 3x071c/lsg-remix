@@ -16,8 +16,8 @@ import { withIronSessionApiRoute, withIronSessionSsr } from "iron-session/next";
 const config: IronSessionOptions = {
 	cookieName: "cms_auth",
 	cookieOptions: {
-		sameSite: process.env.NODE_ENV === "production" ? "strict" : "none",
-		secure: process.env.NODE_ENV === "production",
+		sameSite: process.env.NODE_ENV !== "development" ? "strict" : "none",
+		secure: process.env.NODE_ENV !== "development",
 	},
 	password: process.env["API_AUTH_SECRET"]!,
 };

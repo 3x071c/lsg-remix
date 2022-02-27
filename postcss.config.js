@@ -9,7 +9,7 @@ const dev = {
 };
 
 const prod =
-	process.env.NODE_ENV === "production"
+	process.env.NODE_ENV !== "development"
 		? {
 				autoprefixer: {},
 				cssnano: {
