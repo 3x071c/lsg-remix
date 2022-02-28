@@ -1,4 +1,6 @@
-const config = {
+import { resolve } from "path";
+
+export default {
 	env: {
 		browser: true,
 		es2021: true,
@@ -23,7 +25,9 @@ const config = {
 		project: ["./tsconfig.json"],
 		sourceType: "module",
 		tsconfigRootDir:
-			__dirname /* This line is the only reason why the entire file is JS :vomiting_face: */,
+			resolve(
+				".",
+			) /* This line is the only reason why the entire file is JS :vomiting_face: */,
 		warnOnUnsupportedTypeScriptVersion: true,
 	},
 	plugins: ["@typescript-eslint", "react"],
@@ -81,4 +85,3 @@ const config = {
 		},
 	},
 };
-module.exports = config;

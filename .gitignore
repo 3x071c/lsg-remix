@@ -263,6 +263,7 @@ $RECYCLE.BIN/
 .*cache
 db/one.db
 __generated__/
+.swc/
 
 # === End of generic rules ===
 # === Start of specific rules ===

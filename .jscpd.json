@@ -12,7 +12,8 @@
 		".husky",
 		"*.tsbuildinfo",
 		"db/one.db",
-		"__generated__"
+		"__generated__",
+		".swc"
 	],
 	"reporters": ["console"]
 }

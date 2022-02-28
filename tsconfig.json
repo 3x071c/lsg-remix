@@ -120,9 +120,7 @@
 	"include": ["next-env.d.ts", "**/*", "**/.*"],
 	"ts-node": {
 		"files": true,
-		"require": ["tsconfig-paths/register"],
-		"compilerOptions": {
-			"module": "CommonJS"
-		}
+		"swc": true,
+		"transpileOnly": true
 	}
 }

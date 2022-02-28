@@ -29,7 +29,8 @@
 		"**/node_modules": true,
 		"**/pnpm-lock.yaml": true,
 		"**/*.tsbuildinfo": true,
-		"**/.*cache": true
+		"**/.*cache": true,
+		"**/.swc": true
 	},
 	"npm.packageManager": "pnpm",
 	"prettier.requireConfig": true,

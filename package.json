@@ -1,6 +1,7 @@
 {
 	"name": "lsg-stack",
 	"version": "0.0.0",
+	"type": "module",
 	"description": "LSG musin fullstack",
 	"repository": {
 		"type": "git",
@@ -28,7 +29,6 @@
 	],
 	"scripts": {
 		"apollo:generate": "apollo client:codegen --includes=\"{app,graphql,lib,pages}/**\" --localSchemaFile=__generated__/schema.graphql --outputFlat --tagName=gql --target=typescript --tsFileExtension=d.ts --useReadOnlyTypes __generated__/apollo.d.ts",
-		"apollo:watch": "apollo client:codegen --includes=\"{app,graphql,lib,pages}/**\" --localSchemaFile=__generated__/schema.graphql --outputFlat --tagName=gql --target=typescript --tsFileExtension=d.ts --useReadOnlyTypes --watch __generated__/apollo.d.ts",
 		"build": "cross-env NODE_ENV=production run-s clean generate next:build",
 		"check": "tsc --noEmit || echo 'Type checking failed, skipping due to blocking issue in chakra-ui' && (exit 0)",
 		"ci": "run-s new lint check build",
@@ -56,8 +56,7 @@
 		"next:dev": "next dev",
 		"next:export": "next export",
 		"next:start": "next start",
-		"nexus:generate": "cross-env NODE_ENV=development ts-node --transpile-only graphql/schema",
-		"nexus:watch": "cross-env NODE_ENV=development ts-node-dev --transpile-only graphql/schema",
+		"nexus:generate": "cross-env NODE_ENV=development node --loader ts-node/esm --experimental-specifier-resolution=node graphql/schema",
 		"preinstall": "pnpx -y only-allow pnpm",
 		"prepare": "pnpx -y husky install",
 		"prettier:fix": "pnpm prettier:individual -- .",
@@ -71,7 +70,6 @@
 		"prisma:reset": "prisma migrate reset --skip-generate --skip-seed --force",
 		"prisma:seed": "prisma db seed",
 		"prisma:studio": "prisma studio",
-		"prisma:watch": "pnpm prisma:generate -- --watch",
 		"prod": "pnpm production",
 		"production": "cross-env NODE_ENV=production run-s build start",
 		"report": "pnpm lint",
@@ -82,8 +80,7 @@
 		"stylelint:fix": "pnpm stylelint:template -- --fix \"./**/*.{tsx,jsx,html,pcss,css}\"",
 		"stylelint:individual": "pnpm stylelint:template -- --fix",
 		"stylelint:report": "pnpm stylelint:template -- --max-warnings 0 \"./**/*.{tsx,jsx,html,pcss,css}\"",
-		"stylelint:template": "stylelint --cache --report-needless-disables --report-invalid-scope-disables --report-descriptionless-disables",
-		"watch": "run-p apollo:watch prisma:watch"
+		"stylelint:template": "stylelint --cache --report-needless-disables --report-invalid-scope-disables --report-descriptionless-disables"
 	},
 	"dependencies": {
 		"@apollo/client": "3.5.9",
@@ -123,6 +120,7 @@
 		"@faker-js/faker": "6.0.0-alpha.7",
 		"@secretlint/secretlint-rule-preset-recommend": "4.1.4",
 		"@stylelint/postcss-css-in-js": "0.37.2",
+		"@swc/core": "^1.2.146",
 		"@types/faker": "5.5.9",
 		"@types/lodash": "4.14.179",
 		"@types/micro": "7.3.6",
@@ -176,7 +174,6 @@
 		"stylelint-config-recommended": "7.0.0",
 		"stylelint-config-standard": "25.0.0",
 		"ts-node": "10.5.0",
-		"ts-node-dev": "1.1.8",
 		"tsconfig-paths": "3.12.0",
 		"typescript": "4.5.5"
 	},
@@ -200,6 +197,6 @@
 	},
 	"prisma": {
 		"schema": "db/schema.prisma",
-		"seed": "ts-node db/seed.ts"
+		"seed": "node --loader ts-node/esm --experimental-specifier-resolution=node db/seed.ts"
 	}
 }
