@@ -2,6 +2,8 @@ import withBundleAnalyzer from "@next/bundle-analyzer";
 import withPlugins from "next-compose-plugins";
 import withPreact from "next-plugin-preact";
 
+const production = process.env.NODE_ENV === "production";
+
 /**
  * @type {import('next').NextConfig}
  */
@@ -13,6 +15,13 @@ const nextConfig = {
 	typescript: {
 		ignoreBuildErrors: true,
 	},
+	...(production && {
+		compiler: {
+			removeConsole: {
+				exclude: ["error"],
+			},
+		},
+	}),
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call
