@@ -102,7 +102,7 @@
 		"apollo-server-micro": "3.6.3",
 		"argon2": "0.28.4",
 		"framer-motion": "6.2.8",
-		"graphql": "15.8.0",
+		"graphql": "16.3.0",
 		"graphql-scalars": "1.14.1",
 		"iron-session": "6.0.5",
 		"lodash": "4.17.21",
