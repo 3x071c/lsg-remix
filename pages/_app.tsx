@@ -1,10 +1,10 @@
+import type { Page } from "$types/page";
 import type { AppProps as NextAppProps } from "next/app";
 import { ApolloClient, ApolloProvider } from "@apollo/client";
 import { ChakraProvider } from "@chakra-ui/react";
 import { CacheProvider, EmotionCache } from "@emotion/react";
 import Head from "next/head";
 import createEmotionCache from "$app/createEmotionCache";
-import { Container } from "$app/layout";
 import theme from "$app/theme";
 import getApollo from "$graphql/client";
 
@@ -14,6 +14,7 @@ const clientSideEmotionCache = createEmotionCache();
 interface AppProps extends NextAppProps {
 	emotionCache?: EmotionCache;
 	apolloClient?: ApolloClient<object>;
+	Component: Page;
 }
 
 export default function App({
@@ -22,6 +23,8 @@ export default function App({
 	apolloClient = getApollo(),
 	pageProps,
 }: AppProps): JSX.Element {
+	const getLayout = Component.getLayout ?? ((page) => page);
+
 	return (
 		<CacheProvider value={emotionCache}>
 			<Head>
@@ -33,9 +36,7 @@ export default function App({
 			</Head>
 			<ApolloProvider client={apolloClient}>
 				<ChakraProvider theme={theme}>
-					<Container>
-						<Component {...pageProps} />
-					</Container>
+					{getLayout(<Component {...pageProps} />)}
 				</ChakraProvider>
 			</ApolloProvider>
 		</CacheProvider>

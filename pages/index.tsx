@@ -1,4 +1,5 @@
 import type { GetPages } from "$generated/apollo";
+import type { ReactElement } from "react";
 import { gql, useQuery } from "@apollo/client";
 import { Heading, Center, Text, VStack } from "@chakra-ui/react";
 import { Hero } from "$app/hero";
@@ -14,7 +15,7 @@ const GET_PAGES = gql`
 	}
 `;
 
-export default function Index(): JSX.Element {
+function Index(): JSX.Element {
 	const spacing = useBreakpoints((k, _v, i) => [k, `${(i + 1) ** 2}px`]);
 	const { data, loading, error } = useQuery<GetPages>(GET_PAGES);
 	if (loading) return <Loading />;
@@ -36,3 +37,9 @@ export default function Index(): JSX.Element {
 		</>
 	);
 }
+
+Index.getLayout = (page: ReactElement) => {
+	return <Container>{page}</Container>;
+};
+
+export default Index;

@@ -6,7 +6,7 @@ import {
 	stringArg,
 	queryField,
 } from "nexus";
-import { verifyPassword } from "$lib/auth";
+import { hashPassword, verifyPassword } from "$lib/auth";
 
 export const User = objectType({
 	definition: (t) => {
@@ -77,6 +77,16 @@ export const UsersQuery = queryField("users", {
 	type: "User",
 });
 
+export const CurrentUserQuery = queryField("currentUser", {
+	authorize: (_root, _args, ctx) => !!ctx.req.session.user,
+	resolve: (_root, _args, ctx) =>
+		ctx.prisma.user.findUnique({
+			where: {
+				id: ctx.req.session.user!.id,
+			},
+		}),
+	type: "User",
+});
 export const LoginMutation = mutationField("login", {
 	args: {
 		password: nonNull(stringArg()),
@@ -89,10 +99,14 @@ export const LoginMutation = mutationField("login", {
 			},
 		});
 
+		const PREVENT_TIMING_ATTACKS = await hashPassword(
+			"preventTimingAttacks1234",
+		);
+
 		if (
 			!(await verifyPassword(
 				password,
-				user?.password ?? "preventTimingAttacks123",
+				user?.password ?? PREVENT_TIMING_ATTACKS,
 			)) ||
 			!user
 		)

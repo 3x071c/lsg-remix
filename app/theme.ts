@@ -2,16 +2,22 @@ import {
 	extendTheme,
 	withDefaultColorScheme,
 	ThemeConfig,
+	theme,
 } from "@chakra-ui/react";
 
 const config: ThemeConfig = {
-	initialColorMode: "system",
+	initialColorMode: "light",
 };
 
 export default extendTheme(
 	{ config },
+	{
+		colors: {
+			brand: theme.colors.purple,
+		},
+	},
 	withDefaultColorScheme({
-		colorScheme: "blue",
+		colorScheme: "brand",
 	}),
 ) as {
 	config: typeof config;
