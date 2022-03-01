@@ -3,6 +3,10 @@
 		{
 			"args": ["${relativeFile}"],
 			"cwd": "${workspaceRoot}",
+			"env": {
+				"NODE_ENV": "test"
+			},
+			"envFile": "${workspaceFolder}/.env.local",
 			"internalConsoleOptions": "openOnSessionStart",
 			"name": "ts-node",
 			"protocol": "inspector",

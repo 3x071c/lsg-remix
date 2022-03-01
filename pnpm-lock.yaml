@@ -40,6 +40,7 @@ specifiers:
   cssnano: 5.0.17
   cssnano-preset-advanced: 5.1.12
   cz-conventional-changelog: 3.3.0
+  dotenv-cli: ^5.0.0
   eslint: 8.10.0
   eslint-config-airbnb: 19.0.4
   eslint-config-airbnb-typescript: 16.1.0
@@ -167,6 +168,7 @@ devDependencies:
   cssnano: 5.0.17_postcss@8.4.7
   cssnano-preset-advanced: 5.1.12_postcss@8.4.7
   cz-conventional-changelog: 3.3.0
+  dotenv-cli: 5.0.0
   eslint: 8.10.0
   eslint-config-airbnb: 19.0.4_9a5616da51bd2cb5ecdb57c59dec5c01
   eslint-config-airbnb-typescript: 16.1.0_61c78c095eafb8fa2228c10a15e248b4
@@ -4343,7 +4345,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001312
-      electron-to-chromium: 1.4.74
+      electron-to-chromium: 1.4.75
       escalade: 3.1.1
       node-releases: 2.0.2
       picocolors: 1.0.0
@@ -4832,7 +4834,7 @@ packages:
       cz-conventional-changelog: 3.2.0
       dedent: 0.7.0
       detect-indent: 6.0.0
-      find-node-modules: 2.1.2
+      find-node-modules: 2.1.3
       find-root: 1.1.0
       fs-extra: 8.1.0
       glob: 7.1.4
@@ -5566,6 +5568,26 @@ packages:
       is-obj: 2.0.0
     dev: true
 
+  /dotenv-cli/5.0.0:
+    resolution: {integrity: sha512-0Cb2WMDJ805hTD7m43gXXFLraoE5KwrKmGW2dAzYvSEB96tlKI2hmcJ/9In4s2FfvkAFk3SjNQcLeKLoRSXhKA==}
+    hasBin: true
+    dependencies:
+      cross-spawn: 7.0.3
+      dotenv: 16.0.0
+      dotenv-expand: 8.0.1
+      minimist: 1.2.5
+    dev: true
+
+  /dotenv-expand/8.0.1:
+    resolution: {integrity: sha512-j/Ih7bIERDR5PzI89Zu8ayd3tXZ6E3dbY0ljQ9Db0K87qBO8zdLsi2dIvDHMWtjC3Yxb8XixOTHAtia0fDHRpg==}
+    engines: {node: '>=12'}
+    dev: true
+
+  /dotenv/16.0.0:
+    resolution: {integrity: sha512-qD9WU0MPM4SWLPJy/r2Be+2WgQj8plChsyrCNQzW/0WjvcJQiKQJ9mH3ZgB3fxbUUxgc/11ZJ0Fi5KiimWGz2Q==}
+    engines: {node: '>=12'}
+    dev: true
+
   /dotenv/8.6.0:
     resolution: {integrity: sha512-IrPdXQsk2BbzvCBGBOTmmSH5SodmqZNt4ERAZDmW4CT+tL8VtvinqywuANaFu4bOMWki16nqf0e4oC0QIaDr/g==}
     engines: {node: '>=10'}
@@ -5591,8 +5613,8 @@ packages:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
     dev: true
 
-  /electron-to-chromium/1.4.74:
-    resolution: {integrity: sha512-DvQ20M0I4dIH8KcAo7n7E4OEeNafZ1N8z6g6ck+ALCM0ZoV6mpjaX6ekjs31zKlqPzacU3lmjG9PZEa1mQhEpQ==}
+  /electron-to-chromium/1.4.75:
+    resolution: {integrity: sha512-LxgUNeu3BVU7sXaKjUDD9xivocQLxFtq6wgERrutdY/yIOps3ODOZExK1jg8DTEg4U8TUCb5MLGeWFOYuxjF3Q==}
 
   /elegant-spinner/1.0.1:
     resolution: {integrity: sha1-2wQ1IcldfjA/2PNFvtwzSc+wcp4=}
@@ -6197,8 +6219,8 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /find-node-modules/2.1.2:
-    resolution: {integrity: sha512-x+3P4mbtRPlSiVE1Qco0Z4YLU8WFiFcuWTf3m75OV9Uzcfs2Bg+O9N+r/K0AnmINBW06KpfqKwYJbFlFq4qNug==}
+  /find-node-modules/2.1.3:
+    resolution: {integrity: sha512-UC2I2+nx1ZuOBclWVNdcnbDR5dlrOdVb7xNjmT/lHE+LsgztWks3dG7boJ37yTS/venXw84B/mAW9uHVoC5QRg==}
     dependencies:
       findup-sync: 4.0.0
       merge: 2.1.1
@@ -11451,7 +11473,7 @@ packages:
   /wide-align/1.1.5:
     resolution: {integrity: sha512-eDMORYaPNZ4sQIuuYPDHdQvf4gyCF9rEEV/yPxGfwPkRodwEgiMUUXTx/dex+Me0wxx53S+NgUHaP7y3MGlDmg==}
     dependencies:
-      string-width: 4.2.3
+      string-width: 1.0.2
     dev: false
 
   /widest-line/3.1.0:
