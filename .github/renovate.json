@@ -28,7 +28,6 @@
 		}
 	],
 	"platformAutomerge": true,
-	"prConcurrentLimit": 1,
 	"prCreation": "not-pending",
 	"prNotPendingHours": 1,
 	"rangeStrategy": "auto",
