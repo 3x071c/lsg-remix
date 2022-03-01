@@ -208,6 +208,11 @@
 		"*.{tsx,jsx,html,pcss,css}": "pnpm stylelint:individual",
 		"*.{tsx,ts,jsx,js,mjs,cjs}": "pnpm eslint:individual"
 	},
+	"pnpm": {
+		"overrides": {
+			"graphql": "16.3.0"
+		}
+	},
 	"prisma": {
 		"schema": "db/schema.prisma",
 		"seed": "ts-node db/seed.ts"

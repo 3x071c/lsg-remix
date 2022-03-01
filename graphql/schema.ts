@@ -1,3 +1,4 @@
+import type { GraphQLSchema } from "graphql";
 import { resolve } from "path";
 import {
 	makeSchema,
@@ -27,4 +28,4 @@ export default makeSchema({
 		],
 	},
 	types,
-});
+}) as unknown as GraphQLSchema;
