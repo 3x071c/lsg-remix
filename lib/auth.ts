@@ -16,16 +16,16 @@ import { withIronSessionApiRoute, withIronSessionSsr } from "iron-session/next";
 const config: IronSessionOptions = {
 	cookieName: "cms_auth",
 	cookieOptions: {
-		sameSite: process.env.NODE_ENV === "production" ? "strict" : "none",
-		secure: process.env.NODE_ENV === "production",
+		sameSite: process.env.NODE_ENV !== "development" ? "strict" : "none",
+		secure: process.env.NODE_ENV !== "development",
 	},
-	password: process.env["API_AUTH_SECRET"]!,
+	password: process.env["CMS_COOKIE_SECRET"]!,
 };
 
 export const apiAuth = (
 	handler: Parameters<typeof withIronSessionApiRoute>[0],
 ): NextApiHandler =>
-	process.env["API_AUTH_SECRET"]
+	process.env["CMS_COOKIE_SECRET"]
 		? withIronSessionApiRoute(handler, config)
 		: (_req, res) =>
 				res.status(500).send({
@@ -46,7 +46,7 @@ export const ssrAuth = <
 ): ((
 	context: GetServerSidePropsContext,
 ) => Promise<GetServerSidePropsResult<P>>) =>
-	process.env["API_AUTH_SECRET"]
+	process.env["CMS_COOKIE_SECRET"]
 		? withIronSessionSsr(handler, config)
 		: // eslint-disable-next-line require-await
 		  async () => ({
