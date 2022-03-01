@@ -22,9 +22,12 @@
 			"schedule": ["before 8am on Monday"]
 		},
 		{
-			"groupName": "devDependencies",
 			"matchDepTypes": ["devDependencies"],
 			"prPriority": -1
+		},
+		{
+			"allowedVersions": "5.5.3",
+			"matchPackageNames": ["faker"]
 		}
 	],
 	"platformAutomerge": true,
