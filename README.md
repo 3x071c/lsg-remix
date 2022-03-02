@@ -55,7 +55,7 @@ Store an encryption password for the CMS authentication cookie in `.env.local` (
 
 ```console
 # /.env.local
-API_AUTH_SECRET=<30-50 character random password without quotation (f.e. from https://1password.com/password-generator/)>
+CMS_COOKIE_SECRET=<30-50 character random password without quotation (f.e. from https://1password.com/password-generator/)>
 ```
 
 Spin up a local development server. It will automatically reflect changes in the code:

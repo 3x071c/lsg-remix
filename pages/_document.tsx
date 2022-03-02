@@ -1,4 +1,5 @@
 import type { AppPropsType } from "next/dist/shared/lib/utils";
+import { createHash } from "crypto";
 import { getDataFromTree } from "@apollo/client/react/ssr";
 import { ColorModeScript } from "@chakra-ui/react";
 import createEmotionServer from "@emotion/server/create-instance";
@@ -150,9 +151,20 @@ export default class Document extends NextDocument<ExtendedDocument> {
 	}
 
 	override render(): JSX.Element {
+		const csp = `${
+			process.env.NODE_ENV === "production"
+				? `default-src 'self'; script-src 'self'`
+				: `style-src 'self' 'unsafe-inline'; font-src 'self' data:; default-src 'self'; script-src 'unsafe-eval' 'self'`
+		}${createHash("sha256")
+			.update(NextScript.getInlineScriptSource(this.props))
+			.digest("base64")}`;
+
 		return (
 			<Html lang="de">
-				<Head>{this.props.emotionStyleTags}</Head>
+				<Head>
+					<meta httpEquiv="Content-Security-Policy" content={csp} />
+					{this.props.emotionStyleTags}
+				</Head>
 				<body>
 					<ColorModeScript
 						initialColorMode={theme.config.initialColorMode}
