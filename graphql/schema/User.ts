@@ -1,4 +1,3 @@
-import type { CanMutateUsersOnUsers } from "@prisma/client";
 import {
 	objectType,
 	nonNull,
@@ -72,7 +71,6 @@ export const UserQuery = queryField("user", {
 	authorize: async (_root, { id }, ctx) =>
 		!!(await ctx.prisma.user.findFirst({
 			where: {
-				id: ctx.req.session.user?.id ?? 0,
 				canMutateUsers: {
 					some: {
 						child: {
@@ -80,6 +78,7 @@ export const UserQuery = queryField("user", {
 						},
 					},
 				},
+				id: ctx.req.session.user?.id ?? 0,
 			},
 		})),
 	resolve: (_root, { id }, ctx) =>
@@ -89,8 +88,8 @@ export const UserQuery = queryField("user", {
 export const UsersQuery = queryField("users", {
 	authorize: (_root, _args, ctx) => !!ctx.req.session.user,
 	list: true,
-	resolve: async (_root, _args, ctx) =>
-		await ctx.prisma.user.findMany({
+	resolve: (_root, _args, ctx) =>
+		ctx.prisma.user.findMany({
 			where: {
 				canBeMutatedBy: {
 					some: {
@@ -107,8 +106,11 @@ export const LoginMutation = mutationField("login", {
 		password: nonNull(stringArg()),
 		username: nonNull(stringArg()),
 	},
-	authorize: (_root, _args, ctx) => !ctx.req.session,
 	resolve: async (_root, { username, password }, ctx) => {
+		if (ctx.req.session.user) {
+			throw new Error("Already signed in");
+		}
+
 		const user = await ctx.prisma.user.findUnique({
 			where: {
 				username,
@@ -127,6 +129,7 @@ export const LoginMutation = mutationField("login", {
 		ctx.req.session.user = {
 			id: user.id,
 		};
+
 		await ctx.req.session.save();
 
 		return user;
@@ -163,7 +166,7 @@ export const CreateUserMutation = mutationField("createUser", {
 		(
 			await ctx.prisma.user.findUnique({
 				where: {
-					id: ctx.req.session.user?.id,
+					id: ctx.req.session.user?.id ?? 0,
 				},
 			})
 		)?.canMutateUsersSubscription ?? false,
@@ -178,9 +181,37 @@ export const CreateUserMutation = mutationField("createUser", {
 		},
 		ctx,
 	) => {
-		const { id } = await ctx.prisma.user.create({
+		const createdUser = await ctx.prisma.user.create({
 			data: {
+				canMutatePages: {
+					create: canMutatePagesSubscription
+						? [
+								...(
+									await ctx.prisma.page.findMany()
+								).map((page) => {
+									return {
+										createdById: ctx.req.session.user!.id,
+										pageId: page.id,
+									};
+								}),
+						  ]
+						: [],
+				},
 				canMutatePagesSubscription,
+				canMutateUsers: {
+					create: canMutateUsersSubscription
+						? [
+								...(
+									await ctx.prisma.user.findMany()
+								).map((user) => {
+									return {
+										childId: user.id,
+										createdById: ctx.req.session.user!.id,
+									};
+								}),
+						  ]
+						: [],
+				},
 				canMutateUsersSubscription,
 				firstname,
 				lastname,
@@ -188,17 +219,20 @@ export const CreateUserMutation = mutationField("createUser", {
 				username: createUsername(firstname, lastname),
 			},
 		});
-		await ctx.prisma.$transaction([
-			(
+
+		await prisma?.$transaction([
+			...(
 				await ctx.prisma.user.findMany({
-					OR: [
-						{
-							canMutateUsersSubscription: true,
-						},
-						{
-							id,
-						},
-					],
+					where: {
+						OR: [
+							{
+								canMutateUsersSubscription: true,
+							},
+							{
+								id: createdUser.id,
+							},
+						],
+					},
 				})
 			).map(({ id: userId }) => {
 				return ctx.prisma.user.update({
@@ -206,11 +240,12 @@ export const CreateUserMutation = mutationField("createUser", {
 						canMutateUsers: {
 							connectOrCreate: {
 								create: {
-									childId: id,
+									childId: createdUser.id,
+									createdById: ctx.req.session.user!.id,
 								},
 								where: {
 									parentId_childId: {
-										childId: id,
+										childId: createdUser.id,
 										parentId: userId,
 									},
 								},
@@ -223,47 +258,32 @@ export const CreateUserMutation = mutationField("createUser", {
 				});
 			}),
 		]);
+
+		return createdUser;
 	},
 	type: "User",
 });
 
 export const EditUserMutation = mutationField("editUser", {
 	args: {
-		canMutatePagesSubscription: booleanArg(),
-		canMutateUsersSubscription: booleanArg(),
 		firstname: stringArg(),
 		id: nonNull(intArg()),
 		lastname: stringArg(),
 		password: stringArg(),
 	},
-	authorize: (
-		_root,
-		{ id, canMutatePagesSubscription, canMutateUsersSubscription },
-		ctx,
-	) => {
-		// every user can edit himself but not change permission attributes
-		if (
-			id === ctx.req.session.user?.id &&
-			canMutatePagesSubscription == null &&
-			canMutateUsersSubscription == null
-		) {
-			return true;
-		}
-
-		return canMutateUser(id, ctx);
+	authorize: async (_root, { id }, ctx) => {
+		return !!(await ctx.prisma.user.findFirst({
+			where: {
+				canMutateUsers: {
+					some: {
+						childId: id,
+					},
+				},
+				id: ctx.req.session.user?.id ?? 0,
+			},
+		}));
 	},
-	resolve: async (
-		_root,
-		{
-			canMutatePagesSubscription,
-			canMutateUsersSubscription,
-			firstname,
-			id,
-			lastname,
-			password,
-		},
-		ctx,
-	) => {
+	resolve: async (_root, { firstname, id, lastname, password }, ctx) => {
 		let username: string | undefined;
 
 		// reCreate the username if either firstname or lastname will be changed
@@ -292,12 +312,6 @@ export const EditUserMutation = mutationField("editUser", {
 
 		return ctx.prisma.user.update({
 			data: {
-				canMutatePagesSubscription: undefinedOrValue(
-					canMutatePagesSubscription,
-				),
-				canMutateUsersSubscription: undefinedOrValue(
-					canMutateUsersSubscription,
-				),
 				firstname: undefinedOrValue(firstname),
 				lastname: undefinedOrValue(lastname),
 				password: newPassword,
@@ -314,8 +328,17 @@ export const DeleteUserMutation = mutationField("deleteUser", {
 	args: {
 		id: nonNull(intArg()),
 	},
-	authorize: (_root, { id }, ctx) => {
-		return canMutateUser(id, ctx);
+	authorize: async (_root, { id }, ctx) => {
+		return !!(await ctx.prisma.user.findFirst({
+			where: {
+				canMutateUsers: {
+					some: {
+						childId: id,
+					},
+				},
+				id: ctx.req.session.user?.id ?? 0,
+			},
+		}));
 	},
 	resolve: async (_root, { id }, ctx) => {
 		const deleteUser = ctx.prisma.user.delete({

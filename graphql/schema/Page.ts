@@ -1,5 +1,3 @@
-import type { Context } from "../context";
-import type { CanMutatePagesOnUsers } from "@prisma/client";
 import {
 	intArg,
 	mutationField,
@@ -66,68 +64,65 @@ export const CreatePageMutation = mutationField("createPage", {
 		path: nonNull(stringArg()),
 		title: nonNull(stringArg()),
 	},
-	authorize: async (_root, _args, ctx) => {
-		if (!ctx.req.session.user) return false;
-
-		const user = await ctx.prisma.user.findUnique({
-			where: { id: ctx.req.session.user.id },
-		});
-
-		return !!user?.canMutatePagesSubscription;
-	},
-	resolve: (_root, { content, parentId, path, title }, ctx) => {
-		return ctx.prisma.page.create({
-			data: {
-				/* give the user who created the page the permission
-		 		to edit the page */
-				canBeMutatedBy: {
-					create: [
-						{
-							createdById: ctx.req.session.user!.id,
-							userId: ctx.req.session.user!.id,
-						},
-					],
+	authorize: async (_root, _args, ctx) =>
+		(
+			await ctx.prisma.user.findUnique({
+				where: {
+					id: ctx.req.session.user?.id ?? 0,
 				},
+			})
+		)?.canMutatePagesSubscription ?? false,
+	resolve: async (_root, { content, parentId, path, title }, ctx) => {
+		const createdPage = await ctx.prisma.page.create({
+			data: {
 				content,
 				parentId,
 				path,
 				title,
 				users: {
-					create: [
-						{
-							userId: ctx.req.session.user!.id,
-						},
-					],
+					create: {
+						userId: ctx.req.session.user!.id,
+					},
 				},
 			},
 		});
+
+		await prisma?.$transaction([
+			...(
+				await ctx.prisma.user.findMany({
+					where: {
+						canMutatePagesSubscription: true,
+					},
+				})
+			).map(({ id: userId }) => {
+				return ctx.prisma.user.update({
+					data: {
+						canMutatePages: {
+							connectOrCreate: {
+								create: {
+									createdById: ctx.req.session.user!.id,
+									pageId: createdPage.id,
+								},
+								where: {
+									userId_pageId: {
+										pageId: createdPage.id,
+										userId,
+									},
+								},
+							},
+						},
+					},
+					where: {
+						id: userId,
+					},
+				});
+			}),
+		]);
+
+		return createdPage;
 	},
 	type: "Page",
 });
-
-export const canMutatePage = async (
-	pageId: number,
-	ctx: Context,
-): Promise<boolean> => {
-	if (ctx.req.session.user == null) return false;
-
-	const user = await ctx.prisma.user.findUnique({
-		include: {
-			canMutatePages: true,
-		},
-		where: {
-			id: ctx.req.session.user.id,
-		},
-	});
-
-	if (!user) return false;
-
-	return (
-		user.canMutatePages.filter(
-			(p: CanMutatePagesOnUsers) => p.pageId === pageId,
-		).length > 0
-	);
-};
 
 export const EditPageMutation = mutationField("editPage", {
 	args: {
@@ -140,7 +135,6 @@ export const EditPageMutation = mutationField("editPage", {
 	authorize: async (_root, { id }, ctx) =>
 		!!(await ctx.prisma.page.findFirst({
 			where: {
-				id,
 				canBeMutatedBy: {
 					some: {
 						user: {
@@ -148,6 +142,7 @@ export const EditPageMutation = mutationField("editPage", {
 						},
 					},
 				},
+				id,
 			},
 		})),
 	resolve: (_root, { content, id, parentId, path, title }, ctx) => {
@@ -190,7 +185,6 @@ export const DeletePageMutation = mutationField("deletePage", {
 	authorize: async (_root, { id }, ctx) =>
 		!!(await ctx.prisma.page.findFirst({
 			where: {
-				id,
 				canBeMutatedBy: {
 					some: {
 						user: {
@@ -198,6 +192,7 @@ export const DeletePageMutation = mutationField("deletePage", {
 						},
 					},
 				},
+				id,
 			},
 		})),
 	resolve: async (_root, { id }, ctx) =>
