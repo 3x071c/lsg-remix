@@ -266,6 +266,6 @@ __generated__/
 # === End of generic rules ===
 # === Start of specific rules ===
 
-pnpm-lock.yaml
+package-lock.json
 
 # === End of specific rules ===

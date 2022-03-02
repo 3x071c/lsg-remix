@@ -5,13 +5,14 @@
 		"node_modules",
 		".git",
 		".vscode",
-		"pnpm-lock.yaml",
+		"package-lock.json",
 		".*cache",
 		".*ignore",
 		".next",
 		".husky",
 		"*.tsbuildinfo",
-		"__generated__"
+		"__generated__",
+		"db/migrations"
 	],
 	"import": ["@cspell/dict-de-de/cspell-ext.json"],
 	"language": "en,de",
@@ -24,6 +25,7 @@
 		"codeql",
 		"commitizen",
 		"deepakputhraya",
+		"deps",
 		"dessant",
 		"epischerer",
 		"fira",
@@ -36,10 +38,10 @@
 		"Linkify",
 		"monokai",
 		"musin",
+		"mysql",
 		"nextjs",
 		"pcss",
-		"pnpm",
-		"pnpx",
+		"postgresql",
 		"prisma",
 		"quokka",
 		"reboard",
@@ -47,9 +49,6 @@
 		"turborepo",
 		"uhyo",
 		"unspaced",
-		"Vercel",
-		"zalgo",
-		"postgresql",
-		"mysql"
+		"zalgo"
 	]
 }

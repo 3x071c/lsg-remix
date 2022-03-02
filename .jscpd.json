@@ -5,13 +5,14 @@
 		"node_modules",
 		".git",
 		".vscode",
-		"pnpm-lock.yaml",
+		"package-lock.json",
 		".*cache",
 		".*ignore",
 		".next",
 		".husky",
 		"*.tsbuildinfo",
-		"__generated__"
+		"__generated__",
+		"db/migrations"
 	],
 	"reporters": ["console"]
 }
