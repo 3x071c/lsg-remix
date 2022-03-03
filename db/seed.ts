@@ -16,15 +16,12 @@ const seedDate = (start: Date, end: Date) =>
 	);
 
 const uniqueData: string[] = [];
-const getNumber = (length: number) => {
-	return random(10 ** (length - 1), 10 ** length - 1);
-};
 const makeUnique = (arg: string | number) => {
 	let i = 0;
 	let computed = "";
 	do {
+		computed = `${arg}${i}`;
 		i += 1;
-		computed = `${arg}${(i && getNumber(Math.floor(i / 10))) || ""}`;
 	} while (uniqueData.includes(computed));
 	return computed;
 };

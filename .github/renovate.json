@@ -24,10 +24,6 @@
 		{
 			"matchDepTypes": ["devDependencies"],
 			"prPriority": -1
-		},
-		{
-			"allowedVersions": "5.5.3",
-			"matchPackageNames": ["faker"]
 		}
 	],
 	"platformAutomerge": true,
