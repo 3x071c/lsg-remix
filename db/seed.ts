@@ -1,7 +1,7 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-console */
-// eslint-disable-next-line import/no-extraneous-dependencies
+/* eslint-disable import/no-extraneous-dependencies */
 import faker from "@faker-js/faker/locale/de";
 import { Prisma, PrismaClient, User, Page } from "@prisma/client";
 import { sample, sampleSize, random, camelCase } from "lodash";
@@ -16,15 +16,12 @@ const seedDate = (start: Date, end: Date) =>
 	);
 
 const uniqueData: string[] = [];
-const getNumber = (length: number) => {
-	return random(10 ** (length - 1), 10 ** length - 1);
-};
 const makeUnique = (arg: string | number) => {
 	let i = 0;
 	let computed = "";
 	do {
+		computed = `${arg}${i}`;
 		i += 1;
-		computed = `${arg}${(i && getNumber(Math.floor(i / 10))) || ""}`;
 	} while (uniqueData.includes(computed));
 	return computed;
 };

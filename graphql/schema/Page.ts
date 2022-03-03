@@ -6,7 +6,6 @@ import {
 	queryField,
 	stringArg,
 } from "nexus";
-import { undefinedOrValue } from "$lib/util";
 
 export const Page = objectType({
 	definition: (t) => {
@@ -65,20 +64,18 @@ export const CreatePageMutation = mutationField("createPage", {
 		title: nonNull(stringArg()),
 	},
 	authorize: async (_root, _args, ctx) =>
-		(
+		!!ctx.req.session.user &&
+		!!(
 			await ctx.prisma.user.findUnique({
 				where: {
-					id: ctx.req.session.user?.id ?? 0,
+					id: ctx.req.session.user.id,
 				},
 			})
-		)?.canMutatePagesSubscription ?? false,
-	resolve: async (_root, { content, parentId, path, title }, ctx) => {
+		)?.canMutatePagesSubscription,
+	resolve: async (_root, args, ctx) => {
 		const createdPage = await ctx.prisma.page.create({
 			data: {
-				content,
-				parentId,
-				path,
-				title,
+				...args,
 				users: {
 					create: {
 						userId: ctx.req.session.user!.id,
@@ -87,7 +84,7 @@ export const CreatePageMutation = mutationField("createPage", {
 			},
 		});
 
-		await prisma?.$transaction([
+		await ctx.prisma.$transaction([
 			...(
 				await ctx.prisma.user.findMany({
 					where: {
@@ -100,7 +97,7 @@ export const CreatePageMutation = mutationField("createPage", {
 						canMutatePages: {
 							connectOrCreate: {
 								create: {
-									createdById: ctx.req.session.user!.id,
+									createdById: userId,
 									pageId: createdPage.id,
 								},
 								where: {
@@ -133,35 +130,27 @@ export const EditPageMutation = mutationField("editPage", {
 		title: stringArg(),
 	},
 	authorize: async (_root, { id }, ctx) =>
-		!!(await ctx.prisma.page.findFirst({
+		!!ctx.req.session.user &&
+		!!(await ctx.prisma.canMutatePagesOnUsers.findUnique({
 			where: {
-				canBeMutatedBy: {
-					some: {
-						user: {
-							id: ctx.req.session.user?.id ?? 0,
-						},
-					},
+				userId_pageId: {
+					pageId: id,
+					userId: ctx.req.session.user.id,
 				},
-				id,
 			},
 		})),
-	resolve: (_root, { content, id, parentId, path, title }, ctx) => {
-		return ctx.prisma.page.update({
+	resolve: (_root, { parentId, id, ...args }, ctx) =>
+		ctx.prisma.page.update({
 			data: {
-				content: undefinedOrValue(content),
-				parentId: undefinedOrValue(parentId),
-				path: undefinedOrValue(path),
-				title: undefinedOrValue(title),
-				/*
-				If the user has not yet edited this page, create a new
-				PagesOnUsers entry
-				*/
+				...Object.fromEntries(
+					Object.entries(args).filter(([, v]) => v !== null),
+				),
+				parentId /* Is nullable in the schema */,
 				users: {
-					upsert: {
+					connectOrCreate: {
 						create: {
 							userId: ctx.req.session.user!.id,
 						},
-						update: {},
 						where: {
 							userId_pageId: {
 								pageId: id,
@@ -174,8 +163,7 @@ export const EditPageMutation = mutationField("editPage", {
 			where: {
 				id,
 			},
-		});
-	},
+		}),
 	type: "Page",
 });
 export const DeletePageMutation = mutationField("deletePage", {
@@ -183,16 +171,13 @@ export const DeletePageMutation = mutationField("deletePage", {
 		id: nonNull(intArg()),
 	},
 	authorize: async (_root, { id }, ctx) =>
-		!!(await ctx.prisma.page.findFirst({
+		!!ctx.req.session.user &&
+		!!(await ctx.prisma.canMutatePagesOnUsers.findUnique({
 			where: {
-				canBeMutatedBy: {
-					some: {
-						user: {
-							id: ctx.req.session.user?.id ?? 0,
-						},
-					},
+				userId_pageId: {
+					pageId: id,
+					userId: ctx.req.session.user.id,
 				},
-				id,
 			},
 		})),
 	resolve: async (_root, { id }, ctx) =>
