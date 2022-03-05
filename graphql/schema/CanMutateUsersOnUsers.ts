@@ -8,8 +8,8 @@ export const CanMutateUsersOnUsers = objectType({
 					.findUnique({
 						where: {
 							parentId_childId: {
-								childId: childId!,
-								parentId: parentId!,
+								childId,
+								parentId,
 							},
 						},
 					})
@@ -23,8 +23,8 @@ export const CanMutateUsersOnUsers = objectType({
 					.findUnique({
 						where: {
 							parentId_childId: {
-								childId: childId!,
-								parentId: parentId!,
+								childId,
+								parentId,
 							},
 						},
 					})
@@ -38,8 +38,8 @@ export const CanMutateUsersOnUsers = objectType({
 					.findUnique({
 						where: {
 							parentId_childId: {
-								childId: childId!,
-								parentId: parentId!,
+								childId,
+								parentId,
 							},
 						},
 					})

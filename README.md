@@ -62,13 +62,13 @@ Before you start working:
 $ git status # Check you're on the default branch (trunk), if not:
 $ git checkout trunk
 $ git pull --all --rebase # Make sure you're up-to-date
-$ git checkout -b <build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test>/<your idea>
-# examples:
+$ git checkout -b <build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test>/<your idea> # Start off with a feature branch
+$ # examples:
 $ git checkout -b feat/add-cat-gifs
 $ git checkout -b fix/zalgo-bug
 $ git checkout -b chore/bump-deps
 $ git checkout -b refactor/folder-structure
-# ...
+$ # ...
 ```
 
 Commit changes in reasonable chunks regularly while working (make sure everything works before committing):

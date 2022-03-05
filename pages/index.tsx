@@ -1,4 +1,3 @@
-import type { GetPages } from "$generated/apollo";
 import { gql, useQuery } from "@apollo/client";
 import { Heading, Center, Text, VStack } from "@chakra-ui/react";
 import { Hero } from "$app/hero";
@@ -16,7 +15,10 @@ const GET_PAGES = gql`
 
 export default function Index(): JSX.Element {
 	const spacing = useBreakpoints((k, _v, i) => [k, `${(i + 1) ** 2}px`]);
-	const { data, loading, error } = useQuery<GetPages>(GET_PAGES);
+	const { data, loading, error } = useQuery<{
+		title: string;
+		content: string;
+	}>(GET_PAGES);
 	if (loading) return <Loading />;
 	if (error || !data) return <Error message={error?.message} />;
 
@@ -27,9 +29,9 @@ export default function Index(): JSX.Element {
 				<Center>
 					<VStack spacing={spacing}>
 						<Heading as="h1" size="xl">
-							Epic Heading 😎
+							Überschrift
 						</Heading>
-						<Text fontSize="md">Noch epischerer Text 🔫</Text>
+						<Text fontSize="md">Text</Text>
 					</VStack>
 				</Center>
 			</Container>

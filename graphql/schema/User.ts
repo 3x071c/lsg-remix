@@ -17,43 +17,37 @@ export const User = objectType({
 		t.string("username");
 		t.list.field("pages", {
 			resolve: ({ id }, _args, ctx) =>
-				ctx.prisma.user.findUnique({ where: { id: id! } }).pages(),
+				ctx.prisma.user.findUnique({ where: { id } }).pages(),
 			type: "PagesOnUsers",
 		});
 		t.list.field("canBeMutatedBy", {
 			resolve: ({ id }, _args, ctx) =>
-				ctx.prisma.user
-					.findUnique({ where: { id: id! } })
-					.canBeMutatedBy(),
+				ctx.prisma.user.findUnique({ where: { id } }).canBeMutatedBy(),
 			type: "CanMutateUsersOnUsers",
 		});
 		t.list.field("canMutateUsers", {
 			resolve: ({ id }, _args, ctx) =>
-				ctx.prisma.user
-					.findUnique({ where: { id: id! } })
-					.canMutateUsers(),
+				ctx.prisma.user.findUnique({ where: { id } }).canMutateUsers(),
 			type: "CanMutateUsersOnUsers",
 		});
 		t.boolean("canMutateUsersSubscription");
 		t.list.field("canMutateUsersAssigned", {
 			resolve: ({ id }, _args, ctx) =>
 				ctx.prisma.user
-					.findUnique({ where: { id: id! } })
+					.findUnique({ where: { id } })
 					.canMutateUsersAssigned(),
 			type: "CanMutateUsersOnUsers",
 		});
 		t.list.field("canMutatePages", {
 			resolve: ({ id }, _args, ctx) =>
-				ctx.prisma.user
-					.findUnique({ where: { id: id! } })
-					.canMutatePages(),
+				ctx.prisma.user.findUnique({ where: { id } }).canMutatePages(),
 			type: "CanMutatePagesOnUsers",
 		});
 		t.boolean("canMutatePagesSubscription");
 		t.list.field("canMutatePagesAssigned", {
 			resolve: ({ id }, _args, ctx) =>
 				ctx.prisma.user
-					.findUnique({ where: { id: id! } })
+					.findUnique({ where: { id } })
 					.canMutatePagesAssigned(),
 			type: "CanMutatePagesOnUsers",
 		});

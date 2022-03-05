@@ -15,25 +15,23 @@ export const Page = objectType({
 		t.string("content");
 		t.list.field("users", {
 			resolve: ({ id }, _args, ctx) =>
-				ctx.prisma.page.findUnique({ where: { id: id! } }).users(),
+				ctx.prisma.page.findUnique({ where: { id } }).users(),
 			type: "PagesOnUsers",
 		});
 		t.field("parent", {
 			resolve: ({ id }, _args, ctx) =>
-				ctx.prisma.page.findUnique({ where: { id: id! } }).parent(),
+				ctx.prisma.page.findUnique({ where: { id } }).parent(),
 			type: "Page",
 		});
 		t.int("parentId");
 		t.list.field("children", {
 			resolve: ({ id }, _args, ctx) =>
-				ctx.prisma.page.findUnique({ where: { id: id! } }).children(),
+				ctx.prisma.page.findUnique({ where: { id } }).children(),
 			type: "Page",
 		});
 		t.list.field("canBeMutatedBy", {
 			resolve: ({ id }, _args, ctx) =>
-				ctx.prisma.page
-					.findUnique({ where: { id: id! } })
-					.canBeMutatedBy(),
+				ctx.prisma.page.findUnique({ where: { id } }).canBeMutatedBy(),
 			type: "CanMutatePagesOnUsers",
 		});
 		t.date("lastMutatedAt");

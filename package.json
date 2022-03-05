@@ -28,8 +28,6 @@
 	],
 	"scripts": {
 		"analyze": "cross-env ANALYZE=true npm run build",
-		"apollo:generate": "apollo client:codegen --includes=\"{app,graphql,lib,pages}/**\" --localSchemaFile=__generated__/schema.graphql --outputFlat --tagName=gql --target=typescript --tsFileExtension=d.ts --useReadOnlyTypes __generated__/apollo.d.ts",
-		"apollo:watch": "apollo client:codegen --includes=\"{app,graphql,lib,pages}/**\" --localSchemaFile=__generated__/schema.graphql --outputFlat --tagName=gql --target=typescript --tsFileExtension=d.ts --useReadOnlyTypes --watch __generated__/apollo.d.ts",
 		"build": "cross-env NODE_ENV=production run-s clean generate next:build",
 		"check": "tsc --noEmit",
 		"ci": "run-s new lint check build",
@@ -48,7 +46,7 @@
 		"export": "cross-env NODE_ENV=production run-s clean next:export",
 		"fix": "npm run format",
 		"format": "run-s prettier:fix eslint:fix stylelint:fix secretlint:report cspell:report jscpd:report",
-		"generate": "run-s prisma:generate nexus:generate apollo:generate",
+		"generate": "run-s prisma:generate nexus:generate",
 		"jscpd:individual": "jscpd",
 		"jscpd:report": "npm run jscpd:individual -- \".\"",
 		"lint": "run-s prettier:report eslint:report stylelint:report secretlint:report cspell:report jscpd:report",
@@ -84,7 +82,7 @@
 		"stylelint:individual": "npm run stylelint:template -- --fix",
 		"stylelint:report": "npm run stylelint:template -- --max-warnings 0 \"./**/*.{tsx,jsx,html,pcss,css}\"",
 		"stylelint:template": "stylelint --cache --report-needless-disables --report-invalid-scope-disables --report-descriptionless-disables",
-		"watch": "run-p prisma:watch nexus:watch apollo:watch"
+		"watch": "run-p prisma:watch nexus:watch"
 	},
 	"dependencies": {
 		"@apollo/client": "3.5.9",
@@ -142,7 +140,6 @@
 		"@types/react-dom": "17.0.11",
 		"@typescript-eslint/eslint-plugin": "5.12.1",
 		"@typescript-eslint/parser": "5.12.1",
-		"apollo": "2.33.9",
 		"autoprefixer": "10.4.2",
 		"browserslist": "4.19.3",
 		"commitizen": "4.2.4",

@@ -8,8 +8,8 @@ export const CanMutatePagesOnUsers = objectType({
 					.findUnique({
 						where: {
 							userId_pageId: {
-								pageId: pageId!,
-								userId: userId!,
+								pageId,
+								userId,
 							},
 						},
 					})
@@ -23,8 +23,8 @@ export const CanMutatePagesOnUsers = objectType({
 					.findUnique({
 						where: {
 							userId_pageId: {
-								pageId: pageId!,
-								userId: userId!,
+								pageId,
+								userId,
 							},
 						},
 					})
@@ -38,8 +38,8 @@ export const CanMutatePagesOnUsers = objectType({
 					.findUnique({
 						where: {
 							userId_pageId: {
-								pageId: pageId!,
-								userId: userId!,
+								pageId,
+								userId,
 							},
 						},
 					})

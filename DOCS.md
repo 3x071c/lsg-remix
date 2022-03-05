@@ -4,7 +4,6 @@
 
 If you've just edited some GraphQL-related code, there's a high chance TypeScript (and type-related ESLint rules) will start complaining about some weird type incompatibility. This is because a lot of the tools used here (Apollo Client's Query type-checking, Nexus types for its schema, Prisma's types for the database) require some command to run in the background to regenerate its types when the code changes. Here's a simplified rundown of what to do, depending on the part of the app that was changed:
 
--   On the client-side (Apollo Client): `npm run apollo:watch`
 -   In the schema folder (Nexus): `npm run nexus:watch` (Doesn't appear to do anything right now -> just run the dev server `npm run dev` in the background)
 -   In the `schema.prisma` file (Prisma): `npm run prisma:watch`
 -   **Regenerate everything**: `npm run generate` (once) / `npm run watch` (until killed)
