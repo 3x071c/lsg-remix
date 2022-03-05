@@ -5,12 +5,6 @@
 	"endOfLine": "auto",
 	"htmlWhitespaceSensitivity": "ignore",
 	"jsxSingleQuote": false,
-	"plugins": [
-		"./node_modules/prettier-plugin-pkg",
-		"./node_modules/prettier-plugin-prisma",
-		"./node_modules/prettier-plugin-sh",
-		"./node_modules/prettier-plugin-sort-json"
-	],
 	"printWidth": 80,
 	"proseWrap": "never",
 	"quoteProps": "as-needed",

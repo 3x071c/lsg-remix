@@ -21,17 +21,6 @@ jobs:
         steps:
             - name: Git Checkout
               uses: actions/checkout@v3
-            - name: Setup pnpm
-              uses: pnpm/action-setup@v2
-              with:
-                  version: latest
-            - name: Setup Node
-              uses: actions/setup-node@v3
-              with:
-                  node-version: ${{ matrix.node }}
-                  cache: pnpm
-            - name: Install dependencies
-              run: pnpm install --frozen-lockfile --strict-peer-dependencies
             - name: Cache Next.js
               uses: actions/cache@v2
               with:
@@ -40,8 +29,15 @@ jobs:
                   key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
                   # If source files changed but packages didn't, rebuild from a prior cache.
                   restore-keys: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
+            - name: Setup Node
+              uses: actions/setup-node@v3
+              with:
+                  node-version: ${{ matrix.node }}
+                  cache: npm
+            - name: Install dependencies
+              run: npm ci
             - name: Run Tests
-              run: pnpm ci
+              run: npm run ci
               env:
                   ci: true
                   NODE_ENV: production
