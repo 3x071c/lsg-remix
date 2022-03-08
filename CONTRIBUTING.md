@@ -6,7 +6,7 @@ This repository follows the guidelines of [Trunk based development](https://trun
 
 ## Git Usage
 
-> Git is a distributed version control system. As a result of its nature, the _remote_ (online repository hosted on GitHub, often called `origin` (check `git remote -v` to see the name of your remote)) and your local repository are treated separately, may diverge, not stay in sync, get out of date etc. Atlassian provides a great [tutorial](https://www.atlassian.com/git/tutorials/setting-up-a-repository) on the basics of git collaboration.
+> Git is a distributed version control system. As a result of its nature, the _remote_ (online repository hosted on GitHub, often called `origin` (check `git remote -v` to see the name of your remote)) and your local repository are treated separately, may diverge, not stay in sync, get out of date etc. Here's a great [tutorial](https://www.atlassian.com/git/tutorials/setting-up-a-repository) on the basics of git collaboration.
 
 Squashing and rebasing over merging is encouraged. PRs can only be squashed onto trunk. Here is a reference for some common git operations:
 

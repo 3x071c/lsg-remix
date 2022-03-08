@@ -45,17 +45,28 @@ Install the dependencies of this project:
 $ pnpm i
 ```
 
-Generate TypeScript types (this is mostly needed to type-check GraphQL operations) and seed the database (filling it with example data for development):
+Setup a local mysql-compatible database (MariaDB, mySQL):
+
+```console
+$ # Instructions for macOS
+$ brew install --cask dbngin
+$                                       # Examples for GNU/Linux
+$ apt install mariadb-server            # Look up the documentation for your specific OS, apt is for Debian-based distributions
+$                                       # Instructions for Windows
+$ winget install -e --id MariaDB.Server # Or XAMPP or Laragon, if you prefer
+```
+
+Make sure to configure it according to available documentation, making a database connection available at a certain port (commonly `3306`) of your local machine (`localhost`) with a user and password. Store the connection string to your database, as well as an encryption key in `.env`. Make sure to keep it **secret**:
+
+```console
+# /.env
+CMS_COOKIE_SECRET=<30-50 character random password without quotation (f.e. from https://1password.com/password-generator/)>
+```
+
+Seed the database, run routines and generate types:
 
 ```console
 $ pnpm new
-```
-
-Store an encryption password for the CMS authentication cookie in `.env.local` ([**never put secrets in .env!**](https://nextjs.org/docs/basic-features/environment-variables)). Make sure to keep it **secret** (in production):
-
-```console
-# /.env.local
-CMS_COOKIE_SECRET=<30-50 character random password without quotation (f.e. from https://1password.com/password-generator/)>
 ```
 
 Spin up a local development server. It will automatically reflect changes in the code:
@@ -72,13 +83,13 @@ Before you start working:
 $ git status # Check you're on the default branch (trunk), if not:
 $ git checkout trunk
 $ git pull --all --rebase # Make sure you're up-to-date
-$ git checkout -b <build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test>/<your idea>
-# examples:
+$ git checkout -b <build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test>/<your idea> # Start off with a feature branch
+$ # examples:
 $ git checkout -b feat/add-cat-gifs
 $ git checkout -b fix/zalgo-bug
 $ git checkout -b chore/bump-deps
 $ git checkout -b refactor/folder-structure
-# ...
+$ # ...
 ```
 
 Commit changes in reasonable chunks regularly while working (make sure everything works before committing):

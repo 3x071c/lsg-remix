@@ -1,12 +1,25 @@
-import { Heading, Wrap, WrapItem, Text, VStack, Box } from "@chakra-ui/react";
-import { Image } from "$app/image";
-import { useBreakpoints, useHeadingSize, useSubHeadingSize } from "$app/layout";
+import {
+	Heading,
+	Wrap,
+	WrapItem,
+	Text,
+	VStack,
+	Box,
+	Image,
+	useBreakpointValue,
+} from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { useBreakpoints } from "~app/layout";
 import backgroundImage from "./bg.jpg";
 
 export default function Hero() {
 	const spacing = useBreakpoints((k, _v, i) => [k, `${(i + 1) ** 2}px`]);
-	const headingSize = useHeadingSize();
-	const subHeadingSize = useSubHeadingSize();
+	const headingSize = useBreakpointValue({ base: "2xl", md: "3xl" });
+	const [mounted, setMounted] = useState(false);
+
+	useEffect(() => {
+		setMounted(true);
+	}, []);
 
 	return (
 		<Wrap
@@ -17,10 +30,10 @@ export default function Hero() {
 			p={spacing}>
 			<WrapItem flex="1 1 0">
 				<VStack spacing={spacing}>
-					<Heading as="h1" size={headingSize}>
+					<Heading as="h1" size={mounted ? headingSize : undefined}>
 						Louise-Schroeder-Gymnasium
 					</Heading>
-					<Text fontSize={subHeadingSize}>
+					<Text fontSize={{ base: "lg", md: "xl" }}>
 						Naturwissenschaftlich-technologisches und sprachliches
 						Gymnasium in München 🍺
 					</Text>
@@ -31,7 +44,6 @@ export default function Hero() {
 					<Image
 						src={backgroundImage}
 						alt="Louise-Schroeder-Gymnasium Außenansicht"
-						priority
 						borderRadius="2xl"
 					/>
 				</Box>

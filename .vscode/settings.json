@@ -25,11 +25,12 @@
 	"files.exclude": {
 		"**/.DS_Store": true,
 		"**/.git": true,
-		"**/.next": true,
+		"**/.remix": true,
 		"**/node_modules": true,
 		"**/pnpm-lock.yaml": true,
 		"**/*.tsbuildinfo": true,
-		"**/.*cache": true
+		"**/.*cache": true,
+		"**/public/build": true
 	},
 	"npm.packageManager": "pnpm",
 	"prettier.requireConfig": true,

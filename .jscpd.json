@@ -8,11 +8,11 @@
 		"pnpm-lock.yaml",
 		".*cache",
 		".*ignore",
-		".next",
+		".remix",
 		".husky",
 		"*.tsbuildinfo",
-		"db/one.db",
-		"__generated__"
+		"public/build",
+		"db/migrations"
 	],
 	"reporters": ["console"]
 }
