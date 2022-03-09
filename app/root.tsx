@@ -1,5 +1,6 @@
+import type { ColorMode } from "@chakra-ui/react";
 import type { PropsWithChildren } from "react";
-import { Heading } from "@chakra-ui/react";
+import { storageKey, Heading } from "@chakra-ui/react";
 import {
 	MetaFunction,
 	Links,
@@ -21,17 +22,21 @@ export const meta: MetaFunction = () => {
 };
 
 const getLoaderData = (request: Request) => ({
-	cookie: request.headers.get("Cookie"),
+	colormode: request.headers
+		.get("Cookie")
+		?.match(new RegExp(`(^| )${storageKey}=([^;]+)`))?.[2],
 });
 type LoaderData = ReturnType<typeof getLoaderData>;
 export const loader: LoaderFunction = ({ request }) => {
 	return json<LoaderData>(getLoaderData(request));
 };
 
-function Document({ children, title }: PropsWithChildren<{ title?: string }>) {
-	const { cookie } = useLoaderData<LoaderData>();
-
-	console.log("[Document]", cookie);
+function Document({
+	children,
+	title,
+	colorMode,
+}: PropsWithChildren<{ title?: string; colorMode?: ColorMode }>) {
+	if (colorMode) console.log("[Document]", colorMode);
 
 	return (
 		<html lang="de">
@@ -46,7 +51,9 @@ function Document({ children, title }: PropsWithChildren<{ title?: string }>) {
 				<Links />
 			</head>
 			<body>
-				<ColorModeManager>{children}</ColorModeManager>
+				<ColorModeManager colorMode={colorMode}>
+					{children}
+				</ColorModeManager>
 				<ScrollRestoration />
 				<Scripts />
 				<LiveReload />
@@ -56,8 +63,10 @@ function Document({ children, title }: PropsWithChildren<{ title?: string }>) {
 }
 
 export default function App() {
+	const { colormode } = useLoaderData<LoaderData>();
+
 	return (
-		<Document>
+		<Document colorMode={colormode as ColorMode}>
 			<Container>
 				<Outlet />
 			</Container>

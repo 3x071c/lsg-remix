@@ -1,11 +1,9 @@
+import type { ColorMode } from "@chakra-ui/react";
+import type { PropsWithChildren } from "react";
 import { ChakraProvider, StorageManager, storageKey } from "@chakra-ui/react";
-import { useContext, PropsWithChildren } from "react";
 import theme from "~app/theme";
-import ColorModeContext, { ColorModeContextData } from "./ColorModeContext";
 
-const colorModeStorageManager = (
-	mode: ColorModeContextData,
-): StorageManager => ({
+const colorModeStorageManager = (mode?: ColorMode): StorageManager => ({
 	get(init?) {
 		console.log("[colorModeStorageManager]", init, mode);
 		if (mode) {
@@ -22,12 +20,14 @@ const colorModeStorageManager = (
 
 export default function ColorModeManager({
 	children,
-}: PropsWithChildren<unknown>) {
-	const colorModeContext = useContext(ColorModeContext);
-
+	colorMode,
+}: PropsWithChildren<{
+	colorMode?: ColorMode;
+}>) {
 	return (
 		<ChakraProvider
-			colorModeManager={colorModeStorageManager(colorModeContext)}>
+			theme={theme}
+			colorModeManager={colorModeStorageManager(colorMode)}>
 			{children}
 		</ChakraProvider>
 	);
