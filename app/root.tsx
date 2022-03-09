@@ -1,6 +1,6 @@
 import type { ColorMode } from "@chakra-ui/react";
 import type { PropsWithChildren } from "react";
-import { storageKey, Heading } from "@chakra-ui/react";
+import { Heading } from "@chakra-ui/react";
 import {
 	MetaFunction,
 	Links,
@@ -14,7 +14,11 @@ import {
 	LoaderFunction,
 	useLoaderData,
 } from "remix";
-import { ColorModeManager } from "~app/colormode";
+import {
+	ColorModeManager,
+	ColorModeToggle,
+	colorModeFromHeader,
+} from "~app/colormode";
 import { Container } from "~app/layout";
 
 export const meta: MetaFunction = () => {
@@ -22,22 +26,17 @@ export const meta: MetaFunction = () => {
 };
 
 const getLoaderData = (request: Request) => ({
-	colormode: request.headers
-		.get("Cookie")
-		?.match(new RegExp(`(^| )${storageKey}=([^;]+)`))?.[2],
+	colormode: colorModeFromHeader(request.headers.get("Cookie") || ""),
 });
 type LoaderData = ReturnType<typeof getLoaderData>;
-export const loader: LoaderFunction = ({ request }) => {
-	return json<LoaderData>(getLoaderData(request));
-};
+export const loader: LoaderFunction = ({ request }) =>
+	json<LoaderData>(getLoaderData(request));
 
 function Document({
 	children,
 	title,
 	colorMode,
 }: PropsWithChildren<{ title?: string; colorMode?: ColorMode }>) {
-	if (colorMode) console.log("[Document]", colorMode);
-
 	return (
 		<html lang="de">
 			<head>
@@ -52,6 +51,7 @@ function Document({
 			</head>
 			<body>
 				<ColorModeManager colorMode={colorMode}>
+					<ColorModeToggle />
 					{children}
 				</ColorModeManager>
 				<ScrollRestoration />

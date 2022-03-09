@@ -1,19 +1,18 @@
 import type { ColorMode } from "@chakra-ui/react";
-import type { PropsWithChildren } from "react";
-import { ChakraProvider, StorageManager, storageKey } from "@chakra-ui/react";
+import { ChakraProvider, StorageManager } from "@chakra-ui/react";
+import { useContext, PropsWithChildren } from "react";
 import theme from "~app/theme";
+import ColorModeContext from "./ColorModeContext";
+import getColorMode from "./getColorMode";
+import setColorMode from "./setColorMode";
 
 const colorModeStorageManager = (mode?: ColorMode): StorageManager => ({
 	get(init?) {
-		console.log("[colorModeStorageManager]", init, mode);
-		if (mode) {
-			console.log("[colorModeStorageManager] mode", mode);
-			return mode;
-		}
+		if (mode) return mode;
 		return init;
 	},
 	set(value) {
-		document.cookie = `${storageKey}=${value}; max-age=604800; path=/`;
+		setColorMode(value);
 	},
 	type: "cookie",
 });
@@ -24,10 +23,14 @@ export default function ColorModeManager({
 }: PropsWithChildren<{
 	colorMode?: ColorMode;
 }>) {
+	const colorModeContext = useContext(ColorModeContext);
+
 	return (
 		<ChakraProvider
 			theme={theme}
-			colorModeManager={colorModeStorageManager(colorMode)}>
+			colorModeManager={colorModeStorageManager(
+				getColorMode(colorModeContext, colorMode),
+			)}>
 			{children}
 		</ChakraProvider>
 	);
