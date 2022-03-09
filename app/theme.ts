@@ -6,6 +6,7 @@ import {
 
 const config: ThemeConfig = {
 	initialColorMode: "system",
+	useSystemColorMode: true,
 };
 
 export default extendTheme(

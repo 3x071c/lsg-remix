@@ -17,6 +17,7 @@ specifiers:
   '@remix-run/eslint-config': 1.2.3
   '@remix-run/react': 1.2.3
   '@remix-run/serve': 1.2.3
+  '@remix-run/server-runtime': ^1.2.3
   '@remix-run/vercel': 1.2.3
   '@secretlint/secretlint-rule-preset-recommend': 4.1.4
   '@types/faker': 5.5.9
@@ -78,6 +79,7 @@ dependencies:
   '@prisma/client': 3.10.0_prisma@3.10.0
   '@remix-run/react': 1.2.3_react-dom@17.0.2+react@17.0.2
   '@remix-run/serve': 1.2.3_react-dom@17.0.2+react@17.0.2
+  '@remix-run/server-runtime': 1.2.3_react-dom@17.0.2+react@17.0.2
   '@remix-run/vercel': 1.2.3_1afa648d931f96185b1b8bd78b569843
   argon2: 0.28.4
   framer-motion: 6.2.8_react-dom@17.0.2+react@17.0.2

@@ -1,7 +1,7 @@
 import type { PropsWithChildren } from "react";
-import type { MetaFunction } from "remix";
-import { ChakraProvider, Heading } from "@chakra-ui/react";
+import { Heading } from "@chakra-ui/react";
 import {
+	MetaFunction,
 	Links,
 	LiveReload,
 	Meta,
@@ -9,15 +9,30 @@ import {
 	Scripts,
 	ScrollRestoration,
 	useCatch,
+	json,
+	LoaderFunction,
+	useLoaderData,
 } from "remix";
+import { ColorModeManager } from "~app/colormode";
 import { Container } from "~app/layout";
-import theme from "~app/theme";
 
 export const meta: MetaFunction = () => {
 	return { title: "LSG" };
 };
 
+const getLoaderData = (request: Request) => ({
+	cookie: request.headers.get("Cookie"),
+});
+type LoaderData = ReturnType<typeof getLoaderData>;
+export const loader: LoaderFunction = ({ request }) => {
+	return json<LoaderData>(getLoaderData(request));
+};
+
 function Document({ children, title }: PropsWithChildren<{ title?: string }>) {
+	const { cookie } = useLoaderData<LoaderData>();
+
+	console.log("[Document]", cookie);
+
 	return (
 		<html lang="de">
 			<head>
@@ -31,7 +46,7 @@ function Document({ children, title }: PropsWithChildren<{ title?: string }>) {
 				<Links />
 			</head>
 			<body>
-				{children}
+				<ColorModeManager>{children}</ColorModeManager>
 				<ScrollRestoration />
 				<Scripts />
 				<LiveReload />
@@ -43,11 +58,9 @@ function Document({ children, title }: PropsWithChildren<{ title?: string }>) {
 export default function App() {
 	return (
 		<Document>
-			<ChakraProvider theme={theme}>
-				<Container>
-					<Outlet />
-				</Container>
-			</ChakraProvider>
+			<Container>
+				<Outlet />
+			</Container>
 		</Document>
 	);
 }
@@ -57,13 +70,11 @@ export function CatchBoundary() {
 
 	return (
 		<Document title={`${caught.status} ${caught.statusText}`}>
-			<ChakraProvider theme={theme}>
-				<Container>
-					<Heading as="h1" bg="purple.600">
-						[CatchBoundary]: {caught.status} {caught.statusText}
-					</Heading>
-				</Container>
-			</ChakraProvider>
+			<Container>
+				<Heading as="h1" bg="purple.600">
+					[CatchBoundary]: {caught.status} {caught.statusText}
+				</Heading>
+			</Container>
 		</Document>
 	);
 }
@@ -71,13 +82,11 @@ export function CatchBoundary() {
 export function ErrorBoundary({ error }: { error: Error }) {
 	return (
 		<Document title="Error!">
-			<ChakraProvider theme={theme}>
-				<Container>
-					<Heading as="h1" bg="blue.500">
-						[ErrorBoundary]: There was an error: {error.message}
-					</Heading>
-				</Container>
-			</ChakraProvider>
+			<Container>
+				<Heading as="h1" bg="blue.500">
+					[ErrorBoundary]: There was an error: {error.message}
+				</Heading>
+			</Container>
 		</Document>
 	);
 }

@@ -6,31 +6,21 @@ import {
 	VStack,
 	Box,
 	Image,
-	useBreakpointValue,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { useBreakpoints } from "~app/layout";
 import backgroundImage from "./bg.jpg";
 
 export default function Hero() {
-	const spacing = useBreakpoints((k, _v, i) => [k, `${(i + 1) ** 2}px`]);
-	const headingSize = useBreakpointValue({ base: "2xl", md: "3xl" });
-	const [mounted, setMounted] = useState(false);
-
-	useEffect(() => {
-		setMounted(true);
-	}, []);
-
 	return (
 		<Wrap
-			spacing={spacing}
+			spacing={{ base: "xl", md: "3xl" }}
 			justify="center"
 			align="center"
 			textAlign="center"
-			p={spacing}>
+			px={{ base: "xl", md: "3xl" }}
+			py={{ base: "xl", md: "3xl" }}>
 			<WrapItem flex="1 1 0">
-				<VStack spacing={spacing}>
-					<Heading as="h1" size={mounted ? headingSize : undefined}>
+				<VStack spacing={{ base: "xl", md: "3xl" }}>
+					<Heading as="h1" size="3xl">
 						Louise-Schroeder-Gymnasium
 					</Heading>
 					<Text fontSize={{ base: "lg", md: "xl" }}>
