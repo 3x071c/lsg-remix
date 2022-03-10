@@ -1,8 +1,12 @@
-import type { ColorMode } from "@chakra-ui/react";
 import type { EntryContext } from "remix";
 import { renderToString } from "react-dom/server";
 import { RemixServer } from "remix";
-import { ColorModeContext, colorModeFromHeader } from "~app/colormode";
+import {
+	ColorModeContext,
+	getColorModeCookie,
+	getInitialColorModeCookie,
+	InitialColorModeContext,
+} from "~app/colormode";
 
 export default function handleRequest(
 	request: Request,
@@ -11,14 +15,21 @@ export default function handleRequest(
 	remixContext: EntryContext,
 ) {
 	const render = renderToString(
-		<ColorModeContext.Provider
+		<InitialColorModeContext.Provider
 			value={
-				(colorModeFromHeader(
+				getInitialColorModeCookie(
 					request.headers.get("Cookie") || "",
-				) as ColorMode) || null
+				) || null
 			}>
-			<RemixServer context={remixContext} url={request.url} />,
-		</ColorModeContext.Provider>,
+			<ColorModeContext.Provider
+				value={
+					getColorModeCookie(request.headers.get("Cookie") || "") ||
+					null
+				}>
+				<RemixServer context={remixContext} url={request.url} />,
+			</ColorModeContext.Provider>
+			,
+		</InitialColorModeContext.Provider>,
 	);
 
 	responseHeaders.set("Content-Type", "text/html");

@@ -1,2 +1,3 @@
-export default (cookies: string, key: string) =>
-	cookies.match(new RegExp(`(^| )${key}=([^;]+)`))?.[2];
+export default function parseCookie(cookies: string, key: string) {
+	return cookies.match(new RegExp(`(^| )${key}=([^;]+)`))?.[2];
+}

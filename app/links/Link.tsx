@@ -8,7 +8,7 @@ import { Link as RemixLink } from "remix";
 import isExternal from "./isExternal";
 
 export default forwardRef<Overwrite<ChakraLinkProps, { href: string }>, "a">(
-	({ children, href, ...props }, ref): JSX.Element => {
+	function Link({ children, href, ...props }, ref): JSX.Element {
 		if (isExternal(href)) {
 			return (
 				<ChakraLink {...props} isExternal href={href} ref={ref}>

@@ -1,9 +1,9 @@
-import { ColorMode, storageKey } from "@chakra-ui/react";
+import type { ColorMode } from "@chakra-ui/react";
+import {
+	setColorModeCookie,
+	setInitialColorModeCookie,
+} from "./colorModeCookie";
 
-const isServer = typeof document === "undefined";
-
-export default (value: ColorMode): ColorMode => {
-	if (isServer) throw new Error("Invalid document access, reload page");
-	document.cookie = `${storageKey}=${value}; max-age=604800; path=/`;
-	return value;
-};
+export default function setColorMode(value: ColorMode) {
+	return setColorModeCookie(setInitialColorModeCookie(value));
+}

@@ -4,7 +4,7 @@ import { Link as RemixLink } from "remix";
 import isExternal from "./isExternal";
 
 export default forwardRef<Overwrite<ButtonProps, { href: string }>, "a">(
-	({ href, ...props }, ref): JSX.Element => {
+	function LinkButton({ href, ...props }, ref): JSX.Element {
 		if (isExternal(href)) {
 			return (
 				<Button

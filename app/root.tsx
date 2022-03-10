@@ -1,4 +1,3 @@
-import type { ColorMode } from "@chakra-ui/react";
 import type { PropsWithChildren } from "react";
 import { Heading } from "@chakra-ui/react";
 import {
@@ -10,33 +9,15 @@ import {
 	Scripts,
 	ScrollRestoration,
 	useCatch,
-	json,
-	LoaderFunction,
-	useLoaderData,
 } from "remix";
-import {
-	ColorModeManager,
-	ColorModeToggle,
-	colorModeFromHeader,
-} from "~app/colormode";
+import { ColorModeManager, ColorModeToggle } from "~app/colormode";
 import { Container } from "~app/layout";
 
 export const meta: MetaFunction = () => {
 	return { title: "LSG" };
 };
 
-const getLoaderData = (request: Request) => ({
-	colormode: colorModeFromHeader(request.headers.get("Cookie") || ""),
-});
-type LoaderData = ReturnType<typeof getLoaderData>;
-export const loader: LoaderFunction = ({ request }) =>
-	json<LoaderData>(getLoaderData(request));
-
-function Document({
-	children,
-	title,
-	colorMode,
-}: PropsWithChildren<{ title?: string; colorMode?: ColorMode }>) {
+function Document({ children, title }: PropsWithChildren<{ title?: string }>) {
 	return (
 		<html lang="de">
 			<head>
@@ -50,7 +31,7 @@ function Document({
 				<Links />
 			</head>
 			<body>
-				<ColorModeManager colorMode={colorMode}>
+				<ColorModeManager>
 					<ColorModeToggle />
 					{children}
 				</ColorModeManager>
@@ -63,10 +44,8 @@ function Document({
 }
 
 export default function App() {
-	const { colormode } = useLoaderData<LoaderData>();
-
 	return (
-		<Document colorMode={colormode as ColorMode}>
+		<Document>
 			<Container>
 				<Outlet />
 			</Container>
