@@ -11,9 +11,10 @@ export default function ColorModeToggle(): JSX.Element {
 			icon={<ColorModeIcon />}
 			isRound
 			size="lg"
-			pos="absolute"
-			top="20px"
-			right="20px"
+			pos="fixed"
+			bottom="0"
+			right="0"
+			transform="translate(-50%, -50%)"
 			onClick={toggleColorMode}
 		/>
 	);

@@ -100,7 +100,17 @@
 		"target": "ESNext" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
 		"useUnknownInCatchVariables": true /* Type catch clause variables as 'unknown' instead of 'any'. */
 	},
-	"exclude": ["node_modules"],
+	"exclude": [
+		"node_modules",
+		".git",
+		".vscode",
+		".*cache",
+		".*ignore",
+		".remix",
+		".husky",
+		"public/build",
+		"db/migrations"
+	],
 	"include": ["next-env.d.ts", "**/*", "**/.*"],
 	"ts-node": {
 		"compilerOptions": {
