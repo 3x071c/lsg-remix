@@ -1,14 +1,14 @@
 {
-	"name": "lsg-stack",
+	"name": "lsg",
 	"version": "0.0.0",
 	"description": "LSG musin fullstack",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/3x071c/lsg-stack"
+		"url": "https://github.com/3x071c/lsg"
 	},
 	"homepage": "https://lsg.musin.de",
 	"bugs": {
-		"url": "https://github.com/3x071c/lsg-stack/issues"
+		"url": "https://github.com/3x071c/lsg/issues"
 	},
 	"author": {
 		"email": "dev@3x071c.com",
