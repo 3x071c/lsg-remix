@@ -18,8 +18,8 @@
 
 ## Introduction
 
-👋 &nbsp; Hey!  
-You're looking at the source code behind the new [Louise-Schroeder-Gymnasium website](https://lsg.musin.de/) right now! 🤯 &nbsp; It houses a full-stack Next.js application, loaded with TypeScript, Apollo Server and Client, Nexus Schema, Prisma and [a bunch of other goodies](#tech-stack). It's not out yet, but we're working on it. Wanna help out? 😇 &nbsp; See how to [get started](#get-started), take a look at the [tech stack](#tech-stack), or dig straight into the [documentation](#documentation). 👀
+👋 Hey!  
+You're looking at the source code behind the new [Louise-Schroeder-Gymnasium website](https://lsg.musin.de/) right now! 🤯 It houses a full-stack [Remix](https://remix.run/) application, loaded with TypeScript, Prisma and [a bunch of other goodies](#tech-stack). It's not out yet, but we're working on it. Wanna help out? 😇 See how to [get started](#get-started), take a look at the [tech stack](#tech-stack), or dig straight into the [documentation](#documentation). 👀
 
 ## Public Money, Public Code
 
@@ -27,15 +27,59 @@ You're looking at the source code behind the new [Louise-Schroeder-Gymnasium web
 
 ## Get Started 💨
 
-> Prerequisite: You have installed the latest version of [Node.js](https://nodejs.org/) and NPM (the Node package manager, which should ship with it)
+Make sure you have the latest version of [Node.js](https://nodejs.org/) and NPM (the Node package manager, which should ship with it) installed:
 
-Install the dependencies of this project:
+-   (Linux) `$ apt/dnf/... install nodejs`
+-   (macOS) `$ brew install node`
+-   (Windows) `$ winget install -e --id OpenJS.NodeJS`
+
+> (for Linux, always check your **distribution-specific** Debian/Fedora/Ubuntu/... documentation first, as commands may differ)
+
+Make sure you have the latest version of [git](https://git-scm.com/) installed, which you will need to use to download our code, share your changes and collaborate with others ([GitHub](https://github.com) is the server provider that stores our code and interfaces with `git`):
+
+-   (Linux) `$ apt/dnf/... install git`
+-   (macOS) `$ brew install git`
+-   (Windows) `$ winget install -e --id Git.Git`
+
+> If you want to contribute code, you'll probably want to configure git to use your name and email, associating your contributions with your GitHub account:  
+> `git config --global user.name "<your GitHub username>"`  
+> `git config --global user.email "<your GitHub email>"`
+
+Open a terminal (you'll probably want to keep this around):
+
+-   (Linux) <kbd>⊞ Win</kbd> (App Launcher) -> open `Terminal`/`Konsole`
+-   (macOS) <kbd>⌘</kbd> + <kbd>Space</kbd> -> open `Terminal.app`
+-   (Windows) <kbd>⊞ Win</kbd> + <kbd>R</kbd> -> `cmd` ([m](https://tinyurl.com/nuub2bq)[y](https://tinyurl.com/y2emej63)[ ](https://tinyurl.com/y2lzznux)[c](https://tinyurl.com/y3v8vo5a)[o](https://tinyurl.com/y4qcfkw3)[n](https://tinyurl.com/y5gm9ysv)[d](https://tinyurl.com/y69uplwl)[o](https://tinyurl.com/yygc57ta)[l](https://tinyurl.com/yynoa7ql)[e](https://tinyurl.com/y3shavwn)[n](https://tinyurl.com/yxladmrj)[c](https://tinyurl.com/y3yxymqr)[e](https://tinyurl.com/y2c6alo5)[s](https://tinyurl.com/y5qtqr6p))
+
+Clone this repository with git (This will "download" the code and keep a special directory around (`.git`) to track your changes and make collaboration easier):
+
+```console
+$ cd ~/Folder/you/want/to/clone/this/repository/into
+$ git clone https://github.com/3x071c/lsg.git
+```
+
+> Tip: Use <kbd>Tab</kbd> to complete terminal commands and show suggestions
+
+Open the project in [Visual Studio Code](https://code.visualstudio.com/), our recommended IDE (code editor):
+
+```console
+$ code lsg
+```
+
+**Make sure to trust the folder and install all recommended extensions** (If you're new to Visual Studio Code, check out the [next section](#recommendations-for-vscode) as well).
+
+> Installation instructions for Visual Studio Code:  
+> (Linux) `apt/dnf/... install code` (Look up a tutorial for your distribution on how to add the VSCode package repository first)  
+> (macOS) `brew install --cask visual-studio-code`  
+> (Windows) `winget install -e --id Microsoft.VisualStudioCode`
+
+Install the dependencies of this project (you can open up a Terminal in VSCode with <kbd>Ctrl</kbd> + <kbd>J</kbd>):
 
 ```console
 $ npm i
 ```
 
-Setup a local mysql-compatible database (MariaDB, mySQL):
+Setup a local mysql-compatible database (f.e. MariaDB, Oracle MySQL):
 
 ```console
 $ # Instructions for macOS
@@ -46,14 +90,14 @@ $                                       # Instructions for Windows
 $ winget install -e --id MariaDB.Server # Or XAMPP or Laragon, if you prefer
 ```
 
-Make sure to configure it according to available documentation, making a database connection available at a certain port (commonly `3306`) of your local machine (`localhost`) with a user and password. Store the connection string to your database, as well as an encryption key in `.env`. Make sure to keep it **secret**:
+Make sure to configure it according to available documentation/tutorials online, making a database connection available at a certain port (commonly `3306`) of your local machine (`localhost`) with a user and password. Store the connection string to your database, as well as an encryption key in `.env`. Make sure to keep it **secret**:
 
 ```console
 # /.env
 CMS_COOKIE_SECRET=<30-50 character random password without quotation (f.e. from https://1password.com/password-generator/)>
 ```
 
-Seed the database, run routines and generate types:
+Seed the database with example data for local testing, run routines and generate types:
 
 ```console
 $ npm run new
@@ -65,14 +109,12 @@ Spin up a local development server. It will automatically reflect changes in the
 $ npm run dev
 ```
 
-Open the project in **Visual Studio Code**, trust the project and install all recommended extensions.
-
 Before you start working:
 
 ```console
-$ git status # Check you're on the default branch (trunk), if not:
-$ git checkout trunk
-$ git pull --all --rebase # Make sure you're up-to-date
+$ git status # Check if everything's fine
+$ git checkout trunk # Move to the default branch in case you aren't
+$ git pull --all --rebase # Make sure you're up-to-date by "pulling" the latest changes
 $ git checkout -b <build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test>/<your idea> # Start off with a feature branch
 $ # examples:
 $ git checkout -b feat/add-cat-gifs
@@ -178,10 +220,6 @@ That's it, you're good to go! 🤩
 
 See [Docs](DOCS.md)
 
-## Todo
-
-See [Todo](TODO.md)
-
 ## Contributing
 
 See [Contributing](CONTRIBUTING.md)
@@ -192,7 +230,6 @@ See [Contributing](CONTRIBUTING.md)
 -   [Editorconfig](https://editorconfig.org/) - IDE file style consistency
 -   [Prettier](https://prettier.io/) - Code formatting
 -   [ESLint](https://eslint.org/) - JavaScript linting
--   [Stylelint](https://stylelint.io/) - CSS style linting
 -   [CSpell](https://github.com/streetsidesoftware/cspell) - Spell checker
 -   [SecretLint](https://github.com/secretlint/secretlint) - Prevent secret leakage
 -   [jscpd](https://github.com/kucherenko/jscpd) - Copy/paste detector
@@ -202,16 +239,10 @@ See [Contributing](CONTRIBUTING.md)
 -   [NodeJS](https://nodejs.org/en/) - Server-Side JavaScript
 -   [TypeScript](https://www.typescriptlang.org/) - Typed JavaScript superset/compiler
 -   [React](https://reactjs.org/) - Declarative, component-based, reactive UI library
--   [Next.js](https://nextjs.org) - SSR React Framework
--   [PostCSS](https://postcss.org) - CSS preprocessing
--   [Emotion](https://emotion.sh) - CSS-in-JS library
+-   [Remix](https://remix.run/) - SSR React Framework using [React-Router](https://reactrouter.com/)
 -   [Chakra UI](https://chakra-ui.com) - React component framework
--   [GraphQL](https://graphql.org) - API Query specification
--   [Apollo GraphQL](https://www.apollographql.com) - Implementation of the GraphQL spec (client and server)
--   [Nexus](https://nexusjs.org) - GraphQL SDL replacement (schema-in-js)
+-   [Emotion](https://emotion.sh) - CSS-in-JS library used by Chakra UI
 -   [Prisma](https://www.prisma.io) - Database ORM
--   [Iron](https://hapi.dev) - Authorization/Authentication
--   [Micro](https://github.com/vercel/micro) - API middleware
 -   [Faker](https://fakerjs.dev) - Example data seeding
 -   [Lodash](https://lodash.com) - Utility functions
 
