@@ -27,41 +27,42 @@ You're looking at the source code behind the new [Louise-Schroeder-Gymnasium web
 
 ## Get Started 💨
 
-We use [pnpm](https://pnpm.io), a package manager for Node.js which is faster than the standard npm (it uses the same package repository). Install pnpm (if not already installed):
-
-```console
-$ npm i -g pnpm@latest
-```
-
-Make sure pnpm is updated every once in a while:
-
-```console
-$ pnpm add -g pnpm
-```
+> Prerequisite: You have installed the latest version of [Node.js](https://nodejs.org/) and NPM (the Node package manager, which should ship with it)
 
 Install the dependencies of this project:
 
 ```console
-$ pnpm i
+$ npm i
 ```
 
-Generate TypeScript types (this is mostly needed to type-check GraphQL operations) and seed the database (filling it with example data for development):
+Setup a local mysql-compatible database (MariaDB, mySQL):
 
 ```console
-$ pnpm new
+$ # Instructions for macOS
+$ brew install --cask dbngin
+$                                       # Examples for GNU/Linux
+$ apt install mariadb-server            # Look up the documentation for your specific OS, apt is for Debian-based distributions
+$                                       # Instructions for Windows
+$ winget install -e --id MariaDB.Server # Or XAMPP or Laragon, if you prefer
 ```
 
-Store an encryption password for the CMS authentication cookie in `.env.local` ([**never put secrets in .env!**](https://nextjs.org/docs/basic-features/environment-variables)). Make sure to keep it **secret** (in production):
+Make sure to configure it according to available documentation, making a database connection available at a certain port (commonly `3306`) of your local machine (`localhost`) with a user and password. Store the connection string to your database, as well as an encryption key in `.env`. Make sure to keep it **secret**:
 
 ```console
-# /.env.local
+# /.env
 CMS_COOKIE_SECRET=<30-50 character random password without quotation (f.e. from https://1password.com/password-generator/)>
+```
+
+Seed the database, run routines and generate types:
+
+```console
+$ npm run new
 ```
 
 Spin up a local development server. It will automatically reflect changes in the code:
 
 ```console
-$ pnpm dev
+$ npm run dev
 ```
 
 Open the project in **Visual Studio Code**, trust the project and install all recommended extensions.
@@ -72,19 +73,19 @@ Before you start working:
 $ git status # Check you're on the default branch (trunk), if not:
 $ git checkout trunk
 $ git pull --all --rebase # Make sure you're up-to-date
-$ git checkout -b <build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test>/<your idea>
-# examples:
+$ git checkout -b <build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test>/<your idea> # Start off with a feature branch
+$ # examples:
 $ git checkout -b feat/add-cat-gifs
 $ git checkout -b fix/zalgo-bug
 $ git checkout -b chore/bump-deps
 $ git checkout -b refactor/folder-structure
-# ...
+$ # ...
 ```
 
 Commit changes in reasonable chunks regularly while working (make sure everything works before committing):
 
 ```console
-$ pnpm commit # Make sure to always commit using conventional commit messages if you commit with a different tool (see https://www.conventionalcommits.org/ for more info)
+$ npm run commit # Make sure to always commit using conventional commit messages if you commit with a different tool (see https://www.conventionalcommits.org/ for more info)
 ```
 
 Push your changes to GitHub so others can follow your progress (you will need repository access):
@@ -199,7 +200,6 @@ See [Contributing](CONTRIBUTING.md)
 -   [Commitizen](http://commitizen.github.io/cz-cli/) - [Conventional Commit](https://www.conventionalcommits.org/) Prompt
 -   [GitHub Actions](https://github.com/features/actions) - Continuous Integration
 -   [NodeJS](https://nodejs.org/en/) - Server-Side JavaScript
--   [pnpm](https://pnpm.io/) - Package Manager
 -   [TypeScript](https://www.typescriptlang.org/) - Typed JavaScript superset/compiler
 -   [React](https://reactjs.org/) - Declarative, component-based, reactive UI library
 -   [Next.js](https://nextjs.org) - SSR React Framework
