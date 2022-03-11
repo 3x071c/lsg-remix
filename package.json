@@ -48,7 +48,7 @@
 		"lint": "run-s prettier:report eslint:report secretlint:report cspell:report jscpd:report",
 		"new": "run-s prisma:reset prisma:push generate prisma:seed",
 		"postinstall": "remix setup node",
-		"preinstall": "npx --yes only-allow npm",
+		"preinstall": "npx only-allow npm",
 		"prepare": "husky install",
 		"prettier:fix": "npm run prettier:individual -- .",
 		"prettier:individual": "npm run prettier:template -- --write",
