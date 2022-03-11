@@ -62,10 +62,12 @@
 		"prisma:watch": "npm run prisma:generate -- --watch",
 		"remix:build": "remix build",
 		"remix:dev": "remix dev",
+		"remix:start": "remix-serve build",
 		"report": "npm run lint",
 		"secretlint:individual": "secretlint",
 		"secretlint:report": "npm run secretlint:individual -- \".\"",
-		"stage": "git add -A"
+		"stage": "git add -A",
+		"start": "cross-env NODE_ENV=production npm run remix:start"
 	},
 	"dependencies": {
 		"@chakra-ui/icons": "1.1.7",
@@ -79,8 +81,6 @@
 		"@prisma/client": "3.10.0",
 		"@remix-run/react": "1.2.3",
 		"@remix-run/serve": "1.2.3",
-		"@remix-run/server-runtime": "^1.2.3",
-		"@remix-run/vercel": "1.2.3",
 		"argon2": "0.28.4",
 		"framer-motion": "6.2.8",
 		"lodash": "4.17.21",
@@ -107,7 +107,6 @@
 		"@types/react-dom": "17.0.13",
 		"@typescript-eslint/eslint-plugin": "5.12.1",
 		"@typescript-eslint/parser": "5.12.1",
-		"@vercel/node": "1.13.0",
 		"browserslist": "4.19.3",
 		"commitizen": "4.2.4",
 		"cross-env": "7.0.3",
