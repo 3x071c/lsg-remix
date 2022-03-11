@@ -29,7 +29,8 @@
 		"**/package-lock.json": true,
 		"**/*.tsbuildinfo": true,
 		"**/.*cache": true,
-		"**/public/build": true
+		"**/public/build": true,
+		"**/remix.env.d.ts": true
 	},
 	"prettier.requireConfig": true,
 	"prettier.useEditorConfig": true,
