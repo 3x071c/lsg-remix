@@ -4,24 +4,22 @@ import {
 	LinkProps as ChakraLinkProps,
 	forwardRef,
 } from "@chakra-ui/react";
-import Linkify from "./Linkify";
+import { Link as RemixLink } from "remix";
+import isExternal from "./isExternal";
 
-/* jscpd:ignore-start */
-export default forwardRef<
-	Overwrite<ChakraLinkProps, Pick<Parameters<typeof Linkify>[0], "href">>,
-	"a"
->(({ href, ...props }, ref): JSX.Element => {
-	const hrefString = href.toString();
-	return (
-		<Linkify
-			href={href}
-			whenExternal={
-				<ChakraLink {...props} isExternal href={hrefString} ref={ref}>
-					{props.children} <ExternalLinkIcon mx="2px" />
+export default forwardRef<Overwrite<ChakraLinkProps, { href: string }>, "a">(
+	function Link({ children, href, ...props }, ref): JSX.Element {
+		if (isExternal(href)) {
+			return (
+				<ChakraLink {...props} isExternal href={href} ref={ref}>
+					{children} <ExternalLinkIcon mx="2px" />
 				</ChakraLink>
-			}>
-			<ChakraLink {...props} ref={ref} />
-		</Linkify>
-	);
-});
-/* jscpd:ignore-end */
+			);
+		}
+		return (
+			<ChakraLink {...props} as={RemixLink} to={href} ref={ref}>
+				{children}
+			</ChakraLink>
+		);
+	},
+);

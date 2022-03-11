@@ -6,12 +6,12 @@ const config = {
 	},
 	extends: [
 		"eslint:recommended",
+		"@remix-run/eslint-config",
 		"plugin:@typescript-eslint/recommended",
 		"plugin:@typescript-eslint/recommended-requiring-type-checking",
 		"airbnb",
 		"airbnb/hooks",
 		"airbnb-typescript",
-		"next/core-web-vitals",
 		"plugin:prettier/recommended",
 	],
 	parser: "@typescript-eslint/parser",
@@ -51,13 +51,12 @@ const config = {
 				pathGroups: [
 					{
 						group: "internal",
-						pattern: "$**",
+						pattern: "~**",
 						position: "before",
 					},
 				],
 			},
 		] /* Custom settings */,
-		"import/prefer-default-export": "off",
 		"no-dupe-else-if": "warn" /* airbnb: not enabled yet */,
 		"no-empty": [
 			"error",
@@ -69,6 +68,7 @@ const config = {
 			{ allowAsStatement: true },
 		] /* allowAsStatement not enabled */,
 		"react/jsx-props-no-spreading": "off",
+		"react/react-in-jsx-scope": "off" /* Global */,
 		"react/require-default-props":
 			"off" /* Better: https://react-typescript-cheatsheet.netlify.app/docs/basic/getting-started/default_props/ */,
 		"require-await": "error",

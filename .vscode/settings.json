@@ -12,7 +12,6 @@
 	},
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"eslint.onIgnoredFiles": "warn",
-	"eslint.packageManager": "pnpm",
 	"eslint.validate": [
 		"typescriptreact",
 		"typescript",
@@ -25,17 +24,16 @@
 	"files.exclude": {
 		"**/.DS_Store": true,
 		"**/.git": true,
-		"**/.next": true,
+		"**/.remix": true,
 		"**/node_modules": true,
-		"**/pnpm-lock.yaml": true,
+		"**/package-lock.json": true,
 		"**/*.tsbuildinfo": true,
-		"**/.*cache": true
+		"**/.*cache": true,
+		"**/public/build": true
 	},
-	"npm.packageManager": "pnpm",
 	"prettier.requireConfig": true,
 	"prettier.useEditorConfig": true,
 	"prettier.withNodeModules": false,
-	"stylelint.packageManager": "pnpm",
 	"stylelint.reportInvalidScopeDisables": true,
 	"stylelint.reportNeedlessDisables": true,
 	"typescript.tsdk": "node_modules/typescript/lib"
