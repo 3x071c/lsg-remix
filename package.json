@@ -27,7 +27,7 @@
 		"win32"
 	],
 	"scripts": {
-		"build": "cross-env NODE_ENV=production run-s remix:build",
+		"build": "cross-env NODE_ENV=production npm run remix:build",
 		"check": "tsc --noEmit",
 		"ci": "run-s lint check",
 		"commit": "run-s stage cz",
@@ -35,7 +35,7 @@
 		"cspell:report": "npm run cspell:individual -- \"**\"",
 		"cz": "cz",
 		"dev": "npm run development",
-		"development": "cross-env NODE_ENV=development run-s remix:dev",
+		"development": "cross-env NODE_ENV=development npm run remix:dev",
 		"eslint:fix": "npm run eslint:template -- --fix .",
 		"eslint:individual": "npm run eslint:template -- --fix",
 		"eslint:report": "npm run eslint:template -- --max-warnings 0 .",
