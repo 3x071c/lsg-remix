@@ -81,20 +81,16 @@ $ npm i
 
 Setup a local mysql-compatible database (f.e. MariaDB, Oracle MySQL):
 
-```console
-$ # Instructions for macOS
-$ brew install --cask dbngin
-$                                       # Examples for GNU/Linux
-$ apt install mariadb-server            # Look up the documentation for your specific OS, apt is for Debian-based distributions
-$                                       # Instructions for Windows
-$ winget install -e --id MariaDB.Server # Or XAMPP or Laragon, if you prefer
-```
+-   (Linux) `apt/dnf/... install mariadb-server`
+-   (macOS) `brew install --cask dbngin`
+-   (Windows) `winget install -e --id MariaDB.Server` (or XAMPP/Laragon)
 
 Make sure to configure it according to available documentation/tutorials online, making a database connection available at a certain port (commonly `3306`) of your local machine (`localhost`) with a user and password. Store the connection string to your database, as well as an encryption key in `.env`. Make sure to keep it **secret**:
 
 ```console
 # /.env
 CMS_COOKIE_SECRET=<30-50 character random password without quotation (f.e. from https://1password.com/password-generator/)>
+MYSQL_URL=<mysql://root:password@localhost:3306/db>
 ```
 
 Seed the database with example data for local testing, run routines and generate types:

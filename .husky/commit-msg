@@ -1,4 +1,4 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-pnpx -y commitlint --edit $1 --verbose
+npx --yes -- commitlint --edit $1 --verbose
