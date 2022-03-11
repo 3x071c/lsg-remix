@@ -1,7 +1,5 @@
 {
 	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
-	"automerge": true,
-	"automergeType": "pr",
 	"branchPrefix": "chore/renovate_",
 	"commitBodyTable": true,
 	"commitMessageAction": "Bump",

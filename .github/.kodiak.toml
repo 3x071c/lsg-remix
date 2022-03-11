@@ -11,8 +11,6 @@ automerge_label=[]
 require_automerge_label = false
 # If a PR's title matches this regex, Kodiak will not merge the PR. This is useful to prevent merging work-in-progress PRs.
 blocking_title_regex = ""
-# Kodiak will not merge a PR with any of these labels.
-blocking_labels = ["dependencies"]
 # Choose merge method for Kodiak to use.
 method = "squash"
 # Once a PR is merged, delete the branch. This option behaves like the GitHub repository setting "Automatically delete head branches", which automatically deletes head branches after pull requests are merged.
