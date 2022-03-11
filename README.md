@@ -27,22 +27,12 @@ You're looking at the source code behind the new [Louise-Schroeder-Gymnasium web
 
 ## Get Started 💨
 
-We use [pnpm](https://pnpm.io), a package manager for Node.js which is faster than the standard npm (it uses the same package repository). Install pnpm (if not already installed):
-
-```console
-$ npm i -g pnpm@latest
-```
-
-Make sure pnpm is updated every once in a while:
-
-```console
-$ pnpm add -g pnpm
-```
+> Prerequisite: You have installed the latest version of [Node.js](https://nodejs.org/) and NPM (the Node package manager, which should ship with it)
 
 Install the dependencies of this project:
 
 ```console
-$ pnpm i
+$ npm i
 ```
 
 Setup a local mysql-compatible database (MariaDB, mySQL):
@@ -66,13 +56,13 @@ CMS_COOKIE_SECRET=<30-50 character random password without quotation (f.e. from 
 Seed the database, run routines and generate types:
 
 ```console
-$ pnpm new
+$ npm run new
 ```
 
 Spin up a local development server. It will automatically reflect changes in the code:
 
 ```console
-$ pnpm dev
+$ npm run dev
 ```
 
 Open the project in **Visual Studio Code**, trust the project and install all recommended extensions.
@@ -95,7 +85,7 @@ $ # ...
 Commit changes in reasonable chunks regularly while working (make sure everything works before committing):
 
 ```console
-$ pnpm commit # Make sure to always commit using conventional commit messages if you commit with a different tool (see https://www.conventionalcommits.org/ for more info)
+$ npm run commit # Make sure to always commit using conventional commit messages if you commit with a different tool (see https://www.conventionalcommits.org/ for more info)
 ```
 
 Push your changes to GitHub so others can follow your progress (you will need repository access):
@@ -210,7 +200,6 @@ See [Contributing](CONTRIBUTING.md)
 -   [Commitizen](http://commitizen.github.io/cz-cli/) - [Conventional Commit](https://www.conventionalcommits.org/) Prompt
 -   [GitHub Actions](https://github.com/features/actions) - Continuous Integration
 -   [NodeJS](https://nodejs.org/en/) - Server-Side JavaScript
--   [pnpm](https://pnpm.io/) - Package Manager
 -   [TypeScript](https://www.typescriptlang.org/) - Typed JavaScript superset/compiler
 -   [React](https://reactjs.org/) - Declarative, component-based, reactive UI library
 -   [Next.js](https://nextjs.org) - SSR React Framework

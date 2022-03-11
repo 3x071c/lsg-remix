@@ -5,7 +5,7 @@
 		"node_modules",
 		".git",
 		".vscode",
-		"pnpm-lock.yaml",
+		"package-lock.json",
 		".*cache",
 		".*ignore",
 		".remix",

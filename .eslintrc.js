@@ -51,13 +51,12 @@ const config = {
 				pathGroups: [
 					{
 						group: "internal",
-						pattern: "$**",
+						pattern: "~**",
 						position: "before",
 					},
 				],
 			},
 		] /* Custom settings */,
-		"import/prefer-default-export": "off",
 		"no-dupe-else-if": "warn" /* airbnb: not enabled yet */,
 		"no-empty": [
 			"error",

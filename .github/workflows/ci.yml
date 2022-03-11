@@ -21,19 +21,15 @@ jobs:
         steps:
             - name: Git Checkout
               uses: actions/checkout@v3
-            - name: Setup pnpm
-              uses: pnpm/action-setup@v2
-              with:
-                  version: latest
             - name: Setup Node
               uses: actions/setup-node@v3
               with:
                   node-version: ${{ matrix.node }}
-                  cache: pnpm
+                  cache: npm
             - name: Install dependencies
-              run: pnpm install --frozen-lockfile --strict-peer-dependencies
+              run: npm ci
             - name: Run Tests
-              run: pnpm ci
+              run: npm run ci
               env:
                   ci: true
                   NODE_ENV: production
