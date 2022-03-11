@@ -9,5 +9,5 @@ module.exports = {
 	devServerPort: 8002,
 	ignoredRouteFiles: [".*"],
 	publicPath: "/build/",
-	serverBuildPath: ".remix/server.js",
+	serverBuildPath: ".remix/server/index.js",
 };
