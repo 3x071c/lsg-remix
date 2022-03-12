@@ -12,7 +12,8 @@
 		".husky",
 		"*.tsbuildinfo",
 		"public/build",
-		"db/migrations"
+		"db/migrations",
+		".swc"
 	],
 	"import": ["@cspell/dict-de-de/cspell-ext.json"],
 	"language": "en,de",

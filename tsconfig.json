@@ -117,6 +117,8 @@
 			"module": "CommonJS"
 		},
 		"files": true,
-		"require": ["tsconfig-paths/register"]
+		"require": ["tsconfig-paths/register"],
+		"transpileOnly": true,
+		"swc": true
 	}
 }
