@@ -132,7 +132,7 @@ Push your changes to GitHub so others can follow your progress (you will need re
 $ git push --prune -u origin HEAD # Authenticate with your GitHub credentials (See here for how to save them: https://git-scm.com/book/en/v2/Git-Tools-Credential-Storage)
 ```
 
-Open a `draft` pull request (PR) on GitHub from your branch to the default branch (trunk) and watch the status checks complete. The title of the PR should follow the [same format](https://www.conventionalcommits.org/) as your commits, the body should include all necessary information for others to understand what the PR changes. Vercel will build a live preview of your branch!
+Open a `draft` pull request (PR) on GitHub from your branch to the default branch (trunk) and watch the status checks complete. The title of the PR should follow the [same format](https://www.conventionalcommits.org/) as your commits, the body should include all necessary information for others to understand what the PR changes. [Railway](https://railway.app/) will build a live preview of your branch!
 
 Once your branch is ready to be published, convert the draft PR into a regular one, and `kodiak` (a bot) will automatically take care of "squashing" your changes into a single commit onto the default branch.
 
@@ -241,6 +241,7 @@ See [Contributing](CONTRIBUTING.md)
 -   [Prisma](https://www.prisma.io) - Database ORM
 -   [Faker](https://fakerjs.dev) - Example data seeding
 -   [Lodash](https://lodash.com) - Utility functions
+-   [Railway](https://railway.app/) - Continuous Deployment
 
 ## License
 
