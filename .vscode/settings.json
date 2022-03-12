@@ -30,7 +30,8 @@
 		"**/*.tsbuildinfo": true,
 		"**/.*cache": true,
 		"**/public/build": true,
-		"**/remix.env.d.ts": true
+		"**/remix.env.d.ts": true,
+		"**/.swc": true
 	},
 	"prettier.requireConfig": true,
 	"prettier.useEditorConfig": true,

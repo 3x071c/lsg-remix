@@ -29,7 +29,7 @@
 	"scripts": {
 		"build": "cross-env NODE_ENV=production npm run remix:build",
 		"check": "tsc --noEmit",
-		"ci": "run-s lint check",
+		"ci": "run-s generate lint check",
 		"clean": "run-s \"clean:*\"",
 		"clean:1": "rimraf .remix",
 		"clean:2": "rimraf public/build",
@@ -103,6 +103,7 @@
 		"@remix-run/dev": "1.2.3",
 		"@remix-run/eslint-config": "1.2.3",
 		"@secretlint/secretlint-rule-preset-recommend": "4.1.4",
+		"@swc/core": "^1.2.154",
 		"@types/faker": "5.5.9",
 		"@types/lodash": "4.14.179",
 		"@types/node": "17.0.21",
