@@ -29,7 +29,7 @@
 	"scripts": {
 		"build": "cross-env NODE_ENV=production npm run remix:build",
 		"check": "tsc --noEmit",
-		"ci": "run-s lint check",
+		"ci": "run-s generate lint check",
 		"clean": "run-s \"clean:*\"",
 		"clean:1": "rimraf .remix",
 		"clean:2": "rimraf public/build",
