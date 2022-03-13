@@ -1,7 +1,7 @@
 import type { ColorMode } from "@chakra-ui/react";
 import type { PropsWithChildren } from "react";
 import { ChakraProvider, StorageManager } from "@chakra-ui/react";
-import theme from "~app/theme";
+import { theme } from "~app/chakra";
 import { setColorModeCookie } from "./colorModeCookie";
 import getColorMode from "./getColorMode";
 import useColorModeCookie from "./useColorModeCookie";

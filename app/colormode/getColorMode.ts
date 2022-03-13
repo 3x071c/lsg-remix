@@ -1,6 +1,6 @@
 /* Modeled after official documentation: https://chakra-ui.com/docs/styled-system/features/color-mode#behavior-of-colormode */
 import type { ColorMode } from "@chakra-ui/react";
-import theme from "~app/theme";
+import { theme } from "~app/chakra";
 import setColorMode from "./setColorMode";
 
 const isServer = typeof document === "undefined";
