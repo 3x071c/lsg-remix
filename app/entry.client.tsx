@@ -6,9 +6,16 @@ import { createEmotionCache, EmotionClientContext } from "~app/emotion";
 
 function ClientWrapper({ children }: PropsWithChildren<unknown>) {
 	const [cache, setCache] = useState(createEmotionCache());
+	const [mounted, setMounted] = useState(false);
+
 	const ctx = useMemo(
-		() => ({ reset: () => setCache(createEmotionCache()) }),
-		[],
+		() => ({
+			reset: () => {
+				if (!mounted) return setMounted(true);
+				return setCache(createEmotionCache());
+			},
+		}),
+		[mounted],
 	);
 
 	return (

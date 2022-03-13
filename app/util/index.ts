@@ -1,2 +1,2 @@
-// eslint-disable-next-line import/prefer-default-export
+/* eslint-disable import/prefer-default-export */
 export { default as parseCookie } from "./parseCookie";
