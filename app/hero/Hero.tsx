@@ -1,36 +1,32 @@
-import {
-	Heading,
-	Wrap,
-	WrapItem,
-	Text,
-	VStack,
-	Box,
-	Image,
-} from "@chakra-ui/react";
+import { Heading, Wrap, WrapItem, Text, Box } from "@chakra-ui/react";
+import { Image } from "~app/image";
 import backgroundImage from "./bg.jpg";
 
 export default function Hero() {
 	return (
 		<Wrap
-			spacing={{ base: "xl", md: "3xl" }}
+			spacing={8}
 			justify="center"
 			align="center"
 			textAlign="center"
-			px={{ base: "xl", md: "3xl" }}
-			py={{ base: "xl", md: "3xl" }}>
+			py={8}>
 			<WrapItem flex="1 1 0">
-				<VStack spacing={{ base: "xl", md: "3xl" }}>
-					<Heading as="h1" size="3xl">
+				<Box>
+					<Heading
+						as="h1"
+						size="3xl"
+						fontSize={{ base: "4xl", md: "6xl" }}
+						d="block">
 						Louise-Schroeder-Gymnasium
 					</Heading>
-					<Text fontSize={{ base: "lg", md: "xl" }}>
+					<Text fontSize={{ base: "lg", md: "xl" }} mt={4}>
 						Naturwissenschaftlich-technologisches und sprachliches
 						Gymnasium in München 🍺
 					</Text>
-				</VStack>
+				</Box>
 			</WrapItem>
 			<WrapItem flex="1 1 0" minW="270px">
-				<Box boxShadow="2xl" d="flex">
+				<Box d="flex" boxShadow="2xl" borderRadius="2xl">
 					<Image
 						src={backgroundImage}
 						alt="Louise-Schroeder-Gymnasium Außenansicht"
