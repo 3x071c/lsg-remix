@@ -12,7 +12,7 @@ const prefersColorScheme = (scheme: "light" | "dark"): boolean | undefined =>
 const getSystemColorMode = (): ColorMode | null => {
 	if (isClient && theme.config.useSystemColorMode) {
 		const prefersDarkColorScheme = prefersColorScheme("dark");
-		if (typeof prefersDarkColorScheme !== "undefined")
+		if (prefersDarkColorScheme !== undefined)
 			return (prefersDarkColorScheme ? "dark" : "light") as ColorMode;
 	}
 	return null;
@@ -21,7 +21,7 @@ const getSystemColorMode = (): ColorMode | null => {
 const getInitialSystemColorMode = (): ColorMode | null => {
 	if (isClient && theme.config.initialColorMode === "system") {
 		const prefersDarkColorScheme = prefersColorScheme("dark");
-		if (typeof prefersDarkColorScheme !== "undefined")
+		if (prefersDarkColorScheme !== undefined)
 			return (prefersDarkColorScheme ? "dark" : "light") as ColorMode;
 	}
 	return null;
