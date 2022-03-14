@@ -9,6 +9,11 @@ import {
 	InitialColorModeContext,
 } from "~app/colormode";
 import { createEmotionCache, EmotionServerContext } from "~app/emotion";
+import { RemountProvider } from "~app/hooks";
+
+const cache = createEmotionCache(); // TODO Figure out if global style caching is a good idea
+// eslint-disable-next-line @typescript-eslint/unbound-method
+const { extractCriticalToChunks } = createEmotionServer(cache);
 
 export default function handleRequest(
 	request: Request,
@@ -16,12 +21,8 @@ export default function handleRequest(
 	responseHeaders: Headers,
 	remixContext: EntryContext,
 ) {
-	const cache = createEmotionCache();
-	// eslint-disable-next-line @typescript-eslint/unbound-method
-	const { extractCriticalToChunks } = createEmotionServer(cache);
-
-	const prerender = renderToString(
-		<EmotionServerContext.Provider value={null}>
+	const markup = (
+		<RemountProvider>
 			<InitialColorModeContext.Provider
 				value={
 					getInitialColorModeCookie(
@@ -37,32 +38,23 @@ export default function handleRequest(
 					<RemixServer context={remixContext} url={request.url} />
 				</ColorModeContext.Provider>
 			</InitialColorModeContext.Provider>
+		</RemountProvider>
+	);
+
+	const prerender = renderToString(
+		<EmotionServerContext.Provider value={null}>
+			{markup}
 		</EmotionServerContext.Provider>,
 	);
 
 	const chunks = extractCriticalToChunks(prerender);
 	const render = renderToString(
 		<EmotionServerContext.Provider value={chunks.styles}>
-			<InitialColorModeContext.Provider
-				value={
-					getInitialColorModeCookie(
-						request.headers.get("Cookie") || "",
-					) || null
-				}>
-				<ColorModeContext.Provider
-					value={
-						getColorModeCookie(
-							request.headers.get("Cookie") || "",
-						) || null
-					}>
-					<RemixServer context={remixContext} url={request.url} />
-				</ColorModeContext.Provider>
-			</InitialColorModeContext.Provider>
+			{markup}
 		</EmotionServerContext.Provider>,
 	);
 
 	responseHeaders.set("Content-Type", "text/html");
-
 	return new Response(`<!DOCTYPE html>${render}`, {
 		headers: responseHeaders,
 		status: responseStatusCode,
