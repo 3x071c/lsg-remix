@@ -1,8 +1,9 @@
 import { Heading, Wrap, WrapItem, Text, Box } from "@chakra-ui/react";
+import { memo } from "react";
 import { Image } from "~app/image";
 import backgroundImage from "./bg.jpg";
 
-export default function Hero() {
+export default memo(function Hero() {
 	return (
 		<Wrap
 			spacing={8}
@@ -36,4 +37,4 @@ export default function Hero() {
 			</WrapItem>
 		</Wrap>
 	);
-}
+});
