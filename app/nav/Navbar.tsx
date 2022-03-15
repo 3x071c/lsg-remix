@@ -5,6 +5,7 @@ import { Link } from "~app/links";
 type NavbarProps = {
 	pages: {
 		title: string;
+		id: number;
 	}[];
 };
 export default memo(function Navbar({ pages }: NavbarProps): JSX.Element {
@@ -16,8 +17,8 @@ export default memo(function Navbar({ pages }: NavbarProps): JSX.Element {
 				</Box>
 				<Spacer />
 				<Flex justify="space-evenly" textAlign="center" align="center">
-					{pages.map(({ title }) => (
-						<Link href="/" mx={2}>
+					{pages.map(({ title, id }) => (
+						<Link href="/" mx={2} key={id}>
 							{title}
 						</Link>
 					))}
