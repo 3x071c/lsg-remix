@@ -1,10 +1,11 @@
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable no-await-in-loop */
 
 /* eslint-disable no-console */
 /* eslint-disable import/no-extraneous-dependencies */
 import faker from "@faker-js/faker/locale/de";
 import { Prisma, PrismaClient } from "@prisma/client";
-import { random, camelCase } from "lodash";
+import { random } from "lodash";
 import { hashPassword } from "~app/auth";
 
 const prisma = new PrismaClient();
@@ -53,25 +54,39 @@ const seedUser = async (): Promise<Prisma.UserCreateInput> => {
 	return {
 		createdAt,
 		firstname,
-		lastMutatedAt: seedDate(createdAt, end),
 		lastname,
 		password: await hashPassword(`${username}1234`),
+		updatedAt: seedDate(createdAt, end),
 		username,
 	};
 };
 
-const seedPage = (): Prisma.PageCreateInput => {
+const seedPageCategory = (): Prisma.PageCategoryCreateInput => {
+	const createdAt = seedDate(start, end);
+
+	return {
+		createdAt,
+		name: getUnique(() => faker.commerce.department()),
+		updatedAt: seedDate(createdAt, end),
+	};
+};
+
+const seedPage = (categoryId: number): Prisma.PageCreateInput => {
 	const createdAt = seedDate(start, end);
 	const title = getUnique(() => faker.commerce.department());
 
 	return {
+		category: {
+			connect: {
+				id: categoryId,
+			},
+		},
 		content: `This is a wonderful description for **${title}**. Here you will find *${faker.commerce.productName()}* and similar pages! As the legend once said: ${faker.lorem.paragraphs(
 			random(2, 4),
 		)}`,
 		createdAt,
-		lastMutatedAt: seedDate(createdAt, end),
-		path: `${camelCase(title)}`,
 		title,
+		updatedAt: seedDate(createdAt, end),
 	};
 };
 
@@ -84,18 +99,32 @@ export default async function main(): Promise<void> {
 			data: await seedUser(),
 		});
 		console.log(
-			`👋 Created user ${user.firstname} ${user.lastname} (${user.username}) with id ${user.id}`,
+			`👋 Created user ${user.firstname} ${user.lastname} (#${user.id}) with username ${user.username}`,
 		);
 	}
 
-	// 2. Create pages ✍️
+	// 2. Create page categories 🙌
+	// TODO: Use real data instead of faker randomness
 	for (let i = 0; i < random(5, 8); i += 1) {
-		const page = await prisma.page.create({
-			data: seedPage(),
+		const pageCategory = await prisma.pageCategory.create({
+			data: seedPageCategory(),
 		});
 		console.log(
-			`📟 Created page ${page.title} (${page.path}) with id ${page.id}`,
+			`🐈 Created category ${pageCategory.name} (#${pageCategory.id})`,
 		);
+	}
+	const pageCategories = await prisma.pageCategory.findMany();
+
+	// 3. Create pages ✍️
+	for (const { id: categoryId, name: categoryName } of pageCategories) {
+		for (let i = 0; i < random(3, 8); i += 1) {
+			const page = await prisma.page.create({
+				data: seedPage(categoryId),
+			});
+			console.log(
+				`📟 Created page ${page.title} (#${page.id}) on ${categoryName}`,
+			);
+		}
 	}
 
 	console.log(`✨ Seeding finished.`);

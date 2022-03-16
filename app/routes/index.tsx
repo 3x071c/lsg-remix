@@ -16,10 +16,16 @@ import { Navbar } from "~app/nav";
 import { PrismaClient as prisma } from "~app/prisma";
 
 const getLoaderData = () => {
-	return prisma.page.findMany({
+	return prisma.pageCategory.findMany({
 		select: {
 			id: true,
-			title: true,
+			name: true,
+			pages: {
+				select: {
+					id: true,
+					title: true,
+				},
+			},
 		},
 		take: 10,
 	});
@@ -33,7 +39,7 @@ export default function Index(): JSX.Element {
 
 	return (
 		<>
-			<Navbar pages={pages} />
+			<Navbar data={pages} />
 			<Container>
 				<Hero />
 				<chakra.section>

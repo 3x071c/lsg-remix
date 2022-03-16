@@ -11,20 +11,29 @@ datasource db {
 }
 
 model User {
-    id            Int      @id @default(autoincrement())
-    firstname     String   @db.VarChar(20)
-    lastname      String   @db.VarChar(20)
-    username      String   @unique @db.VarChar(22)
-    password      String   @db.VarChar(96)
-    lastMutatedAt DateTime @default(now()) @updatedAt
-    createdAt     DateTime @default(now())
+    id        Int      @id @default(autoincrement())
+    firstname String   @db.VarChar(20)
+    lastname  String   @db.VarChar(20)
+    username  String   @unique @db.VarChar(22)
+    password  String   @db.VarChar(96)
+    updatedAt DateTime @default(now()) @updatedAt
+    createdAt DateTime @default(now())
 }
 
 model Page {
-    id            Int      @id @default(autoincrement())
-    path          String   @unique @db.VarChar(40)
-    title         String   @db.VarChar(40)
-    content       String   @db.Text
-    lastMutatedAt DateTime @default(now()) @updatedAt
-    createdAt     DateTime @default(now())
+    id         Int          @id @default(autoincrement())
+    category   PageCategory @relation(fields: [categoryId], references: [id])
+    categoryId Int
+    title      String       @db.VarChar(40)
+    content    String       @db.Text
+    updatedAt  DateTime     @default(now()) @updatedAt
+    createdAt  DateTime     @default(now())
+}
+
+model PageCategory {
+    id        Int      @id @default(autoincrement())
+    pages     Page[]
+    name      String   @db.VarChar(40)
+    updatedAt DateTime @default(now()) @updatedAt
+    createdAt DateTime @default(now())
 }
