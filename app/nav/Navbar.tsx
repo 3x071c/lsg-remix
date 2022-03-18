@@ -42,9 +42,7 @@ export default memo(function Navbar({
 		<chakra.nav borderBottomWidth="1px" w="full" pos="sticky">
 			<Flex w="full" maxW="7xl" mx="auto" align="center">
 				<Box p={2}>
-					<Heading size="lg" lineHeight="revert">
-						LSG
-					</Heading>
+					<Heading size="lg">LSG</Heading>
 				</Box>
 				<Spacer />
 				<HStack textAlign="center" spacing={2} overflowY="auto">
