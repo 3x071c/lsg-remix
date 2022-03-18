@@ -16,6 +16,6 @@ export default forwardRef<Overwrite<ButtonProps, { href: string }>, "a">(
 				/>
 			);
 		}
-		return <Button as={RemixLink} to={href} ref={ref} />;
+		return <Button {...props} as={RemixLink} to={href} ref={ref} />;
 	},
 );

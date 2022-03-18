@@ -83,7 +83,7 @@ Setup a local mysql-compatible database (f.e. MariaDB, Oracle MySQL):
 
 -   (Linux) `apt/dnf/... install mariadb-server`
 -   (macOS) `brew install --cask dbngin`
--   (Windows) `winget install -e --id MariaDB.Server` (or XAMPP/Laragon)
+-   (Windows) `winget install -e --id MariaDB.Server`
 
 Make sure to configure it according to available documentation/tutorials online, making a database connection available at a certain port (commonly `3306`) of your local machine (`localhost`) with a user and password. Store the connection string to your database, as well as an encryption key in `.env`. Make sure to keep it **secret**:
 
@@ -199,16 +199,10 @@ A few theme recommendations if the default themes (<kbd>Ctrl</kbd> + <kbd>K</kbd
 Some extension recommendations:
 
 -   [Better Comments](https://marketplace.visualstudio.com/items?itemName=aaron-bond.better-comments)
--   [Colorize](https://marketplace.visualstudio.com/items?itemName=kamikillerto.vscode-colorize)
--   [EasyZoom](https://marketplace.visualstudio.com/items?itemName=NabeelValley.easyzoom)
 -   [GitLens - Git supercharged](https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens)
 -   [Import Cost](https://marketplace.visualstudio.com/items?itemName=wix.vscode-import-cost)
--   [Quokka.js](https://marketplace.visualstudio.com/items?itemName=WallabyJs.quokka-vscode)
--   [Sort JSON objects](https://marketplace.visualstudio.com/items?itemName=richie5um2.vscode-sort-json)
--   [Tabnine AI Autocompletion](https://marketplace.visualstudio.com/items?itemName=TabNine.tabnine-vscode)
 -   [NPM Version Lens](https://marketplace.visualstudio.com/items?itemName=pflannery.vscode-versionlens)
 -   [Visual Studio IntelliCode](https://marketplace.visualstudio.com/items?itemName=VisualStudioExptTeam.vscodeintellicode)
--   [Wallaby.js](https://marketplace.visualstudio.com/items?itemName=WallabyJs.wallaby-vscode)
 
 That's it, you're good to go! 🤩
 

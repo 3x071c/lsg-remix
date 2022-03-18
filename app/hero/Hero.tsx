@@ -1,8 +1,9 @@
 import { Heading, Wrap, WrapItem, Text, Box } from "@chakra-ui/react";
+import { memo } from "react";
 import { Image } from "~app/image";
 import backgroundImage from "./bg.jpg";
 
-export default function Hero() {
+export default memo(function Hero() {
 	return (
 		<Wrap
 			spacing={8}
@@ -12,11 +13,7 @@ export default function Hero() {
 			py={8}>
 			<WrapItem flex="1 1 0">
 				<Box>
-					<Heading
-						as="h1"
-						size="3xl"
-						fontSize={{ base: "4xl", md: "6xl" }}
-						d="block">
+					<Heading as="h1" size="3xl" d="block">
 						Louise-Schroeder-Gymnasium
 					</Heading>
 					<Text fontSize={{ base: "lg", md: "xl" }} mt={4}>
@@ -36,4 +33,4 @@ export default function Hero() {
 			</WrapItem>
 		</Wrap>
 	);
-}
+});
