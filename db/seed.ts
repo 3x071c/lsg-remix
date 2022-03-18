@@ -1,6 +1,5 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-await-in-loop */
-
 /* eslint-disable no-console */
 
 import { readdir as readDir, readFile, stat } from "fs/promises";

@@ -5,18 +5,13 @@ import backgroundImage from "./bg.jpg";
 
 export default memo(function Hero() {
 	return (
-		<Wrap
-			spacing={8}
-			justify="center"
-			align="center"
-			textAlign="center"
-			py={8}>
+		<Wrap spacing={8} justify="center" align="center" textAlign="center">
 			<WrapItem flex="1 1 0">
 				<Box>
 					<Heading as="h1" size="3xl" d="block">
 						Louise-Schroeder-Gymnasium
 					</Heading>
-					<Text fontSize={{ base: "lg", md: "xl" }} mt={4}>
+					<Text fontSize="xl" mt={4}>
 						Naturwissenschaftlich-technologisches und sprachliches
 						Gymnasium in München 🍺
 					</Text>

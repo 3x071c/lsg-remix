@@ -1,7 +1,6 @@
-import { Heading, Text, Box, chakra } from "@chakra-ui/react";
+import { Heading, Text, Box, chakra, Container } from "@chakra-ui/react";
 import { json, LoaderFunction, useLoaderData } from "remix";
 import { Hero } from "~app/hero";
-import { Container } from "~app/layout";
 import { Navbar } from "~app/nav";
 import { PrismaClient as prisma } from "~app/prisma";
 
@@ -30,14 +29,14 @@ export default function Index(): JSX.Element {
 	return (
 		<>
 			<Navbar data={data} />
-			<Container>
+			<Container w="full" maxW="7xl" mx="auto" py={8} centerContent>
 				<Hero />
-				<chakra.section>
+				<chakra.section py={16}>
 					<Box textAlign="center">
-						<Heading as="h1" size="xl">
+						<Heading as="h1" size="2xl">
 							Home
 						</Heading>
-						<Text fontSize="md" mt={2}>
+						<Text fontSize="lg">
 							Insert something interesting here
 						</Text>
 					</Box>

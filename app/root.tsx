@@ -1,5 +1,4 @@
 import type { StyleSheet } from "@emotion/utils";
-import { Heading, Text } from "@chakra-ui/react";
 import { withEmotionCache } from "@emotion/react";
 import { memo, PropsWithChildren, useContext, useMemo } from "react";
 import {
@@ -14,8 +13,9 @@ import {
 } from "remix";
 import { ColorModeManager, ColorModeToggle } from "~app/colormode";
 import { EmotionServerContext, EmotionClientContext } from "~app/emotion";
-import { useOnRemount } from "~app/hooks";
-import { Container } from "~app/layout";
+import { useOnRemount } from "~app/remount";
+import InnerCatchBoundary from "./CatchBoundary";
+import InnerErrorBoundary from "./ErrorBoundary";
 
 export const meta: MetaFunction = () => {
 	return { title: "LSG" };
@@ -105,35 +105,24 @@ export default function App() {
 
 export function CatchBoundary() {
 	const caught = useCatch();
-	let message;
-	switch (caught.status) {
-		case 401:
-			message = (
-				<Text>
-					Looks like you tried to visit a page that you do not have
-					access to.
-				</Text>
-			);
-			break;
-		case 404:
-			message = (
-				<Text>
-					Looks like you tried to visit a page that does not exist.
-				</Text>
-			);
-			break;
-		default:
-			break;
-	}
+	const messages: {
+		[key: string]: string;
+	} = {
+		401: "Die Authentifizierung ist für den Zugriff fehlgeschlagen 😳",
+		404: "Wir haben überall gesucht 👉👈🥺",
+	};
+	const message = Object.keys(messages).includes(caught.status.toString())
+		? messages[caught.status.toString()] ||
+		  "Hier haben sich mehrere Fehler eingeschlichen 🧐"
+		: "Unbekannter Fehler - Bei wiederholtem, unvorhergesehenen Auftreten bitte melden 🤯";
 
 	return (
 		<Document title={`${caught.status} | LSG`}>
-			<Container>
-				<Heading as="h1" bg="purple.600">
-					Caught {caught.status}: {caught.statusText}
-				</Heading>
-				{message}
-			</Container>
+			<InnerCatchBoundary
+				message={message}
+				status={caught.status}
+				statusText={caught.statusText}
+			/>
 		</Document>
 	);
 }
@@ -144,11 +133,7 @@ export function ErrorBoundary({ error }: { error: Error }) {
 
 	return (
 		<Document title={`${error.name} | LSG`}>
-			<Container>
-				<Heading as="h1" bg="blue.500">
-					There was an error: {error.message}
-				</Heading>
-			</Container>
+			<InnerErrorBoundary message={error.message} name={error.name} />
 		</Document>
 	);
 }
