@@ -40,18 +40,17 @@ export default memo(function Navbar({
 
 	return (
 		<chakra.nav borderBottomWidth="1px" w="full" pos="sticky">
-			<Flex w="full" maxW="7xl" mx="auto">
+			<Flex w="full" maxW="7xl" mx="auto" align="center">
 				<Box p={2}>
-					<Heading size="lg">LSG</Heading>
+					<Heading size="lg" lineHeight="revert">
+						LSG
+					</Heading>
 				</Box>
 				<Spacer />
-				<HStack textAlign="center" spacing={4}>
-					<Box>
-						{categories.map(({ name, id, pages }) => (
-							<Popover
-								key={id}
-								trigger="hover"
-								placement="auto-end">
+				<HStack textAlign="center" spacing={2} overflowY="auto">
+					{categories.map(({ name, id, pages }) => (
+						<Box key={id}>
+							<Popover trigger="hover">
 								<PopoverTrigger>
 									<Button
 										variant="ghost"
@@ -91,8 +90,8 @@ export default memo(function Navbar({
 									</PopoverBody>
 								</PopoverContent>
 							</Popover>
-						))}
-					</Box>
+						</Box>
+					))}
 				</HStack>
 				<Spacer />
 				{

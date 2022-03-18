@@ -13,11 +13,7 @@ export default memo(function Hero() {
 			py={8}>
 			<WrapItem flex="1 1 0">
 				<Box>
-					<Heading
-						as="h1"
-						size="3xl"
-						fontSize={{ base: "4xl", md: "6xl" }}
-						d="block">
+					<Heading as="h1" size="3xl" d="block">
 						Louise-Schroeder-Gymnasium
 					</Heading>
 					<Text fontSize={{ base: "lg", md: "xl" }} mt={4}>
