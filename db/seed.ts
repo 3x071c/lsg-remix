@@ -64,7 +64,7 @@ export default async function main(): Promise<void> {
 
 	await prisma.user.create({
 		data: {
-			password: hashPassword("letmein"),
+			password: hashPassword("hello"),
 			username: "lsglab",
 		},
 	});
