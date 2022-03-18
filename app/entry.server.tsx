@@ -9,7 +9,7 @@ import {
 	InitialColorModeContext,
 } from "~app/colormode";
 import { createEmotionCache, EmotionServerContext } from "~app/emotion";
-import { RemountProvider } from "~app/hooks";
+import { RemountProvider } from "~app/remount";
 
 const cache = createEmotionCache(); // TODO Figure out if global style caching is a good idea
 // eslint-disable-next-line @typescript-eslint/unbound-method

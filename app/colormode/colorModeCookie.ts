@@ -1,5 +1,8 @@
 import { ColorMode, storageKey as colorModeStorageKey } from "@chakra-ui/react";
-import { parseCookie } from "~app/util";
+
+function parseCookie(cookies: string, key: string) {
+	return cookies.match(new RegExp(`(^| )${key}=([^;]+)`))?.[2];
+}
 
 const setCookie = <T extends string>(key: string, value: T): T => {
 	if (typeof document === "undefined") return value;
