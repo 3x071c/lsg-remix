@@ -58,7 +58,7 @@ export default memo(function Navbar({
 								</PopoverTrigger>
 								<PopoverContent
 									shadow="md"
-									maxW="max-content"
+									w="" // fixes oversized popover
 									sx={{
 										"@supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none))":
 											{
