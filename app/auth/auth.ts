@@ -1,27 +1,12 @@
-import type { Request } from "@remix-run/node";
-import {
-	hash,
-	verify,
-	Options as ArgonOptions,
-	argon2id,
-	needsRehash,
-} from "argon2";
+import * as bcrypt from "bcryptjs";
 import { createCookieSessionStorage, redirect } from "remix";
 
-const argonOptions: ArgonOptions & { raw?: false } = {
-	hashLength: 32,
-	memoryCost: 4096,
-	parallelism: 2,
-	saltLength: 16,
-	timeCost: 3,
-	type: argon2id,
-};
+const salt = bcrypt.genSaltSync(10);
 
-export const hashPassword = (password: string) => hash(password, argonOptions);
+export const hashPassword = (password: string) =>
+	bcrypt.hashSync(password, salt);
 export const verifyPassword = (password: string, passwordHash: string) =>
-	verify(passwordHash, password, argonOptions);
-export const shouldRehashPassword = (passwordHash: string) =>
-	needsRehash(passwordHash, argonOptions);
+	bcrypt.compareSync(password, passwordHash);
 
 const cmsCookieSecret = process.env["CMS_COOKIE_SECRET"];
 
