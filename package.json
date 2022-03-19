@@ -112,7 +112,7 @@
 		"@faker-js/faker": "6.0.0-alpha.7",
 		"@remix-run/dev": "1.2.3",
 		"@remix-run/eslint-config": "1.2.3",
-		"@secretlint/secretlint-rule-preset-recommend": "4.1.4",
+		"@secretlint/secretlint-rule-preset-recommend": "5.1.0",
 		"@swc/core": "1.2.154",
 		"@types/faker": "5.5.9",
 		"@types/lodash": "4.14.179",
