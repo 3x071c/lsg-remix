@@ -30,6 +30,7 @@ const config = {
 	root: true,
 	rules: {
 		"@typescript-eslint/no-non-null-assertion": "off",
+		"@typescript-eslint/no-throw-literal": "off",
 		"@typescript-eslint/prefer-readonly-parameter-types": "off",
 		"import/order": [
 			"warn",

@@ -5,6 +5,7 @@
 import { readdir as readDir, readFile, stat } from "fs/promises";
 import { parse, resolve } from "path";
 import { PrismaClient } from "@prisma/client";
+import { hashPassword } from "~app/auth";
 
 const prisma = new PrismaClient();
 
@@ -59,6 +60,13 @@ export default async function main(): Promise<void> {
 			});
 		}
 	}
+
+	await prisma.user.create({
+		data: {
+			password: hashPassword("hello"),
+			username: "lsglab",
+		},
+	});
 
 	console.log(`✨ Seeding finished.`);
 }
