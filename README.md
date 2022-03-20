@@ -89,7 +89,7 @@ Make sure to configure it according to available documentation/tutorials online,
 
 ```console
 # /.env
-CMS_COOKIE_SECRET=<30-50 character random password without quotation (f.e. from https://1password.com/password-generator/)>
+CMS_AUTH_SECRET=<30-50 character random password without quotation (f.e. from https://1password.com/password-generator/)>
 MYSQL_URL=<mysql://root:password@localhost:3306/db>
 ```
 

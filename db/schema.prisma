@@ -12,8 +12,10 @@ datasource db {
 
 model User {
     id        Int      @id @default(autoincrement())
+    firstname String   @db.VarChar(20)
+    lastname  String   @db.VarChar(20)
     username  String   @unique @db.VarChar(20)
-    password  String
+    password  String   @db.VarChar(96)
     updatedAt DateTime @default(now()) @updatedAt
     createdAt DateTime @default(now())
 }

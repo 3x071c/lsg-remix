@@ -1,21 +1,33 @@
 import { Center, Heading } from "@chakra-ui/react";
 import { json, LoaderFunction, useLoaderData } from "remix";
-import { requireUserId } from "~app/auth";
+import { authorizeUserSession } from "~app/auth";
+import { PrismaClient as prisma } from "~app/prisma";
 
-export const loader: LoaderFunction = async ({ request }) => {
-	return json({ userId: await requireUserId(request) });
+const getLoaderData = async (request: Request) => {
+	return prisma.user.findUnique({
+		select: {
+			firstname: true,
+			lastname: true,
+		},
+		where: {
+			id: await authorizeUserSession(request),
+		},
+	});
 };
-
-interface LoaderData {
-	userId: number;
-}
+type LoaderData = Awaited<ReturnType<typeof getLoaderData>>;
+export const loader: LoaderFunction = async ({ request }) =>
+	json<LoaderData>(await getLoaderData(request));
 
 export default function Index() {
-	const { userId } = useLoaderData<LoaderData>();
+	const loaderData = useLoaderData<LoaderData>();
+	if (!loaderData) throw new Error("Unexpected Response");
+	const { firstname, lastname } = loaderData;
 
 	return (
-		<Center h="100vh">
-			<Heading>Hello User {userId}</Heading>
+		<Center minW="100vw" minH="100vh">
+			<Heading>
+				Hallo {firstname} {lastname} 👋
+			</Heading>
 		</Center>
 	);
 }

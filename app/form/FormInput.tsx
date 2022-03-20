@@ -16,7 +16,7 @@ export default function FormInput({
 
 	return (
 		<FormControl isInvalid={!!error}>
-			<FormLabel fontWeight="semibold" htmlFor={name}>
+			<FormLabel htmlFor={name} fontWeight="semibold">
 				{label}
 			</FormLabel>
 			<Input {...props} {...getInputProps()} id={name} />

@@ -1,4 +1,5 @@
 import type { StyleSheet } from "@emotion/utils";
+import { Center, chakra, Heading, Text, Code } from "@chakra-ui/react";
 import { withEmotionCache } from "@emotion/react";
 import { memo, PropsWithChildren, useContext, useMemo } from "react";
 import {
@@ -13,9 +14,8 @@ import {
 } from "remix";
 import { ColorModeManager, ColorModeToggle } from "~app/colormode";
 import { EmotionServerContext, EmotionClientContext } from "~app/emotion";
+import { LinkButton } from "~app/links";
 import { useOnRemount } from "~app/remount";
-import InnerCatchBoundary from "./CatchBoundary";
-import InnerErrorBoundary from "./ErrorBoundary";
 
 export const meta: MetaFunction = () => {
 	return { title: "LSG" };
@@ -104,36 +104,59 @@ export default function App() {
 }
 
 export function CatchBoundary() {
-	const caught = useCatch();
+	const { status, statusText } = useCatch();
 	const messages: {
 		[key: string]: string;
 	} = {
 		401: "Die Authentifizierung ist für den Zugriff fehlgeschlagen 😳",
 		404: "Wir haben überall gesucht 👉👈🥺",
 	};
-	const message = Object.keys(messages).includes(caught.status.toString())
-		? messages[caught.status.toString()] ||
+	const message = Object.keys(messages).includes(status.toString())
+		? messages[status.toString()] ||
 		  "Hier haben sich mehrere Fehler eingeschlichen 🧐"
 		: "Unbekannter Fehler - Bei wiederholtem, unvorhergesehenen Auftreten bitte melden 🤯";
 
 	return (
-		<Document title={`${caught.status} | LSG`}>
-			<InnerCatchBoundary
-				message={message}
-				status={caught.status}
-				statusText={caught.statusText}
-			/>
+		<Document title={`${status} | LSG`}>
+			<Center minW="100vw" minH="100vh">
+				<chakra.main maxW="90%" py={8} textAlign="center">
+					<Heading as="h1" size="xl">
+						{statusText}
+					</Heading>
+					<Text fontSize="md">
+						Houston, we&apos;ve had a {status}
+					</Text>
+					<Text my={2} fontSize="sm">
+						{message}
+					</Text>
+					<LinkButton href="/" variant="link">
+						Hier geht&apos;s zurück
+					</LinkButton>
+				</chakra.main>
+			</Center>
 		</Document>
 	);
 }
 
-export function ErrorBoundary({ error }: { error: Error }) {
-	// eslint-disable-next-line no-console
-	console.error(error);
-
+export function ErrorBoundary({ error: { message, name } }: { error: Error }) {
 	return (
-		<Document title={`${error.name} | LSG`}>
-			<InnerErrorBoundary message={error.message} name={error.name} />
+		<Document title={`${name} | LSG`}>
+			<Center minW="100vw" minH="100vh">
+				<chakra.main maxW="90%" py={8} textAlign="center">
+					<Heading as="h1" size="xl">
+						{name}
+					</Heading>
+					<Text fontSize="md">
+						Ein kritischer Fehler ist aufgetreten.
+					</Text>
+					<Code d="block" my={2} colorScheme="red" fontSize="sm">
+						{message}
+					</Code>
+					<LinkButton href="/" variant="link">
+						Hier geht&apos;s zurück
+					</LinkButton>
+				</chakra.main>
+			</Center>
 		</Document>
 	);
 }

@@ -37,7 +37,7 @@ export default function Index(): JSX.Element {
 							Home
 						</Heading>
 						<Text fontSize="lg">
-							Insert something interesting here
+							Hier geht&apos;s irgendwann weiter!
 						</Text>
 					</Box>
 				</chakra.section>
