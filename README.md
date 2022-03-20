@@ -16,6 +16,8 @@
   <a href="#license">License</a>
 </p>
 
+> Looking for the old version using Next.js with a fully loaded Apollo+Nexus GraphQL stack? It's gone now. ([archive](https://github.com/3x071c/lsg/tree/7c377cdef5baddd9dcf5f49985325081f31159e3))
+
 ## Introduction
 
 👋 Hey!  
