@@ -40,8 +40,8 @@ const getActionData = async (request: Request) => {
 	await getLoaderData(request);
 
 	const { error, data } = await validator.validate(await request.formData());
-	if (error || !data) throw validationError(error);
-	const { username, password } = data;
+	if (error) throw validationError(error);
+	const { username, password } = data!;
 
 	const { id, password: passwordHash } = (await prisma.user.findUnique({
 		select: {
@@ -59,6 +59,7 @@ const getActionData = async (request: Request) => {
 			passwordHash ??
 				"$argon2i$v=19$m=4096,t=3,p=1$UFp3ZFmnUdIc84t1M7zpXQ$o+I1FxwYr0ulRgG4epYb+EIWxI/g8lEiLXTv4Ps1W8k",
 		)) ||
+		!id ||
 		!passwordHash
 	)
 		return { formError: "Invalid username or password" };
