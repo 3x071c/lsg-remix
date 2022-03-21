@@ -52,7 +52,7 @@
 		"new": "npm run new:dev",
 		"new:dev": "run-s generate prisma:reset prisma:dev prisma:seed",
 		"new:preview": "run-s prisma:reset prisma:prod prisma:seed",
-		"new:prod": "npm run prisma:prod",
+		"new:prod": "npm run new:preview",
 		"postinstall": "remix setup node",
 		"preinstall": "npx --yes -- only-allow npm",
 		"prepare": "husky install",
