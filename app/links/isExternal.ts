@@ -1,4 +1,4 @@
-export default function isExternal(url: string) {
+export default function isExternal(url: string): boolean {
 	// RFC 3986 URI regex: https://datatracker.ietf.org/doc/html/rfc3986#appendix-B
 	const match = url.match(
 		/^(([^:/?#]+):)?(\/\/([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/,

@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-constructed-context-values */
 import type { EntryContext } from "remix";
 import createEmotionServer from "@emotion/server/create-instance";
 import { renderToString } from "react-dom/server";
@@ -6,7 +7,6 @@ import {
 	ColorModeContext,
 	getColorModeCookie,
 	getInitialColorModeCookie,
-	InitialColorModeContext,
 } from "~app/colormode";
 import { createEmotionCache, EmotionServerContext } from "~app/emotion";
 import { RemountProvider } from "~app/remount";
@@ -20,24 +20,20 @@ export default function handleRequest(
 	responseStatusCode: number,
 	responseHeaders: Headers,
 	remixContext: EntryContext,
-) {
+): Response {
 	const markup = (
 		<RemountProvider>
-			<InitialColorModeContext.Provider
-				value={
-					getInitialColorModeCookie(
+			<ColorModeContext.Provider
+				value={{
+					current: getColorModeCookie(
 						request.headers.get("Cookie") || "",
-					) || null
-				}>
-				<ColorModeContext.Provider
-					value={
-						getColorModeCookie(
-							request.headers.get("Cookie") || "",
-						) || null
-					}>
-					<RemixServer context={remixContext} url={request.url} />
-				</ColorModeContext.Provider>
-			</InitialColorModeContext.Provider>
+					),
+					initial: getInitialColorModeCookie(
+						request.headers.get("Cookie") || "",
+					),
+				}}>
+				<RemixServer context={remixContext} url={request.url} />
+			</ColorModeContext.Provider>
 		</RemountProvider>
 	);
 

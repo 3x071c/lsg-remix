@@ -3,7 +3,7 @@ import RemountContext from "./RemountContext";
 
 export default function RemountProvider({
 	children,
-}: PropsWithChildren<unknown>) {
+}: PropsWithChildren<unknown>): JSX.Element {
 	const [data, setDataRaw] = useState({});
 	const setData = (key: string, value: unknown) =>
 		setDataRaw((oldData) => {
