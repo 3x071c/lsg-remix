@@ -7,7 +7,7 @@ import {
 	chakra,
 } from "@chakra-ui/react";
 import { withZod } from "@remix-validated-form/with-zod";
-import { ActionFunction, json, useActionData } from "remix";
+import { ActionFunction, json, LoaderFunction, useActionData } from "remix";
 import { ValidatedForm, validationError } from "remix-validated-form";
 import { zfd } from "zod-form-data";
 import {
@@ -16,7 +16,7 @@ import {
 	hashPassword,
 	shouldRehashPassword,
 	authorize,
-	back,
+	toCMS,
 } from "~app/auth";
 import { FormInput, SubmitButton } from "~app/form";
 import { PrismaClient as prisma } from "~app/prisma";
@@ -28,13 +28,19 @@ const validator = withZod(
 	}),
 );
 
-type ActionData = {
-	formError?: string;
+const getLoaderData = async (request: Request) => {
+	if (await authorize(request, { required: false })) throw toCMS();
+	return {};
 };
-export const action: ActionFunction = async ({ request }) => {
-	if (await authorize(request, { required: false })) throw back();
+type LoaderData = Awaited<ReturnType<typeof getLoaderData>>;
+export const loader: LoaderFunction = async ({ request }) =>
+	json<LoaderData>(await getLoaderData(request));
+
+const getActionData = async (request: Request) => {
+	await getLoaderData(request);
+
 	const { error, data } = await validator.validate(await request.formData());
-	if (error || !data) return validationError(error);
+	if (error || !data) throw validationError(error);
 	const { username, password } = data;
 
 	const { id, password: passwordHash } = (await prisma.user.findUnique({
@@ -55,7 +61,7 @@ export const action: ActionFunction = async ({ request }) => {
 		)) ||
 		!passwordHash
 	)
-		return json({ formError: "Invalid username or password" }, 401);
+		return { formError: "Invalid username or password" };
 
 	if (shouldRehashPassword(passwordHash))
 		await prisma.user.update({
@@ -67,10 +73,13 @@ export const action: ActionFunction = async ({ request }) => {
 			},
 		});
 
-	return login(request, {
+	throw await login(request, {
 		id,
 	});
 };
+type ActionData = Awaited<ReturnType<typeof getActionData>>;
+export const action: ActionFunction = async ({ request }) =>
+	json<ActionData>(await getActionData(request), 401);
 
 export default function Login(): JSX.Element {
 	const actionData = useActionData<ActionData>();
