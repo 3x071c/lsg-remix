@@ -1,14 +1,19 @@
 import { useContext } from "react";
-import ColorModeContext from "./ColorModeContext";
-import { getColorModeCookie } from "./colorModeCookie";
+import ColorModeContext, { ColorModeContextData } from "./ColorModeContext";
+import {
+	getColorModeCookie,
+	getInitialColorModeCookie,
+} from "./colorModeCookie";
 
-const isServer = typeof document === "undefined";
-const isClient = !isServer;
+const cookies = typeof document !== "undefined" ? document.cookie : "";
 
-export default function useColorModeCookie() {
+export default function useColorModeCookie(): ColorModeContextData {
 	const colorModeContext = useContext(ColorModeContext);
 
 	return (
-		colorModeContext || getColorModeCookie(isClient ? document.cookie : "")
+		colorModeContext || {
+			current: getColorModeCookie(cookies),
+			initial: getInitialColorModeCookie(cookies),
+		}
 	);
 }

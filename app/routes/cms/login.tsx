@@ -11,10 +11,12 @@ import { ActionFunction, json, useActionData } from "remix";
 import { ValidatedForm, validationError } from "remix-validated-form";
 import { zfd } from "zod-form-data";
 import {
-	createUserSession,
+	login,
 	verifyPassword,
 	hashPassword,
 	shouldRehashPassword,
+	authorize,
+	back,
 } from "~app/auth";
 import { FormInput, SubmitButton } from "~app/form";
 import { PrismaClient as prisma } from "~app/prisma";
@@ -30,6 +32,7 @@ type ActionData = {
 	formError?: string;
 };
 export const action: ActionFunction = async ({ request }) => {
+	if (await authorize(request, { required: false })) throw back();
 	const { error, data } = await validator.validate(await request.formData());
 	if (error || !data) return validationError(error);
 	const { username, password } = data;
@@ -54,7 +57,7 @@ export const action: ActionFunction = async ({ request }) => {
 	)
 		return json({ formError: "Invalid username or password" }, 401);
 
-	if (shouldRehashPassword(passwordHash)) {
+	if (shouldRehashPassword(passwordHash))
 		await prisma.user.update({
 			data: {
 				password: await hashPassword(password),
@@ -63,14 +66,15 @@ export const action: ActionFunction = async ({ request }) => {
 				id,
 			},
 		});
-	}
 
-	return createUserSession(id, "/cms");
+	return login(request, {
+		id,
+	});
 };
 
-export default function Login() {
+export default function Login(): JSX.Element {
 	const actionData = useActionData<ActionData>();
-	const background = useColorModeValue("gray.300", "gray.700");
+	const background = useColorModeValue("gray.50", "gray.700");
 
 	return (
 		<Center minW="100vw" minH="100vh">
@@ -99,3 +103,5 @@ export default function Login() {
 		</Center>
 	);
 }
+
+export const url = "/cms/login";

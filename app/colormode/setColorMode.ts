@@ -4,6 +4,6 @@ import {
 	setInitialColorModeCookie,
 } from "./colorModeCookie";
 
-export default function setColorMode(value: ColorMode) {
+export default function setColorMode(value: ColorMode): ColorMode {
 	return setColorModeCookie(setInitialColorModeCookie(value));
 }

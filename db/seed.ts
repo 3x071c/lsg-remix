@@ -43,6 +43,15 @@ export default async function main(): Promise<void> {
 	console.log(`Start seeding ✨`);
 
 	console.log("🧬 Seeding users...");
+	console.log(`⚠️ Creating development user (dev:dev)`);
+	await prisma.user.create({
+		data: {
+			firstname: "John",
+			lastname: "Doe",
+			password: await hashPassword("dev"),
+			username: "dev",
+		},
+	});
 	for (let i = 0; i < random(10, 30); i += 1) {
 		let firstname = "";
 		let lastname = "";

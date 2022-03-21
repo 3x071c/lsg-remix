@@ -35,6 +35,8 @@ const config = {
 			"off" /* Remix encourages throwing methods to escape execution */,
 		"@typescript-eslint/prefer-readonly-parameter-types":
 			"off" /* While functional, it doesn't play well with framework conventions (which often encourage the modification of parameters, or provide incompatible typings) */,
+		"import/no-cycle":
+			"off" /* False positives :*( A litte too conservative with ES6 modules */,
 		"import/order": [
 			"warn",
 			{

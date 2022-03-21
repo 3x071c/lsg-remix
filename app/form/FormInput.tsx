@@ -11,7 +11,7 @@ export default function FormInput({
 	name,
 	label,
 	...props
-}: InputProps & { name: string; label: string }) {
+}: InputProps & { name: string; label: string }): JSX.Element {
 	const { error, getInputProps } = useField(name);
 
 	return (

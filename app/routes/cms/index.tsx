@@ -1,6 +1,6 @@
 import { Center, Heading } from "@chakra-ui/react";
 import { json, LoaderFunction, useLoaderData } from "remix";
-import { authorizeUserSession } from "~app/auth";
+import { authorize } from "~app/auth";
 import { PrismaClient as prisma } from "~app/prisma";
 
 const getLoaderData = async (request: Request) => {
@@ -10,7 +10,7 @@ const getLoaderData = async (request: Request) => {
 			lastname: true,
 		},
 		where: {
-			id: await authorizeUserSession(request),
+			id: (await authorize(request))?.id,
 		},
 	});
 };
@@ -18,7 +18,7 @@ type LoaderData = Awaited<ReturnType<typeof getLoaderData>>;
 export const loader: LoaderFunction = async ({ request }) =>
 	json<LoaderData>(await getLoaderData(request));
 
-export default function Index() {
+export default function Index(): JSX.Element {
 	const loaderData = useLoaderData<LoaderData>();
 	if (!loaderData) throw new Error("Unexpected Response");
 	const { firstname, lastname } = loaderData;
@@ -31,3 +31,5 @@ export default function Index() {
 		</Center>
 	);
 }
+
+export const url = "/cms";

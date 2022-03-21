@@ -95,7 +95,7 @@ const Document = memo(
 	}),
 );
 
-export default function App() {
+export default function App(): JSX.Element {
 	return (
 		<Document>
 			<Outlet />
@@ -103,7 +103,7 @@ export default function App() {
 	);
 }
 
-export function CatchBoundary() {
+export function CatchBoundary(): JSX.Element {
 	const { status, statusText } = useCatch();
 	const messages: {
 		[key: string]: string;
@@ -138,7 +138,11 @@ export function CatchBoundary() {
 	);
 }
 
-export function ErrorBoundary({ error: { message, name } }: { error: Error }) {
+export function ErrorBoundary({
+	error: { message, name },
+}: {
+	error: Error;
+}): JSX.Element {
 	return (
 		<Document title={`${name} | LSG`}>
 			<Center minW="100vw" minH="100vh">
