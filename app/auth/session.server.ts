@@ -1,6 +1,6 @@
 import { createCookieSessionStorage, redirect } from "remix";
-import { url as cmsURL } from "~routes/cms";
-import { url as loginURL } from "~routes/cms/login";
+import { url as loginURL } from "~routes/cms.login";
+import { url as cmsURL } from "~routes/cms/index";
 
 // eslint-disable-next-line prefer-destructuring -- process.env doesn't have a proper iterator
 const CMS_AUTH_SECRET = process.env["CMS_AUTH_SECRET"];

@@ -91,7 +91,7 @@ export default function Login(): JSX.Element {
 			<chakra.main p={8} rounded="md" bg={background}>
 				<ValidatedForm validator={validator} method="post">
 					<Heading textAlign="center">Login</Heading>
-					<VStack spacing={2}>
+					<VStack spacing={2} mt={4}>
 						<Text color="red.400">{actionData?.formError}</Text>
 						<FormInput
 							name="username"
@@ -105,7 +105,7 @@ export default function Login(): JSX.Element {
 							label="Password"
 						/>
 					</VStack>
-					<SubmitButton w="100%" mt={2}>
+					<SubmitButton w="100%" mt={8}>
 						Login
 					</SubmitButton>
 				</ValidatedForm>
