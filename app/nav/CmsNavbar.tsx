@@ -37,21 +37,15 @@ export default function CmsNavbar({ fullName }: { fullName: string }) {
 				<Stack direction="column">
 					<NavElement icon={FiHome} name="Home" href={cmsUrl} />
 				</Stack>
-				<Stack>
-					<Flex
+				<Form method="post" action={logoutURL}>
+					<Button
 						mx={2}
-						alignItems="center"
-						justifyContent="space-between">
-						<Form method="post" action={logoutURL}>
-							<Button
-								type="submit"
-								variant="outline"
-								colorScheme="red">
-								Logout
-							</Button>
-						</Form>
-					</Flex>
-				</Stack>
+						type="submit"
+						variant="outline"
+						colorScheme="red">
+						Logout
+					</Button>
+				</Form>
 			</Flex>
 		</Flex>
 	);

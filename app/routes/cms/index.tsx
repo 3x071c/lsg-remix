@@ -27,8 +27,8 @@ export default function Index(): JSX.Element {
 	const { firstname, lastname } = useLoaderData<LoaderData>();
 
 	return (
-		<Center h="100%" w="100%">
-			<Heading m={8}>
+		<Center minH="100%" minW="100%">
+			<Heading m={2}>
 				Hallo {firstname} {lastname} 👋
 			</Heading>
 		</Center>

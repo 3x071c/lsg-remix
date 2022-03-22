@@ -11,7 +11,7 @@ export default function NavElement({
 	name: string;
 	icon: IconType;
 }) {
-	const textColor = useColorModeValue("gray.700", "gray.400");
+	const bgHover = useColorModeValue("gray.300", "gray.800");
 
 	return (
 		<Link
@@ -19,17 +19,13 @@ export default function NavElement({
 			py={2}
 			borderRadius="lg"
 			_hover={{
-				bg: useColorModeValue("gray.300", "gray.800"),
+				bg: bgHover,
 			}}>
 			<Flex alignItems="center" ml={2}>
 				<Center mr={2}>
-					<Icon color={textColor} boxSize={5} as={icon} />
+					<Icon boxSize={5} as={icon} />
 				</Center>
-				<Text
-					fontSize={18}
-					textDecoration="none"
-					fontWeight={600}
-					color={textColor}>
+				<Text fontSize={18} textDecoration="none" fontWeight={600}>
 					{name}
 				</Text>
 			</Flex>
