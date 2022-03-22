@@ -29,15 +29,15 @@ You're looking at the source code behind the new [Louise-Schroeder-Gymnasium web
 
 Make sure you have the latest version of [Node.js](https://nodejs.org/) and NPM (the Node package manager, which should ship with it) installed:
 
--   (Linux) `$ apt/dnf/... install nodejs`
+-   (Linux) `$ pacman -S nodejs`
 -   (macOS) `$ brew install node`
 -   (Windows) `$ winget install -e --id OpenJS.NodeJS`
 
-> (for Linux, always check your **distribution-specific** Debian/Fedora/Ubuntu/... documentation first, as commands may differ)
+> (The package manager `pacman` is specific to Arch Linux based distributions. Always check your **distribution-specific** Debian/Fedora/Ubuntu/... documentation first, as commands may differ)
 
 Make sure you have the latest version of [git](https://git-scm.com/) installed, which you will need to use to download our code, share your changes and collaborate with others ([GitHub](https://github.com) is the server provider that stores our code and interfaces with `git`):
 
--   (Linux) `$ apt/dnf/... install git`
+-   (Linux) `$ pacman -S git`
 -   (macOS) `$ brew install git`
 -   (Windows) `$ winget install -e --id Git.Git`
 
@@ -69,7 +69,7 @@ $ code lsg
 **Make sure to trust the folder and install all recommended extensions** (If you're new to Visual Studio Code, check out the [next section](#recommendations-for-vscode) as well).
 
 > Installation instructions for Visual Studio Code:  
-> (Linux) `apt/dnf/... install code` (Look up a tutorial for your distribution on how to add the VSCode package repository first)  
+> (Linux) `pacman -S code` (limited OSS version) / `yay -S visual-studio-code-bin` (Research required!)  
 > (macOS) `brew install --cask visual-studio-code`  
 > (Windows) `winget install -e --id Microsoft.VisualStudioCode`
 
@@ -79,19 +79,22 @@ Install the dependencies of this project (you can open up a Terminal in VSCode w
 $ npm i
 ```
 
-Setup a local mysql-compatible database (f.e. MariaDB, Oracle MySQL):
+Setup a local PostgreSQL database:
 
--   (Linux) `apt/dnf/... install mariadb-server`
--   (macOS) `brew install --cask dbngin`
--   (Windows) `winget install -e --id MariaDB.Server`
+-   (Linux) `pacman -S postgresql`
+-   (macOS) `brew install --cask postgres-unofficial`
+-   (Windows) `winget install -e --id PostgreSQL.PostgreSQL`
 
-Make sure to configure it according to available documentation/tutorials online, making a database connection available at a certain port (commonly `3306`) of your local machine (`localhost`) with a user and password. Store the connection string to your database, as well as an encryption key in `.env`. Make sure to keep it **secret**:
+Make sure to configure it according to available documentation/tutorials online, making a database connection available at a certain port (commonly `5432`/`5433`) of your local machine (`localhost`). Store the connection string to your database, as well as an encryption key in `.env`. Make sure to keep it **secret**:
 
 ```console
 # /.env
-CMS_AUTH_SECRET=<30-50 character random password without quotation (f.e. from https://1password.com/password-generator/)>
-MYSQL_URL=<mysql://root:password@localhost:3306/db>
+CMS_AUTH_SECRET="<30-50 character random password>"
+DATABASE_URL="<postgresql://user<:password>@localhost:5432/db>"
 ```
+
+> To securely generate a random password on your computer:  
+> (Linux/macOS) `openssl rand -base64 40`
 
 Seed the database with example data for local testing, run routines and generate types:
 

@@ -71,7 +71,7 @@
 		"prisma:watch": "npm run prisma:generate -- --watch",
 		"prod": "npm run production",
 		"production": "cross-env NODE_ENV=production run-s build start",
-		"railway:start": "if [ \"$RAILWAY_GIT_BRANCH\" = \"trunk\" ]; then npm run new:prod; else npm run new:preview; fi; npm run start",
+		"provider:start": "run-s new:preview start",
 		"remix:build": "remix build",
 		"remix:dev": "remix dev",
 		"remix:start": "remix-serve .remix/server",
