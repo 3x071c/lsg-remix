@@ -27,7 +27,7 @@
 		"win32"
 	],
 	"scripts": {
-		"build": "cross-env NODE_ENV=production npm run remix:build",
+		"build": "cross-env NODE_ENV=production run-s deploy remix:build",
 		"check": "tsc --noEmit",
 		"ci": "run-s generate lint check",
 		"clean": "run-s \"clean:*\"",
