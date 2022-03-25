@@ -9,7 +9,7 @@ const getSessionFromStorage = (request: Request) =>
 	sessionStorage.getSession(request.headers.get("Cookie"));
 
 export const SessionData = z.object({
-	id: z.number(),
+	uuid: z.string(),
 });
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- The type of SessionData by itself is unusable in TS
 export type SessionData = z.infer<typeof SessionData>;
@@ -84,9 +84,17 @@ export async function authorize<
 	return session.data as SessionData;
 }
 
+/**
+ * Redirects to the CMS homepage
+ * @returns Redirects to the CMS URL
+ */
 export function toCMS(): Response {
 	return redirect(cmsURL);
 }
+/**
+ * Redirects to the Login page
+ * @returns Redirects to the Login URL
+ */
 export function toLogin(): Response {
 	return redirect(loginURL);
 }

@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-redeclare -- Make Zod typings usable */
-/* eslint-disable no-underscore-dangle -- Private APIs */
+
 import { z } from "zod";
 
 export const Email = z
 	.string({
-		description: "Die E-Mail-Adresse des Nutzers",
+		description: "E-Mail-Adresse",
 		invalid_type_error: "E-Mail-Adresse muss eine Zeichenkette sein",
 		required_error: "E-Mail-Adresse ist erforderlich",
 	})
@@ -13,7 +13,7 @@ export type Email = z.infer<typeof Email>;
 
 export const Firstname = z
 	.string({
-		description: "Der Vorname des Nutzers",
+		description: "Vorname",
 		invalid_type_error: "Vorname muss eine Zeichenkette sein",
 		required_error: "Vorname ist erforderlich",
 	})
@@ -23,7 +23,7 @@ export type Firstname = z.infer<typeof Firstname>;
 
 export const Lastname = z
 	.string({
-		description: "Nachname des Nutzers",
+		description: "Nachname",
 		invalid_type_error: "Nachname muss eine Zeichenkette sein",
 		required_error: "Nachname ist erforderlich",
 	})
@@ -33,7 +33,7 @@ export type Lastname = z.infer<typeof Lastname>;
 
 export const Password = z
 	.string({
-		description: "Das Passwort des Nutzers",
+		description: "Passwort",
 		invalid_type_error: "Passwort muss eine Zeichenkette sein",
 		required_error: "Passwort ist erforderlich",
 	})
@@ -62,10 +62,19 @@ export type UUID = z.infer<typeof UUID>;
 
 export const Title = z
 	.string({
-		description: "Der Titel der Unterseite",
+		description: "Titel",
 		invalid_type_error: "Titel muss eine Zeichenkette sein",
 		required_error: "Titel ist erforderlich",
 	})
 	.min(3, { message: "Titel muss mindestens 3 Charaktere lang sein" })
 	.max(15, { message: "Titel darf nicht länger als 15 Zeichen sein" });
 export type Title = z.infer<typeof Title>;
+
+export const Name = z
+	.string({
+		description: "Name",
+		invalid_type_error: "Name muss eine Zeichenkette sein",
+		required_error: "Name ist erforderlich",
+	})
+	.min(3, { message: "Name muss mindestens 3 Charaktere lang sein" })
+	.max(15, { message: "Name darf nicht länger als 15 Zeichen sein" });

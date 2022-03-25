@@ -1,8 +1,8 @@
-/* eslint-disable @typescript-eslint/no-redeclare -- Make Zod typings usable */
 /* eslint-disable no-underscore-dangle -- Private APIs */
+import type { SuperJSONResult } from "superjson/dist/types";
+import type { ZodObject, ZodType } from "zod";
 import superjson from "superjson";
-import { z, ZodObject, ZodRawShape, ZodType } from "zod";
-import entries from "~app/util/entries";
+import { entries, fromEntries } from "~app/util";
 import { UUID } from "./_shared";
 
 const handler =
@@ -24,13 +24,15 @@ const handler =
 					uuid,
 				)}`;
 			},
-			_constructValueWithMetadata<T extends keyof Omit<M, "uuid">>(
+			_constructValue<T extends keyof Omit<M, "uuid">>(
 				field: T,
 				value: M[T],
-			): [string, KVNamespacePutOptions] {
-				const validatedValue = this._validateValue(field, value);
-				const { json, meta } = superjson.serialize(validatedValue);
-				return [JSON.stringify(json), { metadata: meta }];
+			): string {
+				return JSON.stringify({
+					superjson: superjson.serialize(
+						this._validateValue(field, value),
+					),
+				});
 			},
 			_validateField<T extends keyof Omit<M, "uuid">>(field: T): string {
 				const parsedField = field.toString();
@@ -38,14 +40,17 @@ const handler =
 					throw new Error("[_arrayField] Invalider Schlüsselzugriff");
 				return parsedField;
 			},
-			_validateUUID(uuid: M["uuid"]): string {
+			_validateModel(_model: M): M {
+				return model.parse(_model) as M;
+			},
+			_validateUUID(uuid: M["uuid"]): M["uuid"] {
 				return UUID.parse(uuid);
 			},
 			_validateValue<T extends keyof Omit<M, "uuid">>(
 				field: T,
 				value: M[T],
-			) {
-				return model.shape[field].parse(value);
+			): M[T] {
+				return model.shape[field].parse(value) as M[T];
 			},
 			async create(data: Omit<M, "uuid">): Promise<M> {
 				const uuid = crypto.randomUUID();
@@ -53,63 +58,118 @@ const handler =
 					entries(data).map(([field, value]) =>
 						ctx.put(
 							this._constructKey(uuid, field),
-							...this._constructValueWithMetadata(field, value),
+							this._constructValue(field, value),
 						),
 					),
 				);
-				return { ...data, uuid };
+				return this._validateModel({ ...data, uuid } as M);
 			},
-			async getFieldValue<T extends keyof Omit<M, "uuid">>(
+			async get<T extends keyof Omit<M, "uuid">>(
 				uuid: M["uuid"],
 				field: T,
 				cache = 3600,
-			): Promise<M[T] | undefined> {
-				const { value, metadata: meta } = await ctx.getWithMetadata(
+			): Promise<M[T]> {
+				const value = await ctx.get<{ superjson?: SuperJSONResult }>(
 					this._constructKey(uuid, field),
 					{
 						cacheTtl: cache,
 						type: "json",
 					},
 				);
-				if (!matches) return undefined;
-				return matches;
-			},
-			async getFieldValues<T extends keyof Omit<M, "uuid">>(
-				field: T,
-				value: M[T],
-				cache = 3600,
-			): Promise<M["uuid"][]> {
-				const matches = await ctx.get<M["uuid"][]>(
-					`${field}:${value}`,
-					{
-						cacheTtl: cache,
-						type: "json",
-					},
+				if (!value?.superjson)
+					throw new Error("[_handler] Unerwarteter Feldwert");
+				return this._validateValue(
+					field,
+					superjson.deserialize(value.superjson),
 				);
-				if (!matches) return [];
-				return matches;
 			},
-			list({
-				cursor,
-				limit,
-			}: Pick<KVNamespaceListOptions, "cursor" | "limit">) {
-				return ctx.list({ cursor, limit });
-			},
-			async update(
-				{ uuid, ...data }: PartialExcept<M, "uuid">,
+			async getMany<T extends keyof Omit<M, "uuid">>(
+				uuid: M["uuid"],
+				fields: T[],
 				cache = 3600,
 			) {
-				await Promise.all(
-					Object.entries(data).map(async ([k, v]) => {
-						await ctx.put(`by-uuid:${uuid}:${k}`, v as string);
-						await this._arrayField(
-							uuid,
-							k as keyof Omit<M, "uuid">,
-							v as string,
-							cache,
-						);
-					}),
+				return fromEntries<{
+					[field in typeof fields[number]]: M[field];
+				}>(
+					await Promise.all(
+						fields.map(async (field) => [
+							field,
+							await this.get(uuid, field, cache),
+						]),
+					),
 				);
+			},
+			async list<T extends keyof Omit<M, "uuid">>(
+				field: T,
+				options?: Pick<KVNamespaceListOptions, "cursor" | "limit"> & {
+					required?: boolean;
+				},
+			) {
+				const prefix = this._constructKey("", field);
+				const required = options?.required ?? !options?.limit;
+				const {
+					cursor,
+					keys,
+					list_complete: listComplete,
+				} = await ctx.list({
+					cursor: options?.cursor,
+					limit: options?.limit,
+					prefix,
+				});
+				if (required && !listComplete)
+					throw new Error("Nicht vollständiger Rückgabewert");
+				const data = keys.map(({ name, ...rest }) => ({
+					...rest,
+					uuid: this._validateUUID(name.replace(prefix, "")),
+				}));
+				return {
+					cursor,
+					data,
+					listComplete,
+				};
+			},
+			async listValues<T extends keyof Omit<M, "uuid">>(
+				field: T,
+				options?: Pick<KVNamespaceListOptions, "cursor" | "limit"> & {
+					cache?: number;
+					required?: boolean;
+				},
+			) {
+				const {
+					cursor,
+					data: keys,
+					listComplete,
+				} = await this.list(field, {
+					cursor: options?.cursor,
+					limit: options?.limit,
+					required: options?.required,
+				});
+				const data = await Promise.all(
+					keys.map(async ({ uuid, ...rest }) => ({
+						...rest,
+						uuid,
+						value: await this.get(uuid, field, options?.cache),
+					})),
+				);
+				return {
+					cursor,
+					data,
+					listComplete,
+				};
+			},
+			async update({ uuid, ...data }: PartialExcept<M, "uuid">) {
+				await Promise.all(
+					entries(data).map(([field, value]) =>
+						ctx.put(
+							this._constructKey(uuid, field),
+							this._constructValue(
+								field,
+								value as M[typeof field] /* TS sucks */,
+							),
+						),
+					),
+				);
+				return { ...data, uuid };
 			},
 		};
 	};

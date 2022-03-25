@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-redeclare -- Make Zod typings usable */
-/* eslint-disable no-underscore-dangle -- Private APIs */
+
 import { z } from "zod";
 import handler from "./_handler";
 import { Title, UUID } from "./_shared";
 
 const rawPage = {
+	groupRef: UUID,
 	title: Title,
 	uuid: UUID,
 };

@@ -19,12 +19,12 @@ import {
 	toCMS,
 } from "~app/auth";
 import { FormInput, SubmitButton } from "~app/form";
-import { PrismaClient as prisma } from "~app/prisma";
+import { users } from "~app/models";
 
 const validator = withZod(
 	zfd.formData({
+		email: zfd.text(),
 		password: zfd.text(),
-		username: zfd.text(),
 	}),
 );
 
@@ -36,51 +36,42 @@ type LoaderData = Awaited<ReturnType<typeof getLoaderData>>;
 export const loader: LoaderFunction = async ({ request }) =>
 	json<LoaderData>(await getLoaderData(request));
 
-const getActionData = async (request: Request) => {
+const getActionData = async (request: Request, env: AppLoadContextEnvType) => {
 	await getLoaderData(request);
 
 	const { error, data } = await validator.validate(await request.formData());
 	if (error) throw validationError(error);
-	const { username, password } = data!;
+	const { email, password } = data;
 
-	const { id, password: passwordHash } = (await prisma.user.findUnique({
-		select: {
-			id: true,
-			password: true,
-		},
-		where: {
-			username,
-		},
-	})) ?? { id: undefined, password: undefined };
+	const userEnv = users(env);
+	const uuids = (await userEnv.listValues("email")).data
+		.map(({ uuid, value }) => (value === email ? uuid : false))
+		.filter(Boolean);
+	if (uuids.length > 1) throw new Error("Unexpected State");
+	const uuid = uuids?.[0] as string | undefined;
 
-	if (
-		!(await verifyPassword(
-			password,
-			passwordHash ??
-				"$argon2i$v=19$m=4096,t=3,p=1$UFp3ZFmnUdIc84t1M7zpXQ$o+I1FxwYr0ulRgG4epYb+EIWxI/g8lEiLXTv4Ps1W8k",
-		)) ||
-		!id ||
-		!passwordHash
-	)
-		return { formError: "Invalid username or password" };
+	const { password: passwordHash } = uuid
+		? await userEnv.getMany(uuid, ["password"], 60)
+		: {
+				password:
+					"$argon2i$v=19$m=4096,t=3,p=1$UFp3ZFmnUdIc84t1M7zpXQ$o+I1FxwYr0ulRgG4epYb+EIWxI/g8lEiLXTv4Ps1W8k",
+		  };
+	if (!(await verifyPassword(password, passwordHash)) || !uuid)
+		return { formError: "Invalid email or password" };
 
 	if (shouldRehashPassword(passwordHash))
-		await prisma.user.update({
-			data: {
-				password: await hashPassword(password),
-			},
-			where: {
-				id,
-			},
-		});
+		await userEnv.update({ password: await hashPassword(password), uuid });
 
 	throw await login(request, {
-		id,
+		uuid,
 	});
 };
 type ActionData = Awaited<ReturnType<typeof getActionData>>;
-export const action: ActionFunction = async ({ request }) =>
-	json<ActionData>(await getActionData(request), 401);
+export const action: ActionFunction = async ({ request, context: { env } }) =>
+	json<ActionData>(
+		await getActionData(request, env as AppLoadContextEnvType),
+		401,
+	);
 
 export default function Login(): JSX.Element {
 	const actionData = useActionData<ActionData>();
@@ -94,9 +85,9 @@ export default function Login(): JSX.Element {
 					<VStack spacing={2}>
 						<Text color="red.400">{actionData?.formError}</Text>
 						<FormInput
-							name="username"
-							placeholder="username"
-							label="Username"
+							name="email"
+							placeholder="email"
+							label="email"
 						/>
 						<FormInput
 							type="password"

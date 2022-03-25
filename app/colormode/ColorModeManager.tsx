@@ -6,6 +6,11 @@ import { setColorModeCookie } from "./colorModeCookie";
 import getColorMode from "./getColorMode";
 import useColorModeCookie from "./useColorModeCookie";
 
+/**
+ * Allows chakra to modify the current color mode (f.e. via hooks)
+ * @param mode The mode passed as a prop
+ * @returns A StorageManager for use with `ChakraProvider`
+ */
 const colorModeStorageManager = (mode?: ColorMode): StorageManager => ({
 	get(init?) {
 		if (mode) return mode;
@@ -23,6 +28,7 @@ export default memo(function ColorModeManager({
 }: PropsWithChildren<unknown>) {
 	const colorModeCookie = useColorModeCookie();
 	const colorMode = getColorMode(
+		/* Compute the color mode to use */
 		colorModeCookie?.initial,
 		colorModeCookie?.current,
 	);

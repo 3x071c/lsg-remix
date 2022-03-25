@@ -18,19 +18,22 @@ import {
 import { transparentize } from "@chakra-ui/theme-tools";
 import { memo } from "react";
 import { LinkButton } from "~app/links";
+import { entries } from "~app/util";
 
 type NavbarProps = {
-	data: {
-		pages: {
-			id: number;
-			title: string;
-		}[];
-		id: number;
-		name: string;
-	}[];
+	groupedPages: {
+		[groupUUID: string]: {
+			name: string;
+			pages: {
+				[pageUUID: string]: {
+					title: string;
+				};
+			};
+		};
+	};
 };
 export default memo(function Navbar({
-	data: categories,
+	groupedPages,
 }: NavbarProps): JSX.Element {
 	const theme = useTheme();
 	const popoverContentBackdropBg = useColorModeValue(
@@ -46,8 +49,8 @@ export default memo(function Navbar({
 				</Box>
 				<Spacer />
 				<HStack textAlign="center" spacing={2} overflowY="auto">
-					{categories.map(({ name, id, pages }) => (
-						<Box key={id}>
+					{entries(groupedPages).map(([uuid, { name, pages }]) => (
+						<Box key={uuid}>
 							<Popover trigger="hover">
 								<PopoverTrigger>
 									<Button
@@ -70,17 +73,14 @@ export default memo(function Navbar({
 									}}>
 									<PopoverBody>
 										<VStack spacing={4}>
-											{pages.map(
-												({
-													id: pageId,
-													title: pageTitle,
-												}) => (
+											{entries(pages).map(
+												([pageUUID, { title }]) => (
 													<LinkButton
-														href={`/page/${pageId}`}
-														key={`${id}.${pageId}`}
+														href={`/page/${pageUUID}`}
+														key={`${uuid}.${pageUUID}`}
 														variant="ghost"
 														w="full">
-														{pageTitle}
+														{title}
 													</LinkButton>
 												),
 											)}
