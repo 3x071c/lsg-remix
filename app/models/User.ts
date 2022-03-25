@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-redeclare -- Make Zod typings usable */
-/* eslint-disable no-underscore-dangle -- Private APIs */
+
 import { z } from "zod";
 import handler from "./_handler";
 import { Email, Firstname, Lastname, Password, UUID } from "./_shared";

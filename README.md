@@ -81,28 +81,15 @@ Install the dependencies of this project (you can open up a Terminal in VSCode w
 $ npm i
 ```
 
-Setup a local PostgreSQL database:
-
--   (Linux) `pacman -S postgresql`
--   (macOS) `brew install --cask postgres-unofficial`
--   (Windows) `winget install -e --id PostgreSQL.PostgreSQL`
-
-Make sure to configure it according to available documentation/tutorials online, making a database connection available at a certain port (commonly `5432`/`5433`) of your local machine (`localhost`). Store the connection string to your database, as well as an encryption key in `.env`. Make sure to keep it **secret**:
+Store an encryption key in `.env`. Make sure to keep it **secret**:
 
 ```console
 # /.env
 CMS_AUTH_SECRET="<30-50 character random password>"
-DATABASE_URL="<postgresql://user<:password>@localhost:5432/db>"
 ```
 
 > To securely generate a random password on your computer:  
 > (Linux/macOS) `openssl rand -base64 40`
-
-Seed the database with example data for local testing, run routines and generate types:
-
-```console
-$ npm run new
-```
 
 Spin up a local development server. It will automatically reflect changes in the code:
 
