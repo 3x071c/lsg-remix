@@ -19,7 +19,7 @@ jobs:
             - name: ⎔ Setup
               uses: actions/setup-node@v3.0.0
               with:
-                  node-version: lts # Use the latest LTS release
+                  node-version: 16 # Use the latest LTS release
                   cache: npm
             - name: 📥 Install
               uses: nick-fields/retry@v2.6.0 # Retry npm installation when an http download fails (often due to rate limiting)
@@ -48,7 +48,7 @@ jobs:
             - name: ⎔ Setup
               uses: actions/setup-node@v3.0.0
               with:
-                  node-version: lts # Use the latest LTS release
+                  node-version: 16 # Use the latest LTS release
                   cache: npm
             - name: 📥 Install
               uses: nick-fields/retry@v2.6.0 # Retry npm installation when an http download fails (often due to rate limiting)
