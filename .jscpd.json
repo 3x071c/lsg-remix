@@ -6,14 +6,13 @@
 		".git",
 		".vscode",
 		"package-lock.json",
+		"*.tsbuildinfo",
 		".*cache",
 		".*ignore",
-		".remix",
+		".swc",
 		".husky",
-		"*.tsbuildinfo",
 		"public/build",
-		"db/migrations",
-		".swc"
+		"functions"
 	],
 	"reporters": ["console"]
 }

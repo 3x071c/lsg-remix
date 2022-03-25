@@ -1,4 +1,5 @@
-name: Reopened
+# This workflow runs when an Issue or Pull Request is opened again
+name: 👋 Reopen
 
 on:
     pull_request:
@@ -8,11 +9,16 @@ on:
         types:
             - reopened
 
+# Cancel previous instances of this workflow
+concurrency:
+    group: ${{ github.workflow }}-${{ github.head_ref || github.ref || github.run_id }}
+    cancel-in-progress: true
+
 jobs:
-    reboard:
-        name: Do "Opened" checks again
+    reopen_checks:
+        name: ☑ Check again
         runs-on: ubuntu-latest
         timeout-minutes: 10
         steps:
-            - name: Close if opened by non-stargazer
-              uses: uhyo/please-star-first@master
+            - name: ✨ More stars pls
+              uses: uhyo/please-star-first@v1.0.1

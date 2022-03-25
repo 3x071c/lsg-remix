@@ -1,25 +1,37 @@
-name: PR
+# This workflow runs on Pull Request updates
+name: 🗣 PR
 
 on: pull_request
 
+# Cancel previous instances of this workflow
+concurrency:
+    group: ${{ github.workflow }}-${{ github.head_ref || github.ref || github.run_id }}
+    cancel-in-progress: true
+
 jobs:
-    pr:
-        name: PR Checks
+    pr_name:
+        name: 🏁 PR Name Checks
         runs-on: ubuntu-latest
         timeout-minutes: 10
         steps:
-            - uses: deepakputhraya/action-branch-name@v1.0.0
+            - name: ✅ Branch Name
+              uses: deepakputhraya/action-branch-name@v1.0.0
               with:
                   regex: '([a-z])+\/([a-zA-Z0-9_.\-])+'
                   allowed_prefixes: build,chore,ci,docs,feat,fix,perf,refactor,style,test
                   ignore: trunk
                   min_length: 5
-            - name: Get branch name
-              id: branch-name
-              uses: tj-actions/branch-names@v5.1
-            - name: Fail if target is not default branch
-              if: steps.branch-name.outputs.base_ref_branch != 'trunk'
+    pr_info:
+        name: 🌈 PR Ref Checks
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        steps:
+            - name: ℹ️ Get Information
+              id: branch-info
+              uses: tj-actions/branch-infos@v5.2
+            - name: 🧾 Source Branch is not trunk
+              if: steps.branch-info.outputs.head_ref_branch == 'trunk'
               run: exit 2
-            - name: Fail if source is default branch
-              if: steps.branch-name.outputs.head_ref_branch == 'trunk'
+            - name: 🎯 Target Branch is trunk
+              if: steps.branch-info.outputs.base_ref_branch != 'trunk'
               run: exit 3

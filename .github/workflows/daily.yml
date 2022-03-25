@@ -1,25 +1,31 @@
+# This workflow runs every day on a schedule
 name: Daily
 
 on:
     schedule:
         - cron: 0 0 * * *
-    workflow_dispatch:
+    workflow_dispatch: # This allows manual triggering from the GitHub UI
+
+# Cancel previous instances of this workflow
+concurrency:
+    group: ${{ github.workflow }}-${{ github.head_ref || github.ref || github.run_id }}
+    cancel-in-progress: true
 
 jobs:
-    reaction:
-        name: Remove reaction comments
+    cron_reaction:
+        name: 🔍 Search for Reactions
         runs-on: ubuntu-latest
         timeout-minutes: 10
         steps:
-            - name: Run the reaction-comments action
-              uses: dessant/reaction-comments@v2
-    lock:
-        name: Lock after timeout if closed
+            - name: 😶 Remove reaction comments
+              uses: dessant/reaction-comments@v2.2.0
+    cron_lock:
+        name: 🔒 Lock threads
         runs-on: ubuntu-latest
         timeout-minutes: 10
         steps:
-            - name: Run the lock-threads action
-              uses: dessant/lock-threads@v3
+            - name: ❌ Lock on inactivity # Prevent "necrobumps"
+              uses: dessant/lock-threads@v3.0.0
               with:
                   issue-inactive-days: 7
                   add-issue-labels: lock

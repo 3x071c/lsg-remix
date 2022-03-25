@@ -16,10 +16,12 @@
   <a href="#license">License</a>
 </p>
 
+> Looking for the old version using Next.js with a fully loaded Apollo+Nexus GraphQL stack? It's gone now. ([archive](https://github.com/3x071c/lsg/tree/7c377cdef5baddd9dcf5f49985325081f31159e3))
+
 ## Introduction
 
 👋 Hey!  
-You're looking at the source code behind the new [Louise-Schroeder-Gymnasium website](https://lsg.musin.de/) right now! 🤯 It houses a full-stack [Remix](https://remix.run/) application, loaded with TypeScript, Prisma and [a bunch of other goodies](#tech-stack). It's not out yet, but we're working on it. Wanna help out? 😇 See how to [get started](#get-started), take a look at the [tech stack](#tech-stack), or dig straight into the [documentation](#documentation). 👀
+You're looking at the source code behind the new [Louise-Schroeder-Gymnasium website](https://lsg.musin.de/) right now! 🤯 It houses a full-stack [Remix](https://remix.run/) application, loaded with TypeScript, Cloudflare Workers and [a bunch of other goodies](#tech-stack). It's not out yet, but we're working on it. Wanna help out? 😇 See how to [get started](#get-started), take a look at the [tech stack](#tech-stack), or dig straight into the [documentation](#documentation). 👀
 
 ## Public Money, Public Code
 
@@ -235,10 +237,9 @@ See [Contributing](CONTRIBUTING.md)
 -   [Remix](https://remix.run/) - SSR React Framework using [React-Router](https://reactrouter.com/)
 -   [Chakra UI](https://chakra-ui.com) - React component framework
 -   [Emotion](https://emotion.sh) - CSS-in-JS library used by Chakra UI
--   [Prisma](https://www.prisma.io) - Database ORM
--   [Faker](https://fakerjs.dev) - Example data seeding
 -   [Lodash](https://lodash.com) - Utility functions
--   [Railway](https://railway.app/) - Continuous Deployment
+-   [Cloudflare Workers](https://workers.cloudflare.com/) - Serverless Functions
+-   [Cloudflare Pages](https://pages.cloudflare.com/) - Continuous Deployment
 
 ## License
 

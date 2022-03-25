@@ -269,17 +269,16 @@ $RECYCLE.BIN/
 
 .env*
 *.pem
-.remix/
-public/build/
-.husky/_/
 .*cache
 .swc/
+.husky/_/
+/public/build/
+/functions/
 
 # === End of generic rules ===
 # === Start of specific rules ===
 
 package-lock.json
 .*ignore
-db/migrations/
 
 # === End of specific rules ===

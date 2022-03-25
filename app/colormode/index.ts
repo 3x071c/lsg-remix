@@ -1,3 +1,4 @@
+/* Re-export all other files in the directory to make importing nicer (see DOCS.md for feature-folder details) */
 export * from "./ColorModeContext";
 export { default as ColorModeContext } from "./ColorModeContext";
 export * from "./colorModeCookie";
