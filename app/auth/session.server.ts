@@ -14,7 +14,7 @@ if (!CMS_AUTH_SECRET) {
  * A session cookie to store insensitive data in.
  * 🚨 This is only signed, not encrypted. The client can't falsify the value, **but it can be read out!** 🚨
  */
-export default createCookieSessionStorage({
+export const sessionStorage = createCookieSessionStorage({
 	cookie: {
 		httpOnly: true,
 		maxAge: 604800,

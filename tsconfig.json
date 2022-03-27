@@ -111,14 +111,5 @@
 		"public/build",
 		"functions"
 	],
-	"include": ["remix-env.d.ts", "**/*", "**/.*"],
-	"ts-node": {
-		"compilerOptions": {
-			"module": "CommonJS"
-		},
-		"files": true,
-		"require": ["tsconfig-paths/register"],
-		"transpileOnly": true,
-		"swc": true
-	}
+	"include": ["remix-env.d.ts", "**/*", "**/.*"]
 }

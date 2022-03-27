@@ -14,11 +14,14 @@
 		"public/build",
 		"functions"
 	],
-	"import": ["@cspell/dict-de-de/cspell-ext.json"],
+	"import": [
+		"@cspell/dict-de-de/cspell-ext.json"
+	],
 	"language": "en,de",
 	"version": "0.2",
 	"words": [
 		"chakra",
+		"esbuild",
 		"fira",
 		"gifs",
 		"homic",

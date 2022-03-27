@@ -1,7 +1,7 @@
 import type { StyleSheet } from "@emotion/utils";
 import { Center, chakra, Heading, Text, Code } from "@chakra-ui/react";
 import { withEmotionCache } from "@emotion/react";
-import { memo, PropsWithChildren, useContext, useMemo } from "react";
+import { memo, PropsWithChildren, useContext } from "react";
 import {
 	MetaFunction,
 	Links,
@@ -11,15 +11,90 @@ import {
 	Scripts,
 	ScrollRestoration,
 	useCatch,
+	LoaderFunction,
+	json,
+	useLoaderData,
 } from "remix";
 import { ColorModeManager, ColorModeToggle } from "~app/colormode";
-import { EmotionServerContext, EmotionClientContext } from "~app/emotion";
+import {
+	EmotionServerContext,
+	EmotionClientContext,
+	EmotionServerContextData,
+} from "~app/emotion";
 import { LinkButton } from "~app/links";
 import { useOnRemount } from "~app/remount";
 
 export const meta: MetaFunction = () => {
 	return { title: "LSG" };
 };
+
+const getLoaderData = () => {
+	return {
+		env: {
+			MAGIC_KEY: process.env["MAGIC_KEY"],
+			NODE_ENV: process.env["NODE_ENV"],
+		},
+	};
+};
+type LoaderData = ReturnType<typeof getLoaderData>;
+export const loader: LoaderFunction = () => json<LoaderData>(getLoaderData());
+
+declare global {
+	interface Window {
+		env: LoaderData["env"];
+	}
+}
+
+const DocumentChild = memo(
+	({
+		emotionServerContext,
+		title,
+		children,
+	}: PropsWithChildren<{
+		emotionServerContext: EmotionServerContextData;
+		title?: string;
+	}>) => {
+		const { env } = useLoaderData<LoaderData>();
+
+		return (
+			<html lang="de">
+				<head>
+					{emotionServerContext?.map(({ key, ids, css }) => (
+						<style
+							key={key}
+							data-emotion={`${key} ${ids.join(" ")}`}
+							// eslint-disable-next-line react/no-danger
+							dangerouslySetInnerHTML={{ __html: css }}
+						/>
+					))}
+					<meta charSet="utf-8" />
+					<meta
+						name="viewport"
+						content="width=device-width,initial-scale=1"
+					/>
+					{title ? <title>{title}</title> : null}
+					<Meta />
+					<Links />
+				</head>
+				<body>
+					<ColorModeManager>
+						<ColorModeToggle />
+						{children}
+					</ColorModeManager>
+					<ScrollRestoration />
+					<Scripts />
+					<LiveReload />
+					<script
+						// eslint-disable-next-line react/no-danger
+						dangerouslySetInnerHTML={{
+							__html: `window.ENV = ${JSON.stringify(env)}`,
+						}}
+					/>
+				</body>
+			</html>
+		);
+	},
+);
 
 const Document = memo(
 	withEmotionCache(function InnerDocument(
@@ -57,41 +132,13 @@ const Document = memo(
 			"Document",
 		);
 
-		const child = useMemo(
-			() => (
-				<html lang="de">
-					<head>
-						{emotionServerContext?.map(({ key, ids, css }) => (
-							<style
-								key={key}
-								data-emotion={`${key} ${ids.join(" ")}`}
-								// eslint-disable-next-line react/no-danger
-								dangerouslySetInnerHTML={{ __html: css }}
-							/>
-						))}
-						<meta charSet="utf-8" />
-						<meta
-							name="viewport"
-							content="width=device-width,initial-scale=1"
-						/>
-						{title ? <title>{title}</title> : null}
-						<Meta />
-						<Links />
-					</head>
-					<body>
-						<ColorModeManager>
-							<ColorModeToggle />
-							{children}
-						</ColorModeManager>
-						<ScrollRestoration />
-						<Scripts />
-						<LiveReload />
-					</body>
-				</html>
-			),
-			[emotionServerContext, title, children],
+		return (
+			<DocumentChild
+				emotionServerContext={emotionServerContext}
+				title={title}>
+				{children}
+			</DocumentChild>
 		);
-		return child;
 	}),
 );
 

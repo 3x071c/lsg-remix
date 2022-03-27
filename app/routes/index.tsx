@@ -57,7 +57,9 @@ export default function Index(): JSX.Element {
 		<>
 			<Navbar groupedPages={groupedPages} />
 			<Container w="full" maxW="7xl" mx="auto" py={8} centerContent>
-				<Hero />
+				<chakra.section>
+					<Hero />
+				</chakra.section>
 				<chakra.section py={16}>
 					<Box textAlign="center">
 						<Heading as="h1" size="2xl">
@@ -72,3 +74,5 @@ export default function Index(): JSX.Element {
 		</>
 	);
 }
+
+export const url = "/";

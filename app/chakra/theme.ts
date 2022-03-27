@@ -15,7 +15,7 @@ const config: ThemeConfig = {
 	// useSystemColorMode: true,
 };
 
-export default extendTheme(
+export const theme = extendTheme(
 	{ config },
 	withDefaultColorScheme({
 		colorScheme: "blue" /* Sets the accent colors of the entire theme */,

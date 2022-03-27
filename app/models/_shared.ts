@@ -2,14 +2,24 @@
 
 import { z } from "zod";
 
-export const Email = z
+export const UUID = z
 	.string({
-		description: "E-Mail-Adresse",
-		invalid_type_error: "E-Mail-Adresse muss eine Zeichenkette sein",
-		required_error: "E-Mail-Adresse ist erforderlich",
+		description: "Eine 128-bit einzigartige Kennung",
+		invalid_type_error: "UUID muss eine Zeichenkette sein",
+		required_error: "UUID ist erforderlich",
 	})
-	.email({ message: "E-Mail muss valide sein" });
-export type Email = z.infer<typeof Email>;
+	.length(32, {
+		message: "UUID muss mindestens 32 Charaktere lang sein",
+	})
+	.uuid({ message: "UUID muss valide sein" });
+export type UUID = z.infer<typeof UUID>;
+
+export const DID = z.string({
+	description: "Eine einzigartige Nutzerkennung (Decentralized ID)",
+	invalid_type_error: "DID muss eine Zeichenkette sein",
+	required_error: "DID ist erforderlich",
+});
+export type DID = z.infer<typeof DID>;
 
 export const Firstname = z
 	.string({
@@ -30,35 +40,6 @@ export const Lastname = z
 	.min(3, { message: "Nachname muss valide sein" })
 	.max(20, { message: "Nachname muss valide sein" });
 export type Lastname = z.infer<typeof Lastname>;
-
-export const Password = z
-	.string({
-		description: "Passwort",
-		invalid_type_error: "Passwort muss eine Zeichenkette sein",
-		required_error: "Passwort ist erforderlich",
-	})
-	.min(8, { message: "Passwort muss mindestens 8 Zeichen haben" })
-	.max(50, { message: "Passwort darf nicht länger als 50 Zeichen sein" })
-	.regex(
-		/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-		{
-			message:
-				"Passwort muss aus mindestens einem Groß- und Kleinbuchstaben, einer Zahl und einem Sonderzeichen bestehen",
-		},
-	);
-export type Password = z.infer<typeof Password>;
-
-export const UUID = z
-	.string({
-		description: "Eine 128-bit einzigartige Kennung",
-		invalid_type_error: "UUID muss eine Zeichenkette sein",
-		required_error: "UUID ist erforderlich",
-	})
-	.length(32, {
-		message: "UUID muss mindestens 32 Charaktere lang sein",
-	})
-	.uuid({ message: "UUID muss valide sein" });
-export type UUID = z.infer<typeof UUID>;
 
 export const Title = z
 	.string({

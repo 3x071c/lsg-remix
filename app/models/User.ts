@@ -2,13 +2,12 @@
 
 import { z } from "zod";
 import handler from "./_handler";
-import { Email, Firstname, Lastname, Password, UUID } from "./_shared";
+import { Firstname, Lastname, DID, UUID } from "./_shared";
 
 const rawUser = {
-	email: Email,
+	did: DID,
 	firstname: Firstname,
 	lastname: Lastname,
-	password: Password,
 	uuid: UUID,
 };
 export const User = z.object(rawUser);
