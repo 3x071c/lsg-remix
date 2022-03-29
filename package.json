@@ -48,7 +48,7 @@
 		"jscpd:report": "npm run jscpd:individual -- \".\"",
 		"lint": "run-s prettier:report eslint:report secretlint:report cspell:report jscpd:report",
 		"postinstall": "remix setup cloudflare-pages && remix-esbuild-override && npm run clean",
-		"preinstall": "npm exec --yes -- only-allow npm",
+		"preinstall": "npx --yes only-allow npm",
 		"prepare": "husky install",
 		"prettier:fix": "npm run prettier:individual -- .",
 		"prettier:individual": "npm run prettier:template -- --write",
