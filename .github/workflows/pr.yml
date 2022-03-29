@@ -1,5 +1,5 @@
 # This workflow runs on Pull Request updates
-name: 🗣 PR
+name: PR
 
 on: pull_request
 
@@ -10,11 +10,11 @@ concurrency:
 
 jobs:
     pr_name:
-        name: 🏁 PR Name Checks
+        name: PR Name Checks
         runs-on: ubuntu-latest
         timeout-minutes: 10
         steps:
-            - name: ✅ Branch Name
+            - name: Branch Name
               uses: deepakputhraya/action-branch-name@v1.0.0
               with:
                   regex: '([a-z])+\/([a-zA-Z0-9_.\-])+'
@@ -22,16 +22,16 @@ jobs:
                   ignore: trunk
                   min_length: 5
     pr_info:
-        name: 🌈 PR Ref Checks
+        name: PR Ref Checks
         runs-on: ubuntu-latest
         timeout-minutes: 10
         steps:
-            - name: ℹ️ Get Information
+            - name: Get Information
               id: branch-info
               uses: tj-actions/branch-names@v5.2
-            - name: 🧾 Source Branch is not trunk
+            - name: Source Branch is not trunk
               if: steps.branch-info.outputs.head_ref_branch == 'trunk'
               run: exit 2
-            - name: 🎯 Target Branch is trunk
+            - name: Target Branch is trunk
               if: steps.branch-info.outputs.base_ref_branch != 'trunk'
               run: exit 3

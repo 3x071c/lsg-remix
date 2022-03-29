@@ -1,5 +1,5 @@
 # This workflow runs when a new Issue or Pull Request is opened
-name: 🎉 Open
+name: Open
 
 on:
     pull_request:
@@ -17,11 +17,11 @@ concurrency:
 
 jobs:
     new_issue:
-        name: 📄 New Issue
+        name: New Issue
         runs-on: ubuntu-latest
         timeout-minutes: 10
         steps:
-            - name: ⏭ Add to To Do column
+            - name: Add to To Do column
               if: github.event_name == 'issues'
               uses: alex-page/github-project-automation-plus@v0.8.1
               with:
@@ -29,11 +29,11 @@ jobs:
                   column: To do
                   repo-token: ${{ secrets.GITHUB_TOKEN }}
     new_pr:
-        name: 💪 New PR
+        name: New PR
         runs-on: ubuntu-latest
         timeout-minutes: 10
         steps:
-            - name: 📆 Add to In Progress column
+            - name: Add to In Progress column
               if: github.event_name == 'pull_request'
               uses: alex-page/github-project-automation-plus@v0.8.1
               with:
@@ -41,9 +41,9 @@ jobs:
                   column: In progress
                   repo-token: ${{ secrets.GITHUB_TOKEN }}
     new_stargazer:
-        name: ⭐️ Stargazing
+        name: Stargazing
         runs-on: ubuntu-latest
         timeout-minutes: 10
         steps:
-            - name: 🤩 Close # if not opened by a stargazer
+            - name: Close # if not opened by a stargazer
               uses: uhyo/please-star-first@v1.0.1

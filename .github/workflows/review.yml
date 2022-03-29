@@ -1,5 +1,5 @@
 # This workflow runs when a PR is ready for review
-name: 🧐 Review
+name: Review
 
 on:
     pull_request:
@@ -14,11 +14,11 @@ concurrency:
 
 jobs:
     review:
-        name: 🔍 Project Automation
+        name: Project Automation
         runs-on: ubuntu-latest
         timeout-minutes: 10
         steps:
-            - name: 💨 Move to Ready for Review column
+            - name: Move to Ready for Review column
               uses: alex-page/github-project-automation-plus@v0.8.1
               with:
                   project: Development

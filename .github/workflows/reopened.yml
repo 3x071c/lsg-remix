@@ -1,5 +1,5 @@
 # This workflow runs when an Issue or Pull Request is opened again
-name: 👋 Reopen
+name: Reopen
 
 on:
     pull_request:
@@ -16,9 +16,9 @@ concurrency:
 
 jobs:
     reopen_checks:
-        name: ☑ Check again
+        name: Check again
         runs-on: ubuntu-latest
         timeout-minutes: 10
         steps:
-            - name: ✨ More stars pls
+            - name: More stars pls
               uses: uhyo/please-star-first@v1.0.1

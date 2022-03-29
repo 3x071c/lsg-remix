@@ -1,5 +1,5 @@
 # This workflow was largely left untouched after having been generated automatically
-name: ✋ CodeQL # Context-aware scan for security vulnerabilities (https://codeql.github.com)
+name: CodeQL # Context-aware scan for security vulnerabilities (https://codeql.github.com)
 
 on:
     push:
@@ -20,7 +20,7 @@ concurrency:
 
 jobs:
     cql:
-        name: 🔎 CodeQL
+        name: CodeQL
         runs-on: ubuntu-latest
         timeout-minutes: 10
         permissions:
@@ -28,13 +28,13 @@ jobs:
             contents: read
             security-events: write
         steps:
-            - name: 🧳 Checkout
+            - name: Checkout
               uses: actions/checkout@v3.0.0
-            - name: 🚀 Initialize
+            - name: Initialize
               uses: github/codeql-action/init@v1
               with:
                   languages: javascript
-            - name: 🧱 Build
+            - name: Build
               uses: github/codeql-action/autobuild@v1 # This figures out build instructions automatically
-            - name: 👀 Analyze
+            - name: Analyze
               uses: github/codeql-action/analyze@v1

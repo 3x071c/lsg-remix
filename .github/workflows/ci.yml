@@ -1,5 +1,5 @@
 # This workflow runs "integration tests", to make sure everything's working fine before accidentally introducing bad code or a bug into the production website
-name: 🧪 Continuous Integration
+name: Continuous Integration
 
 on: push
 
@@ -10,42 +10,42 @@ concurrency:
 
 jobs:
     lint:
-        name: ☑️ ESLint # ESLint "lints" our TypeScript/JavaScript code, making sure it's correct, conforms to our style and isn't poorly written
+        name: ESLint # ESLint "lints" our TypeScript/JavaScript code, making sure it's correct, conforms to our style and isn't poorly written
         runs-on: ubuntu-latest # This used to be a matrix test on different platforms
         timeout-minutes: 15
         steps:
-            - name: 🧳 Checkout
+            - name: Checkout
               uses: actions/checkout@v3.0.0
-            - name: ⎔ Setup
+            - name: Setup
               uses: actions/setup-node@v3.0.0
               with:
                   node-version: 16 # Use the latest LTS release
                   cache: npm
-            - name: 📥 Install
+            - name: Install
               uses: nick-fields/retry@v2.6.0 # Retry npm installation when an http download fails (often due to rate limiting)
               with:
                   timeout_minutes: 5
                   max_attempts: 3
                   command: npm ci # Installs dependencies without modifying lockfile (for production installs)
                   retry_wait_seconds: 60
-            - name: 🔬 Lint
+            - name: Lint
               run: npm run lint
               env:
                   ci: true
                   NODE_ENV: production
     typecheck:
-        name: ʦ TypeScript # TypeScript checks the static typings in our code
+        name: TypeScript # TypeScript checks the static typings in our code
         runs-on: ubuntu-latest
         timeout-minutes: 15
         steps:
-            - name: 🧳 Checkout
+            - name: Checkout
               uses: actions/checkout@v3.0.0
-            - name: ⎔ Setup
+            - name: Setup
               uses: actions/setup-node@v3.0.0
               with:
                   node-version: 16 # Use the latest LTS release
                   cache: npm
-            - name: 📥 Install
+            - name: Install
               uses: nick-fields/retry@v2.6.0 # Retry npm installation when an http download fails (often due to rate limiting)
               with:
                   timeout_minutes: 5
