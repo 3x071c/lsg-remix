@@ -28,7 +28,6 @@
 		"package-lock.json": true,
 		"*.tsbuildinfo": true,
 		".*cache": true,
-		".swc": true,
 		"public/build": true,
 		"functions": true,
 		"remix.env.d.ts": true

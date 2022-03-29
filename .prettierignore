@@ -269,11 +269,9 @@ $RECYCLE.BIN/
 
 .env*
 *.pem
-.remix/
 public/build/
 .husky/_/
 .*cache
-.swc/
 
 # === End of generic rules ===
 # === Start of specific rules ===

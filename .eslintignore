@@ -270,7 +270,6 @@ $RECYCLE.BIN/
 .env*
 *.pem
 .*cache
-.swc/
 .husky/_/
 /public/build/
 /functions/

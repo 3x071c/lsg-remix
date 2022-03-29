@@ -9,7 +9,6 @@
 		"*.tsbuildinfo",
 		".*cache",
 		".*ignore",
-		".swc",
 		".husky",
 		"public/build",
 		"functions"

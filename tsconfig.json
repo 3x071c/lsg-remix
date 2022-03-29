@@ -106,7 +106,6 @@
 		".vscode",
 		".*cache",
 		".*ignore",
-		".remix",
 		".husky",
 		"public/build",
 		"functions"

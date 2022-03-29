@@ -16,6 +16,7 @@ export default memo(function ColorModeToggle(): JSX.Element {
 			bottom="0"
 			right="0"
 			transform="translate(-50%, -50%)" /* Relative instead of fixed positioning 😎 */
+			zIndex={9}
 			onClick={toggleColorMode}
 		/>
 	);
