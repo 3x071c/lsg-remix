@@ -1,13 +1,13 @@
 # This workflow takes care of labeling and closing cards when they move in the project board
-name: 🗃 Cards
+name: Cards
 
 on:
     project_card: # Run when cards move
     workflow_run: # Workflows that act as the `github-actions` bot (using the default GITHUB_TOKEN) can't trigger other workflows (https://docs.github.com/en/actions/using-workflows/triggering-a-workflow#triggering-a-workflow-from-a-workflow)
         workflows: # List workflows that move cards manually
-            - 🆕 Draft
-            - 🎉 Open
-            - 🧐 Review
+            - Draft
+            - Open
+            - Review
         types:
             - completed
 
@@ -18,18 +18,18 @@ concurrency:
 
 jobs:
     triage:
-        name: 🧐 Triage
+        name: Triage
         runs-on: ubuntu-latest
         timeout-minutes: 10
         steps:
-            - name: 🏷 Label based on project card column
+            - name: Label based on project card column
               uses: technote-space/auto-card-labeler@v2.0.6 # Gets label data from .github/card-labeler.yml
     state:
-        name: ⚡️ State
+        name: State
         runs-on: ubuntu-latest
         timeout-minutes: 10
         steps:
-            - name: 🇺🇸 State based on project card column # Changes the open/closed state
+            - name: State based on project card column # Changes the open/closed state
               uses: dessant/issue-states@v2.2.0
               with:
                   open-issue-columns: To do, In progress, Ready for review, Review in progress, Reviewer approved
