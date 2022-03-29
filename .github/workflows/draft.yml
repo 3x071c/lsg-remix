@@ -1,0 +1,25 @@
+# This workflow runs when a Pull Request is converted back to a draft
+name: 🆕 Draft
+
+on:
+    pull_request:
+        types:
+            - converted_to_draft
+
+# Cancel previous instances of this workflow
+concurrency:
+    group: ${{ github.workflow }}-${{ github.head_ref || github.ref || github.run_id }}
+    cancel-in-progress: true
+
+jobs:
+    draft:
+        name: 🎯 Project Board
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        steps:
+            - name: 💨 Move back
+              uses: alex-page/github-project-automation-plus@v0.8.1
+              with:
+                  project: Development
+                  column: In progress
+                  repo-token: ${{ secrets.GITHUB_TOKEN }}

@@ -1,34 +1,59 @@
-name: CI
+# This workflow runs "integration tests", to make sure everything's working fine before accidentally introducing bad code or a bug into the production website
+name: 🧪 Continuous Integration
 
 on: push
 
-jobs:
-    ci:
-        strategy:
-            matrix:
-                node:
-                    - 16
-                    - 17
-                runner:
-                    - ubuntu-latest
-                    - macos-latest
-                    - windows-latest
+# Cancel previous instances of this workflow
+concurrency:
+    group: ${{ github.workflow }}-${{ github.head_ref || github.ref || github.run_id }}
+    cancel-in-progress: true
 
-        name: Continuous Integration (${{ matrix.runner }} / Node ${{ matrix.node }})
-        runs-on: ${{ matrix.runner }}
-        timeout-minutes: 30
+jobs:
+    lint:
+        name: ☑️ ESLint # ESLint "lints" our TypeScript/JavaScript code, making sure it's correct, conforms to our style and isn't poorly written
+        runs-on: ubuntu-latest # This used to be a matrix test on different platforms
+        timeout-minutes: 15
         steps:
-            - name: Git Checkout
-              uses: actions/checkout@v3
-            - name: Setup Node
-              uses: actions/setup-node@v3
+            - name: 🧳 Checkout
+              uses: actions/checkout@v3.0.0
+            - name: ⎔ Setup
+              uses: actions/setup-node@v3.0.0
               with:
-                  node-version: ${{ matrix.node }}
+                  node-version: 16 # Use the latest LTS release
                   cache: npm
-            - name: Install dependencies
-              run: npm ci
+            - name: 📥 Install
+              uses: nick-fields/retry@v2.6.0 # Retry npm installation when an http download fails (often due to rate limiting)
+              with:
+                  timeout_minutes: 5
+                  max_attempts: 3
+                  command: npm ci # Installs dependencies without modifying lockfile (for production installs)
+                  retry_wait_seconds: 60
+            - name: 🔬 Lint
+              run: npm run lint
+              env:
+                  ci: true
+                  NODE_ENV: production
+    typecheck:
+        name: ʦ TypeScript # TypeScript checks the static typings in our code
+        runs-on: ubuntu-latest
+        timeout-minutes: 15
+        steps:
+            - name: 🧳 Checkout
+              uses: actions/checkout@v3.0.0
+            - name: ⎔ Setup
+              uses: actions/setup-node@v3.0.0
+              with:
+                  node-version: 16 # Use the latest LTS release
+                  cache: npm
+            - name: 📥 Install
+              uses: nick-fields/retry@v2.6.0 # Retry npm installation when an http download fails (often due to rate limiting)
+              with:
+                  timeout_minutes: 5
+                  max_attempts: 3
+                  command: npm ci # Installs dependencies without modifying lockfile (for production installs)
+                  retry_wait_seconds: 60
             - name: Run Tests
-              run: npm run ci
+              run: npm run check
               env:
                   ci: true
                   NODE_ENV: production

@@ -1,7 +1,7 @@
 import type { StyleSheet } from "@emotion/utils";
 import { Center, chakra, Heading, Text, Code } from "@chakra-ui/react";
 import { withEmotionCache } from "@emotion/react";
-import { memo, PropsWithChildren, useContext, useMemo } from "react";
+import { memo, PropsWithChildren, useContext, useEffect } from "react";
 import {
 	MetaFunction,
 	Links,
@@ -11,93 +11,125 @@ import {
 	Scripts,
 	ScrollRestoration,
 	useCatch,
+	LoaderFunction,
+	json,
+	useLoaderData,
 } from "remix";
 import { ColorModeManager, ColorModeToggle } from "~app/colormode";
 import { EmotionServerContext, EmotionClientContext } from "~app/emotion";
 import { LinkButton } from "~app/links";
-import { useOnRemount } from "~app/remount";
+import { setSessionEnv } from "./auth";
 
 export const meta: MetaFunction = () => {
 	return { title: "LSG" };
 };
 
+const getLoaderData = (env: AppLoadContextEnvType) => {
+	setSessionEnv(env);
+
+	return {
+		env: {
+			MAGIC_KEY: env["MAGIC_KEY"],
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Remix replaces only the literal 'process.env.NODE_ENV' with the hard-coded value at build time
+			// @ts-ignore
+			NODE_ENV: process.env.NODE_ENV,
+		},
+	};
+};
+type LoaderData = ReturnType<typeof getLoaderData>;
+export const loader: LoaderFunction = ({ context: { env } }) =>
+	json<LoaderData>(getLoaderData(env as AppLoadContextEnvType));
+
+declare global {
+	interface Window {
+		env: LoaderData["env"];
+	}
+}
+
 const Document = memo(
 	withEmotionCache(function InnerDocument(
-		{ children, title }: PropsWithChildren<{ title?: string }>,
+		{
+			children,
+			title,
+			env,
+		}: PropsWithChildren<{ title?: string; env?: LoaderData["env"] }>,
 		emotionCache,
 	) {
 		const emotionServerContext = useContext(EmotionServerContext);
 		const emotionClientContext = useContext(EmotionClientContext);
 
 		// Only executed on client, when Document is re-mounted (error boundary)
-		useOnRemount(
-			() => {
-				// re-link sheet container
-				// eslint-disable-next-line no-param-reassign
-				emotionCache.sheet.container = document.head;
+		useEffect(() => {
+			// re-link sheet container
+			// eslint-disable-next-line no-param-reassign
+			emotionCache.sheet.container = document.head;
 
-				// re-inject tags
-				const { tags } = emotionCache.sheet;
-				emotionCache.sheet.flush();
-				tags.forEach((tag) => {
-					// eslint-disable-next-line no-underscore-dangle -- External, Private API
-					(
-						emotionCache.sheet as unknown as {
-							_insertTag: (
-								tag: StyleSheet["tags"][number],
-							) => unknown;
-						}
-					)._insertTag(tag);
-				});
+			// re-inject tags
+			const { tags } = emotionCache.sheet;
+			emotionCache.sheet.flush();
+			tags.forEach((tag) => {
+				// eslint-disable-next-line no-underscore-dangle -- External, Private API
+				(
+					emotionCache.sheet as unknown as {
+						_insertTag: (
+							tag: StyleSheet["tags"][number],
+						) => unknown;
+					}
+				)._insertTag(tag);
+			});
 
-				// reset cache to re-apply global styles
-				return emotionClientContext?.reset();
-			},
-			[],
-			"Document",
-		);
+			// reset cache to re-apply global styles
+			return emotionClientContext?.reset();
+			// eslint-disable-next-line react-hooks/exhaustive-deps -- Only trigger on remount
+		}, []);
 
-		const child = useMemo(
-			() => (
-				<html lang="de">
-					<head>
-						{emotionServerContext?.map(({ key, ids, css }) => (
-							<style
-								key={key}
-								data-emotion={`${key} ${ids.join(" ")}`}
-								// eslint-disable-next-line react/no-danger
-								dangerouslySetInnerHTML={{ __html: css }}
-							/>
-						))}
-						<meta charSet="utf-8" />
-						<meta
-							name="viewport"
-							content="width=device-width,initial-scale=1"
+		return (
+			<html lang="de">
+				<head>
+					{emotionServerContext?.map(({ key, ids, css }) => (
+						<style
+							key={key}
+							data-emotion={`${key} ${ids.join(" ")}`}
+							// eslint-disable-next-line react/no-danger
+							dangerouslySetInnerHTML={{ __html: css }}
 						/>
-						{title ? <title>{title}</title> : null}
-						<Meta />
-						<Links />
-					</head>
-					<body>
-						<ColorModeManager>
-							<ColorModeToggle />
-							{children}
-						</ColorModeManager>
-						<ScrollRestoration />
-						<Scripts />
-						<LiveReload />
-					</body>
-				</html>
-			),
-			[emotionServerContext, title, children],
+					))}
+					<meta charSet="utf-8" />
+					<meta
+						name="viewport"
+						content="width=device-width,initial-scale=1"
+					/>
+					{title ? <title>{title}</title> : null}
+					<Meta />
+					<Links />
+				</head>
+				<body>
+					<ColorModeManager>
+						<ColorModeToggle />
+						{children}
+					</ColorModeManager>
+					<ScrollRestoration />
+					<Scripts />
+					<LiveReload />
+					{env && (
+						<script
+							// eslint-disable-next-line react/no-danger
+							dangerouslySetInnerHTML={{
+								__html: `window.env = ${JSON.stringify(env)}`,
+							}}
+						/>
+					)}
+				</body>
+			</html>
 		);
-		return child;
 	}),
 );
 
 export default function App(): JSX.Element {
+	const { env } = useLoaderData<LoaderData>();
+
 	return (
-		<Document>
+		<Document env={env}>
 			<Outlet />
 		</Document>
 	);

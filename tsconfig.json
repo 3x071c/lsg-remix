@@ -6,7 +6,7 @@
 		"allowSyntheticDefaultImports": true /* Allow 'import x from y' when a module doesn't have a default export. */,
 		"alwaysStrict": true /* Ensure 'use strict' is always emitted. */,
 		"baseUrl": "./" /* Specify the base directory to resolve non-relative module names. */,
-		"checkJs": true /* Enable error reporting in type-checked JavaScript files. */,
+		"checkJs": false /* Enable error reporting in type-checked JavaScript files. */,
 		"esModuleInterop": true /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables `allowSyntheticDefaultImports` for type compatibility. */,
 		// "preserveSymlinks": true,                         /* Disable resolving symlinks to their realpath. This correlates to the same flag in node. */
 		"forceConsistentCasingInFileNames": true /* Ensure that casing is correct in imports. */,
@@ -106,19 +106,10 @@
 		".vscode",
 		".*cache",
 		".*ignore",
-		".remix",
 		".husky",
 		"public/build",
-		"db/migrations"
+		"functions",
+		".mf"
 	],
-	"include": ["next-env.d.ts", "**/*", "**/.*"],
-	"ts-node": {
-		"compilerOptions": {
-			"module": "CommonJS"
-		},
-		"files": true,
-		"require": ["tsconfig-paths/register"],
-		"transpileOnly": true,
-		"swc": true
-	}
+	"include": ["remix-env.d.ts", "**/*", "**/.*"]
 }

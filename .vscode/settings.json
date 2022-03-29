@@ -24,14 +24,13 @@
 	"files.exclude": {
 		"**/.DS_Store": true,
 		"**/.git": true,
-		"**/.remix": true,
 		"**/node_modules": true,
-		"**/package-lock.json": true,
-		"**/*.tsbuildinfo": true,
-		"**/.*cache": true,
-		"**/public/build": true,
-		"**/remix.env.d.ts": true,
-		"**/.swc": true
+		"package-lock.json": true,
+		"*.tsbuildinfo": true,
+		".*cache": true,
+		"public/build": true,
+		"functions": true,
+		"remix.env.d.ts": true
 	},
 	"prettier.requireConfig": true,
 	"prettier.useEditorConfig": true,

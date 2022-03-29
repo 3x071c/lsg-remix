@@ -16,10 +16,12 @@
   <a href="#license">License</a>
 </p>
 
+> Looking for the old version using Next.js with a fully loaded Apollo+Nexus GraphQL stack? It's gone now. ([archive](https://github.com/3x071c/lsg/tree/7c377cdef5baddd9dcf5f49985325081f31159e3))
+
 ## Introduction
 
 👋 Hey!  
-You're looking at the source code behind the new [Louise-Schroeder-Gymnasium website](https://lsg.musin.de/) right now! 🤯 It houses a full-stack [Remix](https://remix.run/) application, loaded with TypeScript, Prisma and [a bunch of other goodies](#tech-stack). It's not out yet, but we're working on it. Wanna help out? 😇 See how to [get started](#get-started), take a look at the [tech stack](#tech-stack), or dig straight into the [documentation](#documentation). 👀
+You're looking at the source code behind the new [Louise-Schroeder-Gymnasium website](https://lsg.musin.de/) right now! 🤯 It houses a full-stack [Remix](https://remix.run/) application, loaded with TypeScript, Cloudflare Workers and [a bunch of other goodies](#tech-stack). It's not out yet, but we're working on it. Wanna help out? 😇 See how to [get started](#get-started), take a look at the [tech stack](#tech-stack), or dig straight into the [documentation](#documentation). 👀
 
 ## Public Money, Public Code
 
@@ -79,28 +81,15 @@ Install the dependencies of this project (you can open up a Terminal in VSCode w
 $ npm i
 ```
 
-Setup a local PostgreSQL database:
-
--   (Linux) `pacman -S postgresql`
--   (macOS) `brew install --cask postgres-unofficial`
--   (Windows) `winget install -e --id PostgreSQL.PostgreSQL`
-
-Make sure to configure it according to available documentation/tutorials online, making a database connection available at a certain port (commonly `5432`/`5433`) of your local machine (`localhost`). Store the connection string to your database, as well as an encryption key in `.env`. Make sure to keep it **secret**:
+Store an encryption key in `.env`. Make sure to keep it **secret**:
 
 ```console
 # /.env
 CMS_AUTH_SECRET="<30-50 character random password>"
-DATABASE_URL="<postgresql://user<:password>@localhost:5432/db>"
 ```
 
 > To securely generate a random password on your computer:  
 > (Linux/macOS) `openssl rand -base64 40`
-
-Seed the database with example data for local testing, run routines and generate types:
-
-```console
-$ npm run new
-```
 
 Spin up a local development server. It will automatically reflect changes in the code:
 
@@ -235,10 +224,9 @@ See [Contributing](CONTRIBUTING.md)
 -   [Remix](https://remix.run/) - SSR React Framework using [React-Router](https://reactrouter.com/)
 -   [Chakra UI](https://chakra-ui.com) - React component framework
 -   [Emotion](https://emotion.sh) - CSS-in-JS library used by Chakra UI
--   [Prisma](https://www.prisma.io) - Database ORM
--   [Faker](https://fakerjs.dev) - Example data seeding
 -   [Lodash](https://lodash.com) - Utility functions
--   [Railway](https://railway.app/) - Continuous Deployment
+-   [Cloudflare Workers](https://workers.cloudflare.com/) - Serverless Functions
+-   [Cloudflare Pages](https://pages.cloudflare.com/) - Continuous Deployment
 
 ## License
 

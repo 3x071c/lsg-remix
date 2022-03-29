@@ -9,7 +9,6 @@ import {
 	getInitialColorModeCookie,
 } from "~app/colormode";
 import { createEmotionCache, EmotionServerContext } from "~app/emotion";
-import { RemountProvider } from "~app/remount";
 
 const cache = createEmotionCache(); // TODO Figure out if global style caching is a good idea
 // eslint-disable-next-line @typescript-eslint/unbound-method
@@ -22,19 +21,17 @@ export default function handleRequest(
 	remixContext: EntryContext,
 ): Response {
 	const markup = (
-		<RemountProvider>
-			<ColorModeContext.Provider
-				value={{
-					current: getColorModeCookie(
-						request.headers.get("Cookie") || "",
-					),
-					initial: getInitialColorModeCookie(
-						request.headers.get("Cookie") || "",
-					),
-				}}>
-				<RemixServer context={remixContext} url={request.url} />
-			</ColorModeContext.Provider>
-		</RemountProvider>
+		<ColorModeContext.Provider
+			value={{
+				current: getColorModeCookie(
+					request.headers.get("Cookie") || "",
+				),
+				initial: getInitialColorModeCookie(
+					request.headers.get("Cookie") || "",
+				),
+			}}>
+			<RemixServer context={remixContext} url={request.url} />
+		</ColorModeContext.Provider>
 	);
 
 	const prerender = renderToString(

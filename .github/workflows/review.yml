@@ -1,0 +1,26 @@
+# This workflow runs when a PR is ready for review
+name: 🧐 Review
+
+on:
+    pull_request:
+        types:
+            - ready_for_review
+            - review_requested
+
+# Cancel previous instances of this workflow
+concurrency:
+    group: ${{ github.workflow }}-${{ github.head_ref || github.ref || github.run_id }}
+    cancel-in-progress: true
+
+jobs:
+    review:
+        name: 🔍 Project Automation
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        steps:
+            - name: 💨 Move to Ready for Review column
+              uses: alex-page/github-project-automation-plus@v0.8.1
+              with:
+                  project: Development
+                  column: Ready for review
+                  repo-token: ${{ secrets.GITHUB_TOKEN }}
