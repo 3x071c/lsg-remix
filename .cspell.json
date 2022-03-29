@@ -11,7 +11,8 @@
 		".*ignore",
 		".husky",
 		"public/build",
-		"functions"
+		"functions",
+		".mf"
 	],
 	"import": ["@cspell/dict-de-de/cspell-ext.json"],
 	"language": "en,de",

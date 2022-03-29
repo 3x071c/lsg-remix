@@ -269,9 +269,11 @@ $RECYCLE.BIN/
 
 .env*
 *.pem
-public/build/
-.husky/_/
 .*cache
+.husky/_/
+/public/build/
+/functions/
+/.mf/
 
 # === End of generic rules ===
 # === Start of specific rules ===

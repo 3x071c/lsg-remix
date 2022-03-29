@@ -1,3 +1,4 @@
+import { LockIcon } from "@chakra-ui/icons";
 import {
 	Center,
 	Heading,
@@ -10,10 +11,11 @@ import {
 	Button,
 	FormLabel,
 } from "@chakra-ui/react";
+import { useCallback } from "react";
 import { useForm } from "react-hook-form";
-import { ActionFunction, redirect, Form } from "remix";
+import { ActionFunction, redirect, Form, useTransition } from "remix";
 import { useLogin, sessionStorage } from "~app/auth";
-import { magicServer } from "~app/magic";
+import { magicClient, magicServer } from "~app/magic";
 import { users, User } from "~app/models";
 import { entries } from "~app/util";
 import { url as cmsURL } from "~routes/cms";
@@ -32,18 +34,25 @@ export const action: ActionFunction = async ({
 		throw new Error(
 			"Authentifizierung aufgrund fehlendem Tokens fehlgeschlagen",
 		);
-	magic.token.validate(didToken);
-	/* 🚨 Important: Make sure the token is valid and **hasn't expired**, before authorizing access to user data! */
+	try {
+		magic.token.validate(
+			didToken,
+		); /* 🚨 Important: Make sure the token is valid and **hasn't expired**, before authorizing access to user data! */
+	} catch (e) {
+		throw new Error("Etwas stimmt mit ihrem Nutzer nicht");
+	}
 	const { issuer: did } = await magic.users.getMetadataByToken(didToken);
+	if (!did) throw new Error("Dem Nutzer fehlen erforderliche Eigenschaften");
 	/* Get user UUID */
 	const userEnv = users(env);
-	const didValues = await userEnv.listValues("did");
-	const uuids = didValues.data
+	const didRecords = await userEnv.listValues("did");
+	const uuids = didRecords.data
 		.map(({ uuid, value }) => (value === did ? uuid : false))
 		.filter(Boolean);
 	if (uuids.length > 1) throw new Error("Mehrere Nutzer auf einem Datensatz");
-	if (uuids.length === 0) throw new Error("Nutzer nicht gefunden");
-	const uuid = uuids[0] as string;
+
+	const uuid = uuids[0];
+	if (!uuid) throw redirect("/"); // TODO: Redirect to onboarding page
 
 	const session = await sessionStorage.getSession(
 		request.headers.get("Cookie"),
@@ -58,7 +67,7 @@ export const action: ActionFunction = async ({
 };
 
 export default function Login(): JSX.Element {
-	const { loading, data, login } = useLogin();
+	const { loading, setLoading, data, login } = useLogin();
 	const {
 		register,
 		handleSubmit,
@@ -68,24 +77,47 @@ export default function Login(): JSX.Element {
 		await login(email);
 	});
 	const background = useColorModeValue("gray.50", "gray.700");
+	const logout = useCallback(async () => {
+		setLoading(true);
+		await magicClient().user.logout();
+	}, [setLoading]);
+	const transition = useTransition();
 
 	if (data) {
 		return (
-			<Center minW="100vw" minH="100vh">
-				<chakra.main p={8} rounded="md" bg={background}>
-					<Heading textAlign="center">Fast fertig!</Heading>
-					<ChakraForm method="post" p={4}>
-						<input
-							type="hidden"
-							name="_authorization"
-							value={data}
-						/>
-						<Button w="full" type="submit">
-							Anmeldung abschließen
-						</Button>
-					</ChakraForm>
-				</chakra.main>
-			</Center>
+			<>
+				<Button
+					size="lg"
+					pos="fixed"
+					top="20px"
+					right="20px"
+					zIndex={9}
+					variant="outline"
+					rightIcon={<LockIcon />}
+					onClick={() => {
+						void logout();
+					}}>
+					Abmelden
+				</Button>
+				<Center minW="100vw" minH="100vh">
+					<chakra.main p={8} rounded="md" bg={background}>
+						<Heading textAlign="center">Fast fertig!</Heading>
+						<ChakraForm method="post" p={4}>
+							<input
+								type="hidden"
+								name="_authorization"
+								value={data}
+							/>
+							<Button
+								w="full"
+								type="submit"
+								isLoading={transition.state === "submitting"}>
+								Anmeldung abschließen
+							</Button>
+						</ChakraForm>
+					</chakra.main>
+				</Center>
+			</>
 		);
 	}
 
@@ -94,8 +126,10 @@ export default function Login(): JSX.Element {
 			<Center minW="100vw" minH="100vh">
 				<chakra.main p={8} rounded="md" bg={background}>
 					<Heading textAlign="center">Login</Heading>
-					{/* eslint-disable-next-line @typescript-eslint/no-misused-promises -- External API */}
-					<form onSubmit={onSubmit}>
+					<form
+						onSubmit={() => {
+							void onSubmit();
+						}}>
 						<FormControl
 							isRequired
 							isInvalid={!!errors.email}

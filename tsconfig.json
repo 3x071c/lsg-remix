@@ -108,7 +108,8 @@
 		".*ignore",
 		".husky",
 		"public/build",
-		"functions"
+		"functions",
+		".mf"
 	],
 	"include": ["remix-env.d.ts", "**/*", "**/.*"]
 }

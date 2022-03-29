@@ -8,9 +8,6 @@ export const UUID = z
 		invalid_type_error: "UUID muss eine Zeichenkette sein",
 		required_error: "UUID ist erforderlich",
 	})
-	.length(32, {
-		message: "UUID muss mindestens 32 Charaktere lang sein",
-	})
 	.uuid({ message: "UUID muss valide sein" });
 export type UUID = z.infer<typeof UUID>;
 
@@ -60,3 +57,6 @@ export const Name = z
 	.min(3, { message: "Name muss mindestens 3 Charaktere lang sein" })
 	.max(15, { message: "Name darf nicht länger als 15 Zeichen sein" });
 export type Name = z.infer<typeof Name>;
+
+export const Boolean = z.boolean();
+export type Boolean = z.infer<typeof Boolean>;

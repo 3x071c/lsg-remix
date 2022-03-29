@@ -11,7 +11,8 @@
 		".*ignore",
 		".husky",
 		"public/build",
-		"functions"
+		"functions",
+		".mf"
 	],
 	"reporters": ["console"]
 }
