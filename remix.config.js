@@ -1,13 +1,34 @@
 /* eslint-disable no-param-reassign, import/no-extraneous-dependencies */
-const alias = require("esbuild-plugin-alias");
-// eslint-disable-next-line import/no-unresolved -- Hacky Cloudflare Workers workaround
 const { resolve } = require("node:path");
-const { replaceEsbuild } = require("remix-esbuild-override/dist/replace");
+const alias = require("esbuild-plugin-alias");
 
-replaceEsbuild();
+const { withEsbuildOverride } = require("remix-esbuild-override");
 
 /**
- * @type {import('remix-esbuild-override').AppConfig}
+ * Define callbacks for the arguments of withEsbuildOverride.
+ * @param option - Default configuration values defined by the remix compiler
+ * @param isServer - True for server compilation, false for browser compilation
+ * @param isDev - True during development.
+ * @return {EsbuildOption} - You must return the updated option
+ */
+withEsbuildOverride((option, { isServer }) => {
+	option.jsxFactory = "jsx";
+	option.inject = [resolve("reactShims.ts")];
+	option.plugins = [
+		alias({
+			"html-tokenize": require.resolve("no-op"),
+			multipipe: require.resolve("no-op"),
+			through: require.resolve("no-op"),
+		}),
+		...option.plugins,
+	];
+	if (isServer) option.mainFields = ["browser", "module", "main"];
+
+	return option;
+});
+
+/**
+ * @type {import('@remix-run/dev').AppConfig}
  */
 module.exports = {
 	appDirectory: "app",
@@ -20,21 +41,4 @@ module.exports = {
 	server: "./server.js",
 	serverBuildPath: "functions/[[path]].js",
 	serverBuildTarget: "cloudflare-pages",
-
-	// eslint-disable-next-line sort-keys -- Hacky CF workers workaround at the end
-	esbuildOverride: (option, { isServer }) => {
-		option.jsxFactory = "jsx";
-		option.inject = [resolve(__dirname, "reactShims.ts")];
-		option.plugins = [
-			alias({
-				"html-tokenize": require.resolve("no-op"),
-				multipipe: require.resolve("no-op"),
-				through: require.resolve("no-op"),
-			}),
-			...option.plugins,
-		];
-		if (isServer) option.mainFields = ["browser", "module", "main"];
-
-		return option;
-	},
 };

@@ -1,12 +1,18 @@
 import { Magic } from "magic-sdk";
 
 declare global {
-	// eslint-disable-next-line no-var, vars-on-top
-	var magic: InstanceType<typeof Magic> | undefined;
+	interface Window {
+		magic: InstanceType<typeof Magic> | undefined;
+	}
 }
 
-export default global.magic ||
-	(global.magic = new Magic(window.env.MAGIC_KEY ?? "", {
-		locale: "de",
-		testMode: window.env.NODE_ENV === "development",
-	}));
+// eslint-disable-next-line no-return-assign -- Far more elegant
+export default () =>
+	window.magic ||
+	(window.magic = new Magic(
+		typeof window.env.MAGIC_KEY === "string" ? window.env.MAGIC_KEY : "",
+		{
+			locale: "de",
+			// testMode: window.env.NODE_ENV === "development",
+		},
+	));

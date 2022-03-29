@@ -1,4 +1,3 @@
-// import type { LoaderFunction } from "remix";
 import {
 	Alert,
 	AlertIcon,
@@ -11,12 +10,6 @@ import {
 	CircularProgress,
 } from "@chakra-ui/react";
 import { useAuthCallback } from "~app/auth";
-
-// const getLoaderData = () => {
-// }
-// type LoaderData = Awaited<ReturnType<typeof getLoaderData>>;
-// export const loader: LoaderFunction = async ({ context: { env } }) =>
-// 	json<LoaderData>(await getLoaderData(env as AppLoadContextEnvType));
 
 export default function Callback(): JSX.Element {
 	const { data, error, loading } = useAuthCallback();

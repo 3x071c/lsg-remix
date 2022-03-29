@@ -1,21 +1,30 @@
-import { useEffect, useState } from "react";
-import { redirect } from "remix";
+import { useCallback, useEffect, useState } from "react";
 import { magicClient } from "~app/magic";
-import { url as redirectURI } from "~routes/cms/auth";
-import { url as cmsURL } from "~routes/cms/index";
+import { url as authURL } from "~routes/cms/auth";
 
-/**
- * Initiates the magic login process
- * @param email User E-Mail
- * @returns Decentralized ID token
- */
-export async function login(email: string) {
-	if (await magicClient.user.isLoggedIn()) throw redirect(cmsURL);
-	await magicClient.auth.loginWithMagicLink({
-		email,
-		redirectURI,
-	});
-	/* Session creation call here */
+export function useLogin() {
+	const [loading, setLoading] = useState(false);
+	const [data, setData] = useState<string | null>(null);
+	const [error, setError] = useState<unknown | null>(null);
+
+	const login = useCallback(async (email: string) => {
+		setLoading(true);
+		setData(null);
+		setError(null);
+		try {
+			const token = await magicClient().auth.loginWithMagicLink({
+				email,
+				redirectURI: `${window.location.origin}${authURL}`,
+				showUI: true, // TODO: Implement own UI
+			});
+			setData(token);
+		} catch (e) {
+			setError(e);
+		}
+		setLoading(false);
+	}, []);
+
+	return { data, error, loading, login, setLoading };
 }
 
 /**
@@ -26,18 +35,19 @@ export function useAuthCallback() {
 	const [loading, setLoading] = useState(true);
 	const [data, setData] = useState<string | null>(null);
 	const [error, setError] = useState<unknown | null>(null);
+
 	useEffect(() => {
 		const callback = async () => {
 			try {
-				const token = await magicClient.auth.loginWithCredential();
+				const token = await magicClient().auth.loginWithCredential();
 				setData(token);
-				setLoading(false);
 			} catch (e) {
 				setError(e);
-				setLoading(false);
 			}
+			setLoading(false);
 		};
 		void callback();
 	}, []);
+
 	return { data, error, loading };
 }

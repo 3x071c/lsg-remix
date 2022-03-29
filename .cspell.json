@@ -14,9 +14,7 @@
 		"public/build",
 		"functions"
 	],
-	"import": [
-		"@cspell/dict-de-de/cspell-ext.json"
-	],
+	"import": ["@cspell/dict-de-de/cspell-ext.json"],
 	"language": "en,de",
 	"version": "0.2",
 	"words": [
@@ -30,6 +28,7 @@
 		"monokai",
 		"musin",
 		"pacman",
+		"Strg",
 		"tsbuildinfo",
 		"unstringify",
 		"uuids",

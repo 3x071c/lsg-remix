@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 import { redirect } from "remix";
 import { User } from "~app/models";
 import { fromEntries } from "~app/util";

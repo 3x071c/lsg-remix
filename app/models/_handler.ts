@@ -15,14 +15,21 @@ const handler =
 		if (!env[binding])
 			throw new Error(`Zugriff auf ${friendly} aktuell nicht möglich`);
 		const ctx = env[binding]!;
+		if (typeof ctx === "string")
+			throw new Error(`${friendly} aktuell falsch`);
+
 		return {
 			_constructKey<T extends keyof Omit<M, "uuid">>(
 				uuid: M["uuid"],
 				field: T,
+				validateUUID = true,
+				validateField = true,
 			): string {
-				return `${this._validateField(field)}:${this._validateUUID(
-					uuid,
-				)}`;
+				return `${
+					validateField
+						? this._validateField(field)
+						: field.toString()
+				}:${validateUUID ? this._validateUUID(uuid) : uuid}`;
 			},
 			_constructValue<T extends keyof Omit<M, "uuid">>(
 				field: T,
@@ -105,7 +112,7 @@ const handler =
 					required?: boolean;
 				},
 			) {
-				const prefix = this._constructKey("", field);
+				const prefix = this._constructKey("", field, false);
 				const required = options?.required ?? !options?.limit;
 				const {
 					cursor,

@@ -23,21 +23,27 @@ import {
 } from "~app/emotion";
 import { LinkButton } from "~app/links";
 import { useOnRemount } from "~app/remount";
+import { setSessionEnv } from "./auth";
 
 export const meta: MetaFunction = () => {
 	return { title: "LSG" };
 };
 
-const getLoaderData = () => {
+const getLoaderData = (env: AppLoadContextEnvType) => {
+	setSessionEnv(env);
+
 	return {
 		env: {
-			MAGIC_KEY: process.env["MAGIC_KEY"],
-			NODE_ENV: process.env["NODE_ENV"],
+			MAGIC_KEY: env["MAGIC_KEY"],
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Remix replaces only the literal 'process.env.NODE_ENV' with the hard-coded value at build time
+			// @ts-ignore
+			NODE_ENV: process.env.NODE_ENV,
 		},
 	};
 };
 type LoaderData = ReturnType<typeof getLoaderData>;
-export const loader: LoaderFunction = () => json<LoaderData>(getLoaderData());
+export const loader: LoaderFunction = ({ context: { env } }) =>
+	json<LoaderData>(getLoaderData(env as AppLoadContextEnvType));
 
 declare global {
 	interface Window {
@@ -50,12 +56,12 @@ const DocumentChild = memo(
 		emotionServerContext,
 		title,
 		children,
+		env,
 	}: PropsWithChildren<{
 		emotionServerContext: EmotionServerContextData;
 		title?: string;
+		env?: LoaderData["env"];
 	}>) => {
-		const { env } = useLoaderData<LoaderData>();
-
 		return (
 			<html lang="de">
 				<head>
@@ -84,12 +90,14 @@ const DocumentChild = memo(
 					<ScrollRestoration />
 					<Scripts />
 					<LiveReload />
-					<script
-						// eslint-disable-next-line react/no-danger
-						dangerouslySetInnerHTML={{
-							__html: `window.ENV = ${JSON.stringify(env)}`,
-						}}
-					/>
+					{env && (
+						<script
+							// eslint-disable-next-line react/no-danger
+							dangerouslySetInnerHTML={{
+								__html: `window.env = ${JSON.stringify(env)}`,
+							}}
+						/>
+					)}
 				</body>
 			</html>
 		);
@@ -98,7 +106,11 @@ const DocumentChild = memo(
 
 const Document = memo(
 	withEmotionCache(function InnerDocument(
-		{ children, title }: PropsWithChildren<{ title?: string }>,
+		{
+			children,
+			title,
+			env,
+		}: PropsWithChildren<{ title?: string; env?: LoaderData["env"] }>,
 		emotionCache,
 	) {
 		const emotionServerContext = useContext(EmotionServerContext);
@@ -135,7 +147,8 @@ const Document = memo(
 		return (
 			<DocumentChild
 				emotionServerContext={emotionServerContext}
-				title={title}>
+				title={title}
+				env={env}>
 				{children}
 			</DocumentChild>
 		);
@@ -143,8 +156,10 @@ const Document = memo(
 );
 
 export default function App(): JSX.Element {
+	const { env } = useLoaderData<LoaderData>();
+
 	return (
-		<Document>
+		<Document env={env}>
 			<Outlet />
 		</Document>
 	);
@@ -191,23 +206,45 @@ export function ErrorBoundary({
 	error: Error;
 }): JSX.Element {
 	return (
-		<Document title={`${name} | LSG`}>
-			<Center minW="100vw" minH="100vh">
-				<chakra.main maxW="90%" py={8} textAlign="center">
-					<Heading as="h1" size="xl">
-						{name}
-					</Heading>
-					<Text fontSize="md">
-						Ein kritischer Fehler ist aufgetreten.
-					</Text>
-					<Code d="block" my={2} colorScheme="red" fontSize="sm">
-						{message}
-					</Code>
-					<LinkButton href="/" variant="link">
-						Hier geht&apos;s zurück
-					</LinkButton>
-				</chakra.main>
-			</Center>
-		</Document>
+		<html lang="de">
+			<head>
+				<meta charSet="utf-8" />
+				<meta
+					name="viewport"
+					content="width=device-width,initial-scale=1"
+				/>
+				<title>{name} | LSG</title>
+				<Meta />
+				<Links />
+			</head>
+			<body>
+				<ColorModeManager>
+					<ColorModeToggle />
+					<Center minW="100vw" minH="100vh">
+						<chakra.main maxW="90%" py={8} textAlign="center">
+							<Heading as="h1" size="xl">
+								{name}
+							</Heading>
+							<Text fontSize="md">
+								Ein kritischer Fehler ist aufgetreten.
+							</Text>
+							<Code
+								d="block"
+								my={2}
+								colorScheme="red"
+								fontSize="sm">
+								{message}
+							</Code>
+							<LinkButton href="/" variant="link">
+								Hier geht&apos;s zurück
+							</LinkButton>
+						</chakra.main>
+					</Center>
+				</ColorModeManager>
+				<ScrollRestoration />
+				<Scripts />
+				<LiveReload />
+			</body>
+		</html>
 	);
 }

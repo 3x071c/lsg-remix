@@ -15,18 +15,14 @@ export async function authenticate(
 	request: Request,
 	env: AppLoadContextEnvType,
 ) {
-	const authorizationHeader = request.headers.get("Authorization");
-	if (!authorizationHeader) throw new Error("Autorisation nicht gegeben");
-	const didToken = magicServer.utils.parseAuthorizationHeader(
-		request.headers.get("authorization") ?? "",
-	);
-	if (!didToken) throw new Error("Token nicht gefunden");
-	magicServer.token.validate(
+	const magic = magicServer(env);
+	const didToken = (await request.formData()).get("authorization");
+	if (!didToken || typeof didToken !== "string")
+		throw new Error("Token nicht gefunden");
+	magic.token.validate(
 		didToken,
 	); /* 🚨 Important: Make sure the token is valid and **hasn't expired**, before authorizing access to user data! */
-	const { issuer: did } = await magicServer.users.getMetadataByToken(
-		didToken,
-	);
+	const { issuer: did } = await magic.users.getMetadataByToken(didToken);
 	/* Get user UUID */
 	const userEnv = users(env);
 	const uuids = (await userEnv.listValues("did")).data
