@@ -6,13 +6,10 @@ export function useLogin() {
 	const [loading, setLoading] = useState(true);
 	const [data, setData] = useState<string | null>(null);
 	const [error, setError] = useState<unknown | null>(null);
-	console.log("[login] render");
 
 	const login = useCallback(
 		async (email: string) => {
-			console.log("[login] useCallback");
 			if (!(data || loading)) {
-				console.log("[login] useCallback !data");
 				setLoading(true);
 				setData(null);
 				setError(null);
@@ -22,10 +19,8 @@ export function useLogin() {
 						redirectURI: `${window.location.origin}${authURL}`,
 						showUI: true, // TODO: Implement own UI
 					});
-					console.log("[login] useCallback !data token", token);
 					setData(token);
 				} catch (e) {
-					console.log("[login] useCallback !data error");
 					setError(e);
 				}
 				setLoading(false);
@@ -35,17 +30,14 @@ export function useLogin() {
 	);
 
 	useEffect(() => {
-		console.log("[login] useEffect");
 		const callback = async () => {
 			setLoading(true);
 			try {
 				if (await magicClient().user.isLoggedIn()) {
-					console.log("[login] useEffect isLoggedIn");
 					setData(await magicClient().user.getIdToken());
 					setError(null);
 				}
 			} catch (e) {
-				console.log("[login] useEffect error");
 				setError(e);
 			}
 			setLoading(false);
