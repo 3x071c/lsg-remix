@@ -59,3 +59,4 @@ export const Name = z
 	})
 	.min(3, { message: "Name muss mindestens 3 Charaktere lang sein" })
 	.max(15, { message: "Name darf nicht länger als 15 Zeichen sein" });
+export type Name = z.infer<typeof Name>;
