@@ -32,6 +32,10 @@
 		"tsbuildinfo",
 		"unstringify",
 		"uuids",
-		"zalgo"
+		"zalgo",
+		"codeql",
+		"alex",
+		"uhyo",
+		"deepakputhraya"
 	]
 }

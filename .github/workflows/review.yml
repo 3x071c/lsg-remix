@@ -23,3 +23,4 @@ jobs:
               with:
                   project: Development
                   column: Ready for review
+                  repo-token: ${{ secrets.GITHUB_TOKEN }}

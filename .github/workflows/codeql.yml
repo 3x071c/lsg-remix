@@ -31,10 +31,10 @@ jobs:
             - name: 🧳 Checkout
               uses: actions/checkout@v3.0.0
             - name: 🚀 Initialize
-              uses: github/codeql-action/init@v1.1.6
+              uses: github/codeql-action/init@v1
               with:
                   languages: javascript
             - name: 🧱 Build
-              uses: github/codeql-action/autobuild@v1.1.6 # This figures out build instructions automatically
+              uses: github/codeql-action/autobuild@v1 # This figures out build instructions automatically
             - name: 👀 Analyze
-              uses: github/codeql-action/analyze@v1.1.6
+              uses: github/codeql-action/analyze@v1
