@@ -28,11 +28,6 @@ jobs:
                   max_attempts: 3
                   command: npm ci # Installs dependencies without modifying lockfile (for production installs)
                   retry_wait_seconds: 60
-            - name: 🧬 Generate Types
-              run: npm run generate
-              env:
-                  ci: true
-                  NODE_ENV: production
             - name: 🔬 Lint
               run: npm run lint
               env:
@@ -57,11 +52,6 @@ jobs:
                   max_attempts: 3
                   command: npm ci # Installs dependencies without modifying lockfile (for production installs)
                   retry_wait_seconds: 60
-            - name: 🧬 Generate Types
-              run: npm run generate
-              env:
-                  ci: true
-                  NODE_ENV: production
             - name: Run Tests
               run: npm run check
               env:
