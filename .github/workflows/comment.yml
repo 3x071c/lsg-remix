@@ -1,5 +1,5 @@
 # This workflow runs whenever somebody comments on an issue
-name: 💬 Comment
+name: Comment
 
 on: issue_comment
 
@@ -10,9 +10,9 @@ concurrency:
 
 jobs:
     reaction_comment:
-        name: 👍 Reaction
+        name: Reaction
         runs-on: ubuntu-latest
         timeout-minutes: 10
         steps:
-            - name: 😶 Remove # These tend to introduce spam
+            - name: Remove # These tend to introduce spam
               uses: dessant/reaction-comments@v2.2.0

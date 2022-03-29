@@ -13,18 +13,18 @@ concurrency:
 
 jobs:
     cron_reaction:
-        name: 🔍 Search for Reactions
+        name: Search for Reactions
         runs-on: ubuntu-latest
         timeout-minutes: 10
         steps:
-            - name: 😶 Remove reaction comments
+            - name: Remove reaction comments
               uses: dessant/reaction-comments@v2.2.0
     cron_lock:
-        name: 🔒 Lock threads
+        name: Lock threads
         runs-on: ubuntu-latest
         timeout-minutes: 10
         steps:
-            - name: ❌ Lock on inactivity # Prevent "necrobumps"
+            - name: Lock on inactivity # Prevent "necrobumps"
               uses: dessant/lock-threads@v3.0.0
               with:
                   issue-inactive-days: 7
