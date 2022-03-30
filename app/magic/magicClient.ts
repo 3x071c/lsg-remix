@@ -13,6 +13,6 @@ export default () =>
 		typeof window.env.MAGIC_KEY === "string" ? window.env.MAGIC_KEY : "",
 		{
 			locale: "de",
-			// testMode: window.env.NODE_ENV === "development",
+			testMode: window.env.NODE_ENV === "development",
 		},
 	));

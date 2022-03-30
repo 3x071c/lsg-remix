@@ -127,9 +127,8 @@ export default function Login(): JSX.Element {
 				<chakra.main p={8} rounded="md" bg={background}>
 					<Heading textAlign="center">Login</Heading>
 					<form
-						onSubmit={() => {
-							void onSubmit();
-						}}>
+						// eslint-disable-next-line @typescript-eslint/no-misused-promises -- Looks like the only way
+						onSubmit={onSubmit}>
 						<FormControl
 							isRequired
 							isInvalid={!!errors.email}

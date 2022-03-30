@@ -81,15 +81,19 @@ Install the dependencies of this project (you can open up a Terminal in VSCode w
 $ npm i
 ```
 
-Store an encryption key in `.env`. Make sure to keep it **secret**:
+Put some **secret** "environment" variables in `.env`:
 
 ```console
 # /.env
 CMS_AUTH_SECRET="<30-50 character random password>"
+MAGIC_KEY="pk_live_key"
+MAGIC_SECRET="sk_live_secret"
 ```
 
 > To securely generate a random password on your computer:  
 > (Linux/macOS) `openssl rand -base64 40`
+
+The `MAGIC_*` variables hold the public and private (secret) API keys for [Magic](https://magic.link), our chosen authentication solution. For local development, Magic runs in [Test Mode](https://magic.link/docs/introduction/test-mode), so it'll be easier to just use the dummy values from above.
 
 Spin up a local development server. It will automatically reflect changes in the code:
 

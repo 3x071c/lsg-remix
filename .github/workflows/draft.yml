@@ -22,4 +22,4 @@ jobs:
               with:
                   project: Development
                   column: In progress
-                  repo-token: ${{ secrets.GITHUB_TOKEN }}
+                  repo-token: ${{ secrets.WORKFLOW_TOKEN }}
