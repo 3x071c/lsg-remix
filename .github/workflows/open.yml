@@ -1,0 +1,49 @@
+# This workflow runs when a new Issue or Pull Request is opened
+name: Open
+
+on:
+    pull_request:
+        types:
+            - opened
+    issues:
+        types:
+            - opened
+            - transferred
+
+# Cancel previous instances of this workflow
+concurrency:
+    group: ${{ github.workflow }}-${{ github.head_ref || github.ref || github.run_id }}
+    cancel-in-progress: true
+
+jobs:
+    new_issue:
+        name: New Issue
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        steps:
+            - name: Add to To Do column
+              if: github.event_name == 'issues'
+              uses: alex-page/github-project-automation-plus@v0.8.1
+              with:
+                  project: Development
+                  column: To do
+                  repo-token: ${{ secrets.WORKFLOW_TOKEN }}
+    new_pr:
+        name: New PR
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        steps:
+            - name: Add to In Progress column
+              if: github.event_name == 'pull_request'
+              uses: alex-page/github-project-automation-plus@v0.8.1
+              with:
+                  project: Development
+                  column: In progress
+                  repo-token: ${{ secrets.WORKFLOW_TOKEN }}
+    new_stargazer:
+        name: Stargazing
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        steps:
+            - name: Close # if not opened by a stargazer
+              uses: uhyo/please-star-first@v1.0.1

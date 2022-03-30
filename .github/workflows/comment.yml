@@ -1,0 +1,18 @@
+# This workflow runs whenever somebody comments on an issue
+name: Comment
+
+on: issue_comment
+
+# Cancel previous instances of this workflow
+concurrency:
+    group: ${{ github.workflow }}-${{ github.head_ref || github.ref || github.run_id }}
+    cancel-in-progress: true
+
+jobs:
+    reaction_comment:
+        name: Reaction
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        steps:
+            - name: Remove # These tend to introduce spam
+              uses: dessant/reaction-comments@v2.2.0

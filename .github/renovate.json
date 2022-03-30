@@ -15,13 +15,36 @@
 	},
 	"packageRules": [
 		{
+			"extends": ["schedule:daily"],
 			"groupName": "all non-major dependencies",
-			"matchUpdateTypes": ["patch", "minor"],
-			"schedule": ["before 8am on Monday"]
+			"matchUpdateTypes": ["patch", "minor"]
 		},
 		{
 			"matchDepTypes": ["devDependencies"],
 			"prPriority": -1
+		},
+		{
+			"groupName": "Remix",
+			"matchPackageNames": ["remix"],
+			"matchPackagePrefixes": ["@remix-run/"]
+		},
+		{
+			"groupName": "React",
+			"matchPackageNames": [
+				"react",
+				"react-dom",
+				"@types/react",
+				"@types/react-dom"
+			]
+		},
+		{
+			"groupName": "SecretLint",
+			"matchPackageNames": ["secretlint"],
+			"matchPackagePrefixes": ["@secretlint/"]
+		},
+		{
+			"groupName": "TypeScript-ESLint",
+			"matchPackagePrefixes": ["@typescript-eslint/"]
 		}
 	],
 	"platformAutomerge": true,

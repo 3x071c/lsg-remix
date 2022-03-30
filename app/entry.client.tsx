@@ -3,7 +3,6 @@ import { PropsWithChildren, useMemo, useState } from "react";
 import { hydrate } from "react-dom";
 import { RemixBrowser } from "remix";
 import { createEmotionCache, EmotionClientContext } from "~app/emotion";
-import { RemountProvider } from "~app/remount";
 
 function ClientWrapper({ children }: PropsWithChildren<unknown>) {
 	const [cache, setCache] = useState(createEmotionCache());
@@ -16,11 +15,9 @@ function ClientWrapper({ children }: PropsWithChildren<unknown>) {
 	);
 
 	return (
-		<RemountProvider>
-			<EmotionClientContext.Provider value={ctx}>
-				<CacheProvider value={cache}>{children}</CacheProvider>
-			</EmotionClientContext.Provider>
-		</RemountProvider>
+		<EmotionClientContext.Provider value={ctx}>
+			<CacheProvider value={cache}>{children}</CacheProvider>
+		</EmotionClientContext.Provider>
 	);
 }
 

@@ -1,7 +1,7 @@
 import type { StyleSheet } from "@emotion/utils";
 import { Center, chakra, Heading, Text, Code } from "@chakra-ui/react";
 import { withEmotionCache } from "@emotion/react";
-import { memo, PropsWithChildren, useContext, useMemo } from "react";
+import { memo, PropsWithChildren, useContext, useEffect } from "react";
 import {
 	MetaFunction,
 	Links,
@@ -11,93 +11,119 @@ import {
 	Scripts,
 	ScrollRestoration,
 	useCatch,
+	LoaderFunction,
+	json,
+	useLoaderData,
 } from "remix";
 import { ColorModeManager, ColorModeToggle } from "~app/colormode";
 import { EmotionServerContext, EmotionClientContext } from "~app/emotion";
 import { LinkButton } from "~app/links";
-import { useOnRemount } from "~app/remount";
 
 export const meta: MetaFunction = () => {
 	return { title: "LSG" };
 };
 
+const getLoaderData = () => {
+	return {
+		env: {
+			MAGIC_KEY: global.env["MAGIC_KEY"],
+			NODE_ENV: global.env.NODE_ENV,
+		},
+	};
+};
+type LoaderData = ReturnType<typeof getLoaderData>;
+export const loader: LoaderFunction = () => json<LoaderData>(getLoaderData());
+
+declare global {
+	interface Window {
+		env: LoaderData["env"];
+	}
+}
+
 const Document = memo(
 	withEmotionCache(function InnerDocument(
-		{ children, title }: PropsWithChildren<{ title?: string }>,
+		{
+			children,
+			title,
+			env,
+		}: PropsWithChildren<{ title?: string; env?: LoaderData["env"] }>,
 		emotionCache,
 	) {
 		const emotionServerContext = useContext(EmotionServerContext);
 		const emotionClientContext = useContext(EmotionClientContext);
 
 		// Only executed on client, when Document is re-mounted (error boundary)
-		useOnRemount(
-			() => {
-				// re-link sheet container
-				// eslint-disable-next-line no-param-reassign
-				emotionCache.sheet.container = document.head;
+		useEffect(() => {
+			// re-link sheet container
+			// eslint-disable-next-line no-param-reassign
+			emotionCache.sheet.container = document.head;
 
-				// re-inject tags
-				const { tags } = emotionCache.sheet;
-				emotionCache.sheet.flush();
-				tags.forEach((tag) => {
-					// eslint-disable-next-line no-underscore-dangle -- External, Private API
-					(
-						emotionCache.sheet as unknown as {
-							_insertTag: (
-								tag: StyleSheet["tags"][number],
-							) => unknown;
-						}
-					)._insertTag(tag);
-				});
+			// re-inject tags
+			const { tags } = emotionCache.sheet;
+			emotionCache.sheet.flush();
+			tags.forEach((tag) => {
+				// eslint-disable-next-line no-underscore-dangle -- External, Private API
+				(
+					emotionCache.sheet as unknown as {
+						_insertTag: (
+							tag: StyleSheet["tags"][number],
+						) => unknown;
+					}
+				)._insertTag(tag);
+			});
 
-				// reset cache to re-apply global styles
-				return emotionClientContext?.reset();
-			},
-			[],
-			"Document",
-		);
+			// reset cache to re-apply global styles
+			return emotionClientContext?.reset();
+			// eslint-disable-next-line react-hooks/exhaustive-deps -- Only trigger on remount
+		}, []);
 
-		const child = useMemo(
-			() => (
-				<html lang="de">
-					<head>
-						{emotionServerContext?.map(({ key, ids, css }) => (
-							<style
-								key={key}
-								data-emotion={`${key} ${ids.join(" ")}`}
-								// eslint-disable-next-line react/no-danger
-								dangerouslySetInnerHTML={{ __html: css }}
-							/>
-						))}
-						<meta charSet="utf-8" />
-						<meta
-							name="viewport"
-							content="width=device-width,initial-scale=1"
+		return (
+			<html lang="de">
+				<head>
+					{emotionServerContext?.map(({ key, ids, css }) => (
+						<style
+							key={key}
+							data-emotion={`${key} ${ids.join(" ")}`}
+							// eslint-disable-next-line react/no-danger
+							dangerouslySetInnerHTML={{ __html: css }}
 						/>
-						{title ? <title>{title}</title> : null}
-						<Meta />
-						<Links />
-					</head>
-					<body>
-						<ColorModeManager>
-							<ColorModeToggle />
-							{children}
-						</ColorModeManager>
-						<ScrollRestoration />
-						<Scripts />
-						<LiveReload />
-					</body>
-				</html>
-			),
-			[emotionServerContext, title, children],
+					))}
+					<meta charSet="utf-8" />
+					<meta
+						name="viewport"
+						content="width=device-width,initial-scale=1"
+					/>
+					{title ? <title>{title}</title> : null}
+					<Meta />
+					<Links />
+				</head>
+				<body>
+					<ColorModeManager>
+						<ColorModeToggle />
+						{children}
+					</ColorModeManager>
+					<ScrollRestoration />
+					<Scripts />
+					<LiveReload />
+					{env && (
+						<script
+							// eslint-disable-next-line react/no-danger
+							dangerouslySetInnerHTML={{
+								__html: `window.env = ${JSON.stringify(env)}`,
+							}}
+						/>
+					)}
+				</body>
+			</html>
 		);
-		return child;
 	}),
 );
 
 export default function App(): JSX.Element {
+	const { env } = useLoaderData<LoaderData>();
+
 	return (
-		<Document>
+		<Document env={env}>
 			<Outlet />
 		</Document>
 	);
@@ -119,14 +145,14 @@ export function CatchBoundary(): JSX.Element {
 	return (
 		<Document title={`${status} | LSG`}>
 			<Center minW="100vw" minH="100vh">
-				<chakra.main maxW="90%" py={8} textAlign="center">
+				<chakra.main p={2} textAlign="center">
 					<Heading as="h1" size="xl">
 						{statusText}
 					</Heading>
 					<Text fontSize="md">
 						Houston, we&apos;ve had a {status}
 					</Text>
-					<Text my={2} fontSize="sm">
+					<Text maxW="lg" my={2} fontSize="sm">
 						{message}
 					</Text>
 					<LinkButton href="/" variant="link">
@@ -146,14 +172,19 @@ export function ErrorBoundary({
 	return (
 		<Document title={`${name} | LSG`}>
 			<Center minW="100vw" minH="100vh">
-				<chakra.main maxW="90%" py={8} textAlign="center">
+				<chakra.main p={2} textAlign="center">
 					<Heading as="h1" size="xl">
 						{name}
 					</Heading>
 					<Text fontSize="md">
 						Ein kritischer Fehler ist aufgetreten.
 					</Text>
-					<Code d="block" my={2} colorScheme="red" fontSize="sm">
+					<Code
+						d="block"
+						maxW="lg"
+						my={2}
+						colorScheme="red"
+						fontSize="sm">
 						{message}
 					</Code>
 					<LinkButton href="/" variant="link">
