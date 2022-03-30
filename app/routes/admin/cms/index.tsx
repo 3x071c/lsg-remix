@@ -3,15 +3,13 @@ import { json, LoaderFunction, useLoaderData } from "remix";
 import { authorize } from "~app/auth";
 import { users } from "~app/models";
 
-const getLoaderData = async (request: Request, env: AppLoadContextEnvType) => {
+const getLoaderData = async (request: Request) => {
 	const { uuid } = await authorize(request);
-	return users(env).getMany(uuid, ["firstname", "lastname"]);
+	return users().getMany(uuid, ["firstname", "lastname"]);
 };
 type LoaderData = Awaited<ReturnType<typeof getLoaderData>>;
-export const loader: LoaderFunction = async ({ request, context: { env } }) =>
-	json<LoaderData>(
-		await getLoaderData(request, env as AppLoadContextEnvType),
-	);
+export const loader: LoaderFunction = async ({ request }) =>
+	json<LoaderData>(await getLoaderData(request));
 
 export default function Index(): JSX.Element {
 	const { firstname, lastname } = useLoaderData<LoaderData>();
@@ -25,4 +23,4 @@ export default function Index(): JSX.Element {
 	);
 }
 
-export const url = "/cms";
+export const url = "/admin/cms";

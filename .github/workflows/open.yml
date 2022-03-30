@@ -27,7 +27,7 @@ jobs:
               with:
                   project: Development
                   column: To do
-                  repo-token: ${{ secrets.GITHUB_TOKEN }}
+                  repo-token: ${{ secrets.WORKFLOW_TOKEN }}
     new_pr:
         name: New PR
         runs-on: ubuntu-latest
@@ -39,7 +39,7 @@ jobs:
               with:
                   project: Development
                   column: In progress
-                  repo-token: ${{ secrets.GITHUB_TOKEN }}
+                  repo-token: ${{ secrets.WORKFLOW_TOKEN }}
     new_stargazer:
         name: Stargazing
         runs-on: ubuntu-latest

@@ -4,7 +4,14 @@ import * as build from "@remix-run/dev/server-build";
 
 const handleRequest = createPagesFunctionHandler({
 	build,
-	getLoadContext: (context) => context,
+	getLoadContext: (context) => {
+		global.env = {
+			/* drop-in replacement for process.env on CF Page Functions */
+			...context.env,
+			NODE_ENV: process.env.NODE_ENV,
+		};
+		return context;
+	},
 	mode: process.env.NODE_ENV,
 });
 

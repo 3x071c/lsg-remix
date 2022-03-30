@@ -1,19 +1,19 @@
 import { redirect } from "remix";
-import { url as loginURL } from "~routes/cms/login";
-import { sessionStorage } from "./session.server";
+import { url as loginURL } from "~routes/admin/login";
+import { cmsAuthSessionStorage } from "./session.server";
 /**
  * Logs the user out by purging his data
  * @param request The incoming request
  * @returns Redirects to the login
  */
 export async function logout(request: Request): Promise<Response> {
-	const session = await sessionStorage.getSession(
+	const session = await cmsAuthSessionStorage().getSession(
 		request.headers.get("Cookie"),
 	);
 
 	return redirect(loginURL, {
 		headers: {
-			"Set-Cookie": await sessionStorage.destroySession(session),
+			"Set-Cookie": await cmsAuthSessionStorage().destroySession(session),
 		},
 	});
 }

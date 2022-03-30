@@ -1,5 +1,7 @@
 /* eslint-disable no-param-reassign, import/no-extraneous-dependencies */
-const { resolve } = require("node:path");
+const { resolve } = require("path");
+const GlobalsPolyfills =
+	require("@esbuild-plugins/node-globals-polyfill").default;
 const alias = require("esbuild-plugin-alias");
 
 const { withEsbuildOverride } = require("remix-esbuild-override");
@@ -12,9 +14,14 @@ const { withEsbuildOverride } = require("remix-esbuild-override");
  * @return {EsbuildOption} - You must return the updated option
  */
 withEsbuildOverride((option, { isServer }) => {
+	if (isServer) option.mainFields = ["browser", "module", "main"];
+
 	option.jsxFactory = "jsx";
 	option.inject = [resolve("reactShims.ts")];
 	option.plugins = [
+		GlobalsPolyfills({
+			buffer: true,
+		}),
 		alias({
 			"html-tokenize": require.resolve("no-op"),
 			multipipe: require.resolve("no-op"),
@@ -22,7 +29,6 @@ withEsbuildOverride((option, { isServer }) => {
 		}),
 		...option.plugins,
 	];
-	if (isServer) option.mainFields = ["browser", "module", "main"];
 
 	return option;
 });

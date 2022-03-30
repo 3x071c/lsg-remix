@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { magicClient } from "~app/magic";
-import { url as authURL } from "~routes/cms/auth";
+import { url as authURL } from "~routes/admin/auth";
 
 export function useLogin() {
 	const [loading, setLoading] = useState(true);
@@ -22,12 +22,26 @@ export function useLogin() {
 					setData(token);
 				} catch (e) {
 					setError(e);
+				} finally {
+					setLoading(false);
 				}
-				setLoading(false);
 			}
 		},
 		[data, loading],
 	);
+
+	const logout = useCallback(async () => {
+		if (!loading && (await magicClient().user.isLoggedIn())) {
+			setLoading(true);
+			try {
+				await magicClient().user.logout();
+				setError(null);
+				setData(null);
+			} finally {
+				setLoading(false);
+			}
+		}
+	}, [loading]);
 
 	useEffect(() => {
 		const callback = async () => {
@@ -39,13 +53,14 @@ export function useLogin() {
 				}
 			} catch (e) {
 				setError(e);
+			} finally {
+				setLoading(false);
 			}
-			setLoading(false);
 		};
 		void callback();
 	}, []);
 
-	return { data, error, loading, login, setLoading };
+	return { data, error, loading, login, logout };
 }
 
 /**
@@ -64,8 +79,9 @@ export function useAuthCallback() {
 				setData(token);
 			} catch (e) {
 				setError(e);
+			} finally {
+				setLoading(false);
 			}
-			setLoading(false);
 		};
 		void callback();
 	}, []);
