@@ -158,12 +158,9 @@ export default function Login(): JSX.Element {
 						<Input
 							id="email"
 							type="email"
-							pattern="^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
 							placeholder="ich@lsg.muenchen.musin.de"
 							variant="filled"
 							{...register("email", {
-								pattern:
-									/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
 								required: true,
 							})}
 						/>
