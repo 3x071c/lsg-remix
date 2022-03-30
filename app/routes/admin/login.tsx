@@ -150,7 +150,7 @@ export default function Login(): JSX.Element {
 					<FormControl
 						isRequired
 						isInvalid={!!errors.email}
-						mt={3}
+						mt={4}
 						isDisabled={loading || isSubmitting}>
 						<FormLabel htmlFor="email">
 							Ihre E-Mail-Adresse
@@ -180,7 +180,7 @@ export default function Login(): JSX.Element {
 					<Button
 						type="submit"
 						w="full"
-						mt={2}
+						mt={8}
 						isLoading={loading || isSubmitting}>
 						Anmelden
 					</Button>
