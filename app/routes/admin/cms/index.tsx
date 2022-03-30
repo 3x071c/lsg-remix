@@ -1,4 +1,4 @@
-import { Center, Heading } from "@chakra-ui/react";
+import { Center, Heading, Wrap, WrapItem } from "@chakra-ui/react";
 import { json, LoaderFunction, useLoaderData } from "remix";
 import { authorize } from "~app/auth";
 import { Nav } from "~app/cms";
@@ -16,14 +16,18 @@ export default function Index(): JSX.Element {
 	const { firstname, lastname } = useLoaderData<LoaderData>();
 
 	return (
-		<>
-			<Nav fullName={`${firstname} ${lastname}`} />
-			<Center minH="100%" minW="100%">
-				<Heading m={2}>
-					Hallo {firstname} {lastname} 👋
-				</Heading>
-			</Center>
-		</>
+		<Wrap maxW="100%">
+			<WrapItem flex="none">
+				<Nav fullName={`${firstname} ${lastname}`} />
+			</WrapItem>
+			<WrapItem flex="1 1 auto">
+				<Center h="full">
+					<Heading m={2}>
+						Hallo {firstname} {lastname} 👋
+					</Heading>
+				</Center>
+			</WrapItem>
+		</Wrap>
 	);
 }
 
