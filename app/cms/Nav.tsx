@@ -13,10 +13,12 @@ import { LinkButton } from "~app/links";
 import { url as cmsUrl } from "~routes/admin/cms/index";
 
 export default function CmsNavbar({ fullName }: { fullName: string }) {
+	const bg = useColorModeValue("gray.200", "gray.700");
+
 	return (
 		<VStack
 			pos="sticky"
-			bg={useColorModeValue("gray.200", "gray.700")}
+			bg={bg}
 			h="100vh"
 			direction="column"
 			alignItems="stretch"
