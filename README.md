@@ -16,16 +16,21 @@
   <a href="#license">License</a>
 </p>
 
-> Looking for the old version using Next.js with a fully loaded Apollo+Nexus GraphQL stack? It's gone now. ([archive](https://github.com/3x071c/lsg/tree/7c377cdef5baddd9dcf5f49985325081f31159e3))
+> Looking for the old version using Next.js with a fully loaded Apollo+Nexus+Prisma GraphQL stack? It's gone now. ([archive](https://github.com/3x071c/lsg/tree/7c377cdef5baddd9dcf5f49985325081f31159e3))
 
 ## Introduction
 
 👋 Hey!  
-You're looking at the source code behind the new [Louise-Schroeder-Gymnasium website](https://lsg.musin.de/) right now! 🤯 It houses a full-stack [Remix](https://remix.run/) application, loaded with TypeScript, Cloudflare Workers and [a bunch of other goodies](#tech-stack). It's not out yet, but we're working on it. Wanna help out? 😇 See how to [get started](#get-started), take a look at the [tech stack](#tech-stack), or dig straight into the [documentation](#documentation). 👀
+You're looking at the source code behind the new [Louise-Schroeder-Gymnasium website](https://lsg.musin.de/) right now! 🤯 It houses a full-stack [Remix](https://remix.run/) application, loaded with TypeScript, Cloudflare Pages and [a bunch of other goodies](#tech-stack). It's not out yet, but we're working on it. Wanna help out? 😇 See how to [get started](#get-started), take a look at the [tech stack](#tech-stack), or dig straight into the [documentation](#documentation). 👀
 
 ## Public Money, Public Code
 
 [**Why is software created using taxpayer money, written for the public sector, existing solely to serve the public, not released in the public?**](https://www.fsf.org) Too often government spends a considerable amount of money on software which is outdated by the time it arrives, not maintained appropriately, contains serious bugs and/or ultimately can't be trusted to respect the security and privacy of the people who paid for it. That's why this project is licensed under the [**GNU Affero General Public License**](https://www.gnu.org/licenses/agpl-3.0.html). We believe that code written for the public sector should be free and open for the public to run, study, copy, change, distribute and improve. [**If it is public money, it should be public code as well.**](https://publiccode.eu) 💰
+
+## Quickstart
+
+Impatient? Spin up a GitPod environment in seconds and you're good to go:  
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/3x071c/lsg)
 
 ## Get Started 💨
 
@@ -81,7 +86,7 @@ Install the dependencies of this project (you can open up a Terminal in VSCode w
 $ npm i
 ```
 
-Put some **secret** "environment" variables in `.env`:
+Create a `.env` file, containing static key-value pairs for environment-specific configuration. The `.env.example` file serves as a good starting point:
 
 ```console
 # /.env
@@ -93,7 +98,7 @@ MAGIC_SECRET="sk_live_secret"
 > To securely generate a random password on your computer:  
 > (Linux/macOS) `openssl rand -base64 40`
 
-The `MAGIC_*` variables hold the public and private (secret) API keys for [Magic](https://magic.link), our chosen authentication solution. For local development, Magic runs in [Test Mode](https://magic.link/docs/introduction/test-mode), so it'll be easier to just use the dummy values from above.
+The `MAGIC_*` variables hold the public and private (secret) API keys for [Magic](https://magic.link), our chosen authentication solution. For local development, Magic runs in [Test Mode](https://magic.link/docs/introduction/test-mode). If you need to work on anything that involves authentication, you will need to use valid API keys instead of the dummy values above. Either create your own Magic account and app, or request access to our team, and fill in the values from the dashboard.
 
 Spin up a local development server. It will automatically reflect changes in the code:
 
@@ -229,8 +234,8 @@ See [Contributing](CONTRIBUTING.md)
 -   [Chakra UI](https://chakra-ui.com) - React component framework
 -   [Emotion](https://emotion.sh) - CSS-in-JS library used by Chakra UI
 -   [Lodash](https://lodash.com) - Utility functions
--   [Cloudflare Workers](https://workers.cloudflare.com/) - Serverless Functions
 -   [Cloudflare Pages](https://pages.cloudflare.com/) - Continuous Deployment
+-   Cloudflare KV and Workers - Dynamic [Functions](https://developers.cloudflare.com/pages/platform/functions/) and low-latency, cached, eventually consistent datastore
 
 ## License
 

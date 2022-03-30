@@ -11,10 +11,10 @@ const handler =
 		friendly: string,
 		model: ZodObject<R>,
 	) =>
-	(env: AppLoadContextEnvType) => {
-		if (!env[binding])
+	() => {
+		if (!global.env[binding])
 			throw new Error(`Zugriff auf ${friendly} aktuell nicht möglich`);
-		const ctx = env[binding]!;
+		const ctx = global.env[binding]!;
 		if (typeof ctx === "string")
 			throw new Error(`${friendly} aktuell falsch`);
 

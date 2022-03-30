@@ -5,11 +5,9 @@ import { pages, pageGroups } from "~app/models";
 import { Navbar } from "~app/nav";
 import { fromEntries } from "~app/util";
 
-const getLoaderData = async (env: AppLoadContextEnvType) => {
-	const pageGroupEnv = pageGroups(env);
-	const pageEnv = pages(env);
-	const { data: pageGroupNames } = await pageGroupEnv.listValues("name");
-	const { data: pageTitles } = await pageEnv.listValues("title");
+const getLoaderData = async () => {
+	const { data: pageGroupNames } = await pageGroups().listValues("name");
+	const { data: pageTitles } = await pages().listValues("title");
 
 	const groupedPages = fromEntries<{
 		[groupUUID: string]: {
@@ -31,7 +29,7 @@ const getLoaderData = async (env: AppLoadContextEnvType) => {
 	);
 	await Promise.all(
 		pageTitles.map(async ({ value: title, uuid }) => {
-			const { groupRef } = await pageEnv.getMany(uuid, ["groupRef"]);
+			const { groupRef } = await pages().getMany(uuid, ["groupRef"]);
 			const group = groupedPages[groupRef];
 			if (!group)
 				throw new Error(`Dangling groupRef (${groupRef}) in ${uuid}`);
@@ -47,8 +45,8 @@ const getLoaderData = async (env: AppLoadContextEnvType) => {
 	};
 };
 type LoaderData = Awaited<ReturnType<typeof getLoaderData>>;
-export const loader: LoaderFunction = async ({ context: { env } }) =>
-	json<LoaderData>(await getLoaderData(env as AppLoadContextEnvType));
+export const loader: LoaderFunction = async () =>
+	json<LoaderData>(await getLoaderData());
 
 export default function Index(): JSX.Element {
 	const { groupedPages } = useLoaderData<LoaderData>();

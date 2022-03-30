@@ -1,9 +1,8 @@
 import { redirect } from "remix";
 import { User } from "~app/models";
 import { fromEntries } from "~app/util";
-import { url as loginURL } from "~routes/cms/login";
-// import { logout } from "./authentication.server";
-import { sessionStorage } from "./session.server";
+import { url as loginURL } from "~routes/admin/login";
+import { cmsAuthSessionStorage } from "./session.server";
 
 /**
  * Authorize an incoming request by checking the session data and returning it
@@ -22,7 +21,7 @@ export async function authorize<
 	User | (O extends { required: false } ? undefined : Record<string, never>)
 > {
 	const required = options?.required ?? true;
-	const session = await sessionStorage.getSession(
+	const session = await cmsAuthSessionStorage().getSession(
 		request.headers.get("Cookie"),
 	);
 

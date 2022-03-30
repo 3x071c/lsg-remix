@@ -1,27 +1,36 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment -- FEEL THE POWER */
-import { createCookieSessionStorage } from "remix";
+import { createCookieSessionStorage, SessionStorage } from "remix";
 
-let CMS_AUTH_SECRET: string;
-
-export const setSessionEnv = (env: AppLoadContextEnvType) => {
-	CMS_AUTH_SECRET = env["CMS_AUTH_SECRET"] as string;
-};
+declare global {
+	// eslint-disable-next-line vars-on-top, no-var
+	var cmsAuthSessionStorage: SessionStorage | undefined;
+}
 
 /**
  * A session cookie to store insensitive data in.
  * 🚨 This is only signed, not encrypted. The client can't falsify the value, **but it can be read out!** 🚨
  */
-export const sessionStorage = createCookieSessionStorage({
-	cookie: {
-		httpOnly: true,
-		maxAge: 604800,
-		name: "cms_auth",
-		path: "/",
-		// @ts-ignore
-		sameSite: process.env.NODE_ENV !== "development" ? "strict" : "none",
-		// @ts-ignore
-		secrets: [CMS_AUTH_SECRET],
-		// @ts-ignore
-		secure: process.env.NODE_ENV !== "development",
-	},
-});
+export const cmsAuthSessionStorage = () =>
+	global.cmsAuthSessionStorage ||
+	(() => {
+		const { CMS_AUTH_SECRET } = global.env;
+
+		if (!CMS_AUTH_SECRET || typeof CMS_AUTH_SECRET !== "string") {
+			throw new Error(
+				"API Authorization secret is undefined, server can't handle requests at the moment.",
+			);
+		}
+
+		// eslint-disable-next-line no-return-assign
+		return (global.cmsAuthSessionStorage = createCookieSessionStorage({
+			cookie: {
+				httpOnly: true,
+				maxAge: 604800,
+				name: "cms_auth",
+				path: "/",
+				sameSite:
+					global.env.NODE_ENV !== "development" ? "strict" : "none",
+				secrets: [CMS_AUTH_SECRET],
+				secure: global.env.NODE_ENV !== "development",
+			},
+		}));
+	})();

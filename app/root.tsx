@@ -18,27 +18,21 @@ import {
 import { ColorModeManager, ColorModeToggle } from "~app/colormode";
 import { EmotionServerContext, EmotionClientContext } from "~app/emotion";
 import { LinkButton } from "~app/links";
-import { setSessionEnv } from "./auth";
 
 export const meta: MetaFunction = () => {
 	return { title: "LSG" };
 };
 
-const getLoaderData = (env: AppLoadContextEnvType) => {
-	setSessionEnv(env);
-
+const getLoaderData = () => {
 	return {
 		env: {
-			MAGIC_KEY: env["MAGIC_KEY"],
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Remix replaces only the literal 'process.env.NODE_ENV' with the hard-coded value at build time
-			// @ts-ignore
-			NODE_ENV: process.env.NODE_ENV,
+			MAGIC_KEY: global.env["MAGIC_KEY"],
+			NODE_ENV: global.env.NODE_ENV,
 		},
 	};
 };
 type LoaderData = ReturnType<typeof getLoaderData>;
-export const loader: LoaderFunction = ({ context: { env } }) =>
-	json<LoaderData>(getLoaderData(env as AppLoadContextEnvType));
+export const loader: LoaderFunction = () => json<LoaderData>(getLoaderData());
 
 declare global {
 	interface Window {
@@ -151,14 +145,14 @@ export function CatchBoundary(): JSX.Element {
 	return (
 		<Document title={`${status} | LSG`}>
 			<Center minW="100vw" minH="100vh">
-				<chakra.main maxW="90%" py={8} textAlign="center">
+				<chakra.main p={2} textAlign="center">
 					<Heading as="h1" size="xl">
 						{statusText}
 					</Heading>
 					<Text fontSize="md">
 						Houston, we&apos;ve had a {status}
 					</Text>
-					<Text my={2} fontSize="sm">
+					<Text maxW="lg" my={2} fontSize="sm">
 						{message}
 					</Text>
 					<LinkButton href="/" variant="link">
@@ -178,14 +172,19 @@ export function ErrorBoundary({
 	return (
 		<Document title={`${name} | LSG`}>
 			<Center minW="100vw" minH="100vh">
-				<chakra.main maxW="90%" py={8} textAlign="center">
+				<chakra.main p={2} textAlign="center">
 					<Heading as="h1" size="xl">
 						{name}
 					</Heading>
 					<Text fontSize="md">
 						Ein kritischer Fehler ist aufgetreten.
 					</Text>
-					<Code d="block" my={2} colorScheme="red" fontSize="sm">
+					<Code
+						d="block"
+						maxW="lg"
+						my={2}
+						colorScheme="red"
+						fontSize="sm">
 						{message}
 					</Code>
 					<LinkButton href="/" variant="link">
