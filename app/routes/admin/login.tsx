@@ -13,57 +13,32 @@ import {
 	useToast,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
-import { ActionFunction, redirect, Form, useTransition } from "remix";
-import { useLogin, cmsAuthSessionStorage } from "~app/auth";
-import { magicServer } from "~app/magic";
-import { users, User } from "~app/models";
-import { entries } from "~app/util";
-import { url as cmsURL } from "~routes/admin";
+import {
+	ActionFunction,
+	Form,
+	useTransition,
+	redirect,
+	LoaderFunction,
+	json,
+} from "remix";
+import { useLogin, login as authenticate, authorize } from "~app/auth";
+import { url as adminURL } from "~routes/admin";
 
 const ChakraForm = chakra(Form);
+
+const getLoaderData = async (request: Request) => {
+	if (await authorize(request, { required: false })) throw redirect(adminURL);
+	return {};
+};
+type LoaderData = Awaited<ReturnType<typeof getLoaderData>>;
+export const loader: LoaderFunction = async ({ request }) =>
+	json<LoaderData>(await getLoaderData(request));
 
 export const action: ActionFunction = async ({ request }) => {
 	const form = await request.formData();
 	const didToken = form.get("_authorization");
-	if (!didToken || typeof didToken !== "string")
-		throw new Error(
-			"Authentifizierung aufgrund fehlendem Tokens fehlgeschlagen",
-		);
 
-	try {
-		magicServer().token.validate(
-			didToken,
-		); /* 🚨 Important: Make sure the token is valid and **hasn't expired**, before authorizing access to user data! */
-	} catch (e) {
-		throw new Error("Etwas stimmt mit ihrem Nutzer nicht");
-	}
-
-	const { issuer: did } = await magicServer().users.getMetadataByToken(
-		didToken,
-	);
-	if (!did) throw new Error("Dem Nutzer fehlen erforderliche Eigenschaften");
-	/* Get user UUID */
-	const didRecords = await users().listValues("did");
-	const uuids = didRecords.data
-		.map(({ uuid, value }) => (value === did ? uuid : false))
-		.filter(Boolean);
-	if (uuids.length > 1) throw new Error("Mehrere Nutzer auf einem Datensatz");
-
-	const uuid = uuids[0];
-	if (!uuid) throw redirect("/"); // @todo Redirect to onboarding page
-
-	const session = await cmsAuthSessionStorage().getSession(
-		request.headers.get("Cookie"),
-	);
-	entries(
-		User.parse(await users().getMany(uuid, ["firstname", "lastname"])),
-	).map(([k, v]) => session.set(k, v));
-
-	return redirect(cmsURL, {
-		headers: {
-			"Set-Cookie": await cmsAuthSessionStorage().commitSession(session),
-		},
-	});
+	return authenticate(request, didToken);
 };
 
 export default function Login(): JSX.Element {
@@ -71,7 +46,7 @@ export default function Login(): JSX.Element {
 	const transition = useTransition();
 	const toast = useToast();
 
-	const { loading, logout, data, login } = useLogin();
+	const { loading, logout, data: token, login } = useLogin();
 	const {
 		register,
 		handleSubmit,
@@ -89,7 +64,7 @@ export default function Login(): JSX.Element {
 		);
 	});
 
-	if (data) {
+	if (token) {
 		return (
 			<>
 				<Button
@@ -123,7 +98,7 @@ export default function Login(): JSX.Element {
 							<input
 								type="hidden"
 								name="_authorization"
-								value={data}
+								value={token}
 							/>
 							<Button
 								w="full"
