@@ -9,7 +9,17 @@ import {
 	Center,
 	CircularProgress,
 } from "@chakra-ui/react";
-import { useAuthCallback } from "~app/auth";
+import { json, LoaderFunction, redirect } from "remix";
+import { authorize, useAuthCallback } from "~app/auth";
+import { url as adminURL } from "~routes/admin";
+
+const getLoaderData = async (request: Request) => {
+	if (await authorize(request, { required: false })) throw redirect(adminURL);
+	return {};
+};
+type LoaderData = Awaited<ReturnType<typeof getLoaderData>>;
+export const loader: LoaderFunction = async ({ request }) =>
+	json<LoaderData>(await getLoaderData(request));
 
 export default function Callback(): JSX.Element {
 	const { data, error, loading } = useAuthCallback();
