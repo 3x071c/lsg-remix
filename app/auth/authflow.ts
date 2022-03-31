@@ -17,7 +17,7 @@ export function useLogin() {
 					const token = await magicClient().auth.loginWithMagicLink({
 						email,
 						redirectURI: `${window.location.origin}${authURL}`,
-						showUI: true, // TODO: Implement own UI
+						showUI: true, // @todo Implement own UI
 					});
 					setData(token);
 				} catch (e) {

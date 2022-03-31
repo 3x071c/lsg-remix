@@ -10,7 +10,7 @@ import {
 } from "~app/colormode";
 import { createEmotionCache, EmotionServerContext } from "~app/emotion";
 
-const cache = createEmotionCache(); // TODO Figure out if global style caching is a good idea
+const cache = createEmotionCache(); // @todo Figure out if global style caching is a good idea
 // eslint-disable-next-line @typescript-eslint/unbound-method
 const { extractCriticalToChunks } = createEmotionServer(cache);
 

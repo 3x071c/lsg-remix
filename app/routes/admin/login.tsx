@@ -50,7 +50,7 @@ export const action: ActionFunction = async ({ request }) => {
 	if (uuids.length > 1) throw new Error("Mehrere Nutzer auf einem Datensatz");
 
 	const uuid = uuids[0];
-	if (!uuid) throw redirect("/"); // TODO: Redirect to onboarding page
+	if (!uuid) throw redirect("/"); // @todo Redirect to onboarding page
 
 	const session = await cmsAuthSessionStorage().getSession(
 		request.headers.get("Cookie"),

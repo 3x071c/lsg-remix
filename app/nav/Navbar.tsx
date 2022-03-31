@@ -93,7 +93,7 @@ export default memo(function Navbar({
 				</HStack>
 				<Spacer />
 				{
-					// TODO Add cms indicator here
+					// @todo Add cms indicator here
 				}
 			</Flex>
 		</chakra.nav>
