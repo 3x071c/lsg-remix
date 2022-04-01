@@ -18,8 +18,13 @@
 	"language": "en,de",
 	"version": "0.2",
 	"words": [
+		"alex",
 		"chakra",
+		"codeql",
+		"deepakputhraya",
+		"dessant",
 		"esbuild",
+		"ethr",
 		"fira",
 		"gifs",
 		"homic",
@@ -27,17 +32,13 @@
 		"kodiak",
 		"monokai",
 		"musin",
+		"necrobumps",
 		"pacman",
 		"Strg",
 		"tsbuildinfo",
+		"uhyo",
 		"unstringify",
 		"uuids",
-		"zalgo",
-		"codeql",
-		"alex",
-		"uhyo",
-		"deepakputhraya",
-		"dessant",
-		"necrobumps"
+		"zalgo"
 	]
 }

@@ -21,17 +21,24 @@ export async function login(
 			"Authentifizierung aufgrund fehlendem Tokens fehlgeschlagen",
 		);
 
-	try {
-		magicServer().token.validate(
+	/* Get the DID of the user (in test mode during development, the token is invalid, so mock it instead) */
+	let did: string | null | undefined;
+	if (global.env.NODE_ENV !== "development") {
+		try {
+			magicServer().token.validate(
+				didToken,
+			); /* 🚨 Important: Make sure the token is valid and **hasn't expired**, before authorizing access to user data! */
+		} catch (e) {
+			throw new Error("Etwas stimmt mit ihrem Nutzer nicht");
+		}
+
+		({ issuer: did } = await magicServer().users.getMetadataByToken(
 			didToken,
-		); /* 🚨 Important: Make sure the token is valid and **hasn't expired**, before authorizing access to user data! */
-	} catch (e) {
-		throw new Error("Etwas stimmt mit ihrem Nutzer nicht");
+		));
+	} else {
+		did = `did:ethr:0x${"0".repeat(40)}`;
 	}
 
-	const { issuer: did } = await magicServer().users.getMetadataByToken(
-		didToken,
-	);
 	if (!did) throw new Error("Dem Nutzer fehlen erforderliche Eigenschaften");
 
 	/* Get user UUID */
