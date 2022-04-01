@@ -1,5 +1,14 @@
-import { LockIcon } from "@chakra-ui/icons";
-import { Center, Heading } from "@chakra-ui/react";
+import { LinkIcon, LockIcon } from "@chakra-ui/icons";
+import {
+	Heading,
+	Text,
+	SimpleGrid,
+	Box,
+	Badge,
+	Flex,
+	Button,
+	Container,
+} from "@chakra-ui/react";
 import { json, LoaderFunction, useLoaderData } from "remix";
 import { authorize } from "~app/auth";
 import { LinkButton } from "~app/links";
@@ -30,11 +39,45 @@ export default function Index(): JSX.Element {
 				rightIcon={<LockIcon />}>
 				Abmelden
 			</LinkButton>
-			<Center minW="100vw" minH="100vh">
+			<Container w="full" maxW="7xl" mx="auto" py={8} centerContent>
 				<Heading>
 					Hallo {firstname} {lastname} 👋
 				</Heading>
-			</Center>
+				<Text>Auf Dienste zugreifen:</Text>
+				<SimpleGrid
+					spacing="20px"
+					minChildWidth="200px"
+					mt={8}
+					mx="auto"
+					placeItems="center">
+					<Box p="5" borderWidth="1px" w="full">
+						<Flex align="baseline">
+							<Badge
+								borderRadius="full"
+								px="2"
+								colorScheme="teal">
+								Dienst
+							</Badge>
+						</Flex>
+						<Text
+							my={2}
+							fontSize="xl"
+							fontWeight="bold"
+							lineHeight="tight"
+							isTruncated>
+							Content Management System
+						</Text>
+						<Flex justifyContent="flex-end">
+							<Button
+								size="xs"
+								variant="outline"
+								rightIcon={<LinkIcon />}>
+								Besuchen
+							</Button>
+						</Flex>
+					</Box>
+				</SimpleGrid>
+			</Container>
 		</>
 	);
 }
