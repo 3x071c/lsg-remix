@@ -71,47 +71,76 @@ const handler =
 				);
 				return this._validateModel({ ...data, uuid } as M);
 			},
-			async get<T extends keyof Omit<M, "uuid">>(
+			async get<
+				T extends keyof Omit<M, "uuid">,
+				O extends Pick<KVNamespaceGetOptions<"json">, "cacheTtl"> & {
+					required?: boolean;
+				},
+			>(
 				uuid: M["uuid"],
 				field: T,
-				cache = 3600,
-			): Promise<M[T]> {
+				options?: O,
+			): Promise<
+				O extends { required: false } ? M[T] | undefined : M[T]
+			> {
+				const cacheTtl = options?.cacheTtl ?? 3600;
+				const required = options?.required ?? true;
+
 				const value = await ctx.get<{ superjson?: SuperJSONResult }>(
 					this._constructKey(uuid, field),
 					{
-						cacheTtl: cache,
+						cacheTtl,
 						type: "json",
 					},
 				);
-				if (!value?.superjson)
-					throw new Error("[_handler] Unerwarteter Feldwert");
+				if (!value?.superjson) {
+					if (required)
+						throw new Error("[_handler] Unerwarteter Feldwert");
+					return undefined as O extends { required: false }
+						? M[T] | undefined
+						: M[T];
+				}
+
 				return this._validateValue(
 					field,
 					superjson.deserialize(value.superjson),
 				);
 			},
-			async getMany<T extends keyof Omit<M, "uuid">>(
+			async getMany<
+				T extends keyof Omit<M, "uuid">,
+				O extends Pick<KVNamespaceGetOptions<"json">, "cacheTtl"> & {
+					required?: boolean;
+				},
+			>(
 				uuid: M["uuid"],
 				fields: T[],
-				cache = 3600,
-			) {
+				options?: O,
+			): Promise<{
+				[field in typeof fields[number]]: O extends { required: false }
+					? M[field] | undefined
+					: M[field];
+			}> {
 				return fromEntries<{
-					[field in typeof fields[number]]: M[field];
+					[field in typeof fields[number]]: O extends {
+						required: false;
+					}
+						? M[field] | undefined
+						: M[field];
 				}>(
 					await Promise.all(
 						fields.map(async (field) => [
 							field,
-							await this.get(uuid, field, cache),
+							await this.get(uuid, field, options),
 						]),
 					),
 				);
 			},
-			async list<T extends keyof Omit<M, "uuid">>(
-				field: T,
-				options?: Pick<KVNamespaceListOptions, "cursor" | "limit"> & {
+			async list<
+				T extends keyof Omit<M, "uuid">,
+				O extends Pick<KVNamespaceListOptions, "cursor" | "limit"> & {
 					required?: boolean;
 				},
-			) {
+			>(field: T, options?: O) {
 				const prefix = this._constructKey("", field, false);
 				const required = options?.required ?? !options?.limit;
 				const {
@@ -135,13 +164,13 @@ const handler =
 					listComplete,
 				};
 			},
-			async listValues<T extends keyof Omit<M, "uuid">>(
-				field: T,
-				options?: Pick<KVNamespaceListOptions, "cursor" | "limit"> & {
-					cache?: number;
-					required?: boolean;
-				},
-			) {
+			async listValues<
+				T extends keyof Omit<M, "uuid">,
+				O extends Pick<KVNamespaceListOptions, "cursor" | "limit"> &
+					Pick<KVNamespaceGetOptions<"json">, "cacheTtl"> & {
+						required?: boolean;
+					},
+			>(field: T, options?: O) {
 				const {
 					cursor,
 					data: keys,
@@ -155,7 +184,7 @@ const handler =
 					keys.map(async ({ uuid, ...rest }) => ({
 						...rest,
 						uuid,
-						value: await this.get(uuid, field, options?.cache),
+						value: await this.get(uuid, field, options),
 					})),
 				);
 				return {

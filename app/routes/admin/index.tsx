@@ -6,13 +6,13 @@ import {
 	Box,
 	Badge,
 	Flex,
-	Button,
 	Container,
 } from "@chakra-ui/react";
 import { json, LoaderFunction, useLoaderData } from "remix";
 import { authorize } from "~app/auth";
 import { LinkButton } from "~app/links";
 import { users } from "~app/models";
+import { url as cmsURL } from "~routes/admin/cms";
 import { url as logoutURL } from "~routes/admin/logout";
 
 const getLoaderData = async (request: Request) => {
@@ -68,12 +68,13 @@ export default function Index(): JSX.Element {
 							Content Management System
 						</Text>
 						<Flex justifyContent="flex-end">
-							<Button
+							<LinkButton
+								href={cmsURL}
 								size="xs"
 								variant="outline"
 								rightIcon={<LinkIcon />}>
 								Besuchen
-							</Button>
+							</LinkButton>
 						</Flex>
 					</Box>
 				</SimpleGrid>
