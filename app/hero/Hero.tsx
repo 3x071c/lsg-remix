@@ -20,6 +20,7 @@ export default memo(function Hero() {
 			<WrapItem flex="1 1 0" minW="270px">
 				<Box d="flex" boxShadow="2xl" borderRadius="2xl">
 					<Image
+						fallbackSrc="https://via.placeholder.com/600x400"
 						src={backgroundImage}
 						alt="Louise-Schroeder-Gymnasium Außenansicht"
 						borderRadius="2xl"
