@@ -1,7 +1,6 @@
 /* eslint-disable sort-keys */
 import { Box, Image as ChakraImage, ImageProps } from "@chakra-ui/react";
 import useNativeLazyLoading from "@charlietango/use-native-lazy-loading";
-import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { entries } from "~app/util";
 
@@ -39,7 +38,6 @@ export default function Image({
 	id: string;
 	avatar?: boolean;
 }): JSX.Element {
-	const [isVisible, setIsVisible] = useState(false);
 	const supportsLazyLoading = useNativeLazyLoading();
 	const { ref, inView } = useInView({
 		fallbackInView: true,
@@ -60,17 +58,6 @@ export default function Image({
 	const max = maxData.length > 0 ? Math.max(...maxData) : undefined;
 	const { onLoad, onError, crossOrigin, alt, ...boxProps } = props;
 
-	useEffect(() => {
-		// eslint-disable-next-line no-console -- don't complain when I commit this
-		console.log(inView);
-	}, [inView]);
-
-	useEffect(() => {
-		setTimeout(() => {
-			setIsVisible(true);
-		}, 5000);
-	});
-
 	return (
 		<Box {...boxProps} ref={ref} pos="relative">
 			<ChakraImage
@@ -85,25 +72,27 @@ export default function Image({
 				filter="auto"
 				blur="1px"
 			/>
-			{isVisible && (
-				<ChakraImage
-					{...props}
-					ignoreFallback
-					pos="absolute"
-					inset={0}
-					transform="auto"
-					scale={1.01}
-					loading={priority ? "eager" : "lazy"}
-					srcSet={entries(VARIANTS)
-						.map(([k, v]) => {
-							if (v > (max ?? NaN)) return false;
-							return `${src(id, k)} ${v}w`;
-						})
-						.filter(Boolean)
-						.join(",\n")}
-					src={src(id, "public")}
-				/>
-			)}
+			{inView ||
+				supportsLazyLoading ||
+				(priority && (
+					<ChakraImage
+						{...props}
+						ignoreFallback
+						pos="absolute"
+						inset={0}
+						transform="auto"
+						scale={1.01}
+						loading={priority ? "eager" : "lazy"}
+						srcSet={entries(VARIANTS)
+							.map(([k, v]) => {
+								if (v > (max ?? NaN)) return false;
+								return `${src(id, k)} ${v}w`;
+							})
+							.filter(Boolean)
+							.join(",\n")}
+						src={src(id, "public")}
+					/>
+				))}
 			<noscript>
 				<ChakraImage
 					{...props}
