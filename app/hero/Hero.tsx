@@ -23,6 +23,7 @@ export default memo(function Hero() {
 						alt="Louise-Schroeder-Gymnasium Außenansicht"
 						borderRadius="2xl"
 						sizes="(max-width: 600px) 100vw, 50vw"
+						priority
 					/>
 				</Box>
 			</WrapItem>

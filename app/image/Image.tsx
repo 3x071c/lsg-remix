@@ -72,27 +72,25 @@ export default function Image({
 				filter="auto"
 				blur="1px"
 			/>
-			{inView ||
-				supportsLazyLoading ||
-				(priority && (
-					<ChakraImage
-						{...props}
-						ignoreFallback
-						pos="absolute"
-						inset={0}
-						transform="auto"
-						scale={1.01}
-						loading={priority ? "eager" : "lazy"}
-						srcSet={entries(VARIANTS)
-							.map(([k, v]) => {
-								if (v > (max ?? NaN)) return false;
-								return `${src(id, k)} ${v}w`;
-							})
-							.filter(Boolean)
-							.join(",\n")}
-						src={src(id, "public")}
-					/>
-				))}
+			{(inView || supportsLazyLoading || priority) && (
+				<ChakraImage
+					{...props}
+					ignoreFallback
+					pos="absolute"
+					inset={0}
+					transform="auto"
+					scale={1.01}
+					loading={priority ? "eager" : "lazy"}
+					srcSet={entries(VARIANTS)
+						.map(([k, v]) => {
+							if (v > (max ?? NaN)) return false;
+							return `${src(id, k)} ${v}w`;
+						})
+						.filter(Boolean)
+						.join(",\n")}
+					src={src(id, "public")}
+				/>
+			)}
 			<noscript>
 				<ChakraImage
 					{...props}
