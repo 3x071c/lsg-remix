@@ -32,9 +32,7 @@ type NavbarProps = {
 		};
 	};
 };
-export default memo(function Navbar({
-	groupedPages,
-}: NavbarProps): JSX.Element {
+export default memo(function Nav({ groupedPages }: NavbarProps): JSX.Element {
 	const theme = useTheme();
 	const popoverContentBackdropBg = useColorModeValue(
 		"whiteAlpha.900",

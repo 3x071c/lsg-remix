@@ -1,6 +1,6 @@
 import { Center, CircularProgress } from "@chakra-ui/react";
 import { useEffect } from "react";
-import { json, LoaderFunction } from "remix";
+import { json, LoaderFunction, useNavigate } from "remix";
 import { authorize, logout as invalidate, useLogin } from "~app/auth";
 
 const getLoaderData = async (request: Request) => {
@@ -14,19 +14,22 @@ export const loader: LoaderFunction = async ({ request }) =>
 
 export default function Logout(): JSX.Element {
 	const { logout, loading, data } = useLogin();
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		if (!loading && data) {
 			const callback = async () => {
 				await logout();
-				window.location.replace("/");
+				navigate("/", { replace: true });
 			};
 			void callback();
 		}
 		setTimeout(() => {
-			window.location.replace("/");
+			throw new Error(
+				"Fehler: Abmeldung nicht binnen 10 Sekunden erfolgt",
+			);
 		}, 10000);
-	}, [loading, data, logout]);
+	}, [loading, data, logout, navigate]);
 
 	return (
 		<Center minW="100vw" minH="100vh" p={2}>

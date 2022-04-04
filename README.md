@@ -86,14 +86,7 @@ Install the dependencies of this project (you can open up a Terminal in VSCode w
 $ npm i
 ```
 
-Create a `.env` file, containing static key-value pairs for environment-specific configuration. The `.env.example` file serves as a good starting point:
-
-```console
-# /.env
-CMS_AUTH_SECRET="<30-50 character random password>"
-MAGIC_KEY="pk_live_key"
-MAGIC_SECRET="sk_live_secret"
-```
+Create a `.env` file, containing static key-value pairs for environment-specific configuration. The `.env.example` file serves as a good starting point.
 
 > To securely generate a random password on your computer:  
 > (Linux/macOS) `openssl rand -base64 40`

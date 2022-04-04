@@ -2,7 +2,7 @@ import { Heading, Text, Box, chakra, Container } from "@chakra-ui/react";
 import { json, LoaderFunction, useLoaderData } from "remix";
 import { Hero } from "~app/hero";
 import { pages, pageGroups } from "~app/models";
-import { Navbar } from "~app/nav";
+import { Nav } from "~app/nav";
 import { fromEntries } from "~app/util";
 
 const getLoaderData = async () => {
@@ -53,7 +53,7 @@ export default function Index(): JSX.Element {
 
 	return (
 		<>
-			<Navbar groupedPages={groupedPages} />
+			<Nav groupedPages={groupedPages} />
 			<Container w="full" maxW="7xl" mx="auto" py={8} centerContent>
 				<chakra.section>
 					<Hero />
