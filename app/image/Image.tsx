@@ -72,41 +72,27 @@ export default function Image({
 	});
 
 	return (
-		<Box
-			{...boxProps}
-			pos="relative"
-			d="inline-block"
-			overflow="hidden"
-			w="full"
-			h="full"
-			ref={ref}>
-			<Box {...boxProps} d="block" w="full" h="full">
-				<ChakraImage
-					{...props}
-					pos="absolute"
-					inset={0}
-					d="block"
-					w="full"
-					h="full"
-					loading={priority ? "eager" : "lazy"}
-					fallbackSrc={
-						avatar
-							? "data:image/svg+xml,%3csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20version=%271.1%27%20width=%27256%27%20height=%27256%27/%3e"
-							: "data:image/svg+xml,%3csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20version=%271.1%27%20width=%271920%27%20height=%271280%27/%3e"
-					}
-					src={src(id, avatar ? "16" : "preview")}
-					filter="auto"
-					blur="1px"
-				/>
-			</Box>
+		<Box {...boxProps} ref={ref} pos="relative">
+			<ChakraImage
+				{...props}
+				loading={priority ? "eager" : "lazy"}
+				fallbackSrc={
+					avatar
+						? "data:image/svg+xml,%3csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20version=%271.1%27%20width=%27256%27%20height=%27256%27/%3e"
+						: "data:image/svg+xml,%3csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20version=%271.1%27%20width=%271920%27%20height=%271280%27/%3e"
+				}
+				src={src(id, avatar ? "16" : "preview")}
+				filter="auto"
+				blur="1px"
+			/>
 			{isVisible && (
 				<ChakraImage
 					{...props}
 					ignoreFallback
 					pos="absolute"
 					inset={0}
-					w="full"
-					h="full"
+					transform="auto"
+					scale={1.01}
 					loading={priority ? "eager" : "lazy"}
 					srcSet={entries(VARIANTS)
 						.map(([k, v]) => {
