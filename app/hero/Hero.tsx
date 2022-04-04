@@ -19,7 +19,6 @@ export default memo(function Hero() {
 			<WrapItem flex="1 1 0" minW="270px">
 				<Box d="flex" boxShadow="2xl" borderRadius="2xl">
 					<Image
-						ignoreFallback
 						id="9b9917b3-0fce-4ca5-0718-ca3e22794500"
 						alt="Louise-Schroeder-Gymnasium Außenansicht"
 						borderRadius="2xl"

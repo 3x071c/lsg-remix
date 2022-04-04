@@ -1,12 +1,7 @@
 /* eslint-disable sort-keys */
-import {
-	Box,
-	Image as ChakraImage,
-	ImageProps,
-	useColorModeValue,
-} from "@chakra-ui/react";
+import { Box, Image as ChakraImage, ImageProps } from "@chakra-ui/react";
 import useNativeLazyLoading from "@charlietango/use-native-lazy-loading";
-// import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { entries } from "~app/util";
 
@@ -37,10 +32,14 @@ export default function Image({
 	priority,
 	id,
 	sizes,
+	avatar,
 	...props
-}: Omit<ImageProps, "src"> & { priority?: boolean; id: string }): JSX.Element {
-	const bg = useColorModeValue("gray.50", "gray.700");
-	// const [isVisible, setIsVisible] = useState(false);
+}: Omit<ImageProps, "src" | "srcSet" | "loading" | "ignoreFallback"> & {
+	priority?: boolean;
+	id: string;
+	avatar?: boolean;
+}): JSX.Element {
+	const [isVisible, setIsVisible] = useState(false);
 	const supportsLazyLoading = useNativeLazyLoading();
 	const { ref, inView } = useInView({
 		fallbackInView: true,
@@ -59,35 +58,56 @@ export default function Image({
 				.map((v) => Number(v))
 		: [];
 	const max = maxData.length > 0 ? Math.max(...maxData) : undefined;
+	const { onLoad, onError, crossOrigin, alt, ...boxProps } = props;
 
-	// useEffect(() => {
-	// 	setTimeout(() => {
-	// 		setIsVisible(true);
-	// 	}, 5000);
-	// });
+	useEffect(() => {
+		// eslint-disable-next-line no-console -- don't complain when I commit this
+		console.log(inView);
+	}, [inView]);
+
+	useEffect(() => {
+		setTimeout(() => {
+			setIsVisible(true);
+		}, 5000);
+	});
 
 	return (
-		<Box pos="relative" w="full" bg={bg} ref={ref}>
-			{/* {isVisible && (
+		<Box
+			{...boxProps}
+			pos="relative"
+			d="inline-block"
+			overflow="hidden"
+			w="full"
+			h="full"
+			ref={ref}>
+			<Box {...boxProps} d="block" w="full" h="full">
 				<ChakraImage
 					{...props}
-					loading={priority ? "eager" : "lazy"}
+					pos="absolute"
+					inset={0}
+					d="block"
 					w="full"
-					srcSet={entries(VARIANTS)
-						.map(([k, v]) => {
-							if (v > (max ?? NaN)) return false;
-							return `${src(id, k)} ${v}w`;
-						})
-						.filter(Boolean)
-						.join(",\n")}
-					src="https://via.placeholder.com/600x400"
+					h="full"
+					loading={priority ? "eager" : "lazy"}
+					fallbackSrc={
+						avatar
+							? "data:image/svg+xml,%3csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20version=%271.1%27%20width=%27256%27%20height=%27256%27/%3e"
+							: "data:image/svg+xml,%3csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20version=%271.1%27%20width=%271920%27%20height=%271280%27/%3e"
+					}
+					src={src(id, avatar ? "16" : "preview")}
+					filter="auto"
+					blur="1px"
 				/>
-			)} */}
-			{inView || supportsLazyLoading ? (
+			</Box>
+			{isVisible && (
 				<ChakraImage
 					{...props}
-					loading={priority ? "eager" : "lazy"}
+					ignoreFallback
+					pos="absolute"
+					inset={0}
 					w="full"
+					h="full"
+					loading={priority ? "eager" : "lazy"}
 					srcSet={entries(VARIANTS)
 						.map(([k, v]) => {
 							if (v > (max ?? NaN)) return false;
@@ -97,16 +117,24 @@ export default function Image({
 						.join(",\n")}
 					src={src(id, "public")}
 				/>
-			) : (
+			)}
+			<noscript>
 				<ChakraImage
 					{...props}
-					loading={priority ? "eager" : "lazy"}
+					ignoreFallback
 					w="full"
-					src={src(id, "preview")}
-					filter="auto"
-					blur="1px"
+					h="full"
+					loading={priority ? "eager" : "lazy"}
+					srcSet={entries(VARIANTS)
+						.map(([k, v]) => {
+							if (v > (max ?? NaN)) return false;
+							return `${src(id, k)} ${v}w`;
+						})
+						.filter(Boolean)
+						.join(",\n")}
+					src={src(id, "public")}
 				/>
-			)}
+			</noscript>
 		</Box>
 	);
 }
