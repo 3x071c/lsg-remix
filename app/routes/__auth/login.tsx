@@ -17,14 +17,12 @@ import {
 	ActionFunction,
 	Form,
 	useTransition,
-	redirect,
-	LoaderFunction,
 	json,
+	LoaderFunction,
+	redirect,
 } from "remix";
 import { useLogin, login as authenticate, authorize } from "~app/auth";
-import { url as adminURL } from "~routes/admin";
-
-const ChakraForm = chakra(Form);
+import { url as adminURL } from "~routes/__pages/admin/index";
 
 const getLoaderData = async (request: Request) => {
 	if (await authorize(request, { required: false })) throw redirect(adminURL);
@@ -41,6 +39,7 @@ export const action: ActionFunction = async ({ request }) => {
 	return authenticate(request, didToken);
 };
 
+const ChakraForm = chakra(Form);
 export default function Login(): JSX.Element {
 	const background = useColorModeValue("gray.50", "gray.700");
 	const transition = useTransition();

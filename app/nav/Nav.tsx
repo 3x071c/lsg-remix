@@ -17,7 +17,7 @@ import {
 } from "@chakra-ui/react";
 import { transparentize } from "@chakra-ui/theme-tools";
 import { memo } from "react";
-import { LinkButton } from "~app/links";
+import { Link, LinkButton } from "~app/links";
 import { entries } from "~app/util";
 
 type NavbarProps = {
@@ -34,17 +34,26 @@ type NavbarProps = {
 };
 export default memo(function Nav({ groupedPages }: NavbarProps): JSX.Element {
 	const theme = useTheme();
-	const popoverContentBackdropBg = useColorModeValue(
+	const popoverBg = useColorModeValue(
 		"whiteAlpha.900",
 		transparentize("gray.700", 0.9)(theme),
 	);
+	const bg = useColorModeValue("white", "gray.800");
 
 	return (
-		<chakra.nav borderBottomWidth="1px" w="full" pos="sticky">
+		<chakra.nav
+			borderBottomWidth="1px"
+			w="full"
+			pos="sticky"
+			top={0}
+			zIndex={2}
+			bg={bg}>
 			<Flex w="full" maxW="7xl" mx="auto" align="center">
-				<Box p={2} px={4}>
-					<Heading size="lg">LSG</Heading>
-				</Box>
+				<Link href="/">
+					<Box p={2} px={4}>
+						<Heading size="lg">LSG</Heading>
+					</Box>
+				</Link>
 				<Spacer />
 				<HStack textAlign="center" spacing={2} overflowY="auto">
 					{entries(groupedPages).map(([uuid, { name, pages }]) => (
@@ -66,7 +75,7 @@ export default memo(function Nav({ groupedPages }: NavbarProps): JSX.Element {
 												backdropFilter: "auto",
 												// eslint-disable-next-line sort-keys -- Blur has to come after `auto` filter for this to work!
 												backdropBlur: "md",
-												bg: popoverContentBackdropBg,
+												bg: popoverBg,
 											},
 									}}>
 									<PopoverBody>
@@ -90,9 +99,6 @@ export default memo(function Nav({ groupedPages }: NavbarProps): JSX.Element {
 					))}
 				</HStack>
 				<Spacer />
-				{
-					// @todo Add cms indicator here
-				}
 			</Flex>
 		</chakra.nav>
 	);

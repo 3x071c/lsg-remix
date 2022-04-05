@@ -123,7 +123,6 @@
 		"eslint-plugin-react-hooks": "4.4.0",
 		"husky": "7.0.4",
 		"jscpd": "3.4.5",
-		"lint-staged": "12.3.7",
 		"no-op": "1.0.3",
 		"only-allow": "1.1.0",
 		"prettier": "2.6.1",
@@ -144,14 +143,5 @@
 		"extends": [
 			"@commitlint/config-conventional"
 		]
-	},
-	"lint-staged": {
-		"*": [
-			"npm run prettier:individual",
-			"npm run secretlint:individual",
-			"npm run cspell:individual",
-			"npm run jscpd:individual"
-		],
-		"*.{tsx,ts,jsx,js,mjs,cjs}": "npm run eslint:individual"
 	}
 }
