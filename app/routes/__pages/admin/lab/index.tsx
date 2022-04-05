@@ -1,4 +1,4 @@
-import { Center, Heading } from "@chakra-ui/react";
+import { Heading } from "@chakra-ui/react";
 import { json, LoaderFunction, useLoaderData } from "remix";
 import { authorize } from "~app/auth";
 import { users } from "~app/models";
@@ -15,11 +15,9 @@ export default function Index(): JSX.Element {
 	const { firstname, lastname } = useLoaderData<LoaderData>();
 
 	return (
-		<Center minW="100vw" minH="100vh">
-			<Heading>
-				Hallo {firstname} {lastname} 👋
-			</Heading>
-		</Center>
+		<Heading p={8}>
+			Hallo {firstname} {lastname} 👋
+		</Heading>
 	);
 }
 

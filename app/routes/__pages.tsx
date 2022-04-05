@@ -1,6 +1,4 @@
-import { Heading, Text, Box, chakra, Container } from "@chakra-ui/react";
-import { json, LoaderFunction, useLoaderData } from "remix";
-import { Hero } from "~app/hero";
+import { json, LoaderFunction, Outlet, useLoaderData } from "remix";
 import { pages, pageGroups } from "~app/models";
 import { Nav } from "~app/nav";
 import { fromEntries } from "~app/util";
@@ -48,29 +46,13 @@ type LoaderData = Awaited<ReturnType<typeof getLoaderData>>;
 export const loader: LoaderFunction = async () =>
 	json<LoaderData>(await getLoaderData());
 
-export default function Index(): JSX.Element {
+export default function Pages() {
 	const { groupedPages } = useLoaderData<LoaderData>();
 
 	return (
 		<>
 			<Nav groupedPages={groupedPages} />
-			<Container w="full" maxW="7xl" mx="auto" py={8} centerContent>
-				<chakra.section>
-					<Hero />
-				</chakra.section>
-				<chakra.section py={16}>
-					<Box textAlign="center">
-						<Heading as="h1" size="2xl">
-							Home
-						</Heading>
-						<Text fontSize="lg">
-							Hier geht&apos;s irgendwann weiter!
-						</Text>
-					</Box>
-				</chakra.section>
-			</Container>
+			<Outlet />
 		</>
 	);
 }
-
-export const url = "/";

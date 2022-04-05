@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { magicClient } from "~app/magic";
-import { url as authURL } from "~routes/admin/auth";
+import { url as authURL } from "~routes/__auth/callback";
 
 export function useLogin() {
 	const [loading, setLoading] = useState(true);

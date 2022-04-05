@@ -1,7 +1,7 @@
 import { Center, CircularProgress } from "@chakra-ui/react";
 import { useEffect } from "react";
-import { json, LoaderFunction, useNavigate } from "remix";
-import { authorize, logout as invalidate, useLogin } from "~app/auth";
+import { useNavigate, json, LoaderFunction } from "remix";
+import { useLogin, authorize, logout as invalidate } from "~app/auth";
 
 const getLoaderData = async (request: Request) => {
 	if (await authorize(request, { required: false }))

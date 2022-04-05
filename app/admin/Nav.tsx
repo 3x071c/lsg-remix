@@ -15,6 +15,7 @@ import {
 	Button,
 	Avatar,
 	StackDivider,
+	useColorModeValue,
 } from "@chakra-ui/react";
 import { memo } from "react";
 import { NavLink } from "~app/links";
@@ -32,8 +33,16 @@ export default memo(function CmsNav({
 	active: keyof typeof pages;
 	username: string;
 }): JSX.Element {
+	const bg = useColorModeValue("white", "gray.800");
+
 	return (
-		<chakra.nav borderBottomWidth="1px" w="full" pos="sticky">
+		<chakra.nav
+			borderBottomWidth="1px"
+			w="full"
+			pos="sticky"
+			top="53px"
+			zIndex={3}
+			bg={bg}>
 			<Flex w="full" maxW="7xl" mx="auto" align="center">
 				<Box p={2} px={4}>
 					<Heading size="md">{active}</Heading>

@@ -9,21 +9,18 @@ import {
 } from "@chakra-ui/react";
 import { withZod } from "@remix-validated-form/with-zod";
 import {
-	redirect,
 	json,
-	LoaderFunction,
 	ActionFunction,
 	useActionData,
+	LoaderFunction,
+	redirect,
 } from "remix";
 import { ValidatedForm, validationError } from "remix-validated-form";
-import { authorize, login as authenticate, useLogin } from "~app/auth";
+import { login as authenticate, useLogin, authorize } from "~app/auth";
 import { FormInput, SubmitButton } from "~app/form";
 import { User } from "~app/models";
 import { entries } from "~app/util";
-import { url as adminURL } from "~routes/admin";
-
-const validatorData = User.omit({ did: true, uuid: true });
-const validator = withZod(validatorData);
+import { url as adminURL } from "~routes/__pages/admin/index";
 
 const getLoaderData = async (request: Request) => {
 	if (await authorize(request, { required: false })) throw redirect(adminURL);
@@ -33,9 +30,10 @@ type LoaderData = Awaited<ReturnType<typeof getLoaderData>>;
 export const loader: LoaderFunction = async ({ request }) =>
 	json<LoaderData>(await getLoaderData(request));
 
-const getActionData = async (request: Request) => {
-	await getLoaderData(request);
+const validatorData = User.omit({ did: true, uuid: true });
+const validator = withZod(validatorData);
 
+const getActionData = async (request: Request) => {
 	const form = await request.formData();
 	const didToken = form.get("_authorization");
 	const { error, data } = await validator.validate(form);

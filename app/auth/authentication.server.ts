@@ -3,9 +3,9 @@ import { redirect } from "remix";
 import { magicServer } from "~app/magic";
 import { users, User } from "~app/models";
 import { entries } from "~app/util";
-import { url as adminURL } from "~routes/admin";
-import { url as logoutURL } from "~routes/admin/logout";
-import { url as onboardingURL } from "~routes/admin/onboard";
+import { url as logoutURL } from "~routes/__auth/logout";
+import { url as onboardingURL } from "~routes/__auth/onboard";
+import { url as adminURL } from "~routes/__pages/admin/index";
 import { cmsAuthSessionStorage } from "./session.server";
 
 export const UserData = User.omit({ did: true, uuid: true });

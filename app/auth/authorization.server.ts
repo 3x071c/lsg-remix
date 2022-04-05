@@ -1,7 +1,7 @@
 import { redirect } from "remix";
 import { User } from "~app/models";
 import { fromEntries } from "~app/util";
-import { url as loginURL } from "~routes/admin/login";
+import { url as loginURL } from "~routes/__auth/login";
 import { cmsAuthSessionStorage } from "./session.server";
 
 /**
