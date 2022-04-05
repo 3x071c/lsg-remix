@@ -54,10 +54,18 @@ export default function Index(): JSX.Element {
 	return (
 		<>
 			<Navbar groupedPages={groupedPages} />
-			<Container w="full" maxW="7xl" mx="auto" py={8} centerContent>
-				<chakra.section>
+			<Container
+				w="full"
+				bg="#f6f9fc"
+				maxW="full"
+				mx="auto"
+				py={8}
+				centerContent>
+				<chakra.section py={8}>
 					<Hero />
 				</chakra.section>
+			</Container>
+			<Container w="full" maxW="full" mx="auto" py={8} centerContent>
 				<chakra.section py={16}>
 					<Box textAlign="center">
 						<Heading as="h1" size="2xl">
