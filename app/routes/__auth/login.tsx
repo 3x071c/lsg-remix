@@ -164,4 +164,4 @@ export default function Login(): JSX.Element {
 	);
 }
 
-export const url = "/admin/login";
+export const url = "/login";

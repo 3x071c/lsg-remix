@@ -1,20 +1,19 @@
-import { LockIcon } from "@chakra-ui/icons";
 import { Container, chakra } from "@chakra-ui/react";
 import { Outlet, json, LoaderFunction, useLoaderData } from "remix";
 import { Nav as AdminNav } from "~app/admin";
 import { authorize } from "~app/auth";
-import { LinkButton } from "~app/links";
 import { users } from "~app/models";
-import { url as logoutURL } from "~routes/__auth/logout";
 
 const getLoaderData = async (request: Request) => {
 	const { uuid: userUUID } = await authorize(request);
-	const { firstname, lastname } = await users().getMany(userUUID, [
+	const { avatar, firstname, lastname } = await users().getMany(userUUID, [
+		"avatar",
 		"firstname",
 		"lastname",
 	]);
 
 	return {
+		avatar,
 		firstname,
 		lastname,
 	};
@@ -24,23 +23,18 @@ export const loader: LoaderFunction = async ({ request }) =>
 	json<LoaderData>(await getLoaderData(request));
 
 export default function Admin(): JSX.Element {
-	const { firstname, lastname } = useLoaderData<LoaderData>();
+	const { firstname, lastname, avatar } = useLoaderData<LoaderData>();
 
 	return (
 		<chakra.section pos="relative">
-			<AdminNav active="CMS" username={`${firstname} ${lastname}`} />
+			<AdminNav
+				firstname={firstname}
+				lastname={lastname}
+				top="53px"
+				height="48px"
+				avatar={avatar}
+			/>
 			<chakra.section pos="relative">
-				<LinkButton
-					href={logoutURL}
-					size="lg"
-					pos="fixed"
-					float="right"
-					right="20px"
-					top="120px"
-					variant="outline"
-					rightIcon={<LockIcon />}>
-					Abmelden
-				</LinkButton>
 				<Container
 					w="full"
 					maxW="7xl"

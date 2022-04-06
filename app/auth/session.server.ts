@@ -28,7 +28,7 @@ export const cmsAuthSessionStorage = () =>
 				name: "cms_auth",
 				path: "/",
 				sameSite:
-					global.env.NODE_ENV !== "development" ? "strict" : "none",
+					global.env.NODE_ENV !== "development" ? "strict" : "lax",
 				secrets: [CMS_AUTH_SECRET],
 				secure: global.env.NODE_ENV !== "development",
 			},

@@ -16,10 +16,12 @@ import {
 	Avatar,
 	StackDivider,
 	useColorModeValue,
+	LayoutProps,
+	PositionProps,
 } from "@chakra-ui/react";
 import { memo } from "react";
 import { NavLink } from "~app/links";
-import { entries } from "~app/util";
+import { entries, fromEntries } from "~app/util";
 
 const pages = {
 	CMS: "/admin/cms",
@@ -27,11 +29,17 @@ const pages = {
 	Lab: "/admin/lab",
 };
 export default memo(function CmsNav({
-	active,
-	username,
+	top,
+	height,
+	firstname,
+	lastname,
+	avatar,
 }: {
-	active: keyof typeof pages;
-	username: string;
+	top: PositionProps["top"];
+	height: LayoutProps["height"];
+	firstname: string;
+	lastname: string;
+	avatar: string | undefined;
 }): JSX.Element {
 	const bg = useColorModeValue("white", "gray.800");
 
@@ -40,28 +48,61 @@ export default memo(function CmsNav({
 			borderBottomWidth="1px"
 			w="full"
 			pos="sticky"
-			top="53px"
+			top={top}
 			zIndex={3}
 			bg={bg}>
-			<Flex w="full" maxW="7xl" mx="auto" align="center">
-				<Box p={2} px={4}>
-					<Heading size="md">{active}</Heading>
-				</Box>
+			<Flex
+				w="full"
+				maxW="7xl"
+				mx="auto"
+				align="center"
+				h={height}
+				overflow="hidden">
+				{entries(pages).map(([name, url]) => (
+					<NavLink
+						data-name={name}
+						href={url}
+						sx={{
+							":not(.active)": {
+								display: "none",
+							},
+						}}
+						end>
+						<Box p={2} px={4}>
+							<Heading size="md">{name}</Heading>
+						</Box>
+					</NavLink>
+				))}
 				<Spacer />
 				<HStack
 					textAlign="center"
 					spacing={2}
 					overflowY="auto"
-					divider={<StackDivider />}>
-					{entries(pages)
-						.filter(([name]) => name !== active)
-						.map(([name, url]) => (
-							<Box key={name}>
-								<NavLink href={url} variant="link">
-									{name}
-								</NavLink>
-							</Box>
-						))}
+					divider={
+						<StackDivider
+							sx={fromEntries(
+								entries(pages).map(([name, url]) => [
+									"{} .active + &",
+									{ display: "none" },
+								]),
+							)}
+						/>
+					}>
+					{entries(pages).map(([name, url]) => (
+						<Box key={name}>
+							<NavLink
+								href={url}
+								variant="link"
+								sx={{
+									":not(:not(.active))": {
+										display: "none",
+									},
+								}}
+								end>
+								{name}
+							</NavLink>
+						</Box>
+					))}
 				</HStack>
 				<Spacer />
 				<Menu>
@@ -73,11 +114,12 @@ export default memo(function CmsNav({
 						variant="link">
 						<Avatar
 							size="sm"
-							src="https://images.unsplash.com/photo-1493666438817-866a91353ca9?q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200"
+							name={`${firstname} ${lastname}`}
+							src={avatar}
 						/>
 					</MenuButton>
 					<MenuList>
-						<MenuGroup title={username}>
+						<MenuGroup title={`${firstname} ${lastname}`}>
 							<MenuItem icon={<SettingsIcon />}>
 								Einstellungen
 							</MenuItem>

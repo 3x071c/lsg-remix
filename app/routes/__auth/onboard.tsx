@@ -106,4 +106,4 @@ export default function Onboard() {
 	);
 }
 
-export const url = "/admin/onboard";
+export const url = "/onboard";

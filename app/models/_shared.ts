@@ -60,3 +60,12 @@ export type Name = z.infer<typeof Name>;
 
 export const Boolean = z.boolean();
 export type Boolean = z.infer<typeof Boolean>;
+
+export const ImageDelivery = z
+	.string({
+		description: "ImageDelivery Identifikationsnummer",
+		invalid_type_error: "ImageDelivery ID muss eine Zeichenkette sein",
+		required_error: "ImageDelivery ID ist erforderlich",
+	})
+	.optional();
+export type ImageDelivery = z.infer<typeof ImageDelivery>;

@@ -51,7 +51,7 @@ export default function Pages() {
 
 	return (
 		<>
-			<Nav groupedPages={groupedPages} />
+			<Nav groupedPages={groupedPages} height="52px" />
 			<Outlet />
 		</>
 	);

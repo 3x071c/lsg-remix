@@ -14,6 +14,7 @@ import {
 	VStack,
 	useColorModeValue,
 	useTheme,
+	LayoutProps,
 } from "@chakra-ui/react";
 import { transparentize } from "@chakra-ui/theme-tools";
 import { memo } from "react";
@@ -31,8 +32,12 @@ type NavbarProps = {
 			};
 		};
 	};
+	height: LayoutProps["h"];
 };
-export default memo(function Nav({ groupedPages }: NavbarProps): JSX.Element {
+export default memo(function Nav({
+	groupedPages,
+	height,
+}: NavbarProps): JSX.Element {
 	const theme = useTheme();
 	const popoverBg = useColorModeValue(
 		"whiteAlpha.900",
@@ -48,7 +53,13 @@ export default memo(function Nav({ groupedPages }: NavbarProps): JSX.Element {
 			top={0}
 			zIndex={2}
 			bg={bg}>
-			<Flex w="full" maxW="7xl" mx="auto" align="center">
+			<Flex
+				w="full"
+				maxW="7xl"
+				mx="auto"
+				align="center"
+				h={height}
+				overflow="hidden">
 				<Link href="/">
 					<Box p={2} px={4}>
 						<Heading size="lg">LSG</Heading>

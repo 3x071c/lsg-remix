@@ -2,9 +2,10 @@
 
 import { z } from "zod";
 import handler from "./_handler";
-import { Firstname, Lastname, DID, UUID } from "./_shared";
+import { Firstname, Lastname, DID, UUID, ImageDelivery } from "./_shared";
 
 const rawUser = {
+	avatar: ImageDelivery,
 	did: DID,
 	firstname: Firstname,
 	lastname: Lastname,

@@ -68,4 +68,4 @@ export default function Callback(): JSX.Element {
 	);
 }
 
-export const url = "/admin/auth";
+export const url = "/callback";
