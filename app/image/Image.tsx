@@ -57,10 +57,13 @@ export default function Image({
 		: [];
 	const max = maxData.length > 0 ? Math.max(...maxData) : undefined;
 	const { onLoad, onError, crossOrigin, alt, ...boxProps } = props;
+	const load = inView || supportsLazyLoading || priority;
 
 	return (
 		<Box {...boxProps} ref={ref} pos="relative">
 			<ChakraImage
+				w="full"
+				h="full"
 				{...props}
 				loading={priority ? "eager" : "lazy"}
 				fallbackSrc={
@@ -70,16 +73,17 @@ export default function Image({
 				}
 				src={src(id, avatar ? "16" : "preview")}
 				filter="auto"
-				blur="1px"
+				blur={load ? undefined : "1px"}
 			/>
-			{(inView || supportsLazyLoading || priority) && (
+			{load && (
 				<ChakraImage
+					w="full"
+					h="full"
 					{...props}
 					ignoreFallback
 					pos="absolute"
 					inset={0}
 					transform="auto"
-					scale={1.01}
 					loading={priority ? "eager" : "lazy"}
 					srcSet={entries(VARIANTS)
 						.map(([k, v]) => {
@@ -91,23 +95,6 @@ export default function Image({
 					src={src(id, "public")}
 				/>
 			)}
-			<noscript>
-				<ChakraImage
-					{...props}
-					ignoreFallback
-					w="full"
-					h="full"
-					loading={priority ? "eager" : "lazy"}
-					srcSet={entries(VARIANTS)
-						.map(([k, v]) => {
-							if (v > (max ?? NaN)) return false;
-							return `${src(id, k)} ${v}w`;
-						})
-						.filter(Boolean)
-						.join(",\n")}
-					src={src(id, "public")}
-				/>
-			</noscript>
 		</Box>
 	);
 }
