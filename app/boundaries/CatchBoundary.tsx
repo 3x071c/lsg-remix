@@ -24,7 +24,8 @@ export default function CatchBoundary({
 				alignItems="center"
 				justifyContent="center"
 				p={4}
-				textAlign="center">
+				textAlign="center"
+				borderRadius="xl">
 				<AlertIcon boxSize="40px" mr={0} />
 				<AlertTitle mt={4} mb={1} fontSize="lg">
 					Hier könnte ihre Werbung stehen 😅

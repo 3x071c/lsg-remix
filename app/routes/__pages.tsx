@@ -7,23 +7,23 @@ const getLoaderData = async () => {
 	const { data: pageGroupNames } = await pageGroups().listValues("name");
 	const { data: pageTitles } = await pages().listValues("title");
 
-	const groupedPages = fromEntries<{
-		[groupUUID: string]: {
-			name: string;
-			pages: {
-				[pageUUID: string]: {
-					title: string;
-				};
-			};
-		};
-	}>(
-		pageGroupNames.map(({ value: name, uuid }) => [
-			uuid,
-			{
-				name,
-				pages: {},
-			},
-		]),
+	const groupedPages = fromEntries(
+		pageGroupNames.map(
+			({ value: name, uuid }) =>
+				[
+					uuid,
+					{
+						name,
+						pages: {},
+					},
+				] as [
+					string,
+					{
+						name: string;
+						pages: { [key: string]: { title: string } };
+					},
+				],
+		),
 	);
 	await Promise.all(
 		pageTitles.map(async ({ value: title, uuid }) => {

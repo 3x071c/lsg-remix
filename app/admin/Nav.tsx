@@ -21,25 +21,26 @@ import {
 } from "@chakra-ui/react";
 import { memo } from "react";
 import { NavLink } from "~app/links";
-import { entries, fromEntries } from "~app/util";
+import { entries } from "~app/util";
 
-const pages = {
-	CMS: "/admin/cms",
-	Home: "/admin",
-	Lab: "/admin/lab",
-};
 export default memo(function CmsNav({
+	avatar,
+	page,
+	pages,
 	top,
 	height,
 	firstname,
 	lastname,
-	avatar,
 }: {
+	avatar: string | undefined;
+	page: string;
+	pages: {
+		[key: string]: string;
+	};
 	top: PositionProps["top"];
 	height: LayoutProps["height"];
 	firstname: string;
 	lastname: string;
-	avatar: string | undefined;
 }): JSX.Element {
 	const bg = useColorModeValue("white", "gray.800");
 
@@ -58,51 +59,26 @@ export default memo(function CmsNav({
 				align="center"
 				h={height}
 				overflow="hidden">
-				{entries(pages).map(([name, url]) => (
-					<NavLink
-						data-name={name}
-						href={url}
-						sx={{
-							":not(.active)": {
-								display: "none",
-							},
-						}}
-						end>
-						<Box p={2} px={4}>
-							<Heading size="md">{name}</Heading>
-						</Box>
-					</NavLink>
-				))}
+				<NavLink href="." end>
+					<Box p={2} px={4}>
+						<Heading size="md">{page}</Heading>
+					</Box>
+				</NavLink>
 				<Spacer />
 				<HStack
 					textAlign="center"
 					spacing={2}
 					overflowY="auto"
-					divider={
-						<StackDivider
-							sx={fromEntries(
-								entries(pages).map(([name, url]) => [
-									"{} .active + &",
-									{ display: "none" },
-								]),
-							)}
-						/>
-					}>
-					{entries(pages).map(([name, url]) => (
-						<Box key={name}>
-							<NavLink
-								href={url}
-								variant="link"
-								sx={{
-									":not(:not(.active))": {
-										display: "none",
-									},
-								}}
-								end>
-								{name}
-							</NavLink>
-						</Box>
-					))}
+					divider={<StackDivider />}>
+					{entries(pages)
+						.filter(([name]) => name !== page)
+						.map(([name, url]) => (
+							<Box key={name}>
+								<NavLink href={url} variant="link" end>
+									{name}
+								</NavLink>
+							</Box>
+						))}
 				</HStack>
 				<Spacer />
 				<Menu>

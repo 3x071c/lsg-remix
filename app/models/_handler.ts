@@ -122,20 +122,23 @@ const handler =
 					? M[field] | undefined
 					: M[field];
 			}> {
-				return fromEntries<{
+				return fromEntries(
+					await Promise.all(
+						fields.map(
+							async (field) =>
+								[
+									field,
+									await this.get(uuid, field, options),
+								] as const,
+						),
+					),
+				) as unknown as Promise<{
 					[field in typeof fields[number]]: O extends {
 						required: false;
 					}
 						? M[field] | undefined
 						: M[field];
-				}>(
-					await Promise.all(
-						fields.map(async (field) => [
-							field,
-							await this.get(uuid, field, options),
-						]),
-					),
-				);
+				}>;
 			},
 			async list<
 				T extends keyof Omit<M, "uuid">,

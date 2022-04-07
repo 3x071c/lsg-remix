@@ -69,7 +69,7 @@ export async function login(
 			did,
 			uuid,
 		}),
-	).map(([k, v]) => session.set(k, v));
+	).map((e) => session.set(e![0] as string, e![1]));
 
 	throw redirect(adminURL, {
 		headers: {

@@ -12,7 +12,6 @@ import {
 	StatLabel,
 	StatNumber,
 	StatHelpText,
-	StatArrow,
 	StatGroup,
 } from "@chakra-ui/react";
 import { json, LoaderFunction, useLoaderData } from "remix";
@@ -33,30 +32,28 @@ export default function Index(): JSX.Element {
 	const { pageData } = useLoaderData<LoaderData>();
 
 	return (
-		<chakra.main>
+		<chakra.main w="full">
 			<Heading as="h1" size="xl">
 				Content Management
 			</Heading>
 			<Text fontSize="md" mt={2}>
 				Seiten einsehen und bearbeiten
 			</Text>
-			<StatGroup>
-				<Stat>
-					<StatLabel>Sent</StatLabel>
-					<StatNumber>345,670</StatNumber>
-					<StatHelpText>
-						<StatArrow type="increase" />
-						23.36%
-					</StatHelpText>
+			<StatGroup
+				mt={8}
+				borderWidth="1px"
+				borderRadius="2xl"
+				textAlign="center">
+				<Stat borderRightWidth="1px">
+					<StatLabel>Seiten</StatLabel>
+					<StatNumber>{pageData.length}</StatNumber>
+					<StatHelpText>Anzahl</StatHelpText>
 				</Stat>
 
 				<Stat>
-					<StatLabel>Clicked</StatLabel>
-					<StatNumber>45</StatNumber>
-					<StatHelpText>
-						<StatArrow type="decrease" />
-						9.05%
-					</StatHelpText>
+					<StatLabel>Status</StatLabel>
+					<StatNumber>OK</StatNumber>
+					<StatHelpText>Operational</StatHelpText>
 				</Stat>
 			</StatGroup>
 			<SimpleGrid
