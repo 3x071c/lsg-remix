@@ -16,22 +16,31 @@ import {
 	Avatar,
 	StackDivider,
 	useColorModeValue,
+	LayoutProps,
+	PositionProps,
 } from "@chakra-ui/react";
 import { memo } from "react";
 import { NavLink } from "~app/links";
 import { entries } from "~app/util";
 
-const pages = {
-	CMS: "/admin/cms",
-	Home: "/admin",
-	Lab: "/admin/lab",
-};
 export default memo(function CmsNav({
-	active,
-	username,
+	avatar,
+	page,
+	pages,
+	top,
+	height,
+	firstname,
+	lastname,
 }: {
-	active: keyof typeof pages;
-	username: string;
+	avatar: string | undefined;
+	page: string;
+	pages: {
+		[key: string]: string;
+	};
+	top: PositionProps["top"];
+	height: LayoutProps["height"];
+	firstname: string;
+	lastname: string;
 }): JSX.Element {
 	const bg = useColorModeValue("white", "gray.800");
 
@@ -40,13 +49,21 @@ export default memo(function CmsNav({
 			borderBottomWidth="1px"
 			w="full"
 			pos="sticky"
-			top="53px"
+			top={top}
 			zIndex={3}
 			bg={bg}>
-			<Flex w="full" maxW="7xl" mx="auto" align="center">
-				<Box p={2} px={4}>
-					<Heading size="md">{active}</Heading>
-				</Box>
+			<Flex
+				w="full"
+				maxW="7xl"
+				mx="auto"
+				align="center"
+				h={height}
+				overflow="hidden">
+				<NavLink href="." end>
+					<Box p={2} px={4}>
+						<Heading size="md">{page}</Heading>
+					</Box>
+				</NavLink>
 				<Spacer />
 				<HStack
 					textAlign="center"
@@ -54,10 +71,10 @@ export default memo(function CmsNav({
 					overflowY="auto"
 					divider={<StackDivider />}>
 					{entries(pages)
-						.filter(([name]) => name !== active)
+						.filter(([name]) => name !== page)
 						.map(([name, url]) => (
 							<Box key={name}>
-								<NavLink href={url} variant="link">
+								<NavLink href={url} variant="link" end>
 									{name}
 								</NavLink>
 							</Box>
@@ -73,11 +90,12 @@ export default memo(function CmsNav({
 						variant="link">
 						<Avatar
 							size="sm"
-							src="https://images.unsplash.com/photo-1493666438817-866a91353ca9?q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200"
+							name={`${firstname} ${lastname}`}
+							src={avatar}
 						/>
 					</MenuButton>
 					<MenuList>
-						<MenuGroup title={username}>
+						<MenuGroup title={`${firstname} ${lastname}`}>
 							<MenuItem icon={<SettingsIcon />}>
 								Einstellungen
 							</MenuItem>

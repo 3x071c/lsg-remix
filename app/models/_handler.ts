@@ -55,7 +55,7 @@ const handler =
 			},
 			_validateValue<T extends keyof Omit<M, "uuid">>(
 				field: T,
-				value: M[T],
+				value: M[T] | undefined,
 			): M[T] {
 				return model.shape[field].parse(value) as M[T];
 			},
@@ -93,18 +93,20 @@ const handler =
 						type: "json",
 					},
 				);
-				if (!value?.superjson) {
-					if (required)
-						throw new Error("[_handler] Unerwarteter Feldwert");
+
+				try {
+					return this._validateValue(
+						field,
+						value?.superjson
+							? superjson.deserialize(value.superjson)
+							: undefined,
+					);
+				} catch (e) {
+					if (required) throw e;
 					return undefined as O extends { required: false }
 						? M[T] | undefined
 						: M[T];
 				}
-
-				return this._validateValue(
-					field,
-					superjson.deserialize(value.superjson),
-				);
 			},
 			async getMany<
 				T extends keyof Omit<M, "uuid">,
@@ -120,20 +122,23 @@ const handler =
 					? M[field] | undefined
 					: M[field];
 			}> {
-				return fromEntries<{
+				return fromEntries(
+					await Promise.all(
+						fields.map(
+							async (field) =>
+								[
+									field,
+									await this.get(uuid, field, options),
+								] as const,
+						),
+					),
+				) as unknown as Promise<{
 					[field in typeof fields[number]]: O extends {
 						required: false;
 					}
 						? M[field] | undefined
 						: M[field];
-				}>(
-					await Promise.all(
-						fields.map(async (field) => [
-							field,
-							await this.get(uuid, field, options),
-						]),
-					),
-				);
+				}>;
 			},
 			async list<
 				T extends keyof Omit<M, "uuid">,

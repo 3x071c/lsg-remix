@@ -30,7 +30,7 @@ type LoaderData = Awaited<ReturnType<typeof getLoaderData>>;
 export const loader: LoaderFunction = async ({ request }) =>
 	json<LoaderData>(await getLoaderData(request));
 
-const validatorData = User.omit({ did: true, uuid: true });
+const validatorData = User.omit({ avatar: true, did: true, uuid: true });
 const validator = withZod(validatorData);
 
 const getActionData = async (request: Request) => {
@@ -106,4 +106,4 @@ export default function Onboard() {
 	);
 }
 
-export const url = "/admin/onboard";
+export const url = "/onboard";

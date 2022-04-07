@@ -33,11 +33,10 @@ export async function authorize<
 					? undefined
 					: Record<string, never>);
 	}
-	const user = fromEntries<User>(
-		Object.keys(User.shape).map((key) => [
-			key as keyof User,
-			session.get(key),
-		]),
+	const user = fromEntries(
+		Object.keys(User.shape).map(
+			(key) => [key as keyof User, session.get(key)] as const,
+		),
 	);
 	if (!User.safeParse(user).success) throw redirect("/");
 

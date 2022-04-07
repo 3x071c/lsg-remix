@@ -8,6 +8,11 @@ import {
 	Flex,
 	Button,
 	chakra,
+	Stat,
+	StatLabel,
+	StatNumber,
+	StatHelpText,
+	StatGroup,
 } from "@chakra-ui/react";
 import { json, LoaderFunction, useLoaderData } from "remix";
 import { pages } from "~app/models";
@@ -27,13 +32,30 @@ export default function Index(): JSX.Element {
 	const { pageData } = useLoaderData<LoaderData>();
 
 	return (
-		<chakra.main>
+		<chakra.main w="full">
 			<Heading as="h1" size="xl">
 				Content Management
 			</Heading>
 			<Text fontSize="md" mt={2}>
 				Seiten einsehen und bearbeiten
 			</Text>
+			<StatGroup
+				mt={8}
+				borderWidth="1px"
+				borderRadius="2xl"
+				textAlign="center">
+				<Stat borderRightWidth="1px">
+					<StatLabel>Seiten</StatLabel>
+					<StatNumber>{pageData.length}</StatNumber>
+					<StatHelpText>Anzahl</StatHelpText>
+				</Stat>
+
+				<Stat>
+					<StatLabel>Status</StatLabel>
+					<StatNumber>OK</StatNumber>
+					<StatHelpText>Operational</StatHelpText>
+				</Stat>
+			</StatGroup>
 			<SimpleGrid
 				spacing="20px"
 				minChildWidth="200px"
