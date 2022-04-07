@@ -1,5 +1,13 @@
-import { Heading, Text, Box, chakra, Container } from "@chakra-ui/react";
+import {
+	Heading,
+	Text,
+	Box,
+	chakra,
+	Container,
+	useColorModeValue,
+} from "@chakra-ui/react";
 import { json, LoaderFunction, useLoaderData } from "remix";
+import { Awards } from "~app/awards";
 import { Hero } from "~app/hero";
 import { pages, pageGroups } from "~app/models";
 import { Navbar } from "~app/nav";
@@ -56,14 +64,17 @@ export default function Index(): JSX.Element {
 			<Navbar groupedPages={groupedPages} />
 			<Container
 				w="full"
-				bg="#f6f9fc"
+				// bg="#f6f9fc"
+				bg={useColorModeValue("gray.50", "")}
 				maxW="full"
 				mx="auto"
 				py={8}
+				pos="relative"
 				centerContent>
 				<chakra.section py={8}>
 					<Hero />
 				</chakra.section>
+				<Awards />
 			</Container>
 			<Container w="full" maxW="full" mx="auto" py={8} centerContent>
 				<chakra.section py={16}>
