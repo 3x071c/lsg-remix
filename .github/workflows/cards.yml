@@ -1,8 +1,7 @@
 # This workflow takes care of labeling and closing cards when they move in the project board
 name: Cards
 
-on:
-    project_card: # Run when cards move
+on: project_card # Run when cards move
 
 # Cancel previous instances of this workflow
 concurrency:
