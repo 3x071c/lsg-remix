@@ -8,7 +8,9 @@ import {
 } from "@chakra-ui/react";
 import { json, LoaderFunction, useLoaderData } from "remix";
 import { Awards } from "~app/awards";
+import { Calendar } from "~app/calendar";
 import { Hero } from "~app/hero";
+import { Link } from "~app/links";
 import { pages, pageGroups } from "~app/models";
 import { Navbar } from "~app/nav";
 import { fromEntries } from "~app/util";
@@ -78,13 +80,20 @@ export default function Index(): JSX.Element {
 			</Container>
 			<Container w="full" maxW="full" mx="auto" py={8} centerContent>
 				<chakra.section py={16}>
-					<Box textAlign="center">
+					<Box textAlign="center" mb="8">
 						<Heading as="h1" size="2xl">
-							Home
+							Aktuelle Termine
 						</Heading>
-						<Text fontSize="lg">
-							Hier geht&apos;s irgendwann weiter!
+						<Text fontSize="xl" mt="3">
+							Alle demnächst anstehende Termine des
+							Louise-Schroeder-Gymnasiums:
 						</Text>
+					</Box>
+					<Calendar />
+					<Box textAlign="center" mt="8">
+						<Link href="/" color="rgb(0, 119, 255)">
+							Zu allen Terminen
+						</Link>
 					</Box>
 				</chakra.section>
 			</Container>
