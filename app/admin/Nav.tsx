@@ -18,8 +18,10 @@ import {
 	useColorModeValue,
 	LayoutProps,
 	PositionProps,
+	useToast,
 } from "@chakra-ui/react";
 import { memo } from "react";
+import { useNavigate } from "remix";
 import { NavLink } from "~app/links";
 import { entries } from "~app/util";
 
@@ -43,6 +45,8 @@ export default memo(function CmsNav({
 	lastname: string;
 }): JSX.Element {
 	const bg = useColorModeValue("white", "gray.800");
+	const navigate = useNavigate();
+	const toast = useToast();
 
 	return (
 		<chakra.nav
@@ -96,13 +100,39 @@ export default memo(function CmsNav({
 					</MenuButton>
 					<MenuList>
 						<MenuGroup title={`${firstname} ${lastname}`}>
-							<MenuItem icon={<SettingsIcon />}>
+							<MenuItem
+								icon={<SettingsIcon />}
+								onClick={() =>
+									toast({
+										description: `Noch nicht implementiert`,
+										duration: 3000,
+										isClosable: false,
+										status: "info",
+										title: "Aktuell nicht möglich",
+									})
+								}>
 								Einstellungen
 							</MenuItem>
-							<MenuItem icon={<QuestionIcon />}>Hilfe</MenuItem>
+							<MenuItem
+								icon={<QuestionIcon />}
+								onClick={() =>
+									toast({
+										description: `Noch nicht implementiert`,
+										duration: 3000,
+										isClosable: false,
+										status: "info",
+										title: "Aktuell nicht möglich",
+									})
+								}>
+								Hilfe
+							</MenuItem>
 						</MenuGroup>
 						<MenuDivider />
-						<MenuItem icon={<LockIcon />}>Abmelden</MenuItem>
+						<MenuItem
+							icon={<LockIcon />}
+							onClick={() => navigate("/logout")}>
+							Abmelden
+						</MenuItem>
 					</MenuList>
 				</Menu>
 			</Flex>

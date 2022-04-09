@@ -2,9 +2,11 @@
 
 import { z } from "zod";
 import handler from "./_handler";
-import { Title, UUID } from "./_shared";
+import { Title, UUID, Date } from "./_shared";
 
 const rawPage = {
+	createdAt: Date,
+	editedAt: Date,
 	groupRef: UUID,
 	title: Title,
 	uuid: UUID,

@@ -3,10 +3,10 @@
  * @param obj The object to turn into a tuple array (`[key, value][]`)
  * @returns The constructed tuple array from the given object
  */
-export default function entries<T>(obj: T): {
-	readonly [K in keyof T]: [K, T[K]];
-}[keyof T][] {
+export default function entries<O>(obj: O): {
+	readonly [K in keyof O]: [K, O[K]];
+}[keyof O][] {
 	return Object.entries(obj) as {
-		[K in keyof T]: [K, T[K]];
-	}[keyof T][];
+		[K in keyof O]: [K, O[K]];
+	}[keyof O][];
 }
