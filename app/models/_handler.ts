@@ -55,7 +55,7 @@ const handler =
 			},
 			_validateValue<T extends keyof Omit<M, "uuid">>(
 				field: T,
-				value: M[T] | undefined,
+				value?: M[T],
 			): M[T] {
 				return model.shape[field].parse(value) as M[T];
 			},
@@ -115,10 +115,12 @@ const handler =
 				},
 			>(
 				uuid: M["uuid"],
-				fields: T[],
+				fields: ReadonlyArray<T>,
 				options?: O,
 			): Promise<{
-				[field in typeof fields[number]]: O extends { required: false }
+				[field in typeof fields extends ReadonlyArray<infer U>
+					? U
+					: never]: O extends { required: false }
 					? M[field] | undefined
 					: M[field];
 			}> {
@@ -132,13 +134,13 @@ const handler =
 								] as const,
 						),
 					),
-				) as unknown as Promise<{
-					[field in typeof fields[number]]: O extends {
-						required: false;
-					}
+				) as {
+					[field in typeof fields extends ReadonlyArray<infer U>
+						? U
+						: never]: O extends { required: false }
 						? M[field] | undefined
 						: M[field];
-				}>;
+				};
 			},
 			async list<
 				T extends keyof Omit<M, "uuid">,
