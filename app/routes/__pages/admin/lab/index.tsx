@@ -28,7 +28,7 @@ export const pages: {
 export default function Index(): JSX.Element {
 	return (
 		<chakra.main w="full">
-			<Heading>Ahoi Cäpt&apos;n ඞ😳🥺🫡</Heading>
+			<Heading as="h1">Ahoi Cäpt&apos;n ඞ😳🥺🫡</Heading>
 			<Text>Hier ist euer Abfall in unserem Projektordner verewigt:</Text>
 			<SimpleGrid
 				spacing="20px"

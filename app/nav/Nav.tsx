@@ -47,7 +47,7 @@ export default memo(function Nav({
 
 	return (
 		<chakra.nav
-			borderBottomWidth="1px"
+			borderBottomWidth={1}
 			w="full"
 			pos="sticky"
 			top={0}
@@ -62,7 +62,9 @@ export default memo(function Nav({
 				overflow="hidden">
 				<Link href="/">
 					<Box p={2} px={4}>
-						<Heading size="lg">LSG</Heading>
+						<Heading as="h1" size="lg">
+							LSG
+						</Heading>
 					</Box>
 				</Link>
 				<Spacer />

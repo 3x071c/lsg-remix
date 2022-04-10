@@ -50,7 +50,7 @@ export default memo(function CmsNav({
 
 	return (
 		<chakra.nav
-			borderBottomWidth="1px"
+			borderBottomWidth={1}
 			w="full"
 			pos="sticky"
 			top={top}
@@ -65,7 +65,9 @@ export default memo(function CmsNav({
 				overflow="hidden">
 				<NavLink href="." end>
 					<Box p={2} px={4}>
-						<Heading size="md">{page}</Heading>
+						<Heading as="h2" size="md">
+							{page}
+						</Heading>
 					</Box>
 				</NavLink>
 				<Spacer />

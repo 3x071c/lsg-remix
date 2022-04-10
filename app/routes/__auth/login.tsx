@@ -92,7 +92,9 @@ export default function Login(): JSX.Element {
 				</Button>
 				<Center minW="100vw" minH="100vh">
 					<chakra.main p={8} rounded="md" bg={background}>
-						<Heading textAlign="center">Fast fertig!</Heading>
+						<Heading as="h1" textAlign="center">
+							Fast fertig!
+						</Heading>
 						<ChakraForm method="post" p={4}>
 							<input
 								type="hidden"
@@ -117,7 +119,9 @@ export default function Login(): JSX.Element {
 	return (
 		<Center minW="100vw" minH="100vh">
 			<chakra.main p={8} rounded="md" bg={background}>
-				<Heading textAlign="center">Login</Heading>
+				<Heading as="h1" textAlign="center">
+					Login
+				</Heading>
 				<form
 					// eslint-disable-next-line @typescript-eslint/no-misused-promises -- Looks like the only way
 					onSubmit={onSubmit}>

@@ -1,8 +1,7 @@
 import { Heading, Text, chakra, Container } from "@chakra-ui/react";
 import { Awards } from "~app/awards";
-import { Calendar } from "~app/calendar";
 import { Hero } from "~app/hero";
-import { Link } from "~app/links";
+import { LinkButton } from "~app/links";
 
 export default function Index(): JSX.Element {
 	return (
@@ -10,18 +9,26 @@ export default function Index(): JSX.Element {
 			<chakra.main w="full">
 				<chakra.section py={8}>
 					<Hero />
+				</chakra.section>
+				<chakra.section
+					py={8}
+					borderTopWidth={1}
+					borderTopStyle="dashed"
+					borderBottomWidth={1}
+					borderBottomStyle="dashed">
 					<Awards />
 				</chakra.section>
 				<chakra.section py={8} textAlign="center">
-					<Heading as="h1" size="2xl">
+					<Heading as="h2" size="xl">
 						Aktuelle Termine
 					</Heading>
 					<Text fontSize="lg">
-						Alle demnächst anstehende Termine des
+						Alle demnächst anstehenden Termine des
 						Louise-Schroeder-Gymnasiums:
 					</Text>
-					<Calendar />
-					<Link href="/">Zu allen Terminen</Link>
+					<LinkButton href="/" mt={4}>
+						Zu allen Terminen
+					</LinkButton>
 				</chakra.section>
 			</chakra.main>
 		</Container>
