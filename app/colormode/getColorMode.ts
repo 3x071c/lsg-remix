@@ -7,7 +7,6 @@ import setColorMode from "./setColorMode";
  * This little module takes care of computing the color mode to be used based on the theme and stored values
  * By default, chakra-ui would do this for us, but apparently when using Cookie-based storage (instead of the default localStorage, which is incompatible with server side rendering the correct color mode), we'll have to do it ourself.
  * I've refined some details about the default behavior to fully align it with my expectations.
- * If SSR color mode rendering fails, this is the first place I'd stick some `console.log`s.
  */
 
 const isServer = typeof document === "undefined";

@@ -1,7 +1,7 @@
 import { Center, CircularProgress } from "@chakra-ui/react";
 import { useEffect } from "react";
-import { json, LoaderFunction } from "remix";
-import { authorize, logout as invalidate, useLogin } from "~app/auth";
+import { useNavigate, json, LoaderFunction } from "remix";
+import { useLogin, authorize, logout as invalidate } from "~app/auth";
 
 const getLoaderData = async (request: Request) => {
 	if (await authorize(request, { required: false }))
@@ -13,20 +13,18 @@ export const loader: LoaderFunction = async ({ request }) =>
 	json<LoaderData>(await getLoaderData(request));
 
 export default function Logout(): JSX.Element {
-	const { logout, loading, data } = useLogin();
+	const { logout, loading } = useLogin();
+	const navigate = useNavigate();
 
 	useEffect(() => {
-		if (!loading && data) {
+		if (!loading) {
 			const callback = async () => {
 				await logout();
-				window.location.replace("/");
+				navigate("/", { replace: true });
 			};
 			void callback();
 		}
-		setTimeout(() => {
-			window.location.replace("/");
-		}, 10000);
-	}, [loading, data, logout]);
+	}, [loading, logout, navigate]);
 
 	return (
 		<Center minW="100vw" minH="100vh" p={2}>
@@ -35,4 +33,4 @@ export default function Logout(): JSX.Element {
 	);
 }
 
-export const url = "/admin/logout";
+export const url = "/logout";

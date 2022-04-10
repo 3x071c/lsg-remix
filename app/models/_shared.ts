@@ -60,3 +60,19 @@ export type Name = z.infer<typeof Name>;
 
 export const Boolean = z.boolean();
 export type Boolean = z.infer<typeof Boolean>;
+
+export const ImageDelivery = z
+	.string({
+		description: "ImageDelivery Identifikationsnummer",
+		invalid_type_error: "ImageDelivery ID muss eine Zeichenkette sein",
+		required_error: "ImageDelivery ID ist erforderlich",
+	})
+	.optional();
+export type ImageDelivery = z.infer<typeof ImageDelivery>;
+
+export const Date = z.date({
+	description: "Datum",
+	invalid_type_error: "Datum muss ein valides Datum sein",
+	required_error: "Datum ist erforderlich",
+});
+export type Date = z.infer<typeof Date>;

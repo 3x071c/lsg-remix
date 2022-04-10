@@ -1,7 +1,7 @@
 import { redirect } from "remix";
 import { User } from "~app/models";
 import { fromEntries } from "~app/util";
-import { url as loginURL } from "~routes/admin/login";
+import { url as loginURL } from "~routes/__auth/login";
 import { cmsAuthSessionStorage } from "./session.server";
 
 /**
@@ -33,11 +33,10 @@ export async function authorize<
 					? undefined
 					: Record<string, never>);
 	}
-	const user = fromEntries<User>(
-		Object.keys(User.shape).map((key) => [
-			key as keyof User,
-			session.get(key),
-		]),
+	const user = fromEntries(
+		Object.keys(User.shape).map(
+			(key) => [key as keyof User, session.get(key)] as const,
+		),
 	);
 	if (!User.safeParse(user).success) throw redirect("/");
 

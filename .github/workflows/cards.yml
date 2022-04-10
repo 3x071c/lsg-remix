@@ -1,15 +1,7 @@
 # This workflow takes care of labeling and closing cards when they move in the project board
 name: Cards
 
-on:
-    project_card: # Run when cards move
-    workflow_run: # Workflows that act as the `github-actions` bot (using the default GITHUB_TOKEN) can't trigger other workflows (https://docs.github.com/en/actions/using-workflows/triggering-a-workflow#triggering-a-workflow-from-a-workflow)
-        workflows: # List workflows that move cards manually
-            - Draft
-            - Open
-            - Review
-        types:
-            - completed
+on: project_card # Run when cards move
 
 # Cancel previous instances of this workflow
 concurrency:
