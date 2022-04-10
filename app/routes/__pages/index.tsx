@@ -1,22 +1,16 @@
-import {
-	Heading,
-	Text,
-	chakra,
-	Container,
-	useColorModeValue,
-} from "@chakra-ui/react";
+import { Heading, Text, chakra, Container } from "@chakra-ui/react";
+import { Awards } from "~app/awards";
 import { Calendar } from "~app/calendar";
 import { Hero } from "~app/hero";
 import { Link } from "~app/links";
 
 export default function Index(): JSX.Element {
-	const bg = useColorModeValue("gray.50", "");
-
 	return (
-		<Container w="full" maxW="7xl" mx="auto" bg={bg} centerContent>
+		<Container w="full" maxW="7xl" mx="auto" centerContent>
 			<chakra.main w="full">
 				<chakra.section py={8}>
 					<Hero />
+					<Awards />
 				</chakra.section>
 				<chakra.section py={8} textAlign="center">
 					<Heading as="h1" size="2xl">

@@ -1,62 +1,28 @@
 import { Wrap, WrapItem } from "@chakra-ui/react";
 import { memo } from "react";
 import { Image } from "~app/image";
-import awardCae from "./award-cae.png";
-import awardCils from "./award-cils.png";
-import awardCourage from "./award-courage.jpg";
-import awardDelf from "./award-delf.jpg";
 
 export default memo(function Awards() {
 	return (
-		<Wrap
-			spacing={8}
-			justify="space-between"
-			w="full"
-			mt="5"
-			maxW="6xl"
-			pos="relative"
-			_before={{
-				bg: "linear-gradient(90deg, rgba(66, 71, 112, 0.09), rgba(66, 71, 112, 0.09) 50%, transparent 0, transparent)",
-				bgSize: "8px 1px",
-				content: "''",
-				h: "1px",
-				left: "0",
-				pos: "absolute",
-				top: "-20px",
-				w: "full",
-			}}>
-			<WrapItem h="70px">
-				<Image
-					src={awardCourage}
-					h="inherit"
-					filter="grayscale(1)"
-					mixBlendMode="multiply"
-				/>
-			</WrapItem>
-			<WrapItem h="70px">
-				<Image
-					src={awardDelf}
-					h="inherit"
-					filter="grayscale(1)"
-					mixBlendMode="multiply"
-				/>
-			</WrapItem>
-			<WrapItem h="70px">
-				<Image
-					src={awardCils}
-					h="inherit"
-					filter="grayscale(1)"
-					mixBlendMode="multiply"
-				/>
-			</WrapItem>
-			<WrapItem h="70px">
-				<Image
-					src={awardCae}
-					h="inherit"
-					filter="grayscale(1)"
-					mixBlendMode="multiply"
-				/>
-			</WrapItem>
+		<Wrap w="full" spacing={64} align="center" justify="space-between">
+			{(
+				[
+					"09676ff7-b3ca-44b2-d620-e1760fee4600",
+					"79f5ddc2-fac9-462a-695e-492527c36b00",
+					"03a4784b-2c97-4851-613d-bd7739a53b00",
+					"a3a022b7-6506-47b9-4922-b6cb46213f00",
+				] as string[]
+			).map((id) => (
+				<WrapItem key={id} flex="1 1 0" minW="100px">
+					<Image
+						id={id}
+						h="inherit"
+						w="auto"
+						filter="grayscale(1)"
+						mixBlendMode="multiply"
+					/>
+				</WrapItem>
+			))}
 		</Wrap>
 	);
 });

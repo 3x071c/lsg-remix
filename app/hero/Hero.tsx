@@ -1,33 +1,26 @@
-import { Button, Heading, Wrap, WrapItem, Text, Box } from "@chakra-ui/react";
+import { Heading, Wrap, WrapItem, Text, Box } from "@chakra-ui/react";
 import { memo } from "react";
 import { Image } from "~app/image";
+import { LinkButton } from "~app/links";
 
 export default memo(function Hero() {
 	return (
-		<Wrap
-			spacing={8}
-			justify="center"
-			align="center"
-			textAlign="center"
-			maxW="6xl">
-			<WrapItem flex="1 1 0" textAlign="left">
-				<Box maxWidth={400}>
+		<Wrap spacing={8} align="center" justify="center" textAlign="center">
+			<WrapItem flex="1 1 0">
+				<Box>
 					<Heading as="h1" size="2xl" d="block">
 						Städtisches Louise-Schroeder-Gymnasium München
 					</Heading>
 					<Text fontSize="xl" mt={4}>
 						Naturwissenschaftlich-technologisches und sprachliches
-						Gymnasium in München.
+						Gymnasium in München 🍺
 					</Text>
-					<Button background="rgb(0, 119, 255)" marginTop={3}>
+					<LinkButton href="/" mt={3}>
 						Aktuelle Termine
-					</Button>
-					<Text marginTop={6} fontSize="lg" color="grey">
-						Referenzschule der TU München
-					</Text>
+					</LinkButton>
 				</Box>
 			</WrapItem>
-			<WrapItem flex="1 1 0" minW="670px">
+			<WrapItem flex="1 1 0" minW="270px">
 				<Box d="flex" boxShadow="2xl" borderRadius="2xl">
 					<Image
 						id="9b9917b3-0fce-4ca5-0718-ca3e22794500"
