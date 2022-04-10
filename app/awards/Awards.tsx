@@ -13,7 +13,7 @@ export default memo(function Awards() {
 			justify="space-between"
 			w="full"
 			mt="5"
-			maxW="5xl"
+			maxW="6xl"
 			pos="relative"
 			_before={{
 				bg: "linear-gradient(90deg, rgba(66, 71, 112, 0.09), rgba(66, 71, 112, 0.09) 50%, transparent 0, transparent)",

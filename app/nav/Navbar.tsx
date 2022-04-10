@@ -42,9 +42,9 @@ export default memo(function Navbar({
 	);
 
 	return (
-		<chakra.nav borderBottomWidth="1px" w="full" pos="sticky">
-			<Flex w="full" maxW="7xl" mx="auto" align="center">
-				<Box p={2} px={4}>
+		<chakra.nav borderBottomWidth="1px" w="full" pos="sticky" p="0 1em">
+			<Flex w="full" maxW="6xl" mx="auto" align="center">
+				<Box p={2} px={4} pl={0}>
 					<Heading size="lg">LSG</Heading>
 				</Box>
 				<Spacer />

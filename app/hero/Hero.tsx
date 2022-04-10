@@ -28,7 +28,7 @@ export default memo(function Hero() {
 					</Text>
 				</Box>
 			</WrapItem>
-			<WrapItem flex="1 1 0" minW="570px">
+			<WrapItem flex="1 1 0" minW="670px">
 				<Box d="flex" boxShadow="2xl" borderRadius="2xl">
 					<Image
 						src={backgroundImage}

@@ -73,7 +73,7 @@ export default function Index(): JSX.Element {
 				py={8}
 				pos="relative"
 				centerContent>
-				<chakra.section py={8}>
+				<chakra.section pb={8} pt={4}>
 					<Hero />
 				</chakra.section>
 				<Awards />
