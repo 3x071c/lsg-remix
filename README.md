@@ -34,6 +34,10 @@ Impatient? Spin up a GitPod environment in seconds and you're good to go:
 
 ## Get Started 💨
 
+> ### Windows Incompatibility
+>
+> Currently, the development script doesn't run on Windows because it has no POSIX-compliant shell environment. If you're stuck on it, try WSL, Cygwin, etc.
+
 Make sure you have the latest version of [Node.js](https://nodejs.org/) and NPM (the Node package manager, which should ship with it) installed:
 
 -   (Linux) `$ pacman -S nodejs`
