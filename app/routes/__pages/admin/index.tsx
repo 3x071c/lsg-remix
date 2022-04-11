@@ -28,7 +28,7 @@ export default function Index(): JSX.Element {
 
 	return (
 		<chakra.main w="full">
-			<Heading>
+			<Heading as="h3">
 				Hallo {firstname} {lastname} 👋
 			</Heading>
 			<Text>Auf Dienste zugreifen:</Text>

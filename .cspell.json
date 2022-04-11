@@ -19,11 +19,13 @@
 	"version": "0.2",
 	"words": [
 		"alex",
-		"Cäpt",
+		"cäpt",
 		"chakra",
+		"cils",
 		"codeql",
 		"csvg",
 		"deepakputhraya",
+		"delf",
 		"dessant",
 		"esbuild",
 		"ethr",
@@ -31,12 +33,16 @@
 		"gifs",
 		"homic",
 		"intelli",
+		"Jahrgangsstufensprecher",
+		"Jgst",
 		"kodiak",
 		"monokai",
 		"musin",
 		"necrobumps",
 		"pacman",
+		"Pizzabestellung",
 		"schoolib",
+		"Städt",
 		"Strg",
 		"tsbuildinfo",
 		"uhyo",
@@ -44,7 +50,6 @@
 		"uuids",
 		"wqhd",
 		"wxga",
-		"zalgo",
-		"Pizzabestellung"
+		"zalgo"
 	]
 }

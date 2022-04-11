@@ -5,11 +5,7 @@ import { useInView } from "react-intersection-observer";
 import { entries } from "~app/util";
 
 const VARIANTS = {
-	"16": 16,
-	"32": 32,
-	"64": 64,
-	"128": 128,
-	"256": 256,
+	mini: 427,
 	preview: 848,
 	wxga: 1280,
 	public: 1366,
@@ -31,12 +27,10 @@ export default function Image({
 	priority,
 	id,
 	sizes,
-	avatar,
 	...props
 }: Omit<ImageProps, "src" | "srcSet" | "loading" | "ignoreFallback"> & {
 	priority?: boolean;
 	id: string;
-	avatar?: boolean;
 }): JSX.Element {
 	const supportsLazyLoading = useNativeLazyLoading();
 	const { ref, inView } = useInView({
@@ -47,15 +41,6 @@ export default function Image({
 		triggerOnce: true,
 		threshold: 1,
 	});
-	const maxData = sizes
-		? sizes
-				.replaceAll(/\(.*\)/g, "")
-				.replaceAll(/\s/g, "")
-				.replaceAll("px", "")
-				.split(",")
-				.map((v) => Number(v))
-		: [];
-	const max = maxData.length > 0 ? Math.max(...maxData) : undefined;
 	const { onLoad, onError, crossOrigin, alt, ...boxProps } = props;
 	const load = inView || supportsLazyLoading || priority;
 
@@ -65,34 +50,25 @@ export default function Image({
 				w="full"
 				h="full"
 				{...props}
-				loading={priority ? "eager" : "lazy"}
-				fallbackSrc={
-					avatar
-						? "data:image/svg+xml,%3csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20version=%271.1%27%20width=%27256%27%20height=%27256%27/%3e"
-						: "data:image/svg+xml,%3csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20version=%271.1%27%20width=%271920%27%20height=%271280%27/%3e"
-				}
-				src={src(id, avatar ? "16" : "preview")}
+				fallbackSrc="data:image/svg+xml,%3csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20version=%271.1%27%20width=%27848%27%20height=%27477%27/%3e"
+				src={src(id, "preview")}
 				filter="auto"
 				blur={load ? undefined : "1px"}
 			/>
 			{load && (
 				<ChakraImage
-					w="full"
-					h="full"
-					{...props}
-					ignoreFallback
 					pos="absolute"
 					inset={0}
-					transform="auto"
+					w="full"
+					h="full"
+					ignoreFallback
+					{...props}
 					loading={priority ? "eager" : "lazy"}
-					srcSet={entries(VARIANTS)
-						.map(([k, v]) => {
-							if (v > (max ?? NaN)) return false;
-							return `${src(id, k)} ${v}w`;
-						})
-						.filter(Boolean)
-						.join(",\n")}
 					src={src(id, "public")}
+					srcSet={entries(VARIANTS)
+						.map(([k, v]) => `${src(id, k)} ${v}w`)
+						.join(",\n")}
+					sizes={sizes}
 				/>
 			)}
 		</Box>

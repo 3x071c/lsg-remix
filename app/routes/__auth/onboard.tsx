@@ -57,11 +57,13 @@ export default function Onboard() {
 		<Center minW="100vw" minH="100vh">
 			<Wrap spacing={8} justify="center" align="center">
 				<WrapItem>
-					<Heading size="3xl">Hallo! 👋</Heading>
+					<Heading as="h1" size="3xl">
+						Hallo! 👋
+					</Heading>
 				</WrapItem>
 				<WrapItem>
 					<chakra.main p={8} rounded="md" bg={background}>
-						<Heading textAlign="center" mt={2}>
+						<Heading as="h2" textAlign="center" mt={2}>
 							Neuer Nutzer 🤩
 						</Heading>
 						<ValidatedForm validator={validator} method="post">

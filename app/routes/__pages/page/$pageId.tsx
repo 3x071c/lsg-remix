@@ -41,7 +41,7 @@ export default function Page() {
 				top={64}
 				minH="100vh"
 				bg={bg}>
-				<Heading size="xl" p={6}>
+				<Heading as="h2" size="xl" p={6}>
 					{title}
 				</Heading>
 			</chakra.main>

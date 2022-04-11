@@ -39,20 +39,33 @@ export default memo(function Nav({
 	height,
 }: NavbarProps): JSX.Element {
 	const theme = useTheme();
-	const popoverBg = useColorModeValue(
+	const popoverBgTransparent = useColorModeValue(
 		"whiteAlpha.900",
 		transparentize("gray.700", 0.9)(theme),
 	);
 	const bg = useColorModeValue("white", "gray.800");
+	const bgTransparent = useColorModeValue(
+		"whiteAlpha.900",
+		transparentize("gray.800", 0.9)(theme),
+	);
 
 	return (
 		<chakra.nav
-			borderBottomWidth="1px"
+			borderBottomWidth={1}
 			w="full"
 			pos="sticky"
 			top={0}
 			zIndex={2}
-			bg={bg}>
+			bg={bg}
+			sx={{
+				"@supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none))":
+					{
+						backdropFilter: "auto",
+						// eslint-disable-next-line sort-keys -- Blur has to come after `auto` filter for this to work!
+						backdropBlur: "md",
+						bg: bgTransparent,
+					},
+			}}>
 			<Flex
 				w="full"
 				maxW="7xl"
@@ -62,7 +75,9 @@ export default memo(function Nav({
 				overflow="hidden">
 				<Link href="/">
 					<Box p={2} px={4}>
-						<Heading size="lg">LSG</Heading>
+						<Heading as="h1" size="lg">
+							LSG
+						</Heading>
 					</Box>
 				</Link>
 				<Spacer />
@@ -86,7 +101,7 @@ export default memo(function Nav({
 												backdropFilter: "auto",
 												// eslint-disable-next-line sort-keys -- Blur has to come after `auto` filter for this to work!
 												backdropBlur: "md",
-												bg: popoverBg,
+												bg: popoverBgTransparent,
 											},
 									}}>
 									<PopoverBody>
