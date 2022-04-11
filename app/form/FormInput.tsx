@@ -1,11 +1,10 @@
+import type { FormControlProps, InputProps } from "@chakra-ui/react";
 import {
 	FormControl,
-	FormControlProps,
 	FormErrorMessage,
 	FormHelperText,
 	FormLabel,
 	Input,
-	InputProps,
 } from "@chakra-ui/react";
 import { useField } from "remix-validated-form";
 

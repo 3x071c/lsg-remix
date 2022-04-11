@@ -1,3 +1,4 @@
+import type { ActionFunction, LoaderFunction } from "remix";
 import {
 	Heading,
 	Wrap,
@@ -8,13 +9,7 @@ import {
 	Text,
 } from "@chakra-ui/react";
 import { withZod } from "@remix-validated-form/with-zod";
-import {
-	json,
-	ActionFunction,
-	useActionData,
-	LoaderFunction,
-	redirect,
-} from "remix";
+import { json, useActionData, redirect } from "remix";
 import { ValidatedForm, validationError } from "remix-validated-form";
 import { login as authenticate, useLogin, authorize } from "~app/auth";
 import { FormInput, SubmitButton } from "~app/form";

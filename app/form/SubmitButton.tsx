@@ -1,5 +1,6 @@
+import type { ButtonProps } from "@chakra-ui/react";
 import type { PropsWithChildren } from "react";
-import { Button, ButtonProps } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 import { useFormContext, useIsSubmitting } from "remix-validated-form";
 
 export default function SubmitButton({

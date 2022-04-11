@@ -1,9 +1,6 @@
+import type { LinkProps as ChakraLinkProps } from "@chakra-ui/react";
 import type { RemixNavLinkProps } from "@remix-run/react/components";
-import {
-	Link as ChakraLink,
-	LinkProps as ChakraLinkProps,
-	forwardRef,
-} from "@chakra-ui/react";
+import { Link as ChakraLink, forwardRef } from "@chakra-ui/react";
 import { NavLink as RemixNavLink } from "remix";
 
 export default forwardRef<

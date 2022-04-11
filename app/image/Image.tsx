@@ -1,5 +1,6 @@
 /* eslint-disable sort-keys */
-import { Box, Image as ChakraImage, ImageProps } from "@chakra-ui/react";
+import type { ImageProps } from "@chakra-ui/react";
+import { Box, Image as ChakraImage } from "@chakra-ui/react";
 import useNativeLazyLoading from "@charlietango/use-native-lazy-loading";
 import { useInView } from "react-intersection-observer";
 import { entries } from "~app/util";

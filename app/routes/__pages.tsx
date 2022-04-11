@@ -1,4 +1,5 @@
-import { json, LoaderFunction, Outlet, useLoaderData } from "remix";
+import type { LoaderFunction } from "remix";
+import { json, Outlet, useLoaderData } from "remix";
 import { pages, pageGroups } from "~app/models";
 import { Nav } from "~app/nav";
 import { fromEntries } from "~app/util";
