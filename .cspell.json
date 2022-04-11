@@ -19,8 +19,8 @@
 	"version": "0.2",
 	"words": [
 		"alex",
-		"chakra",
 		"cäpt",
+		"chakra",
 		"cils",
 		"codeql",
 		"csvg",
@@ -40,7 +40,9 @@
 		"musin",
 		"necrobumps",
 		"pacman",
+		"Pizzabestellung",
 		"schoolib",
+		"Städt",
 		"Strg",
 		"tsbuildinfo",
 		"uhyo",
@@ -48,7 +50,6 @@
 		"uuids",
 		"wqhd",
 		"wxga",
-		"zalgo",
-		"Pizzabestellung"
+		"zalgo"
 	]
 }

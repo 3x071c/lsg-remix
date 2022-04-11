@@ -1,14 +1,15 @@
 import { Heading, Text, chakra, Container } from "@chakra-ui/react";
-import { Awards } from "~app/awards";
+import { Certificates } from "~app/certificates";
 import { Hero } from "~app/hero";
 import { LinkButton } from "~app/links";
 
 export default function Index(): JSX.Element {
+	const maxContentWidth = "7xl";
 	return (
-		<Container w="full" maxW="7xl" mx="auto" centerContent>
+		<Container w="full" maxW={maxContentWidth} mx="auto" centerContent>
 			<chakra.main w="full">
 				<chakra.section py={8}>
-					<Hero />
+					<Hero maxContentWidth={maxContentWidth} />
 				</chakra.section>
 				<chakra.section
 					py={8}
@@ -16,7 +17,7 @@ export default function Index(): JSX.Element {
 					borderTopStyle="dashed"
 					borderBottomWidth={1}
 					borderBottomStyle="dashed">
-					<Awards />
+					<Certificates maxContentWidth={maxContentWidth} />
 				</chakra.section>
 				<chakra.section py={8} textAlign="center">
 					<Heading as="h2" size="xl">

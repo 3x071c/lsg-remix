@@ -19,7 +19,9 @@ import {
 	LayoutProps,
 	PositionProps,
 	useToast,
+	useTheme,
 } from "@chakra-ui/react";
+import { transparentize } from "@chakra-ui/theme-tools";
 import { memo } from "react";
 import { useNavigate } from "remix";
 import { NavLink } from "~app/links";
@@ -44,9 +46,14 @@ export default memo(function CmsNav({
 	firstname: string;
 	lastname: string;
 }): JSX.Element {
-	const bg = useColorModeValue("white", "gray.800");
 	const navigate = useNavigate();
 	const toast = useToast();
+	const theme = useTheme();
+	const bg = useColorModeValue("white", "gray.800");
+	const bgTransparent = useColorModeValue(
+		"whiteAlpha.900",
+		transparentize("gray.800", 0.9)(theme),
+	);
 
 	return (
 		<chakra.nav
@@ -55,7 +62,16 @@ export default memo(function CmsNav({
 			pos="sticky"
 			top={top}
 			zIndex={3}
-			bg={bg}>
+			bg={bg}
+			sx={{
+				"@supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none))":
+					{
+						backdropFilter: "auto",
+						// eslint-disable-next-line sort-keys -- Blur has to come after `auto` filter for this to work!
+						backdropBlur: "md",
+						bg: bgTransparent,
+					},
+			}}>
 			<Flex
 				w="full"
 				maxW="7xl"

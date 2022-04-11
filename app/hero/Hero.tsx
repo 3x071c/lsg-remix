@@ -1,8 +1,19 @@
-import { Heading, Wrap, WrapItem, Text, Box } from "@chakra-ui/react";
+import { Heading, Wrap, WrapItem, Text, Box, useToken } from "@chakra-ui/react";
 import { memo } from "react";
 import { Image } from "~app/image";
 
-export default memo(function Hero() {
+export default memo(function Hero({
+	maxContentWidth,
+}: {
+	maxContentWidth: string;
+}) {
+	const [maxContentWidthValue] = useToken(
+		"sizes",
+		[maxContentWidth],
+		["80rem"],
+	) as [string];
+	const [wrapperSpacing] = useToken("space", ["8"], ["2rem"]) as [string];
+
 	return (
 		<Wrap spacing={8} align="center" justify="center" textAlign="center">
 			<WrapItem flex="1 1 0">
@@ -22,7 +33,7 @@ export default memo(function Hero() {
 						id="9b9917b3-0fce-4ca5-0718-ca3e22794500"
 						alt="Louise-Schroeder-Gymnasium Außenansicht"
 						borderRadius="2xl"
-						sizes="(max-width: 600px) 100vw, 50vw"
+						sizes={`(max-width: 270px) calc(100vw - ${wrapperSpacing}), (max-width: ${maxContentWidthValue}) calc(50vw - ${wrapperSpacing}), calc((${maxContentWidthValue} / 2) - ${wrapperSpacing})`}
 						priority
 					/>
 				</Box>

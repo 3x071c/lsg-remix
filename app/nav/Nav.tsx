@@ -39,11 +39,15 @@ export default memo(function Nav({
 	height,
 }: NavbarProps): JSX.Element {
 	const theme = useTheme();
-	const popoverBg = useColorModeValue(
+	const popoverBgTransparent = useColorModeValue(
 		"whiteAlpha.900",
 		transparentize("gray.700", 0.9)(theme),
 	);
 	const bg = useColorModeValue("white", "gray.800");
+	const bgTransparent = useColorModeValue(
+		"whiteAlpha.900",
+		transparentize("gray.800", 0.9)(theme),
+	);
 
 	return (
 		<chakra.nav
@@ -52,7 +56,16 @@ export default memo(function Nav({
 			pos="sticky"
 			top={0}
 			zIndex={2}
-			bg={bg}>
+			bg={bg}
+			sx={{
+				"@supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none))":
+					{
+						backdropFilter: "auto",
+						// eslint-disable-next-line sort-keys -- Blur has to come after `auto` filter for this to work!
+						backdropBlur: "md",
+						bg: bgTransparent,
+					},
+			}}>
 			<Flex
 				w="full"
 				maxW="7xl"
@@ -88,7 +101,7 @@ export default memo(function Nav({
 												backdropFilter: "auto",
 												// eslint-disable-next-line sort-keys -- Blur has to come after `auto` filter for this to work!
 												backdropBlur: "md",
-												bg: popoverBg,
+												bg: popoverBgTransparent,
 											},
 									}}>
 									<PopoverBody>
