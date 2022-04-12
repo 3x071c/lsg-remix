@@ -70,9 +70,9 @@ export const ImageDelivery = z
 	.optional();
 export type ImageDelivery = z.infer<typeof ImageDelivery>;
 
-export const Date = z.date({
+export const DateType = z.date({
 	description: "Datum",
 	invalid_type_error: "Datum muss ein valides Datum sein",
 	required_error: "Datum ist erforderlich",
 });
-export type Date = z.infer<typeof Date>;
+export type DateType = z.infer<typeof DateType>;

@@ -2,16 +2,28 @@
 
 import { z } from "zod";
 import handler from "./_handler";
-import { Firstname, Lastname, DID, UUID, ImageDelivery } from "./_shared";
+import {
+	Firstname,
+	Lastname,
+	DID,
+	UUID,
+	ImageDelivery,
+	DateType,
+} from "./_shared";
 
-const rawUser = {
+export const User = z.object({
 	avatar: ImageDelivery,
+	createdAt: DateType,
 	did: DID,
+	editedAt: DateType,
 	firstname: Firstname,
 	lastname: Lastname,
 	uuid: UUID,
-};
-export const User = z.object(rawUser);
+});
 export type User = z.infer<typeof User>;
 
-export const users = handler<User, typeof rawUser>("users", "Nutzer", User);
+export const users = handler<User, typeof User["shape"], typeof User>(
+	User,
+	"users",
+	"Nutzer",
+);

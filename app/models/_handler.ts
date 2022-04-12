@@ -1,15 +1,26 @@
 /* eslint-disable no-underscore-dangle -- Private APIs */
+import type { DateType } from "./_shared";
 import type { SuperJSONResult } from "superjson/dist/types";
-import type { ZodObject, ZodType } from "zod";
+import type { z } from "zod";
 import superjson from "superjson";
 import { entries, fromEntries } from "~app/util";
 import { UUID } from "./_shared";
 
+type Reserved = {
+	uuid: UUID;
+	createdAt: DateType;
+	editedAt: DateType;
+};
+
 const handler =
-	<M extends { uuid: UUID }, R extends { [key in keyof M]: ZodType<M[key]> }>(
+	<
+		R extends Record<string, unknown> & Reserved,
+		S extends { [K in keyof R]: z.ZodType<R[K]> },
+		M extends z.ZodObject<S>,
+	>(
+		model: M,
 		binding: string,
 		friendly: string,
-		model: ZodObject<R>,
 	) =>
 	() => {
 		if (!global.env[binding])
@@ -19,8 +30,8 @@ const handler =
 			throw new Error(`${friendly} aktuell falsch`);
 
 		return {
-			_constructKey<T extends keyof Omit<M, "uuid">>(
-				uuid: M["uuid"],
+			_constructKey<T extends keyof Omit<R, "uuid">>(
+				uuid: R["uuid"],
 				field: T,
 				validateUUID = true,
 				validateField = true,
@@ -31,9 +42,9 @@ const handler =
 						: field.toString()
 				}:${validateUUID ? this._validateUUID(uuid) : uuid}`;
 			},
-			_constructValue<T extends keyof Omit<M, "uuid">>(
+			_constructValue<T extends keyof Omit<R, "uuid">>(
 				field: T,
-				value: M[T],
+				value: R[T],
 			): string {
 				return JSON.stringify({
 					superjson: superjson.serialize(
@@ -41,26 +52,31 @@ const handler =
 					),
 				});
 			},
-			_validateField<T extends keyof Omit<M, "uuid">>(field: T): string {
+			_validateField<T extends keyof Omit<R, "uuid">>(field: T): string {
 				const parsedField = field.toString();
 				if (!Object.keys(model.shape).includes(parsedField))
 					throw new Error("[_arrayField] Invalider Schlüsselzugriff");
 				return parsedField;
 			},
-			_validateModel(_model: M): M {
-				return model.parse(_model) as M;
+			_validateModel(_model: R): R {
+				return model.parse(_model) as R;
 			},
-			_validateUUID(uuid: M["uuid"]): M["uuid"] {
+			_validateUUID(uuid: R["uuid"]): R["uuid"] {
 				return UUID.parse(uuid);
 			},
-			_validateValue<T extends keyof Omit<M, "uuid">>(
+			_validateValue<T extends keyof Omit<R, "uuid">>(
 				field: T,
-				value?: M[T],
-			): M[T] {
-				return model.shape[field].parse(value) as M[T];
+				value?: R[T],
+			): R[T] {
+				return model.shape[field].parse(value) as R[T];
 			},
-			async create(data: Omit<M, "uuid">): Promise<M> {
+			async create(_data: Omit<R, "uuid">): Promise<R> {
 				const uuid = crypto.randomUUID();
+				const data: Omit<R, "uuid"> = {
+					..._data,
+					createdAt: new Date(),
+					editedAt: new Date(),
+				};
 				await Promise.all(
 					entries(data).map(([field, value]) =>
 						ctx.put(
@@ -69,19 +85,19 @@ const handler =
 						),
 					),
 				);
-				return this._validateModel({ ...data, uuid } as M);
+				return this._validateModel({ ...data, uuid } as R);
 			},
 			async get<
-				T extends keyof Omit<M, "uuid">,
+				T extends keyof Omit<R, "uuid">,
 				O extends Pick<KVNamespaceGetOptions<"json">, "cacheTtl"> & {
 					required?: boolean;
 				},
 			>(
-				uuid: M["uuid"],
+				uuid: R["uuid"],
 				field: T,
 				options?: O,
 			): Promise<
-				O extends { required: false } ? M[T] | undefined : M[T]
+				O extends { required: false } ? R[T] | undefined : R[T]
 			> {
 				const cacheTtl = options?.cacheTtl ?? 3600;
 				const required = options?.required ?? true;
@@ -104,25 +120,25 @@ const handler =
 				} catch (e) {
 					if (required) throw e;
 					return undefined as O extends { required: false }
-						? M[T] | undefined
-						: M[T];
+						? R[T] | undefined
+						: R[T];
 				}
 			},
 			async getMany<
-				T extends keyof Omit<M, "uuid">,
+				T extends keyof Omit<R, "uuid">,
 				O extends Pick<KVNamespaceGetOptions<"json">, "cacheTtl"> & {
 					required?: boolean;
 				},
 			>(
-				uuid: M["uuid"],
+				uuid: R["uuid"],
 				fields: ReadonlyArray<T>,
 				options?: O,
 			): Promise<{
 				[field in typeof fields extends ReadonlyArray<infer U>
 					? U
 					: never]: O extends { required: false }
-					? M[field] | undefined
-					: M[field];
+					? R[field] | undefined
+					: R[field];
 			}> {
 				return fromEntries(
 					await Promise.all(
@@ -138,12 +154,12 @@ const handler =
 					[field in typeof fields extends ReadonlyArray<infer U>
 						? U
 						: never]: O extends { required: false }
-						? M[field] | undefined
-						: M[field];
+						? R[field] | undefined
+						: R[field];
 				};
 			},
 			async list<
-				T extends keyof Omit<M, "uuid">,
+				T extends keyof Omit<R, "uuid">,
 				O extends Pick<KVNamespaceListOptions, "cursor" | "limit"> & {
 					required?: boolean;
 				},
@@ -172,7 +188,7 @@ const handler =
 				};
 			},
 			async listValues<
-				T extends keyof Omit<M, "uuid">,
+				T extends keyof Omit<R, "uuid">,
 				O extends Pick<KVNamespaceListOptions, "cursor" | "limit"> &
 					Pick<KVNamespaceGetOptions<"json">, "cacheTtl"> & {
 						required?: boolean;
@@ -200,14 +216,21 @@ const handler =
 					listComplete,
 				};
 			},
-			async update({ uuid, ...data }: PartialExcept<M, "uuid">) {
+			async update({
+				uuid,
+				..._data
+			}: Partial<Omit<R, keyof Reserved>> & { uuid: R["uuid"] }) {
+				const data = {
+					..._data,
+					editedAt: new Date(),
+				} as unknown as Omit<Partial<R>, "uuid">;
 				await Promise.all(
 					entries(data).map(([field, value]) =>
 						ctx.put(
 							this._constructKey(uuid, field),
 							this._constructValue(
 								field,
-								value as M[typeof field] /* TS sucks */,
+								value as R[typeof field] /* TS sucks */,
 							),
 						),
 					),
