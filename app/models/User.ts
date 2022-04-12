@@ -21,6 +21,16 @@ export const User = z.object({
 	uuid: UUID,
 });
 export type User = z.infer<typeof User>;
+export const UserData = User.omit({
+	avatar: true,
+	createdAt: true,
+	did: true,
+	editedAt: true,
+	uuid: true,
+});
+export type UserData = z.infer<typeof UserData>;
+export const UserID = User.pick({ did: true, uuid: true });
+export type UserID = z.infer<typeof UserID>;
 
 export const users = handler<User, typeof User["shape"], typeof User>(
 	User,

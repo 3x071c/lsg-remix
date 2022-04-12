@@ -70,13 +70,13 @@ const handler =
 			): R[T] {
 				return model.shape[field].parse(value) as R[T];
 			},
-			async create(_data: Omit<R, "uuid">): Promise<R> {
+			async create(_data: Omit<R, keyof Reserved>): Promise<R> {
 				const uuid = crypto.randomUUID();
-				const data: Omit<R, "uuid"> = {
+				const data = {
 					..._data,
 					createdAt: new Date(),
 					editedAt: new Date(),
-				};
+				} as Omit<R, "uuid">;
 				await Promise.all(
 					entries(data).map(([field, value]) =>
 						ctx.put(
