@@ -4,16 +4,9 @@ type EntriesType =
 	| [PropertyKey, unknown][]
 	| ReadonlyArray<readonly [PropertyKey, unknown]>;
 
-type DeepWritable<O> = O extends
-	| string
-	| boolean
-	| number
-	| Date
-	| (() => unknown)
-	? O
-	: {
-			-readonly [P in keyof O]: DeepWritable<O[P]>;
-	  };
+type DeepWritable<O> = {
+	-readonly [P in keyof O]: DeepWritable<O[P]>;
+};
 type UnionToIntersection<U> = (
 	U extends unknown ? (k: U) => void : never
 ) extends (k: infer I) => void
