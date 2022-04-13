@@ -75,15 +75,15 @@ export default function Onboard() {
 								/>
 							)}
 							{entries(validatorData.shape).map(
-								([name, { description: translated }]) => (
+								([name, { description }]) => (
 									<FormInput
 										type="text"
 										name={name}
-										placeholder={String(translated)}
+										placeholder={String(description)}
 										helper={`Ihr ${String(
-											translated,
+											description,
 										)} wurde noch nicht hinterlegt`}
-										label={`Ihr ${String(translated)}`}
+										label={`Ihr ${String(description)}`}
 										key={name}
 										isDisabled={loading}
 									/>

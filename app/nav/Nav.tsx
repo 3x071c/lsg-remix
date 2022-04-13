@@ -55,7 +55,7 @@ export default memo(function Nav({
 			w="full"
 			pos="sticky"
 			top={0}
-			zIndex={2}
+			zIndex={3}
 			bg={bg}
 			sx={{
 				"@supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none))":

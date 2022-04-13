@@ -1,15 +1,19 @@
 import type { ButtonProps } from "@chakra-ui/react";
 import type { PropsWithChildren } from "react";
-import { Button } from "@chakra-ui/react";
+import { Button, forwardRef } from "@chakra-ui/react";
 import { useFormContext, useIsSubmitting } from "remix-validated-form";
 
-export default function SubmitButton({
-	isLoading,
-	disabled,
-	...props
-}: PropsWithChildren<ButtonProps>): JSX.Element {
-	const isSubmitting = useIsSubmitting();
-	const { isValid } = useFormContext();
+export default forwardRef<
+	PropsWithChildren<ButtonProps> & {
+		formId?: string;
+	},
+	"button"
+>(function SubmitButton(
+	{ isLoading, disabled, formId, ...props },
+	ref,
+): JSX.Element {
+	const isSubmitting = useIsSubmitting(formId);
+	const { isValid } = useFormContext(formId);
 	const isDisabled = isSubmitting || !isValid || disabled;
 
 	return (
@@ -19,6 +23,7 @@ export default function SubmitButton({
 			disabled={isDisabled}
 			isLoading={isSubmitting || isLoading}
 			mt={2}
+			ref={ref}
 		/>
 	);
-}
+});

@@ -11,6 +11,12 @@ export const PageGroup = z.object({
 	uuid: UUID,
 });
 export type PageGroup = z.infer<typeof PageGroup>;
+export const PageGroupData = PageGroup.omit({
+	createdAt: true,
+	editedAt: true,
+	uuid: true,
+});
+export type PageGroupData = z.infer<typeof PageGroupData>;
 
 export const pageGroups = handler<
 	PageGroup,

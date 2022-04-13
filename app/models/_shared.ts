@@ -76,3 +76,18 @@ export const DateType = z.date({
 	required_error: "Datum ist erforderlich",
 });
 export type DateType = z.infer<typeof DateType>;
+
+export const GroupRef = z
+	.string({
+		description: "Kategorie",
+		invalid_type_error: "Kategorie muss eine Zeichenkette sein",
+		required_error: "Kategorie ist erforderlich",
+	})
+	.length(36, {
+		message: "Es muss eine Kategorie ausgewählt werden",
+	})
+	.uuid({
+		message:
+			"Die Kategorie muss intern eine valide 128-bit Kennung darstellen",
+	});
+export type GroupRef = z.infer<typeof GroupRef>;
