@@ -1,3 +1,4 @@
+import type { LoaderFunction } from "remix";
 import {
 	Alert,
 	AlertIcon,
@@ -9,7 +10,7 @@ import {
 	Center,
 	CircularProgress,
 } from "@chakra-ui/react";
-import { json, LoaderFunction, redirect } from "remix";
+import { json, redirect } from "remix";
 import { useAuthCallback, authorize } from "~app/auth";
 import { url as adminURL } from "~routes/__pages/admin/index";
 

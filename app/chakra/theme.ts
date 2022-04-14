@@ -1,8 +1,5 @@
-import {
-	extendTheme,
-	withDefaultColorScheme,
-	ThemeConfig,
-} from "@chakra-ui/react";
+import type { ThemeConfig } from "@chakra-ui/react";
+import { extendTheme, withDefaultColorScheme } from "@chakra-ui/react";
 
 /**
  * This is the chakra-ui theme configuration
