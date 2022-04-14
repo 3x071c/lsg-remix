@@ -1,12 +1,7 @@
+import type { LoaderFunction } from "remix";
 import { Container, chakra } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import {
-	Outlet,
-	json,
-	LoaderFunction,
-	useLoaderData,
-	useLocation,
-} from "remix";
+import { Outlet, json, useLoaderData, useLocation } from "remix";
 import { Nav as AdminNav } from "~app/admin";
 import { authorize } from "~app/auth";
 import { users } from "~app/models";

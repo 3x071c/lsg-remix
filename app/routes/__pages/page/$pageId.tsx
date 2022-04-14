@@ -1,6 +1,7 @@
 import type { Params } from "react-router";
+import type { LoaderFunction } from "remix";
 import { chakra, Heading, useColorModeValue } from "@chakra-ui/react";
-import { json, LoaderFunction, useLoaderData } from "remix";
+import { json, useLoaderData } from "remix";
 import { Image } from "~app/image";
 import { pages } from "~app/models";
 

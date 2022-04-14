@@ -1,5 +1,6 @@
+import type { PropsWithChildren } from "react";
 import { CacheProvider } from "@emotion/react";
-import { PropsWithChildren, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { hydrate } from "react-dom";
 import { RemixBrowser } from "remix";
 import { createEmotionCache, EmotionClientContext } from "~app/emotion";

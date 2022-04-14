@@ -1,3 +1,4 @@
+import type { LayoutProps } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
 	Box,
@@ -14,7 +15,6 @@ import {
 	VStack,
 	useColorModeValue,
 	useTheme,
-	LayoutProps,
 } from "@chakra-ui/react";
 import { transparentize } from "@chakra-ui/theme-tools";
 import { memo } from "react";

@@ -1,3 +1,4 @@
+import type { LoaderFunction } from "remix";
 import {
 	Heading,
 	Text,
@@ -8,7 +9,7 @@ import {
 	StatHelpText,
 	StatGroup,
 } from "@chakra-ui/react";
-import { json, LoaderFunction, useLoaderData } from "remix";
+import { json, useLoaderData } from "remix";
 import { pages } from "~app/models";
 
 const getLoaderData = async () => {

@@ -1,6 +1,7 @@
+import type { LoaderFunction } from "remix";
 import { Center, CircularProgress } from "@chakra-ui/react";
 import { useEffect } from "react";
-import { useNavigate, json, LoaderFunction } from "remix";
+import { useNavigate, json } from "remix";
 import { useLogin, authorize, logout as invalidate } from "~app/auth";
 
 const getLoaderData = async (request: Request) => {

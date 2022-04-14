@@ -1,4 +1,5 @@
-import { ColorMode, storageKey as colorModeStorageKey } from "@chakra-ui/react";
+import type { ColorMode } from "@chakra-ui/react";
+import { storageKey as colorModeStorageKey } from "@chakra-ui/react";
 
 /**
  * Gets the value of a cookie from a given string

@@ -1,3 +1,4 @@
+import type { ActionFunction, LoaderFunction } from "remix";
 import { LockIcon } from "@chakra-ui/icons";
 import {
 	Center,
@@ -13,14 +14,7 @@ import {
 	useToast,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
-import {
-	ActionFunction,
-	Form,
-	useTransition,
-	json,
-	LoaderFunction,
-	redirect,
-} from "remix";
+import { Form, useTransition, json, redirect } from "remix";
 import { useLogin, login as authenticate, authorize } from "~app/auth";
 import { url as adminURL } from "~routes/__pages/admin/index";
 

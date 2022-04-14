@@ -1,5 +1,6 @@
+import type { ButtonProps } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
-import { Button, ButtonProps, forwardRef } from "@chakra-ui/react";
+import { Button, forwardRef } from "@chakra-ui/react";
 import { Link as RemixLink } from "remix";
 import isExternal from "./isExternal";
 

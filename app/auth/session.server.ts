@@ -1,4 +1,5 @@
-import { createCookieSessionStorage, SessionStorage } from "remix";
+import type { SessionStorage } from "remix";
+import { createCookieSessionStorage } from "remix";
 
 declare global {
 	// eslint-disable-next-line vars-on-top, no-var

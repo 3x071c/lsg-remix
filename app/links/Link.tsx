@@ -1,9 +1,6 @@
+import type { LinkProps as ChakraLinkProps } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
-import {
-	Link as ChakraLink,
-	LinkProps as ChakraLinkProps,
-	forwardRef,
-} from "@chakra-ui/react";
+import { Link as ChakraLink, forwardRef } from "@chakra-ui/react";
 import { Link as RemixLink } from "remix";
 import isExternal from "./isExternal";
 

@@ -1,3 +1,4 @@
+import type { LoaderFunction } from "remix";
 import { LinkIcon } from "@chakra-ui/icons";
 import {
 	Heading,
@@ -8,7 +9,7 @@ import {
 	Flex,
 	chakra,
 } from "@chakra-ui/react";
-import { json, LoaderFunction, useLoaderData } from "remix";
+import { json, useLoaderData } from "remix";
 import { authorize } from "~app/auth";
 import { LinkButton } from "~app/links";
 import { users } from "~app/models";

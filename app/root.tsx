@@ -1,9 +1,10 @@
 import type { StyleSheet } from "@emotion/utils";
+import type { PropsWithChildren } from "react";
+import type { MetaFunction, LoaderFunction } from "remix";
 import { Center, chakra, Heading, Text, Code } from "@chakra-ui/react";
 import { withEmotionCache } from "@emotion/react";
-import { memo, PropsWithChildren, useContext, useEffect } from "react";
+import { memo, useContext, useEffect } from "react";
 import {
-	MetaFunction,
 	Links,
 	LiveReload,
 	Meta,
@@ -11,7 +12,6 @@ import {
 	Scripts,
 	ScrollRestoration,
 	useCatch,
-	LoaderFunction,
 	json,
 	useLoaderData,
 } from "remix";

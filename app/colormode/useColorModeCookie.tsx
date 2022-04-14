@@ -1,5 +1,6 @@
+import type { ColorModeContextData } from "./ColorModeContext";
 import { useContext } from "react";
-import ColorModeContext, { ColorModeContextData } from "./ColorModeContext";
+import ColorModeContext from "./ColorModeContext";
 import {
 	getColorModeCookie,
 	getInitialColorModeCookie,

@@ -1,3 +1,4 @@
+import type { LayoutProps, PositionProps } from "@chakra-ui/react";
 import { LockIcon, QuestionIcon, SettingsIcon } from "@chakra-ui/icons";
 import {
 	Box,
@@ -16,8 +17,6 @@ import {
 	Avatar,
 	StackDivider,
 	useColorModeValue,
-	LayoutProps,
-	PositionProps,
 	useToast,
 	useTheme,
 } from "@chakra-ui/react";
