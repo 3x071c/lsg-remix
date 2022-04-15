@@ -1,5 +1,4 @@
 import type { ActionFunction, LoaderFunction } from "remix";
-import { LockIcon } from "@chakra-ui/icons";
 import {
 	Center,
 	Heading,
@@ -12,9 +11,11 @@ import {
 	Button,
 	FormLabel,
 	useToast,
+	CircularProgress,
 } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Form, useTransition, json, redirect } from "remix";
+import { useSubmit, json, redirect } from "remix";
 import { useLogin, login as authenticate, authorize } from "~app/auth";
 import { url as adminURL } from "~routes/__pages/admin/index";
 
@@ -33,80 +34,31 @@ export const action: ActionFunction = async ({ request }) => {
 	return authenticate(request, didToken);
 };
 
-const ChakraForm = chakra(Form);
 export default function Login(): JSX.Element {
 	const background = useColorModeValue("gray.50", "gray.700");
-	const transition = useTransition();
 	const toast = useToast();
 
-	const { loading, logout, data: token, login } = useLogin();
+	const { loading, data: token, login } = useLogin();
 	const {
 		register,
 		handleSubmit,
 		formState: { errors, isSubmitting },
 	} = useForm<{ email: string }>();
-	const onSubmit = handleSubmit(({ email }) => {
-		login(email).catch((e) =>
-			toast({
-				description: `Wir wissen auch nicht weiter >:( (${String(e)})`,
-				duration: 9000,
-				isClosable: true,
-				status: "error",
-				title: "Anmeldung fehlgeschlagen",
-			}),
-		);
-	});
+	const submit = useSubmit();
+
+	useEffect(() => {
+		if (token) {
+			const formData = new FormData();
+			formData.append("_authorization", token);
+			submit(formData, { method: "post" });
+		}
+	}, [token, submit]);
 
 	if (token) {
 		return (
-			<>
-				<Button
-					size="lg"
-					pos="fixed"
-					top="20px"
-					right="20px"
-					zIndex={9}
-					variant="outline"
-					rightIcon={<LockIcon />}
-					isLoading={loading || transition.state === "submitting"}
-					onClick={() => {
-						logout().catch((e) =>
-							toast({
-								description: `Wir wissen auch nicht weiter >:( (${String(
-									e,
-								)})`,
-								duration: 9000,
-								isClosable: true,
-								status: "error",
-								title: "Abmeldung fehlgeschlagen",
-							}),
-						);
-					}}>
-					Abmelden
-				</Button>
-				<Center minW="100vw" minH="100vh">
-					<chakra.main p={8} rounded="md" bg={background}>
-						<Heading as="h1" textAlign="center">
-							Fast fertig!
-						</Heading>
-						<ChakraForm method="post" p={4}>
-							<input
-								type="hidden"
-								name="_authorization"
-								value={token}
-							/>
-							<Button
-								w="full"
-								type="submit"
-								isLoading={
-									loading || transition.state === "submitting"
-								}>
-								Anmeldung abschließen
-							</Button>
-						</ChakraForm>
-					</chakra.main>
-				</Center>
-			</>
+			<Center minW="100vw" minH="100vh" p={2}>
+				<CircularProgress isIndeterminate capIsRound />
+			</Center>
 		);
 	}
 
@@ -118,7 +70,19 @@ export default function Login(): JSX.Element {
 				</Heading>
 				<form
 					// eslint-disable-next-line @typescript-eslint/no-misused-promises -- Looks like the only way
-					onSubmit={onSubmit}>
+					onSubmit={handleSubmit(({ email }) => {
+						login(email).catch((e) =>
+							toast({
+								description: `Wir wissen auch nicht weiter >:( (${String(
+									e,
+								)})`,
+								duration: 9000,
+								isClosable: true,
+								status: "error",
+								title: "Anmeldung fehlgeschlagen",
+							}),
+						);
+					})}>
 					<FormControl
 						isRequired
 						isInvalid={!!errors.email}
