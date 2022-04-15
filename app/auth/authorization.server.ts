@@ -1,7 +1,8 @@
 import { redirect } from "remix";
-import { User } from "~app/models";
+import { UserID } from "~app/models";
 import { fromEntries } from "~app/util";
 import { url as loginURL } from "~routes/__auth/login";
+import { url as logoutURL } from "~routes/__auth/logout";
 import { cmsAuthSessionStorage } from "./session.server";
 
 /**
@@ -18,7 +19,7 @@ export async function authorize<
 	request: Request,
 	options?: O,
 ): Promise<
-	User | (O extends { required: false } ? undefined : Record<string, never>)
+	UserID | (O extends { required: false } ? undefined : Record<string, never>)
 > {
 	const required = options?.required ?? true;
 	const session = await cmsAuthSessionStorage().getSession(
@@ -28,17 +29,20 @@ export async function authorize<
 	if (Object.keys(session.data).length === 0) {
 		if (required) throw redirect(loginURL);
 		return undefined as
-			| User
+			| UserID
 			| (O extends { required: false }
 					? undefined
 					: Record<string, never>);
 	}
-	const user = fromEntries(
-		Object.keys(User.shape).map(
-			(key) => [key as keyof User, session.get(key)] as const,
+	const userID = fromEntries(
+		Object.keys(UserID.shape).map(
+			(key) => [key as keyof UserID, session.get(key)] as const,
 		),
 	);
-	if (!User.safeParse(user).success) throw redirect("/");
 
-	return session.data as User;
+	try {
+		return UserID.parse(userID);
+	} catch (e) {
+		throw redirect(logoutURL);
+	}
 }

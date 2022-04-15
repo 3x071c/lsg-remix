@@ -1,16 +1,12 @@
-import type { z } from "zod";
 import { redirect } from "remix";
 import { magicServer } from "~app/magic";
-import { users, User } from "~app/models";
+import { users, UserData, UserID } from "~app/models";
 import { entries } from "~app/util";
 import { url as logoutURL } from "~routes/__auth/logout";
 import { url as onboardingURL } from "~routes/__auth/onboard";
 import { url as adminURL } from "~routes/__pages/admin/index";
 import { cmsAuthSessionStorage } from "./session.server";
 
-export const UserData = User.omit({ did: true, uuid: true });
-// eslint-disable-next-line @typescript-eslint/no-redeclare -- Zod TypeScript integration
-export type UserData = z.infer<typeof UserData>;
 export async function login(
 	request: Request,
 	didToken: unknown,
@@ -64,12 +60,11 @@ export async function login(
 		request.headers.get("Cookie"),
 	);
 	entries(
-		User.parse({
-			...(await users().getMany(uuid, ["firstname", "lastname"])),
+		UserID.parse({
 			did,
 			uuid,
 		}),
-	).map((e) => session.set(e![0] as string, e![1]));
+	).map(([k, v]) => session.set(k, v));
 
 	throw redirect(adminURL, {
 		headers: {

@@ -2,16 +2,25 @@
 
 import { z } from "zod";
 import handler from "./_handler";
-import { Title, UUID, Date } from "./_shared";
+import { Title, UUID, DateType, GroupRef } from "./_shared";
 
-const rawPage = {
-	createdAt: Date,
-	editedAt: Date,
-	groupRef: UUID,
+export const Page = z.object({
+	createdAt: DateType,
+	editedAt: DateType,
+	groupRef: GroupRef,
 	title: Title,
 	uuid: UUID,
-};
-export const Page = z.object(rawPage);
+});
 export type Page = z.infer<typeof Page>;
+export const PageData = Page.omit({
+	createdAt: true,
+	editedAt: true,
+	uuid: true,
+});
+export type PageData = z.infer<typeof PageData>;
 
-export const pages = handler<Page, typeof rawPage>("pages", "Seiten", Page);
+export const pages = handler<Page, typeof Page["shape"], typeof Page>(
+	Page,
+	"pages",
+	"Seiten",
+);

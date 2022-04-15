@@ -1,25 +1,28 @@
-import type { FormControlProps, InputProps } from "@chakra-ui/react";
+import type { FormControlProps, SelectProps } from "@chakra-ui/react";
+import type { ReactNode } from "react";
 import {
+	HStack,
 	FormControl,
 	FormErrorMessage,
 	FormHelperText,
 	FormLabel,
-	Input,
+	Select,
 	forwardRef,
 } from "@chakra-ui/react";
 import { useField } from "remix-validated-form";
 
 export default forwardRef<
-	InputProps &
+	SelectProps &
 		Pick<FormControlProps, "isDisabled"> & {
 			name: string;
 			label: string;
 			helper: string;
 			formId?: string;
+			rightChild?: ReactNode;
 		},
-	"input"
->(function FormInput(
-	{ name, label, helper, isDisabled, formId, ...props },
+	"select"
+>(function FormSelect(
+	{ name, label, helper, isDisabled, formId, rightChild, ...props },
 	ref,
 ): JSX.Element {
 	const { error, getInputProps } = useField(name, { formId });
@@ -33,7 +36,10 @@ export default forwardRef<
 			<FormLabel htmlFor={name} fontWeight="semibold">
 				{label}
 			</FormLabel>
-			<Input {...props} {...getInputProps()} id={name} ref={ref} />
+			<HStack align="center" justify="space-between">
+				<Select {...props} {...getInputProps()} id={name} ref={ref} />
+				{rightChild}
+			</HStack>
 			{!error ? (
 				<FormHelperText>{helper}</FormHelperText>
 			) : (

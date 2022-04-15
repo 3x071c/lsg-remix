@@ -2,17 +2,24 @@
 
 import { z } from "zod";
 import handler from "./_handler";
-import { Name, UUID } from "./_shared";
+import { Name, UUID, DateType } from "./_shared";
 
-const rawPageGroup = {
+export const PageGroup = z.object({
+	createdAt: DateType,
+	editedAt: DateType,
 	name: Name,
 	uuid: UUID,
-};
-export const PageGroup = z.object(rawPageGroup);
+});
 export type PageGroup = z.infer<typeof PageGroup>;
+export const PageGroupData = PageGroup.omit({
+	createdAt: true,
+	editedAt: true,
+	uuid: true,
+});
+export type PageGroupData = z.infer<typeof PageGroupData>;
 
-export const pageGroups = handler<PageGroup, typeof rawPageGroup>(
-	"pageGroups",
-	"Seitengruppierungen",
+export const pageGroups = handler<
 	PageGroup,
-);
+	typeof PageGroup["shape"],
+	typeof PageGroup
+>(PageGroup, "pageGroups", "Seitengruppierungen");

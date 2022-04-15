@@ -70,9 +70,24 @@ export const ImageDelivery = z
 	.optional();
 export type ImageDelivery = z.infer<typeof ImageDelivery>;
 
-export const Date = z.date({
+export const DateType = z.date({
 	description: "Datum",
 	invalid_type_error: "Datum muss ein valides Datum sein",
 	required_error: "Datum ist erforderlich",
 });
-export type Date = z.infer<typeof Date>;
+export type DateType = z.infer<typeof DateType>;
+
+export const GroupRef = z
+	.string({
+		description: "Kategorie",
+		invalid_type_error: "Kategorie muss eine Zeichenkette sein",
+		required_error: "Kategorie ist erforderlich",
+	})
+	.length(36, {
+		message: "Es muss eine Kategorie ausgewählt werden",
+	})
+	.uuid({
+		message:
+			"Die Kategorie muss intern eine valide 128-bit Kennung darstellen",
+	});
+export type GroupRef = z.infer<typeof GroupRef>;

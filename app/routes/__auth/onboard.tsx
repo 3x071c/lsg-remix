@@ -13,7 +13,7 @@ import { json, useActionData, redirect } from "remix";
 import { ValidatedForm, validationError } from "remix-validated-form";
 import { login as authenticate, useLogin, authorize } from "~app/auth";
 import { FormInput, SubmitButton } from "~app/form";
-import { User } from "~app/models";
+import { UserData } from "~app/models";
 import { entries } from "~app/util";
 import { url as adminURL } from "~routes/__pages/admin/index";
 
@@ -25,7 +25,7 @@ type LoaderData = Awaited<ReturnType<typeof getLoaderData>>;
 export const loader: LoaderFunction = async ({ request }) =>
 	json<LoaderData>(await getLoaderData(request));
 
-const validatorData = User.omit({ avatar: true, did: true, uuid: true });
+const validatorData = UserData;
 const validator = withZod(validatorData);
 
 const getActionData = async (request: Request) => {
@@ -35,7 +35,12 @@ const getActionData = async (request: Request) => {
 	if (error) throw validationError(error);
 
 	return authenticate(request, didToken, data).catch((e) => {
-		if (e instanceof Error) return { formError: e.message };
+		if (e instanceof Error)
+			return {
+				formError: (JSON.parse(e.message) as { message: string }[])
+					.map((m) => m.message)
+					.join(", "),
+			};
 		throw e;
 	});
 };
@@ -57,7 +62,7 @@ export default function Onboard() {
 					</Heading>
 				</WrapItem>
 				<WrapItem>
-					<chakra.main p={8} rounded="md" bg={background}>
+					<chakra.main minW="sm" p={8} rounded="md" bg={background}>
 						<Heading as="h2" textAlign="center" mt={2}>
 							Neuer Nutzer 🤩
 						</Heading>
@@ -70,15 +75,15 @@ export default function Onboard() {
 								/>
 							)}
 							{entries(validatorData.shape).map(
-								([name, { description: translated }]) => (
+								([name, { description }]) => (
 									<FormInput
 										type="text"
 										name={name}
-										placeholder={String(translated)}
+										placeholder={String(description)}
 										helper={`Ihr ${String(
-											translated,
+											description,
 										)} wurde noch nicht hinterlegt`}
-										label={`Ihr ${String(translated)}`}
+										label={`Ihr ${String(description)}`}
 										key={name}
 										isDisabled={loading}
 									/>
@@ -90,11 +95,11 @@ export default function Onboard() {
 								isDisabled={loading}>
 								Speichern
 							</SubmitButton>
-							<Text color="red.400" mt={2}>
-								&nbsp;
-								{actionData &&
-									`Fehler: ${String(actionData?.formError)}`}
-							</Text>
+							{actionData && (
+								<Text maxW="sm" mt={2} color="red.400">
+									Fehler: {String(actionData?.formError)}
+								</Text>
+							)}
 						</ValidatedForm>
 					</chakra.main>
 				</WrapItem>
