@@ -95,7 +95,7 @@ Create a `.env` file, containing static key-value pairs for environment-specific
 > To securely generate a random password on your computer:  
 > (Linux/macOS) `openssl rand -base64 40`
 
-The `MAGIC_*` variables hold the public and private (secret) API keys for [Magic](https://magic.link), our chosen authentication solution. For local development, Magic runs in [Test Mode](https://magic.link/docs/introduction/test-mode). If you need to work on anything that involves authentication, you will need to use valid API keys instead of the dummy values above. Either create your own Magic account and app, or request access to our team, and fill in the values from the dashboard.
+The `MAGIC_*` variables hold the public and private (secret) API keys for [Magic](https://magic.link), our chosen authentication solution. During local development, **Magic** runs in [Test Mode](https://magic.link/docs/introduction/test-mode) - this allows you to use "**test+success@magic.link**" (or `test+fail@magic.link`) to simulate a real-world successful/failed login while bypassing the regular magic link authentication scheme. Consequently, the environment variables may be populated with "dummy" values for development. In production, values from the Magic admin dashboard are provided.
 
 Spin up a local development server. It will automatically reflect changes in the code:
 
