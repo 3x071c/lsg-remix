@@ -19,7 +19,7 @@ type Variant = keyof typeof VARIANTS;
 const imagedelivery = () =>
 	typeof document !== "undefined"
 		? window.env.IMAGEDELIVERY
-		: global.env["IMAGEDELIVERY"];
+		: process.env["IMAGEDELIVERY"];
 
 const src = (id: string, variant: Variant) =>
 	`${String(imagedelivery())}/${id}/${variant}`;

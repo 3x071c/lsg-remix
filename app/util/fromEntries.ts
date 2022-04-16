@@ -29,8 +29,8 @@ type EntriesToObject<E extends EntriesType> = MergeIntersectingObjects<
  * @param arr The tuple array (`[key, value][]`) to turn into an object
  * @returns Object constructed from the given entries
  */
-export default function fromEntries<E extends EntriesType>(
+export const fromEntries = <E extends EntriesType>(
 	entries: E,
-): EntriesToObject<E> {
+): EntriesToObject<E> => {
 	return Object.fromEntries(entries) as EntriesToObject<E>;
-}
+};

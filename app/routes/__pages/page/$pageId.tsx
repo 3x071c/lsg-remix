@@ -3,16 +3,25 @@ import type { LoaderFunction } from "remix";
 import { chakra, Heading, useColorModeValue } from "@chakra-ui/react";
 import { json, useLoaderData } from "remix";
 import { Image } from "~app/image";
-import { pages } from "~app/models";
+import { PrismaClient as prisma } from "~app/prisma";
 
 const getLoaderData = async (params: Params) => {
-	const uuid = params["pageId"];
-	if (!uuid)
+	const id = Number(params["pageId"]);
+	if (!id)
+		throw new Response("Invalider Seitenaufruf", {
+			status: 400,
+		});
+	const page = await prisma.page.findUnique({
+		where: {
+			id,
+		},
+	});
+	if (!page)
 		throw new Response("Diese Seite existiert nicht", {
 			status: 404,
 		});
-	const { title } = await pages().getMany(uuid, ["title"]);
-	return { title };
+
+	return page;
 };
 type LoaderData = Awaited<ReturnType<typeof getLoaderData>>;
 export const loader: LoaderFunction = async ({ params }) =>

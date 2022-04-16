@@ -1,18 +1,6 @@
 {
 	"blame": true,
 	"gitignore": true,
-	"ignore": [
-		"node_modules",
-		".git",
-		".vscode",
-		"package-lock.json",
-		"*.tsbuildinfo",
-		".*cache",
-		".*ignore",
-		".husky",
-		"public/build",
-		"functions",
-		".mf"
-	],
+	"ignore": ["db/migrations"],
 	"reporters": ["console"]
 }

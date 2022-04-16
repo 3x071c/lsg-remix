@@ -45,53 +45,41 @@ import {
 	VStack,
 } from "@chakra-ui/react";
 import { withZod } from "@remix-validated-form/with-zod";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import FocusLock from "react-focus-lock";
 import { useTable, useSortBy } from "react-table";
 import { json, useLoaderData, useActionData, useTransition } from "remix";
 import { ValidatedForm, validationError } from "remix-validated-form";
 import { FormInput, FormSelect, SubmitButton } from "~app/form";
-import { PageData, PageGroupData, pageGroups, pages } from "~app/models";
-import { entries, fromEntries } from "~app/util";
+import { PageData, PageCategoryData } from "~app/models";
+import { PrismaClient as prisma, toIndexedObject } from "~app/prisma";
+import { keys } from "~app/util";
 
 const pageValidatorData = PageData;
 const pageValidator = withZod(pageValidatorData);
-const pageGroupValidatorData = PageGroupData;
-const pageGroupValidator = withZod(pageGroupValidatorData);
+const pageCategoryValidatorData = PageCategoryData;
+const pageCategoryValidator = withZod(pageCategoryValidatorData);
 
 const getLoaderData = async () => {
-	const opts = { limit: 10 };
-	const { data: pagesTitle } = await pages().listValues("title", opts);
-	const { data: pageGroupsName } = await pageGroups().listValues("name");
+	const categoryData = await prisma.pageCategory.findMany({
+		select: {
+			id: true,
+			name: true,
+		},
+	});
 
-	const groupRefs = fromEntries(
-		pageGroupsName.map(({ uuid, value: name }) => [uuid, name] as const),
-	);
-
-	const pageData = fromEntries(
-		await Promise.all(
-			pagesTitle.map(async ({ uuid, value: title }) => {
-				const { createdAt, editedAt, groupRef } = await pages().getMany(
-					uuid,
-					["createdAt", "editedAt", "groupRef"],
-				);
-				const category = groupRefs[groupRef];
-
-				return [
-					uuid,
-					{
-						category,
-						createdAt: createdAt.getTime(),
-						editedAt: editedAt.getTime(),
-						title,
-					},
-				] as const;
-			}),
-		),
-	);
+	const pageData = await prisma.page.findMany({
+		select: {
+			categoryId: true,
+			createdAt: true,
+			id: true,
+			title: true,
+			updatedAt: true,
+		},
+	});
 
 	return {
-		groupRefs,
+		categoryData,
 		pageData,
 	};
 };
@@ -111,14 +99,14 @@ const getActionData = async (request: Request) => {
 		if (error) throw validationError(error);
 		if (!data)
 			return { formError: "Bei uns sind keine Daten angekommen >:(" };
-		return pages().create(data);
+		return prisma.page.create({ data });
 	}
-	if (subject === "pageGroup") {
-		const { error, data } = await pageGroupValidator.validate(form);
+	if (subject === "pageCategory") {
+		const { error, data } = await pageCategoryValidator.validate(form);
 		if (error) throw validationError(error);
 		if (!data)
 			return { formError: "Bei uns sind keine Daten angekommen >:(" };
-		return pageGroups().create(data);
+		return prisma.pageCategory.create({ data });
 	}
 	throw new Error("Es gab ein internes Problem (ERR_SUBJECT_INVALID)");
 };
@@ -158,11 +146,13 @@ function CategoryPopover(): JSX.Element {
 				<FocusLock returnFocus persistentFocus={false}>
 					<PopoverArrow />
 					<PopoverCloseButton />
-					<ValidatedForm validator={pageGroupValidator} method="post">
+					<ValidatedForm
+						validator={pageCategoryValidator}
+						method="post">
 						<input
 							type="hidden"
 							name="_subject"
-							value="pageGroup"
+							value="pageCategory"
 						/>
 						<FormInput
 							type="text"
@@ -187,12 +177,12 @@ function CategoryPopover(): JSX.Element {
 function PageModal({
 	isOpen,
 	onClose,
-	groupRefs,
+	categoryData,
 	errorMessage,
 }: {
 	isOpen: boolean;
 	onClose: () => void;
-	groupRefs: Record<string, string>;
+	categoryData: LoaderData["categoryData"];
 	errorMessage?: string;
 }): JSX.Element {
 	const transition = useTransition();
@@ -240,8 +230,8 @@ function PageModal({
 						form="pageForm"
 						formId="pageForm"
 						rightChild={<CategoryPopover />}>
-						{entries(groupRefs).map(([uuid, name]) => (
-							<option value={uuid} key={uuid}>
+						{categoryData.map(({ id, name }) => (
+							<option value={id} key={id}>
 								{name}
 							</option>
 						))}
@@ -270,12 +260,15 @@ function PageModal({
 
 export default function Index(): JSX.Element {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const { groupRefs, pageData } = useLoaderData<LoaderData>();
+	const { categoryData, pageData } = useLoaderData<LoaderData>();
 	const actionData = useActionData<ActionData>();
 
 	type TableType = typeof pageData[number];
-	const data = useMemo(() => entries(pageData).map(([, d]) => d), [pageData]);
-	const memoizedWarningTwoIcon = useCallback(() => <WarningTwoIcon />, []);
+	const indexedCategoryData = useMemo(
+		() => toIndexedObject(categoryData),
+		[categoryData],
+	);
+	const memoizedWarningTwoIcon = useMemo(() => <WarningTwoIcon />, []);
 	const dateOpts = useMemo(
 		() =>
 			({
@@ -293,8 +286,9 @@ export default function Index(): JSX.Element {
 				Header: "Titel",
 			},
 			{
-				accessor: "category",
-				Cell: ({ value }) => value ?? memoizedWarningTwoIcon,
+				accessor: "categoryId",
+				Cell: ({ value }) =>
+					indexedCategoryData[value] ?? memoizedWarningTwoIcon,
 				Header: "Kategorie",
 			},
 			{
@@ -304,17 +298,17 @@ export default function Index(): JSX.Element {
 				Header: "Erstellt am",
 			},
 			{
-				accessor: "editedAt",
+				accessor: "updatedAt",
 				Cell: ({ value }) =>
 					new Date(value).toLocaleString(undefined, dateOpts),
 				Header: "Editiert am",
 			},
 		],
-		[memoizedWarningTwoIcon, dateOpts],
+		[memoizedWarningTwoIcon, dateOpts, indexedCategoryData],
 	);
 
 	const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-		useTable<TableType>({ columns, data }, useSortBy);
+		useTable<TableType>({ columns, data: pageData }, useSortBy);
 
 	return (
 		<chakra.main w="full" overflow="hidden">
@@ -331,7 +325,7 @@ export default function Index(): JSX.Element {
 				textAlign="center">
 				<Stat borderRightWidth="1px">
 					<StatLabel>Seiten</StatLabel>
-					<StatNumber>{Object.keys(pageData).length}</StatNumber>
+					<StatNumber>{keys(pageData).length}</StatNumber>
 					<StatHelpText>Anzahl</StatHelpText>
 				</Stat>
 
@@ -406,7 +400,7 @@ export default function Index(): JSX.Element {
 				</Table>
 			</Box>
 			<PageModal
-				groupRefs={groupRefs}
+				categoryData={categoryData}
 				isOpen={isOpen}
 				onClose={onClose}
 				errorMessage={

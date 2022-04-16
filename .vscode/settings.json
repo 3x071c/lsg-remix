@@ -29,7 +29,7 @@
 		"*.tsbuildinfo": true,
 		".*cache": true,
 		"public/build": true,
-		"functions": true,
+		".remix": true,
 		"remix.env.d.ts": true
 	},
 	"prettier.requireConfig": true,

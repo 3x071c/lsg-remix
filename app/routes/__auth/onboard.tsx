@@ -14,7 +14,6 @@ import { ValidatedForm, validationError } from "remix-validated-form";
 import { login as authenticate, useLogin, authorize } from "~app/auth";
 import { FormInput, SubmitButton } from "~app/form";
 import { UserData } from "~app/models";
-import { entries } from "~app/util";
 import { url as adminURL } from "~routes/__pages/admin/index";
 
 const getLoaderData = async (request: Request) => {
@@ -74,21 +73,22 @@ export default function Onboard() {
 									value={token}
 								/>
 							)}
-							{entries(validatorData.shape).map(
-								([name, { description }]) => (
-									<FormInput
-										type="text"
-										name={name}
-										placeholder={String(description)}
-										helper={`Ihr ${String(
-											description,
-										)} wurde noch nicht hinterlegt`}
-										label={`Ihr ${String(description)}`}
-										key={name}
-										isDisabled={loading}
-									/>
-								),
-							)}
+							<FormInput
+								type="text"
+								name="firstname"
+								placeholder="🔤 Vorname"
+								helper="Ihr Vorname wurde noch nicht hinterlegt"
+								label="Ihr Vorname"
+								isDisabled={loading}
+							/>
+							<FormInput
+								type="text"
+								name="lastname"
+								placeholder="🔤 Nachname"
+								helper="Ihr Nachname wurde noch nicht hinterlegt"
+								label="Ihr Nachname"
+								isDisabled={loading}
+							/>
 							<SubmitButton
 								w="full"
 								isLoading={loading}

@@ -1,9 +1,9 @@
 import { redirect } from "remix";
-import { UserID } from "~app/models";
-import { fromEntries } from "~app/util";
+import { User } from "~app/models";
+import { fromEntries, keys } from "~app/util";
 import { url as loginURL } from "~routes/__auth/login";
 import { url as logoutURL } from "~routes/__auth/logout";
-import { cmsAuthSessionStorage } from "./session.server";
+import { getSession } from "./session.server";
 
 /**
  * Authorize an incoming request by checking the session data and returning it
@@ -19,29 +19,25 @@ export async function authorize<
 	request: Request,
 	options?: O,
 ): Promise<
-	UserID | (O extends { required: false } ? undefined : Record<string, never>)
+	User | (O extends { required: false } ? undefined : Record<string, never>)
 > {
 	const required = options?.required ?? true;
-	const session = await cmsAuthSessionStorage().getSession(
-		request.headers.get("Cookie"),
-	);
+	const session = await getSession(request.headers.get("Cookie"));
 
-	if (Object.keys(session.data).length === 0) {
+	if (keys(session.data).length === 0) {
 		if (required) throw redirect(loginURL);
-		return undefined as
-			| UserID
-			| (O extends { required: false }
-					? undefined
-					: Record<string, never>);
+		return undefined as O extends { required: false }
+			? undefined
+			: Record<string, never>;
 	}
-	const userID = fromEntries(
-		Object.keys(UserID.shape).map(
-			(key) => [key as keyof UserID, session.get(key)] as const,
+	const user = fromEntries(
+		keys(User.shape).map(
+			(key) => [key, session.get(key) as User[typeof key]] as const,
 		),
 	);
 
 	try {
-		return UserID.parse(userID);
+		return User.parse(user);
 	} catch (e) {
 		throw redirect(logoutURL);
 	}

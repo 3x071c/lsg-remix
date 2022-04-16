@@ -1,39 +1,25 @@
-/* eslint-disable @typescript-eslint/no-redeclare -- Make Zod typings usable */
-
+/* eslint-disable @typescript-eslint/no-redeclare -- Zod inferred typings */
+import type { User as PrismaUser } from "@prisma/client";
 import { z } from "zod";
-import handler from "./_handler";
-import {
-	Firstname,
-	Lastname,
-	DID,
-	UUID,
-	ImageDelivery,
-	DateType,
-} from "./_shared";
 
-export const User = z.object({
-	avatar: ImageDelivery,
-	createdAt: DateType,
-	did: DID,
-	editedAt: DateType,
-	firstname: Firstname,
-	lastname: Lastname,
-	uuid: UUID,
+export const User: z.ZodObject<{
+	[K in keyof PrismaUser]: z.ZodType<PrismaUser[K]>;
+}> = z.object({
+	createdAt: z.date(),
+	did: z.string(),
+	email: z.string(),
+	firstname: z.string(),
+	id: z.number(),
+	lastname: z.string(),
+	updatedAt: z.date(),
 });
 export type User = z.infer<typeof User>;
+
 export const UserData = User.omit({
-	avatar: true,
 	createdAt: true,
 	did: true,
-	editedAt: true,
-	uuid: true,
+	email: true,
+	id: true,
+	updatedAt: true,
 });
 export type UserData = z.infer<typeof UserData>;
-export const UserID = User.pick({ did: true, uuid: true });
-export type UserID = z.infer<typeof UserID>;
-
-export const users = handler<User, typeof User["shape"], typeof User>(
-	User,
-	"users",
-	"Nutzer",
-);

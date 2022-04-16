@@ -1,26 +1,22 @@
-/* eslint-disable @typescript-eslint/no-redeclare -- Make Zod typings usable */
-
+/* eslint-disable @typescript-eslint/no-redeclare -- Zod inferred typings */
+import type { Page as PrismaPage } from "@prisma/client";
 import { z } from "zod";
-import handler from "./_handler";
-import { Title, UUID, DateType, GroupRef } from "./_shared";
 
-export const Page = z.object({
-	createdAt: DateType,
-	editedAt: DateType,
-	groupRef: GroupRef,
-	title: Title,
-	uuid: UUID,
+export const Page: z.ZodObject<{
+	[K in keyof PrismaPage]: z.ZodType<PrismaPage[K]>;
+}> = z.object({
+	categoryId: z.number(),
+	content: z.string(),
+	createdAt: z.date(),
+	id: z.number(),
+	title: z.string(),
+	updatedAt: z.date(),
 });
 export type Page = z.infer<typeof Page>;
+
 export const PageData = Page.omit({
 	createdAt: true,
-	editedAt: true,
-	uuid: true,
+	id: true,
+	updatedAt: true,
 });
 export type PageData = z.infer<typeof PageData>;
-
-export const pages = handler<Page, typeof Page["shape"], typeof Page>(
-	Page,
-	"pages",
-	"Seiten",
-);

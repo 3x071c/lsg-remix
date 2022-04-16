@@ -4,22 +4,14 @@ import { useEffect, useState } from "react";
 import { Outlet, json, useLoaderData, useLocation } from "remix";
 import { Nav as AdminNav } from "~app/admin";
 import { authorize } from "~app/auth";
-import { users } from "~app/models";
-import { entries, fromEntries } from "~app/util";
 import { url as cmsURL } from "~routes/__pages/admin/cms";
 import { url as adminURL } from "~routes/__pages/admin/index";
 import { url as labURL } from "~routes/__pages/admin/lab";
 
 const getLoaderData = async (request: Request) => {
-	const { uuid: userUUID } = await authorize(request);
-	const { avatar, firstname, lastname } = await users().getMany(userUUID, [
-		"avatar",
-		"firstname",
-		"lastname",
-	]);
+	const { firstname, lastname } = await authorize(request);
 
 	return {
-		avatar,
 		firstname,
 		lastname,
 	};
@@ -29,18 +21,22 @@ export const loader: LoaderFunction = async ({ request }) =>
 	json<LoaderData>(await getLoaderData(request));
 
 export const pages: {
-	[key: string]: { long: string; short: string; url: string };
-} = {
-	1: { long: "Content Management System", short: "CMS", url: cmsURL },
-	2: { long: "Home", short: "Home", url: adminURL },
-	3: {
+	id: number;
+	long: string;
+	short: string;
+	url: string;
+}[] = [
+	{ id: 1, long: "Content Management System", short: "CMS", url: cmsURL },
+	{ id: 2, long: "Home", short: "Home", url: adminURL },
+	{
+		id: 3,
 		long: "Admin Lab only 😎",
 		short: "Lab",
 		url: labURL,
 	},
-} as const;
+];
 export default function Admin(): JSX.Element {
-	const { firstname, lastname, avatar } = useLoaderData<LoaderData>();
+	const { firstname, lastname } = useLoaderData<LoaderData>();
 	const location = useLocation();
 	const [route, setRoute] = useState<string>(location.pathname);
 
@@ -55,15 +51,10 @@ export default function Admin(): JSX.Element {
 				lastname={lastname}
 				top="53px"
 				height="48px"
-				avatar={avatar}
-				pages={fromEntries(
-					entries(pages).map(
-						([, { short, url }]) => [short, url] as const,
-					),
-				)}
+				pages={pages}
 				page={
-					Object.values(pages).find(({ url }) => url.endsWith(route))
-						?.short ?? "<ERR>"
+					pages.find(({ url }) => url.endsWith(route))?.short ??
+					"<ERR>"
 				}
 			/>
 			<chakra.section pos="relative">

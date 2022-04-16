@@ -108,8 +108,16 @@
 		".*ignore",
 		".husky",
 		"public/build",
-		"functions",
-		".mf"
+		".remix"
 	],
-	"include": ["remix-env.d.ts", "**/*", "**/.*"]
+	"include": ["remix-env.d.ts", "**/*", "**/.*"],
+	"ts-node": {
+		"compilerOptions": {
+			"module": "CommonJS"
+		},
+		"files": true,
+		"require": ["tsconfig-paths/register"],
+		"transpileOnly": true,
+		"swc": true
+	}
 }
