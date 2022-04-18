@@ -108,7 +108,8 @@
 		".*ignore",
 		".husky",
 		"public/build",
-		".remix"
+		".remix",
+		"postgres-data"
 	],
 	"include": ["remix-env.d.ts", "**/*", "**/.*"],
 	"ts-node": {

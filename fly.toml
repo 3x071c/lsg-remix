@@ -5,10 +5,10 @@ kill_timeout = 5
 processes = []
 
 [env]
-  PORT = "8080"
+PORT = "8080"
 
 [deploy]
-  release_command = "npm run release"
+	release_command = "npm run release"
 
 [[statics]]
   guest_path = "/public"

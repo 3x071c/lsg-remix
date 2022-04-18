@@ -1,7 +1,7 @@
 {
 	"allowCompoundWords": true,
 	"flagWords": [],
-	"ignorePaths": ["db/migrations", "db/data"],
+	"ignorePaths": ["db/migrations", "db/data", "public/build"],
 	"import": ["@cspell/dict-de-de/cspell-ext.json"],
 	"language": "en,de",
 	"useGitignore": true,
@@ -54,6 +54,7 @@
 		"schoolib",
 		"Pizzabestellung",
 		"Strg",
-		"postgres"
+		"postgres",
+		"esbuild"
 	]
 }

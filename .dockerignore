@@ -272,8 +272,8 @@ $RECYCLE.BIN/
 *.pem
 .*cache
 .husky/_/
-/public/build/
-/.remix/
+public/build/
+.remix/
 
 # === End of generic rules ===
 # === Start of specific rules ===

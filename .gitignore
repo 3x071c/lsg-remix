@@ -272,12 +272,10 @@ $RECYCLE.BIN/
 *.pem
 .*cache
 .husky/_/
-/public/build/
-/.remix/
+public/build/
+.remix/
+postgres-data
 
 # === End of generic rules ===
 # === Start of specific rules ===
-
-/postgres-data
-
 # === End of specific rules ===

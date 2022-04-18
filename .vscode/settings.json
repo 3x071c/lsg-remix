@@ -30,7 +30,8 @@
 		".*cache": true,
 		"public/build": true,
 		".remix": true,
-		"remix.env.d.ts": true
+		"remix.env.d.ts": true,
+		"postgres-data": true
 	},
 	"prettier.requireConfig": true,
 	"prettier.useEditorConfig": true,
