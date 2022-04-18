@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable import/no-dynamic-require */
 /* eslint-disable global-require */
 /* eslint-disable no-console */
+import type { ServerBuild } from "remix";
 import { resolve } from "path";
 import { createRequestHandler } from "@remix-run/express";
 import compression from "compression";
@@ -13,7 +16,7 @@ const BUILD_DIR = resolve(".remix", "server");
 
 app.use((req, res, next) => {
 	// helpful headers:
-	res.set("x-fly-region", process.env.FLY_REGION ?? "unknown");
+	res.set("x-fly-region", process.env["FLY_REGION"] ?? "unknown");
 	res.set("Strict-Transport-Security", `max-age=${60 * 60 * 24 * 365 * 100}`);
 
 	// /clean-urls/ -> /clean-urls
@@ -75,13 +78,13 @@ app.all(
 	NODE_ENV === "development"
 		? (...args) =>
 				createRequestHandler({
-					build: require(BUILD_DIR),
+					build: require(BUILD_DIR) as ServerBuild,
 					mode: NODE_ENV,
 				})(...args)
-		: createRequestHandler({ build: require(BUILD_DIR) }),
+		: createRequestHandler({ build: require(BUILD_DIR) as ServerBuild }),
 );
 
-const port = process.env.PORT || 3000;
+const port = process.env["PORT"] || 3000;
 
 app.listen(port, () => {
 	console.log(`[SERVER] ✅ http://localhost:${port}`);
