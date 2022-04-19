@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import type { StyleSheet } from "@emotion/utils";
 import type { PropsWithChildren } from "react";
 import type { MetaFunction, LoaderFunction } from "remix";
@@ -132,7 +133,9 @@ export default function App(): JSX.Element {
 }
 
 export function CatchBoundary(): JSX.Element {
-	const { status, statusText } = useCatch();
+	const caught = useCatch();
+	console.error("⚠️ Caught:", caught);
+	const { status, statusText } = caught;
 	const messages: {
 		[key: string]: string;
 	} = {
@@ -166,11 +169,10 @@ export function CatchBoundary(): JSX.Element {
 	);
 }
 
-export function ErrorBoundary({
-	error: { message, name },
-}: {
-	error: Error;
-}): JSX.Element {
+export function ErrorBoundary({ error }: { error: Error }): JSX.Element {
+	console.error("🚨 ERROR:", error);
+	const { name, message } = error;
+
 	return (
 		<Document title={`${name} | LSG`}>
 			<Center minW="100vw" minH="100vh">

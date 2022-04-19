@@ -288,7 +288,7 @@ export default function Index(): JSX.Element {
 			{
 				accessor: "categoryId",
 				Cell: ({ value }) =>
-					indexedCategoryData[value] ?? memoizedWarningTwoIcon,
+					indexedCategoryData[value]?.name ?? memoizedWarningTwoIcon,
 				Header: "Kategorie",
 			},
 			{

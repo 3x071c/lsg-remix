@@ -77,7 +77,7 @@
 		"release": "npm run prisma:prod",
 		"remix:build": "remix build",
 		"remix:dev": "remix watch",
-		"remix:server": "nodemon --inspect --require dotenv/config .remix/server/server.js --watch .remix/server/server.js",
+		"remix:server": "nodemon --inspect --require dotenv/config .remix/server/server.js --watch .remix/server",
 		"remix:start": "node .remix/server/server.js",
 		"report": "npm run lint",
 		"secretlint:individual": "secretlint --secretlintignore .gitignore",

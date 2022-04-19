@@ -17,7 +17,8 @@ import { UserData } from "~app/models";
 import { url as adminURL } from "~routes/__pages/admin/index";
 
 const getLoaderData = async (request: Request) => {
-	if (await authorize(request, { required: false })) throw redirect(adminURL);
+	if (await authorize(request, { required: false, onboarding: true }))
+		throw redirect(adminURL);
 	return {};
 };
 type LoaderData = Awaited<ReturnType<typeof getLoaderData>>;

@@ -1,5 +1,6 @@
 import type { UserData } from "~app/models";
 import { redirect } from "remix";
+import superjson from "superjson";
 import { magicServer } from "~app/magic";
 import { PrismaClient as prisma } from "~app/prisma";
 import { entries } from "~app/util";
@@ -60,7 +61,7 @@ export async function login(
 		})());
 
 	const session = await getSession(request.headers.get("Cookie"));
-	entries(user).map(([k, v]) => session.set(k, v));
+	entries(user).map(([k, v]) => session.set(k, superjson.stringify(v)));
 
 	throw redirect(adminURL, {
 		headers: {
