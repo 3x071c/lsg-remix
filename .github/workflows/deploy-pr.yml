@@ -34,10 +34,10 @@ jobs:
               if: ${{ github.event.action != 'closed' }}
               run: |
                   if flyctl status --app "${{ env.APP_NAME }}"; then
-                    echo "::set-env name=APP_EXISTS::true"
+                    echo "APP_EXISTS=true" >> $GITHUB_ENV
                     echo "✅ APP EXISTS"
                   else
-                    echo "::set-env name=APP_EXISTS::false"
+                    echo "APP_EXISTS=false" >> $GITHUB_ENV
                     echo "⛔️ APP DOES NOT EXIST"
                   fi
             - name: Launch
