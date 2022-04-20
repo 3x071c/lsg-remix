@@ -1,0 +1,40 @@
+# This workflow deploys the app to fly.io 🚀
+name: Deploy PR
+
+on:
+    pull_request:
+        types: [opened, reopened, synchronize, closed]
+
+# Cancel previous instances of this workflow (per PR)
+concurrency:
+    group: ${{ github.workflow }}-${{ github.event.number }}
+    cancel-in-progress: true
+
+env:
+    FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+jobs:
+    deploy:
+        name: Deploy
+        runs-on: ubuntu-latest
+        timeout-minutes: 15
+        environment:
+            name: "PR #${{ github.event.number }}"
+            url: ${{ steps.deploy.outputs.url }}
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3.0.0
+            - name: Deploy app
+              id: deploy
+              uses: superfly/fly-pr-review-apps@1.0.0
+              with:
+                  name: lsg-pr-${{ github.event.number }}
+                  region: fra
+                  org: lsglab
+                  postgres: lsg-pr-db
+            - name: Clean up GitHub environment
+              uses: strumwolf/delete-deployment-environment@v2.0.1
+              if: ${{ github.event.action == 'closed' }}
+              with:
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  environment: "PR #${{ github.event.number }}"
