@@ -68,7 +68,7 @@ COPY --chown=node --from=build /lsg/public /lsg/public
 # Copy over all source files, to make the release step work
 COPY --chown=node . .
 
-# Security: switch to unpriviledged 'node' user
+# Security: switch to unprivileged 'node' user
 USER node
 # Launch the production app! 🥳 (directly without the start script, to properly forward kernel signals)
 CMD ["dumb-init", "node", ".remix/server/server.js"]

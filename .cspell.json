@@ -61,6 +61,8 @@
 		"Strg",
 		"postgres",
 		"esbuild",
-		"flyctl"
+		"flyctl",
+		"cils",
+		"delf"
 	]
 }
