@@ -1,5 +1,5 @@
-# This workflow deploys the app to fly.io 🚀
-name: Deploy PR
+# This workflow deploys the PR to fly.io 🚀
+name: PR Preview
 
 on:
     pull_request:
@@ -10,12 +10,9 @@ concurrency:
     group: ${{ github.workflow }}-${{ github.event.number }}
     cancel-in-progress: true
 
-env:
-    FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-
 jobs:
-    deploy:
-        name: Deploy
+    deploy-pr:
+        name: Deploy PR
         runs-on: ubuntu-latest
         timeout-minutes: 15
         environment:
@@ -24,9 +21,11 @@ jobs:
         steps:
             - name: Checkout
               uses: actions/checkout@v3.0.0
-            - name: Deploy app
+            - name: Deploy
               id: deploy
               uses: superfly/fly-pr-review-apps@1.0.0
+              env:
+                  FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
               with:
                   name: lsg-pr-${{ github.event.number }}
                   region: fra
