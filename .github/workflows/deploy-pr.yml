@@ -49,7 +49,7 @@ jobs:
             - name: Deploy
               if: ${{ github.event.action != 'closed' }}
               run: |
-                  flyctl deploy --app "${{ env.APP_NAME }}" --now --remote-only --strategy immediate
+                  flyctl deploy --app "${{ env.APP_NAME }}" --now --remote-only --strategy immediate || (sleep 30; fly status --app "${{ env.APP_NAME }}" | grep -F Status | grep -F running)
             - name: Destroy
               if: ${{ github.event.action == 'closed' }}
               run: |
