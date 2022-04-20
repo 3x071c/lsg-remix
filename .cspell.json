@@ -1,7 +1,12 @@
 {
 	"allowCompoundWords": true,
 	"flagWords": [],
-	"ignorePaths": ["db/migrations", "db/data", "public/build"],
+	"ignorePaths": [
+		"db/migrations",
+		"db/data",
+		"public/build",
+		"*.tsbuildinfo"
+	],
 	"import": ["@cspell/dict-de-de/cspell-ext.json"],
 	"language": "en,de",
 	"useGitignore": true,
@@ -55,6 +60,7 @@
 		"Pizzabestellung",
 		"Strg",
 		"postgres",
-		"esbuild"
+		"esbuild",
+		"flyctl"
 	]
 }

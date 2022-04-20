@@ -39,10 +39,10 @@ export default function Page() {
 			justifyContent="center"
 			alignItems="center">
 			<Image
-				id="9b9917b3-0fce-4ca5-0718-ca3e22794500"
+				w="full"
+				src={bg}
 				alt="Louise-Schroeder-Gymnasium Außenansicht"
 				priority
-				w="full"
 			/>
 			<chakra.main
 				pos="absolute"

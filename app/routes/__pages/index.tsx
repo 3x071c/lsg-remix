@@ -5,11 +5,12 @@ import { LinkButton } from "~app/links";
 
 export default function Index(): JSX.Element {
 	const maxContentWidth = "7xl";
+
 	return (
 		<Container w="full" maxW={maxContentWidth} mx="auto" centerContent>
 			<chakra.main w="full">
 				<chakra.section py={8}>
-					<Hero maxContentWidth={maxContentWidth} />
+					<Hero />
 				</chakra.section>
 				<chakra.section
 					py={8}
@@ -17,7 +18,7 @@ export default function Index(): JSX.Element {
 					borderTopStyle="dashed"
 					borderBottomWidth={1}
 					borderBottomStyle="dashed">
-					<Certificates maxContentWidth={maxContentWidth} />
+					<Certificates />
 				</chakra.section>
 				<chakra.section py={8} textAlign="center">
 					<Heading as="h2" size="xl">

@@ -11,8 +11,10 @@ import express from "express";
 import morgan from "morgan";
 
 const app = express();
-const { NODE_ENV } = process.env;
-const BUILD_DIR = resolve(".remix", "server");
+
+/* https://expressjs.com/en/advanced/best-practice-security.html */
+// app.use(helmet());
+app.disable("x-powered-by");
 
 app.use((req, res, next) => {
 	// helpful headers:
@@ -58,9 +60,6 @@ app.all("*", function getReplayResponse(req, res, next) {
 
 app.use(compression());
 
-// http://expressjs.com/en/advanced/best-practice-security.html#at-a-minimum-disable-x-powered-by-header
-app.disable("x-powered-by");
-
 // Remix fingerprints its assets so we can cache forever.
 app.use(
 	"/build",
@@ -72,6 +71,9 @@ app.use(
 app.use(express.static("public", { maxAge: "1h" }));
 
 app.use(morgan("tiny"));
+
+const { NODE_ENV } = process.env;
+const BUILD_DIR = resolve(".remix", "server");
 
 app.all(
 	"*",
@@ -86,6 +88,20 @@ app.all(
 
 const port = process.env["PORT"] || 3000;
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
 	console.log(`[SERVER] ✅ http://localhost:${port}`);
 });
+
+/* Handle graceful shutdowns */
+const shutdown: NodeJS.SignalsListener = async (signal) => {
+	console.log(`🏁 TERMINATING (${signal})`);
+	try {
+		await global.prisma?.$disconnect();
+	} catch (e) {}
+	server.close(() => {
+		console.log("ℹ️ TERMINATED! Exiting...");
+		process.kill(process.pid, signal);
+	});
+};
+process.once("SIGINT", shutdown);
+process.once("SIGTERM", shutdown);

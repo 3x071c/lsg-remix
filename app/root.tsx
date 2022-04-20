@@ -28,7 +28,6 @@ export const meta: MetaFunction = () => {
 const getLoaderData = () => {
 	return {
 		env: {
-			IMAGEDELIVERY: process.env["IMAGEDELIVERY"],
 			MAGIC_KEY: process.env["MAGIC_KEY"],
 			NODE_ENV: process.env.NODE_ENV,
 		},
