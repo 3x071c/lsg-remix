@@ -16,7 +16,7 @@ jobs:
         runs-on: ubuntu-latest
         timeout-minutes: 15
         environment:
-            name: "PR #${{ github.event.number }}"
+            name: "Preview (PR #${{ github.event.number }})"
             url: ${{ steps.deploy.outputs.url }}
         steps:
             - name: Checkout
@@ -36,4 +36,4 @@ jobs:
               if: ${{ github.event.action == 'closed' }}
               with:
                   token: ${{ secrets.GITHUB_TOKEN }}
-                  environment: "PR #${{ github.event.number }}"
+                  environment: "Preview (PR #${{ github.event.number }})"

@@ -15,6 +15,9 @@ jobs:
         name: Deploy to production
         runs-on: ubuntu-latest
         timeout-minutes: 15
+        environment:
+            name: "Production"
+            url: "https://lsg.fly.dev"
         steps:
             - name: Checkout
               uses: actions/checkout@v3.0.0
