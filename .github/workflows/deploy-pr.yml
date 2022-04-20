@@ -10,6 +10,13 @@ concurrency:
     group: ${{ github.workflow }}-${{ github.event.number }}
     cancel-in-progress: true
 
+env:
+    FLY_API_TOKEN: "${{ secrets.FLY_API_TOKEN }}"
+    APP_NAME: "lsg-pr-${{ github.event.number }}"
+    APP_ORG: lsglab
+    APP_REGION: fra
+    APP_DB: lsg-pr-db
+
 jobs:
     deploy-pr:
         name: Deploy PR
@@ -21,16 +28,31 @@ jobs:
         steps:
             - name: Checkout
               uses: actions/checkout@v3.0.0
+            - name: Setup
+              uses: superfly/flyctl-actions/setup-flyctl@1.3
+            - name: Status Check
+              if: ${{ github.event.action != 'closed' }}
+              run: |
+                  if flyctl status --app "${{ env.APP_NAME }}"; then
+                    echo "::set-env name=APP_EXISTS::true"
+                    echo "✅ APP EXISTS"
+                  else
+                    echo "::set-env name=APP_EXISTS::false"
+                    echo "⛔️ APP DOES NOT EXIST"
+                  fi
+            - name: Launch
+              if: ${{ github.event.action != 'closed' && env.APP_EXISTS != 'true' }}
+              run: |
+                  flyctl launch --copy-config --name "${{ env.APP_NAME }}" --no-deploy --org "${{ env.APP_ORG }}" --region "${{ env.APP_REGION }}" --remote-only
             - name: Deploy
-              id: deploy
-              uses: superfly/fly-pr-review-apps@1.0.0
-              env:
-                  FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-              with:
-                  name: lsg-pr-${{ github.event.number }}
-                  region: fra
-                  org: lsglab
-                  postgres: lsg-pr-db
+              if: ${{ github.event.action != 'closed' }}
+              run: |
+                  flyctl deploy --app "${{ env.APP_NAME }}" --now --remote-only --strategy immediate
+                  flyctl postgres attach --app "${{ env.APP_NAME }}" --postgres-app "${{ env.APP_DB }}"
+            - name: Destroy
+              if: ${{ github.event.action == 'closed' }}
+              run: |
+                  flyctl destroy ${{ env.APP_NAME }} --yes
             - name: Clean up GitHub environment
               uses: strumwolf/delete-deployment-environment@v2.0.1
               if: ${{ github.event.action == 'closed' }}
