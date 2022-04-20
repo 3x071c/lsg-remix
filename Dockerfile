@@ -1,5 +1,5 @@
 # Base image based on Alpine Linux + Node v17 for a very lean/small size and faster builds
-FROM node:18-alpine as base
+FROM node:17-alpine as base
 # Security reference: https://snyk.io/blog/10-best-practices-to-containerize-nodejs-web-applications-with-docker/
 
 # Default to production everything
