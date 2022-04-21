@@ -25,7 +25,13 @@ export const meta: MetaFunction = () => {
 	return { title: "LSG" };
 };
 
-const getLoaderData = () => {
+type LoaderData = {
+	env: {
+		MAGIC_KEY: string | undefined;
+		NODE_ENV: "development" | "production" | "test";
+	};
+};
+const getLoaderData = (): LoaderData => {
 	return {
 		env: {
 			MAGIC_KEY: process.env["MAGIC_KEY"],
@@ -33,7 +39,6 @@ const getLoaderData = () => {
 		},
 	};
 };
-type LoaderData = ReturnType<typeof getLoaderData>;
 export const loader: LoaderFunction = () => json<LoaderData>(getLoaderData());
 
 declare global {

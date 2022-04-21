@@ -133,6 +133,12 @@ Create a `.env` file, containing static key-value pairs for environment-specific
 
 The `MAGIC_*` variables hold the public and private (secret) API keys for [Magic](https://magic.link), our chosen authentication solution. During local development, **Magic** runs in [Test Mode](https://magic.link/docs/introduction/test-mode) - this allows you to use "**test+success@magic.link**" (or `test+fail@magic.link`) to simulate a real-world successful/failed login while bypassing the regular magic link authentication scheme. Consequently, the environment variables may be populated with "dummy" values for development. In production, values from the Magic admin dashboard are provided.
 
+Run our setup script to fill your database with "seeded" sample records and generate code necessary for development:
+
+```console
+$ npm run new
+```
+
 Spin up a local development server. It will automatically reflect changes in the code:
 
 ```console

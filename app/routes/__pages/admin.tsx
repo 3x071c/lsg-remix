@@ -8,7 +8,11 @@ import { url as cmsURL } from "~routes/__pages/admin/cms";
 import { url as adminURL } from "~routes/__pages/admin/index";
 import { url as labURL } from "~routes/__pages/admin/lab";
 
-const getLoaderData = async (request: Request) => {
+type LoaderData = {
+	firstname: string;
+	lastname: string;
+};
+const getLoaderData = async (request: Request): Promise<LoaderData> => {
 	const { firstname, lastname } = await authorize(request);
 
 	return {
@@ -16,7 +20,6 @@ const getLoaderData = async (request: Request) => {
 		lastname,
 	};
 };
-type LoaderData = Awaited<ReturnType<typeof getLoaderData>>;
 export const loader: LoaderFunction = async ({ request }) =>
 	json<LoaderData>(await getLoaderData(request));
 

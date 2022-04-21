@@ -14,14 +14,17 @@ import { authorize } from "~app/auth";
 import { LinkButton } from "~app/links";
 import { pages } from "../admin";
 
-const getLoaderData = async (request: Request) => {
+type LoaderData = {
+	firstname: string;
+	lastname: string;
+};
+const getLoaderData = async (request: Request): Promise<LoaderData> => {
 	const { firstname, lastname } = await authorize(request);
 	return {
 		firstname,
 		lastname,
 	};
 };
-type LoaderData = Awaited<ReturnType<typeof getLoaderData>>;
 export const loader: LoaderFunction = async ({ request }) =>
 	json<LoaderData>(await getLoaderData(request));
 

@@ -1,20 +1,9 @@
 /* eslint-disable @typescript-eslint/no-redeclare -- Zod inferred typings */
 import type { PageCategory as PrismaPageCategory } from "@prisma/client";
-import { z } from "zod";
+import type { z } from "zod";
+import { PageCategoryModel } from "~models";
 
 export const PageCategory: z.ZodObject<{
 	[K in keyof PrismaPageCategory]: z.ZodType<PrismaPageCategory[K]>;
-}> = z.object({
-	createdAt: z.date(),
-	id: z.number(),
-	name: z.string(),
-	updatedAt: z.date(),
-});
+}> = PageCategoryModel;
 export type PageCategory = z.infer<typeof PageCategory>;
-
-export const PageCategoryData = PageCategory.omit({
-	createdAt: true,
-	id: true,
-	updatedAt: true,
-});
-export type PageCategoryData = z.infer<typeof PageCategoryData>;

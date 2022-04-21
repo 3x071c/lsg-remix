@@ -50,17 +50,41 @@ import FocusLock from "react-focus-lock";
 import { useTable, useSortBy } from "react-table";
 import { json, useLoaderData, useActionData, useTransition } from "remix";
 import { ValidatedForm, validationError } from "remix-validated-form";
+import { z } from "zod";
 import { FormInput, FormSelect, SubmitButton } from "~app/form";
-import { PageData, PageCategoryData } from "~app/models";
+import { Page, PageCategory } from "~app/models";
 import { PrismaClient as prisma, toIndexedObject } from "~app/prisma";
 import { keys } from "~app/util";
 
-const pageValidatorData = PageData;
+const pageValidatorData = Page.pick({
+	title: true,
+}).extend({
+	categoryId: z.string({
+		description: "Die Kategorie",
+		invalid_type_error: "Kategorie konnte nicht korrekt übermittelt werden",
+		required_error: "Kategorie muss angegeben werden",
+	}),
+});
 const pageValidator = withZod(pageValidatorData);
-const pageCategoryValidatorData = PageCategoryData;
+const pageCategoryValidatorData = PageCategory.pick({
+	name: true,
+});
 const pageCategoryValidator = withZod(pageCategoryValidatorData);
 
-const getLoaderData = async () => {
+type LoaderData = {
+	categoryData: {
+		id: number;
+		name: string;
+	}[];
+	pageData: {
+		id: number;
+		updatedAt: Date;
+		createdAt: Date;
+		categoryId: number;
+		title: string;
+	}[];
+};
+const getLoaderData = async (): Promise<LoaderData> => {
 	const categoryData = await prisma.pageCategory.findMany({
 		select: {
 			id: true,
@@ -83,11 +107,17 @@ const getLoaderData = async () => {
 		pageData,
 	};
 };
-type LoaderData = Awaited<ReturnType<typeof getLoaderData>>;
 export const loader: LoaderFunction = async () =>
 	json<LoaderData>(await getLoaderData());
 
-const getActionData = async (request: Request) => {
+type ActionData =
+	| Page
+	| PageCategory
+	| {
+			formError: string;
+	  };
+
+const getActionData = async (request: Request): Promise<ActionData> => {
 	const form = await request.formData();
 	const subject = form.get("_subject");
 	if (!subject)
@@ -99,7 +129,16 @@ const getActionData = async (request: Request) => {
 		if (error) throw validationError(error);
 		if (!data)
 			return { formError: "Bei uns sind keine Daten angekommen >:(" };
-		return prisma.page.create({ data });
+		const { title, categoryId: categoryIdRaw } = data;
+		const categoryId = Number(categoryIdRaw);
+		if (!categoryId)
+			return {
+				formError:
+					"Die angegebene Kategorie konnte nicht ermittelt werden",
+			};
+		return prisma.page.create({
+			data: { categoryId, content: `Inhalt für ${title}`, title },
+		});
 	}
 	if (subject === "pageCategory") {
 		const { error, data } = await pageCategoryValidator.validate(form);
@@ -110,11 +149,14 @@ const getActionData = async (request: Request) => {
 	}
 	throw new Error("Es gab ein internes Problem (ERR_SUBJECT_INVALID)");
 };
-type ActionData = Awaited<ReturnType<typeof getActionData>>;
 export const action: ActionFunction = async ({ request }) =>
 	json<ActionData>(await getActionData(request));
 
-function CategoryPopover(): JSX.Element {
+function CategoryPopover({
+	setCloseable,
+}: {
+	setCloseable: (arg: boolean) => void;
+}): JSX.Element {
 	const { onOpen, onClose, isOpen } = useDisclosure();
 	const transition = useTransition();
 	const [submitted, setSubmitted] = useState(false);
@@ -126,6 +168,10 @@ function CategoryPopover(): JSX.Element {
 			onClose();
 		}
 	}, [transition.state, onClose, submitted]);
+
+	useEffect(() => {
+		setCloseable(!isOpen);
+	}, [isOpen, setCloseable]);
 
 	return (
 		<Popover
@@ -187,6 +233,7 @@ function PageModal({
 }): JSX.Element {
 	const transition = useTransition();
 	const [submitted, setSubmitted] = useState(false);
+	const [closeable, setCloseable] = useState(true);
 
 	useEffect(() => {
 		if (transition.state === "loading" && submitted) {
@@ -196,11 +243,15 @@ function PageModal({
 	}, [transition.state, onClose, submitted]);
 
 	return (
-		<Modal isOpen={isOpen} onClose={onClose}>
+		<Modal
+			isOpen={!closeable || isOpen}
+			onClose={closeable ? onClose : () => {}}
+			closeOnEsc={closeable}
+			closeOnOverlayClick={closeable}>
 			<ModalOverlay backdropFilter="auto" backdropBlur="10px" />
 			<ModalContent>
 				<ModalHeader>Neue Seite</ModalHeader>
-				<ModalCloseButton />
+				{closeable && <ModalCloseButton />}
 				<ValidatedForm
 					validator={pageValidator}
 					method="post"
@@ -223,13 +274,15 @@ function PageModal({
 						formId="pageForm"
 					/>
 					<FormSelect
-						name="groupRef"
+						name="categoryId"
 						placeholder="✍️ Kategorie auswählen"
 						helper="Die Kategorie der Seite, welche zur Eingliederung u.a. in der Navigationsleiste verwendet wird"
 						label="Die Kategorie"
 						form="pageForm"
 						formId="pageForm"
-						rightChild={<CategoryPopover />}>
+						rightChild={
+							<CategoryPopover setCloseable={setCloseable} />
+						}>
 						{categoryData.map(({ id, name }) => (
 							<option value={id} key={id}>
 								{name}
@@ -294,13 +347,13 @@ export default function Index(): JSX.Element {
 			{
 				accessor: "createdAt",
 				Cell: ({ value }) =>
-					new Date(value).toLocaleString(undefined, dateOpts),
+					new Date(value).toLocaleString("de", dateOpts),
 				Header: "Erstellt am",
 			},
 			{
 				accessor: "updatedAt",
 				Cell: ({ value }) =>
-					new Date(value).toLocaleString(undefined, dateOpts),
+					new Date(value).toLocaleString("de", dateOpts),
 				Header: "Editiert am",
 			},
 		],
