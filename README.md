@@ -32,6 +32,8 @@ You're looking at the source code behind the new [Louise-Schroeder-Gymnasium web
 Impatient? Spin up a GitPod environment in seconds and you're good to go:  
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/3x071c/lsg)
 
+> NOTE: GitPod environments are largely untested. Please provide feedback and take a look at the guide below if things break unexpectedly.
+
 ## Get Started 💨
 
 Make sure you have the latest version of [Node.js](https://nodejs.org/) and NPM (the Node package manager, which should ship with it) installed:
