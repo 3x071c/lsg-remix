@@ -33,3 +33,4 @@ jobs:
               with:
                   token: ${{ secrets.GITHUB_TOKEN }}
                   environment: "Preview (PR #${{ github.event.number }})"
+                  onlyDeactivateDeployments: true
