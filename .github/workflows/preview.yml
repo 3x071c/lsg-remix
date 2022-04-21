@@ -60,7 +60,13 @@ jobs:
             - name: Destroy
               if: ${{ github.event.action == 'closed' }}
               run: |
-                  flyctl destroy ${{ env.APP_NAME }} --yes
+                  flyctl destroy ${{ env.APP_NAME }} --yes || true
+    cleanup-pr:
+        name: PR Cleanup
+        needs: deploy-pr
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        steps:
             - name: Clean up GitHub environment
               uses: strumwolf/delete-deployment-environment@v2.0.1
               if: ${{ github.event.action == 'closed' }}
