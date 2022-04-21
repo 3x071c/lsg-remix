@@ -10,17 +10,18 @@ import {
 	Center,
 	CircularProgress,
 } from "@chakra-ui/react";
-import { json, redirect } from "remix";
+import { redirect } from "remix";
 import { useAuthCallback, authorize } from "~app/auth";
+import { respond } from "~app/util";
 import { url as adminURL } from "~routes/__pages/admin/index";
 
-type LoaderData = Record<string, never>;
+type LoaderData = { status: number };
 const getLoaderData = async (request: Request): Promise<LoaderData> => {
 	if (await authorize(request, { required: false })) throw redirect(adminURL);
-	return {};
+	return { status: 200 };
 };
 export const loader: LoaderFunction = async ({ request }) =>
-	json<LoaderData>(await getLoaderData(request));
+	respond<LoaderData>(await getLoaderData(request));
 
 export default function Callback(): JSX.Element {
 	const { data, error, loading } = useAuthCallback();

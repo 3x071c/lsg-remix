@@ -9,21 +9,24 @@ import {
 	Text,
 } from "@chakra-ui/react";
 import { withZod } from "@remix-validated-form/with-zod";
-import { json, useActionData, redirect } from "remix";
+import { redirect } from "remix";
 import { ValidatedForm, validationError } from "remix-validated-form";
 import { login as authenticate, useLogin, authorize } from "~app/auth";
 import { FormInput, SubmitButton } from "~app/form";
 import { User } from "~app/models";
+import { respond, useActionResponse } from "~app/util";
 import { url as adminURL } from "~routes/__pages/admin/index";
 
-type LoaderData = Record<string, never>;
+type LoaderData = {
+	status: number;
+};
 const getLoaderData = async (request: Request): Promise<LoaderData> => {
 	if (await authorize(request, { onboarding: true, required: false }))
 		throw redirect(adminURL);
-	return {};
+	return { status: 200 };
 };
 export const loader: LoaderFunction = async ({ request }) =>
-	json<LoaderData>(await getLoaderData(request));
+	respond<LoaderData>(await getLoaderData(request));
 
 const validatorData = User.pick({
 	firstname: true,
@@ -31,8 +34,9 @@ const validatorData = User.pick({
 });
 const validator = withZod(validatorData);
 
-type ActionData = void | {
-	formError: string;
+type ActionData = {
+	formError?: string;
+	status: number;
 };
 const getActionData = async (request: Request): Promise<ActionData> => {
 	const form = await request.formData();
@@ -40,21 +44,25 @@ const getActionData = async (request: Request): Promise<ActionData> => {
 	const { error, data } = await validator.validate(form);
 	if (error) throw validationError(error);
 
-	return authenticate(request, didToken, data).catch((e) => {
+	try {
+		await authenticate(request, didToken, data);
+		return { status: 200 };
+	} catch (e) {
 		if (e instanceof Error)
 			return {
 				formError: (JSON.parse(e.message) as { message: string }[])
 					.map((m) => m.message)
 					.join(", "),
+				status: 400,
 			};
 		throw e;
-	});
+	}
 };
 export const action: ActionFunction = async ({ request }) =>
-	json<ActionData>(await getActionData(request), 401);
+	respond<ActionData>(await getActionData(request));
 
 export default function Onboard() {
-	const actionData = useActionData<ActionData>();
+	const actionData = useActionResponse<ActionData>();
 	const background = useColorModeValue("gray.50", "gray.700");
 	const { loading, data: token } = useLogin();
 

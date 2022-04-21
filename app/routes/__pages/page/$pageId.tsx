@@ -2,12 +2,14 @@ import type { Params } from "react-router";
 import type { LoaderFunction } from "remix";
 import type { z } from "zod";
 import { chakra, Heading, useColorModeValue } from "@chakra-ui/react";
-import { json, useLoaderData } from "remix";
 import type { PageModel } from "~models";
 import { Image } from "~app/image";
 import { PrismaClient as prisma } from "~app/prisma";
+import { respond, useLoaderResponse } from "~app/util";
 
-type LoaderData = z.infer<typeof PageModel>;
+type LoaderData = z.infer<typeof PageModel> & {
+	status: number;
+};
 const getLoaderData = async (params: Params): Promise<LoaderData> => {
 	const id = Number(params["pageId"]);
 	if (!id)
@@ -24,13 +26,13 @@ const getLoaderData = async (params: Params): Promise<LoaderData> => {
 			status: 404,
 		});
 
-	return page;
+	return { ...page, status: 200 };
 };
 export const loader: LoaderFunction = async ({ params }) =>
-	json<LoaderData>(await getLoaderData(params));
+	respond<LoaderData>(await getLoaderData(params));
 
 export default function PageSlug() {
-	const { title } = useLoaderData<LoaderData>();
+	const { title } = useLoaderResponse<LoaderData>();
 	const bg = useColorModeValue("white", "gray.800");
 
 	return (

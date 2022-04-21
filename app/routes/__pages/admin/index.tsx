@@ -9,27 +9,30 @@ import {
 	Flex,
 	chakra,
 } from "@chakra-ui/react";
-import { json, useLoaderData } from "remix";
 import { authorize } from "~app/auth";
 import { LinkButton } from "~app/links";
+import { respond, useLoaderResponse } from "~app/util";
 import { pages } from "../admin";
 
 type LoaderData = {
 	firstname: string;
 	lastname: string;
+	status: number;
 };
 const getLoaderData = async (request: Request): Promise<LoaderData> => {
 	const { firstname, lastname } = await authorize(request);
+
 	return {
 		firstname,
 		lastname,
+		status: 200,
 	};
 };
 export const loader: LoaderFunction = async ({ request }) =>
-	json<LoaderData>(await getLoaderData(request));
+	respond<LoaderData>(await getLoaderData(request));
 
 export default function Index(): JSX.Element {
-	const { firstname, lastname } = useLoaderData<LoaderData>();
+	const { firstname, lastname } = useLoaderResponse<LoaderData>();
 
 	return (
 		<chakra.main w="full">

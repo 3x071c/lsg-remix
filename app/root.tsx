@@ -13,13 +13,11 @@ import {
 	Scripts,
 	ScrollRestoration,
 	useCatch,
-	json,
-	useLoaderData,
 } from "remix";
 import { ColorModeManager, ColorModeToggle } from "~app/colormode";
 import { EmotionServerContext, EmotionClientContext } from "~app/emotion";
 import { LinkButton } from "~app/links";
-import { keys } from "~app/util";
+import { keys, respond, useLoaderResponse } from "~app/util";
 
 export const meta: MetaFunction = () => {
 	return { title: "LSG" };
@@ -30,6 +28,7 @@ type LoaderData = {
 		MAGIC_KEY: string | undefined;
 		NODE_ENV: "development" | "production" | "test";
 	};
+	status: number;
 };
 const getLoaderData = (): LoaderData => {
 	return {
@@ -37,9 +36,11 @@ const getLoaderData = (): LoaderData => {
 			MAGIC_KEY: process.env["MAGIC_KEY"],
 			NODE_ENV: process.env.NODE_ENV,
 		},
+		status: 200,
 	};
 };
-export const loader: LoaderFunction = () => json<LoaderData>(getLoaderData());
+export const loader: LoaderFunction = () =>
+	respond<LoaderData>(getLoaderData());
 
 declare global {
 	interface Window {
@@ -127,7 +128,7 @@ const Document = memo(
 );
 
 export default function App(): JSX.Element {
-	const { env } = useLoaderData<LoaderData>();
+	const { env } = useLoaderResponse<LoaderData>();
 
 	return (
 		<Document env={env}>

@@ -1,17 +1,20 @@
 import type { LoaderFunction } from "remix";
 import { Center, CircularProgress } from "@chakra-ui/react";
 import { useEffect } from "react";
-import { useNavigate, json } from "remix";
+import { useNavigate } from "remix";
 import { useLogin, authorize, logout as invalidate } from "~app/auth";
+import { respond } from "~app/util";
 
-type LoaderData = Record<string, never>;
+type LoaderData = {
+	status: number;
+};
 const getLoaderData = async (request: Request): Promise<LoaderData> => {
 	if (await authorize(request, { required: false }))
 		throw await invalidate(request);
-	return {};
+	return { status: 200 };
 };
 export const loader: LoaderFunction = async ({ request }) =>
-	json<LoaderData>(await getLoaderData(request));
+	respond<LoaderData>(await getLoaderData(request));
 
 export default function Logout(): JSX.Element {
 	const { logout, loading } = useLogin();
