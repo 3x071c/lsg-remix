@@ -16,7 +16,6 @@ env:
     APP_ORG: lsglab
     APP_REGION: fra
     APP_DB: lsg-pr-db
-    APP_ENV: "Preview (PR #${{ github.event.number }})"
 
 jobs:
     deploy-pr:
@@ -34,5 +33,5 @@ jobs:
               uses: strumwolf/delete-deployment-environment@v2.0.1
               with:
                   token: ${{ secrets.GITHUB_TOKEN }}
-                  environment: "${{ env.APP_ENV }}"
+                  environment: "Preview (PR #${{ github.event.number }})"
                   onlyDeactivateDeployments: true

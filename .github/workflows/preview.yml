@@ -1,9 +1,7 @@
 # This workflow deploys the PR to fly.io 🚀
 name: Preview Deployment
 
-on:
-    pull_request:
-        types: [opened, reopened, synchronize]
+on: pull_request
 
 # Cancel previous instances of this workflow (per PR)
 concurrency:
@@ -16,7 +14,6 @@ env:
     APP_ORG: lsglab
     APP_REGION: fra
     APP_DB: lsg-pr-db
-    APP_ENV: "Preview (PR #${{ github.event.number }})"
 
 jobs:
     deploy-pr:
@@ -24,7 +21,7 @@ jobs:
         runs-on: ubuntu-latest
         timeout-minutes: 15
         environment:
-            name: "${{ env.APP_ENV }}"
+            name: "Preview (PR #${{ github.event.number }})"
             url: "${{ steps.deploy.outputs.url }}"
         steps:
             - name: Checkout
