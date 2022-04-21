@@ -1,7 +1,9 @@
 # This workflow deploys the PR to fly.io 🚀
 name: Preview Deployment
 
-on: pull_request
+on:
+    pull_request:
+        types: [opened, reopened, synchronize]
 
 # Cancel previous instances of this workflow (per PR)
 concurrency:
