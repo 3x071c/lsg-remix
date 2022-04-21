@@ -12,13 +12,14 @@ import {
 import { json, useLoaderData } from "remix";
 import { authorize } from "~app/auth";
 import { LinkButton } from "~app/links";
-import { users } from "~app/models";
-import { entries } from "~app/util";
 import { pages } from "../admin";
 
 const getLoaderData = async (request: Request) => {
-	const { uuid } = await authorize(request);
-	return users().getMany(uuid, ["firstname", "lastname"]);
+	const { firstname, lastname } = await authorize(request);
+	return {
+		firstname,
+		lastname,
+	};
 };
 type LoaderData = Awaited<ReturnType<typeof getLoaderData>>;
 export const loader: LoaderFunction = async ({ request }) =>
@@ -39,9 +40,9 @@ export default function Index(): JSX.Element {
 				mt={8}
 				mx="auto"
 				placeItems="center">
-				{entries(pages)
-					.filter(([, { short }]) => short !== "Home")
-					.map(([id, { long, url }]) => (
+				{pages
+					.filter(({ short }) => short !== "Home")
+					.map(({ id, long, url }) => (
 						<Box
 							key={id}
 							w="full"

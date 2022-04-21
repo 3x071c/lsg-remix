@@ -16,12 +16,12 @@
   <a href="#license">License</a>
 </p>
 
-> Looking for the old version using Next.js with a fully loaded Apollo+Nexus+Prisma GraphQL stack? It's gone now. ([archive](https://github.com/3x071c/lsg/tree/7c377cdef5baddd9dcf5f49985325081f31159e3))
+> Looking for the old version using Next.js with an Apollo+Nexus GraphQL stack? It's gone now. ([archive](https://github.com/3x071c/lsg/tree/7c377cdef5baddd9dcf5f49985325081f31159e3))
 
 ## Introduction
 
 👋 Hey!  
-You're looking at the source code behind the new [Louise-Schroeder-Gymnasium website](https://lsg.musin.de/) right now! 🤯 It houses a full-stack [Remix](https://remix.run/) application, loaded with TypeScript, Cloudflare Pages and [a bunch of other goodies](#tech-stack). It's not out yet, but we're working on it. Wanna help out? 😇 See how to [get started](#get-started), take a look at the [tech stack](#tech-stack), or dig straight into the [documentation](#documentation). 👀
+You're looking at the source code behind the new [Louise-Schroeder-Gymnasium website](https://lsg.musin.de/) right now! 🤯 It houses a full-stack [Remix](https://remix.run/) application, loaded with TypeScript, Prisma and [a bunch of other goodies](#tech-stack). It's not out yet, but we're working on it. Wanna help out? 😇 See how to [get started](#get-started), take a look at the [tech stack](#tech-stack), or dig straight into the [documentation](#documentation). 👀
 
 ## Public Money, Public Code
 
@@ -32,11 +32,9 @@ You're looking at the source code behind the new [Louise-Schroeder-Gymnasium web
 Impatient? Spin up a GitPod environment in seconds and you're good to go:  
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/3x071c/lsg)
 
-## Get Started 💨
+> NOTE: GitPod environments are largely untested. Please provide feedback and take a look at the guide below if things break unexpectedly.
 
-> ### Windows Incompatibility
->
-> Currently, the development script doesn't run on Windows because it has no POSIX-compliant shell environment. If you're stuck on it, try WSL, Cygwin, etc.
+## Get Started 💨
 
 Make sure you have the latest version of [Node.js](https://nodejs.org/) and NPM (the Node package manager, which should ship with it) installed:
 
@@ -90,10 +88,48 @@ Install the dependencies of this project (you can open up a Terminal in VSCode w
 $ npm i
 ```
 
-Create a `.env` file, containing static key-value pairs for environment-specific configuration. The `.env.example` file serves as a good starting point.
+Now, you'll need to setup a PostgreSQL database. There are many ways you can get one up and running (ask the internet); we're going to focus on two "officially recommended" ones here:
+
+---
+
+1. Setup a local PostgreSQL database yourself
+
+-   (Linux) `pacman -S postgresql`
+-   (macOS) `brew install --cask postgres-unofficial`
+-   (Windows) `winget install -e --id PostgreSQL.PostgreSQL`
+
+> If you are on macOS, `postgres-unofficial` installs [Postgres.app](https://postgresapp.com), which provides a handy UI and sane defaults to get started with little friction (no need for command-line configuration!)
+
+There are lots of tutorials available online on setting up a PostgreSQL database natively. You will need to make a database connection available at a certain port (commonly `5432`) of your local machine (`localhost`).
+
+2. Have docker setup PostgreSQL for you
+
+(You will need docker though)
+
+-   (Linux) `pacman -S docker docker-compose`
+-   (macOS) `brew install podman docker-compose; podman machine init; podman machine start; alias docker='podman'`
+-   (Windows) ???
+
+> Note: On macOS and Windows, `docker` (a "containerization" solution) does not run natively, but through some kind of VM that provides a Linux environment for docker. A common recommendation here is [Docker Desktop](https://www.docker.com/products/docker-desktop/) by the Docker team (a fine option), though note that it has a very user-restricting license which we can't endorse. [Podman](https://podman.io) is a better alternative if you're ok with [reading a little](https://podman.io/getting-started/installation). You can treat the `podman` command as a drop-in `docker` replacement, and even `alias` it (on UNIX-like systems, that is)
+
+Make sure to install both docker (or a docker equivalent) AND `docker-compose` to proceed:
+
+```console
+$ npm run up
+...
+```
+
+[Docker Compose](https://docs.docker.com/compose/) will orchestrate a PostgreSQL database from the included [docker-compose.yml](./docker-compose.yml) file for you!
+
+**Side note**: If you're working a lot with the build system, having a working docker installation around is going to save you a lot of time, as Fly deploys docker containers!
+
+---
+
+Create a `.env` file, containing static key-value pairs for environment-specific configuration. The `.env.example` file serves as a good starting point. You'll need your **PostgreSQL connection string** from the previous step here, to tell the app (/prisma) where and how to connect to your database.
 
 > To securely generate a random password on your computer:  
-> (Linux/macOS) `openssl rand -base64 40`
+> (Linux/macOS) `openssl rand -base64 40`  
+> (Windows) ??? (use [this](https://1password.com/password-generator/) instead)
 
 The `MAGIC_*` variables hold the public and private (secret) API keys for [Magic](https://magic.link), our chosen authentication solution. During local development, **Magic** runs in [Test Mode](https://magic.link/docs/introduction/test-mode) - this allows you to use "**test+success@magic.link**" (or `test+fail@magic.link`) to simulate a real-world successful/failed login while bypassing the regular magic link authentication scheme. Consequently, the environment variables may be populated with "dummy" values for development. In production, values from the Magic admin dashboard are provided.
 
@@ -130,9 +166,9 @@ Push your changes to GitHub so others can follow your progress (you will need re
 $ git push --prune -u origin HEAD # Authenticate with your GitHub credentials (See here for how to save them: https://git-scm.com/book/en/v2/Git-Tools-Credential-Storage)
 ```
 
-Open a `draft` pull request (PR) on GitHub from your branch to the default branch (trunk) and watch the status checks complete. The title of the PR should follow the [same format](https://www.conventionalcommits.org/) as your commits, the body should include all necessary information for others to understand what the PR changes. [Railway](https://railway.app/) will build a live preview of your branch!
+Open a `draft` pull request (PR) on GitHub from your branch to the default branch (trunk) and watch the status checks complete. The title of the PR should follow the [same format](https://www.conventionalcommits.org/) as your commits, the body should include all necessary information for others to understand what the branch changes. [Fly](https://fly.io/) (and a bunch of scripts) will build a live preview of your PR! (Each deployment usually takes around 7 minutes)
 
-Once your branch is ready to be published, convert the draft PR into a regular one, and `kodiak` (a bot) will automatically take care of "squashing" your changes into a single commit onto the default branch.
+Once your branch is ready to be published, convert the draft PR into a regular one, and `kodiak` (a bot) will automatically take care of "squashing" your changes into a single commit onto the default branch. Make sure to familiarize yourself with the [Contributing](./CONTRIBUTING.md) guide, and request reviews from others (using the sidebar) when appropriate, before "un-drafting" your PR.
 
 Happy hacking! 🥳
 
@@ -231,8 +267,8 @@ See [Contributing](CONTRIBUTING.md)
 -   [Chakra UI](https://chakra-ui.com) - React component framework
 -   [Emotion](https://emotion.sh) - CSS-in-JS library used by Chakra UI
 -   [Lodash](https://lodash.com) - Utility functions
--   [Cloudflare Pages](https://pages.cloudflare.com/) - Continuous Deployment
--   Cloudflare KV and Workers - Dynamic [Functions](https://developers.cloudflare.com/pages/platform/functions/) and low-latency, cached, eventually consistent datastore
+-   [Prisma](https://www.prisma.io) - Database ORM
+-   [Fly](https://fly.io) - Continuous Deployment
 
 ## License
 

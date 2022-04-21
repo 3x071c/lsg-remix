@@ -268,17 +268,13 @@ $RECYCLE.BIN/
 # === Start of generic rules ===
 
 .env*
+!.env.example
 *.pem
 .*cache
 .husky/_/
-/public/build/
-/functions/
-/.mf/
+public/build/
+.remix/
 
 # === End of generic rules ===
 # === Start of specific rules ===
-
-package-lock.json
-.*ignore
-
 # === End of specific rules ===

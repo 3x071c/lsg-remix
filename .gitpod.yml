@@ -1,11 +1,18 @@
 # GitPod Configuration (see https://www.gitpod.io/docs/config-gitpod-file)
 
 tasks:
-    - before: "[ ! -e .env ] && cp .env.example .env"
+    - before: |
+          if [ ! -e .env ]; then
+              echo "AUTH_SECRET=\"$(openssl rand -base64 40)\"" > .env
+              npm run up
+              echo "DATABASE_URL=\"postgresql://postgres:postgres@localhost:5432/postgres\"" >> .env
+              echo "MAGIC_KEY=\"pk_live_key\"" >> .env
+              echo "MAGIC_SECRET=\"sk_live_secret\"" >> .env
+          fi
       init: npm install
       command: npm run dev
 ports:
-    - port: 8788
+    - port: 3000
       onOpen: open-preview
     - port: 8002
       onOpen: ignore

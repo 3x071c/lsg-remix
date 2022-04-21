@@ -1,11 +1,15 @@
+import type { UserData } from "~app/models";
 import { redirect } from "remix";
+import superjson from "superjson";
 import { magicServer } from "~app/magic";
-import { users, UserData, UserID } from "~app/models";
+import { PrismaClient as prisma } from "~app/prisma";
 import { entries } from "~app/util";
 import { url as logoutURL } from "~routes/__auth/logout";
 import { url as onboardingURL } from "~routes/__auth/onboard";
 import { url as adminURL } from "~routes/__pages/admin/index";
-import { cmsAuthSessionStorage } from "./session.server";
+import { getSession, commitSession, destroySession } from "./session.server";
+
+const development = process.env.NODE_ENV === "development";
 
 export async function login(
 	request: Request,
@@ -17,58 +21,51 @@ export async function login(
 			"Authentifizierung aufgrund fehlendem Tokens fehlgeschlagen",
 		);
 
-	/* Get the DID of the user (in test mode during development, the token is invalid, so mock it instead) */
-	let did: string | null | undefined;
-	if (global.env.NODE_ENV !== "development") {
+	/* Magic Test Mode in development produces invalid tokens, so skip this step */
+	if (!development) {
 		try {
-			magicServer().token.validate(
+			magicServer.token.validate(
 				didToken,
 			); /* 🚨 Important: Make sure the token is valid and **hasn't expired**, before authorizing access to user data! */
 		} catch (e) {
-			throw new Error("Etwas stimmt mit ihrem Nutzer nicht");
+			throw new Error("Die Anmeldung ist fehlgeschlagen");
 		}
-
-		({ issuer: did } = await magicServer().users.getMetadataByToken(
-			didToken,
-		));
-	} else {
-		did = `did:ethr:0x${"0".repeat(40)}`;
 	}
 
-	if (!did) throw new Error("Dem Nutzer fehlen erforderliche Eigenschaften");
+	/* Get the DID (and other Magic info) of the user (in test mode during development, the token is invalid, so mock it instead) */
+	const { issuer: did, email } = development
+		? { email: "test@magic.link", issuer: `did:ethr:0x${"0".repeat(40)}` }
+		: await magicServer.users.getMetadataByToken(didToken);
 
-	/* Get user UUID */
-	const didRecords = await users().listValues("did");
-	const uuids = didRecords.data
-		.map(({ uuid, value }) => (value === did ? uuid : false))
-		.filter(Boolean);
-	if (uuids.length > 1) throw new Error("Mehrere Nutzer auf einem Datensatz");
+	if (!did || !email)
+		throw new Error(
+			"Es wurden nicht alle erforderlichen Daten gesichert und übermittelt",
+		);
 
-	let uuid = uuids[0];
-	if (!uuid) {
-		const parsed = UserData.safeParse(data);
-		if (!parsed.success) throw redirect(onboardingURL);
-		const { firstname, lastname } = parsed.data;
-		({ uuid } = await users().create({
-			did,
-			firstname,
-			lastname,
-		}));
-	}
+	/* Get all user data to save in the session, or create a new one (by onboarding) if the user is new */
+	const user =
+		(await prisma.user.findUnique({
+			where: {
+				did,
+			},
+		})) ||
+		(await (() => {
+			if (!data) throw redirect(onboardingURL);
+			return prisma.user.create({
+				data: {
+					...data,
+					did,
+					email,
+				},
+			});
+		})());
 
-	const session = await cmsAuthSessionStorage().getSession(
-		request.headers.get("Cookie"),
-	);
-	entries(
-		UserID.parse({
-			did,
-			uuid,
-		}),
-	).map(([k, v]) => session.set(k, v));
+	const session = await getSession(request.headers.get("Cookie"));
+	entries(user).map(([k, v]) => session.set(k, superjson.stringify(v)));
 
 	throw redirect(adminURL, {
 		headers: {
-			"Set-Cookie": await cmsAuthSessionStorage().commitSession(session),
+			"Set-Cookie": await commitSession(session),
 		},
 	});
 }
@@ -79,13 +76,11 @@ export async function login(
  * @returns Redirects to the login
  */
 export async function logout(request: Request): Promise<Response> {
-	const session = await cmsAuthSessionStorage().getSession(
-		request.headers.get("Cookie"),
-	);
+	const session = await getSession(request.headers.get("Cookie"));
 
 	return redirect(logoutURL, {
 		headers: {
-			"Set-Cookie": await cmsAuthSessionStorage().destroySession(session),
+			"Set-Cookie": await destroySession(session),
 		},
 	});
 }

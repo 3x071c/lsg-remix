@@ -24,10 +24,8 @@ import { transparentize } from "@chakra-ui/theme-tools";
 import { memo } from "react";
 import { useNavigate } from "remix";
 import { NavLink } from "~app/links";
-import { entries } from "~app/util";
 
 export default memo(function CmsNav({
-	avatar,
 	page,
 	pages,
 	top,
@@ -35,11 +33,12 @@ export default memo(function CmsNav({
 	firstname,
 	lastname,
 }: {
-	avatar: string | undefined;
 	page: string;
 	pages: {
-		[key: string]: string;
-	};
+		id: number;
+		url: string;
+		short: string;
+	}[];
 	top: PositionProps["top"];
 	height: LayoutProps["height"];
 	firstname: string;
@@ -91,12 +90,12 @@ export default memo(function CmsNav({
 					spacing={2}
 					overflowY="auto"
 					divider={<StackDivider />}>
-					{entries(pages)
-						.filter(([name]) => name !== page)
-						.map(([name, url]) => (
-							<Box key={name}>
+					{pages
+						.filter(({ short }) => short !== page)
+						.map(({ id, short, url }) => (
+							<Box key={id}>
 								<NavLink href={url} variant="link" end>
-									{name}
+									{short}
 								</NavLink>
 							</Box>
 						))}
@@ -109,11 +108,7 @@ export default memo(function CmsNav({
 						px={4}
 						rounded="full"
 						variant="link">
-						<Avatar
-							size="sm"
-							name={`${firstname} ${lastname}`}
-							src={avatar}
-						/>
+						<Avatar size="sm" name={`${firstname} ${lastname}`} />
 					</MenuButton>
 					<MenuList>
 						<MenuGroup title={`${firstname} ${lastname}`}>

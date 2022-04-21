@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import type { StyleSheet } from "@emotion/utils";
 import type { PropsWithChildren } from "react";
 import type { MetaFunction, LoaderFunction } from "remix";
@@ -18,6 +19,7 @@ import {
 import { ColorModeManager, ColorModeToggle } from "~app/colormode";
 import { EmotionServerContext, EmotionClientContext } from "~app/emotion";
 import { LinkButton } from "~app/links";
+import { keys } from "~app/util";
 
 export const meta: MetaFunction = () => {
 	return { title: "LSG" };
@@ -26,9 +28,8 @@ export const meta: MetaFunction = () => {
 const getLoaderData = () => {
 	return {
 		env: {
-			IMAGEDELIVERY: global.env["IMAGEDELIVERY"],
-			MAGIC_KEY: global.env["MAGIC_KEY"],
-			NODE_ENV: global.env.NODE_ENV,
+			MAGIC_KEY: process.env["MAGIC_KEY"],
+			NODE_ENV: process.env.NODE_ENV,
 		},
 	};
 };
@@ -131,14 +132,16 @@ export default function App(): JSX.Element {
 }
 
 export function CatchBoundary(): JSX.Element {
-	const { status, statusText } = useCatch();
+	const caught = useCatch();
+	console.error("⚠️ Caught:", caught);
+	const { status, statusText } = caught;
 	const messages: {
 		[key: string]: string;
 	} = {
 		401: "Die Authentifizierung ist für den Zugriff fehlgeschlagen 😳",
 		404: "Wir haben überall gesucht 👉👈🥺",
 	};
-	const message = Object.keys(messages).includes(status.toString())
+	const message = keys(messages).includes(status.toString())
 		? messages[status.toString()] ||
 		  "Hier haben sich mehrere Fehler eingeschlichen 🧐"
 		: "Unbekannter Fehler - Bei wiederholtem, unvorhergesehenen Auftreten bitte melden 🤯";
@@ -165,11 +168,10 @@ export function CatchBoundary(): JSX.Element {
 	);
 }
 
-export function ErrorBoundary({
-	error: { message, name },
-}: {
-	error: Error;
-}): JSX.Element {
+export function ErrorBoundary({ error }: { error: Error }): JSX.Element {
+	console.error("🚨 ERROR:", error);
+	const { name, message } = error;
+
 	return (
 		<Document title={`${name} | LSG`}>
 			<Center minW="100vw" minH="100vh">

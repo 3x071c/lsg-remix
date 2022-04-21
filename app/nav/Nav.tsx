@@ -19,19 +19,16 @@ import {
 import { transparentize } from "@chakra-ui/theme-tools";
 import { memo } from "react";
 import { Link, LinkButton } from "~app/links";
-import { entries } from "~app/util";
 
 type NavbarProps = {
 	groupedPages: {
-		[groupUUID: string]: {
-			name: string;
-			pages: {
-				[pageUUID: string]: {
-					title: string;
-				};
-			};
-		};
-	};
+		id: number;
+		name: string;
+		pages: {
+			id: number;
+			title: string;
+		}[];
+	}[];
 	height: LayoutProps["h"];
 };
 export default memo(function Nav({
@@ -82,8 +79,8 @@ export default memo(function Nav({
 				</Link>
 				<Spacer />
 				<HStack textAlign="center" spacing={2} overflowY="auto">
-					{entries(groupedPages).map(([uuid, { name, pages }]) => (
-						<Box key={uuid}>
+					{groupedPages.map(({ id, name, pages }) => (
+						<Box key={id}>
 							<Popover trigger="hover">
 								<PopoverTrigger>
 									<Button
@@ -106,11 +103,11 @@ export default memo(function Nav({
 									}}>
 									<PopoverBody>
 										<VStack spacing={4}>
-											{entries(pages).map(
-												([pageUUID, { title }]) => (
+											{pages.map(
+												({ id: pageId, title }) => (
 													<LinkButton
-														href={`/page/${pageUUID}`}
-														key={`${uuid}.${pageUUID}`}
+														href={`/page/${pageId}`}
+														key={pageId}
 														variant="ghost"
 														w="full">
 														{title}
