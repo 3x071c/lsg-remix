@@ -1,0 +1,38 @@
+# This workflow cleans up PR deployments after they are closed
+name: Preview Cleanup
+
+on:
+    pull_request:
+        types: [closed]
+
+# Cancel previous instances of this workflow (per PR)
+concurrency:
+    group: ${{ github.workflow }}-${{ github.event.number }}
+    cancel-in-progress: true
+
+env:
+    FLY_API_TOKEN: "${{ secrets.FLY_API_TOKEN }}"
+    APP_NAME: "lsg-pr-${{ github.event.number }}"
+    APP_ORG: lsglab
+    APP_REGION: fra
+    APP_DB: lsg-pr-db
+    APP_ENV: "Preview (PR #${{ github.event.number }})"
+
+jobs:
+    deploy-pr:
+        name: PR Cleanup
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        steps:
+            - name: Setup
+              uses: superfly/flyctl-actions/setup-flyctl@master
+            - name: Destroy
+              continue-on-error: true
+              run: |
+                  flyctl destroy ${{ env.APP_NAME }} --yes
+            - name: Clean up GitHub environment
+              uses: strumwolf/delete-deployment-environment@v2.0.1
+              with:
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  environment: "${{ env.APP_ENV }}"
+                  onlyDeactivateDeployments: true
