@@ -48,13 +48,13 @@ import { withZod } from "@remix-validated-form/with-zod";
 import { useEffect, useMemo, useRef, useState } from "react";
 import FocusLock from "react-focus-lock";
 import { useTable, useSortBy } from "react-table";
-import { json, useLoaderData, useActionData, useTransition } from "remix";
+import { useTransition } from "remix";
 import { ValidatedForm, validationError } from "remix-validated-form";
 import { z } from "zod";
 import { FormInput, FormSelect, SubmitButton } from "~app/form";
 import { Page, PageCategory } from "~app/models";
 import { PrismaClient as prisma, toIndexedObject } from "~app/prisma";
-import { keys } from "~app/util";
+import { keys, respond, useActionResponse, useLoaderResponse } from "~app/util";
 
 const pageValidatorData = Page.pick({
 	title: true,
@@ -83,6 +83,7 @@ type LoaderData = {
 		categoryId: number;
 		title: string;
 	}[];
+	status: number;
 };
 const getLoaderData = async (): Promise<LoaderData> => {
 	const categoryData = await prisma.pageCategory.findMany({
@@ -105,52 +106,63 @@ const getLoaderData = async (): Promise<LoaderData> => {
 	return {
 		categoryData,
 		pageData,
+		status: 200,
 	};
 };
 export const loader: LoaderFunction = async () =>
-	json<LoaderData>(await getLoaderData());
+	respond<LoaderData>(await getLoaderData());
 
-type ActionData =
+type ActionData = (
 	| Page
 	| PageCategory
 	| {
 			formError: string;
-	  };
+	  }
+) & {
+	status: number;
+};
 
 const getActionData = async (request: Request): Promise<ActionData> => {
 	const form = await request.formData();
 	const subject = form.get("_subject");
-	if (!subject)
-		return {
-			formError: "Es gab ein internes Problem (ERR_SUBJECT_MISSING)",
-		};
+
 	if (subject === "page") {
 		const { error, data } = await pageValidator.validate(form);
 		if (error) throw validationError(error);
 		if (!data)
-			return { formError: "Bei uns sind keine Daten angekommen >:(" };
+			return {
+				formError: "Es sind unzureichende Daten angekommen",
+				status: 400,
+			};
 		const { title, categoryId: categoryIdRaw } = data;
 		const categoryId = Number(categoryIdRaw);
 		if (!categoryId)
 			return {
 				formError:
 					"Die angegebene Kategorie konnte nicht ermittelt werden",
+				status: 400,
 			};
-		return prisma.page.create({
-			data: { categoryId, content: `Inhalt für ${title}`, title },
-		});
+		return {
+			...(await prisma.page.create({
+				data: { categoryId, content: `Inhalt für ${title}`, title },
+			})),
+			status: 200,
+		};
 	}
 	if (subject === "pageCategory") {
 		const { error, data } = await pageCategoryValidator.validate(form);
 		if (error) throw validationError(error);
 		if (!data)
-			return { formError: "Bei uns sind keine Daten angekommen >:(" };
-		return prisma.pageCategory.create({ data });
+			return {
+				formError: "Es sind unzureichende Daten angekommen",
+				status: 400,
+			};
+		return { ...(await prisma.pageCategory.create({ data })), status: 200 };
 	}
-	throw new Error("Es gab ein internes Problem (ERR_SUBJECT_INVALID)");
+	return { formError: "Es fehlen interne Daten der Anfrage", status: 400 };
 };
 export const action: ActionFunction = async ({ request }) =>
-	json<ActionData>(await getActionData(request));
+	respond<ActionData>(await getActionData(request));
 
 function CategoryPopover({
 	setCloseable,
@@ -313,8 +325,8 @@ function PageModal({
 
 export default function Index(): JSX.Element {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const { categoryData, pageData } = useLoaderData<LoaderData>();
-	const actionData = useActionData<ActionData>();
+	const { categoryData, pageData } = useLoaderResponse<LoaderData>();
+	const actionData = useActionResponse<ActionData>();
 
 	type TableType = typeof pageData[number];
 	const indexedCategoryData = useMemo(

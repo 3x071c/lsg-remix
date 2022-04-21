@@ -40,7 +40,7 @@ model Page {
     /// The foreign key of the category this page has a relation with
     categoryId Int
     /// The page's title
-    title      String       @db.VarChar(20) /// @zod.min(3, { message: "Titel muss mindestens 3 Zeichen lang sein" }).max(20, { message: "Titel darf nicht länger als 20 Zeichen lang sein" })
+    title      String       @db.VarChar(40) /// @zod.min(3, { message: "Titel muss mindestens 3 Zeichen lang sein" }).max(40, { message: "Titel darf nicht länger als 40 Zeichen lang sein" })
     /// The page's content
     content    String       @db.Text
     /// This timestamp is updated on every mutation automatically
@@ -55,7 +55,7 @@ model PageCategory {
     /// The pages that belong to this category
     pages     Page[]
     /// The category name
-    name      String   @db.VarChar(20) /// @zod.min(3, { message: "Name muss mindestens 3 Zeichen lang sein" }).max(20, { message: "Name darf nicht länger als 20 Zeichen lang sein" })
+    name      String   @db.VarChar(40) /// @zod.min(3, { message: "Name muss mindestens 3 Zeichen lang sein" }).max(40, { message: "Name darf nicht länger als 40 Zeichen lang sein" })
     /// This timestamp is updated on every mutation automatically
     updatedAt DateTime @default(now()) @updatedAt
     /// This timestamp is set on creation automatically

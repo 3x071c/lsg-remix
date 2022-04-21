@@ -15,17 +15,18 @@ import {
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useSubmit, json, redirect } from "remix";
+import { useSubmit, redirect } from "remix";
 import { useLogin, login as authenticate, authorize } from "~app/auth";
+import { respond } from "~app/util";
 import { url as adminURL } from "~routes/__pages/admin/index";
 
-type LoaderData = Record<string, never>;
+type LoaderData = { status: number };
 const getLoaderData = async (request: Request): Promise<LoaderData> => {
 	if (await authorize(request, { required: false })) throw redirect(adminURL);
-	return {};
+	return { status: 200 };
 };
 export const loader: LoaderFunction = async ({ request }) =>
-	json<LoaderData>(await getLoaderData(request));
+	respond<LoaderData>(await getLoaderData(request));
 
 export const action: ActionFunction = async ({ request }) => {
 	const form = await request.formData();

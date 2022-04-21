@@ -1,9 +1,10 @@
 import type { LoaderFunction } from "remix";
 import { Container, chakra } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { Outlet, json, useLoaderData, useLocation } from "remix";
+import { Outlet, useLocation } from "remix";
 import { Nav as AdminNav } from "~app/admin";
 import { authorize } from "~app/auth";
+import { respond, useLoaderResponse } from "~app/util";
 import { url as cmsURL } from "~routes/__pages/admin/cms";
 import { url as adminURL } from "~routes/__pages/admin/index";
 import { url as labURL } from "~routes/__pages/admin/lab";
@@ -11,6 +12,7 @@ import { url as labURL } from "~routes/__pages/admin/lab";
 type LoaderData = {
 	firstname: string;
 	lastname: string;
+	status: number;
 };
 const getLoaderData = async (request: Request): Promise<LoaderData> => {
 	const { firstname, lastname } = await authorize(request);
@@ -18,10 +20,11 @@ const getLoaderData = async (request: Request): Promise<LoaderData> => {
 	return {
 		firstname,
 		lastname,
+		status: 200,
 	};
 };
 export const loader: LoaderFunction = async ({ request }) =>
-	json<LoaderData>(await getLoaderData(request));
+	respond<LoaderData>(await getLoaderData(request));
 
 export const pages: {
 	id: number;
@@ -39,7 +42,7 @@ export const pages: {
 	},
 ];
 export default function Admin(): JSX.Element {
-	const { firstname, lastname } = useLoaderData<LoaderData>();
+	const { firstname, lastname } = useLoaderResponse<LoaderData>();
 	const location = useLocation();
 	const [route, setRoute] = useState<string>(location.pathname);
 

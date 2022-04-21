@@ -1,7 +1,8 @@
 import type { LoaderFunction } from "remix";
-import { json, Outlet, useLoaderData } from "remix";
+import { Outlet } from "remix";
 import { Nav } from "~app/nav";
 import { PrismaClient as prisma } from "~app/prisma";
+import { respond, useLoaderResponse } from "~app/util";
 
 type LoaderData = {
 	groupedPages: {
@@ -12,6 +13,7 @@ type LoaderData = {
 		id: number;
 		name: string;
 	}[];
+	status: number;
 };
 const getLoaderData = async (): Promise<LoaderData> => {
 	const groupedPages = await prisma.pageCategory.findMany({
@@ -29,13 +31,14 @@ const getLoaderData = async (): Promise<LoaderData> => {
 
 	return {
 		groupedPages,
+		status: 200,
 	};
 };
 export const loader: LoaderFunction = async () =>
-	json<LoaderData>(await getLoaderData());
+	respond<LoaderData>(await getLoaderData());
 
 export default function Pages() {
-	const { groupedPages } = useLoaderData<LoaderData>();
+	const { groupedPages } = useLoaderResponse<LoaderData>();
 
 	return (
 		<>
