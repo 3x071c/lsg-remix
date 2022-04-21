@@ -109,7 +109,7 @@ export default function Onboard() {
 								isDisabled={loading}>
 								Speichern
 							</SubmitButton>
-							{actionData && (
+							{actionData.formError && (
 								<Text maxW="sm" mt={2} color="red.400">
 									Fehler: {String(actionData?.formError)}
 								</Text>

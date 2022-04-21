@@ -1,5 +1,6 @@
 import type { AppData } from "remix";
 import type { SuperJSONResult } from "superjson/dist/types";
+import { useMemo } from "react";
 import { useActionData, json, useLoaderData } from "remix";
 import { serialize, deserialize } from "superjson";
 
@@ -11,11 +12,10 @@ export const respond = <T extends MakeRequired<ResponseInit, "status">>(
 
 export const useLoaderResponse = <T = AppData>(): T => {
 	const response = useLoaderData<SuperJSONResult>();
-	return deserialize<T>(response);
+	return useMemo(() => deserialize<T>(response), [response]);
 };
 
-export const useActionResponse = <T>(): T | undefined => {
+export const useActionResponse = <T>(): T | Record<string, never> => {
 	const response = useActionData<SuperJSONResult>();
-	if (!response) return undefined;
-	return deserialize<T>(response);
+	return useMemo(() => deserialize<T>(response ?? { json: {} }), [response]);
 };
