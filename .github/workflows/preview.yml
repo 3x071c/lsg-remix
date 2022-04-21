@@ -1,5 +1,5 @@
 # This workflow deploys the PR to fly.io 🚀
-name: PR Preview
+name: Preview Deployment
 
 on:
     pull_request:
@@ -19,7 +19,7 @@ env:
 
 jobs:
     deploy-pr:
-        name: Deploy PR
+        name: PR Preview
         runs-on: ubuntu-latest
         timeout-minutes: 15
         environment:
@@ -31,6 +31,7 @@ jobs:
             - name: Setup
               uses: superfly/flyctl-actions/setup-flyctl@master
             - name: Status Check
+              if: ${{ github.event.action != 'closed' }}
               run: |
                   if flyctl status --app "${{ env.APP_NAME }}"; then
                     echo "APP_EXISTS=true" >> $GITHUB_ENV
@@ -40,13 +41,14 @@ jobs:
                     echo "⛔️ APP DOES NOT EXIST"
                   fi
             - name: Launch
-              if: ${{ env.APP_EXISTS != 'true' }}
+              if: ${{ github.event.action != 'closed' && env.APP_EXISTS != 'true' }}
               run: |
                   flyctl launch --copy-config --name "${{ env.APP_NAME }}" --no-deploy --org "${{ env.APP_ORG }}" --region "${{ env.APP_REGION }}" --remote-only
                   flyctl postgres attach --app "${{ env.APP_NAME }}" --postgres-app "${{ env.APP_DB }}"
                   flyctl secrets set --app "${{ env.APP_NAME }}" AUTH_SECRET="$(openssl rand -base64 40)" MAGIC_KEY="${{ secrets.MAGIC_KEY }}" MAGIC_SECRET="${{ secrets.MAGIC_SECRET }}"
             - name: Deploy
               id: deploy
+              if: ${{ github.event.action != 'closed' }}
               run: |
                   flyctl deploy --app "${{ env.APP_NAME }}" --now --remote-only --strategy immediate || sleep 30
                   flyctl status --app "${{ env.APP_NAME }}"
@@ -65,3 +67,4 @@ jobs:
               with:
                   token: ${{ secrets.GITHUB_TOKEN }}
                   environment: "Preview (PR #${{ github.event.number }})"
+                  onlyDeactivateDeployments: true
