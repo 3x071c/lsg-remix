@@ -2,7 +2,11 @@
 
 ## Folder Structure
 
--   Top-level folders separate concerns (we used to have multiple relatively independent parts)
+-   Top-level folders separate concerns
+-   `db/`:
+    -   Contains database-related files
+    -   Database schema (Prisma)
+    -   Database seeding instructions (Prisma)
 -   `$app/`:
     -   Contains app source code
     -   Inspired by the [Redux recommended folder structure](https://redux.js.org/faq/code-structure#what-should-my-file-structure-look-like-how-should-i-group-my-action-creators-and-reducers-in-my-project-where-should-my-selectors-go)
