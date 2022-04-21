@@ -3,9 +3,9 @@ name: PR
 
 on: pull_request
 
-# Cancel previous instances of this workflow
+# Cancel previous instances of this workflow (per PR)
 concurrency:
-    group: ${{ github.workflow }}-${{ github.head_ref || github.ref || github.run_id }}
+    group: ${{ github.workflow }}-${{ github.event.number }}
     cancel-in-progress: true
 
 jobs:
