@@ -51,7 +51,7 @@ export default async function main(): Promise<void> {
 			return faker.internet.email(firstname, lastname);
 		});
 		const createdAt = seedDate(wayback, today);
-		const did = `did:ethr:0x${faker.random.alphaNumeric(40)}`;
+		const did = `did:ethr:${faker.datatype.hexadecimal(40)}`;
 
 		console.log(`👉 Creating user ${firstname} ${lastname} (${email})`);
 		await prisma.user.create({

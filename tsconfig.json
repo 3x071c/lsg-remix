@@ -37,6 +37,8 @@
 			"~routes": ["app/routes"],
 			"~app/*": ["app/*"],
 			"~app": ["app"],
+			"~models/*": ["db/zod/*"],
+			"~models": ["db/zod"],
 			"~types/*": ["types/*"],
 			"~types": ["types"],
 			"~/*": ["*"],

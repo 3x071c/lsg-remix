@@ -275,6 +275,7 @@ $RECYCLE.BIN/
 public/build/
 .remix/
 postgres-data
+db/zod
 
 # === End of generic rules ===
 # === Start of specific rules ===

@@ -13,22 +13,28 @@ import { json, useActionData, redirect } from "remix";
 import { ValidatedForm, validationError } from "remix-validated-form";
 import { login as authenticate, useLogin, authorize } from "~app/auth";
 import { FormInput, SubmitButton } from "~app/form";
-import { UserData } from "~app/models";
+import { User } from "~app/models";
 import { url as adminURL } from "~routes/__pages/admin/index";
 
-const getLoaderData = async (request: Request) => {
+type LoaderData = Record<string, never>;
+const getLoaderData = async (request: Request): Promise<LoaderData> => {
 	if (await authorize(request, { onboarding: true, required: false }))
 		throw redirect(adminURL);
 	return {};
 };
-type LoaderData = Awaited<ReturnType<typeof getLoaderData>>;
 export const loader: LoaderFunction = async ({ request }) =>
 	json<LoaderData>(await getLoaderData(request));
 
-const validatorData = UserData;
+const validatorData = User.pick({
+	firstname: true,
+	lastname: true,
+});
 const validator = withZod(validatorData);
 
-const getActionData = async (request: Request) => {
+type ActionData = void | {
+	formError: string;
+};
+const getActionData = async (request: Request): Promise<ActionData> => {
 	const form = await request.formData();
 	const didToken = form.get("_authorization");
 	const { error, data } = await validator.validate(form);
@@ -44,7 +50,6 @@ const getActionData = async (request: Request) => {
 		throw e;
 	});
 };
-type ActionData = Awaited<ReturnType<typeof getActionData>>;
 export const action: ActionFunction = async ({ request }) =>
 	json<ActionData>(await getActionData(request), 401);
 

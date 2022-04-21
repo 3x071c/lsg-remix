@@ -1,4 +1,4 @@
-import type { UserData } from "~app/models";
+import type { User } from "~app/models";
 import { redirect } from "remix";
 import superjson from "superjson";
 import { magicServer } from "~app/magic";
@@ -14,7 +14,7 @@ const development = process.env.NODE_ENV === "development";
 export async function login(
 	request: Request,
 	didToken: unknown,
-	data?: UserData,
+	data?: Pick<User, "firstname" | "lastname">,
 ) {
 	if (!didToken || typeof didToken !== "string")
 		throw new Error(

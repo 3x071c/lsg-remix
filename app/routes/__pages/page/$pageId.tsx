@@ -1,11 +1,14 @@
 import type { Params } from "react-router";
 import type { LoaderFunction } from "remix";
+import type { z } from "zod";
 import { chakra, Heading, useColorModeValue } from "@chakra-ui/react";
 import { json, useLoaderData } from "remix";
+import type { PageModel } from "~models";
 import { Image } from "~app/image";
 import { PrismaClient as prisma } from "~app/prisma";
 
-const getLoaderData = async (params: Params) => {
+type LoaderData = z.infer<typeof PageModel>;
+const getLoaderData = async (params: Params): Promise<LoaderData> => {
 	const id = Number(params["pageId"]);
 	if (!id)
 		throw new Response("Invalider Seitenaufruf", {
@@ -23,11 +26,10 @@ const getLoaderData = async (params: Params) => {
 
 	return page;
 };
-type LoaderData = Awaited<ReturnType<typeof getLoaderData>>;
 export const loader: LoaderFunction = async ({ params }) =>
 	json<LoaderData>(await getLoaderData(params));
 
-export default function Page() {
+export default function PageSlug() {
 	const { title } = useLoaderData<LoaderData>();
 	const bg = useColorModeValue("white", "gray.800");
 

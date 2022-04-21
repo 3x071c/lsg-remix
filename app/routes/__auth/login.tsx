@@ -19,11 +19,11 @@ import { useSubmit, json, redirect } from "remix";
 import { useLogin, login as authenticate, authorize } from "~app/auth";
 import { url as adminURL } from "~routes/__pages/admin/index";
 
-const getLoaderData = async (request: Request) => {
+type LoaderData = Record<string, never>;
+const getLoaderData = async (request: Request): Promise<LoaderData> => {
 	if (await authorize(request, { required: false })) throw redirect(adminURL);
 	return {};
 };
-type LoaderData = Awaited<ReturnType<typeof getLoaderData>>;
 export const loader: LoaderFunction = async ({ request }) =>
 	json<LoaderData>(await getLoaderData(request));
 

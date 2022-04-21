@@ -46,10 +46,6 @@ COPY --chown=node --from=dev /lsg/node_modules /lsg/node_modules
 # Copy over all source files from the base image
 COPY --chown=node . .
 
-# Generate prisma files
-RUN npm run generate
-# Run the postinstall hook (to setup Remix imports)
-RUN npm run postinstall
 # Run the build script
 RUN npm run build
 

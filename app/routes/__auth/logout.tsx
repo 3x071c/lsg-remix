@@ -4,12 +4,12 @@ import { useEffect } from "react";
 import { useNavigate, json } from "remix";
 import { useLogin, authorize, logout as invalidate } from "~app/auth";
 
-const getLoaderData = async (request: Request) => {
+type LoaderData = Record<string, never>;
+const getLoaderData = async (request: Request): Promise<LoaderData> => {
 	if (await authorize(request, { required: false }))
 		throw await invalidate(request);
 	return {};
 };
-type LoaderData = Awaited<ReturnType<typeof getLoaderData>>;
 export const loader: LoaderFunction = async ({ request }) =>
 	json<LoaderData>(await getLoaderData(request));
 
