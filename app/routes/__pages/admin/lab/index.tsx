@@ -8,8 +8,8 @@ import {
 	Badge,
 	Flex,
 } from "@chakra-ui/react";
-import { LinkButton } from "~app/links";
-import { entries } from "~app/util";
+import { LinkButton } from "~feat/links";
+import { entries } from "~lib/util";
 
 export const pages: {
 	[key: string]: { long: string; short: string; url: string };

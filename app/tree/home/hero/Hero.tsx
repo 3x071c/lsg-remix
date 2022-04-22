@@ -1,6 +1,6 @@
 import { Heading, Wrap, WrapItem, Text, Box } from "@chakra-ui/react";
 import { memo } from "react";
-import { Image } from "~app/image";
+import { Image } from "~feat/image";
 import bg from "./bg.jpg";
 
 export default memo(function Hero() {

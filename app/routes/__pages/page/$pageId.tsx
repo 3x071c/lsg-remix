@@ -2,12 +2,12 @@ import type { Params } from "react-router";
 import type { LoaderFunction } from "remix";
 import type { z } from "zod";
 import { chakra, Heading, useColorModeValue } from "@chakra-ui/react";
-import type { PageModel } from "~models";
-import { Image } from "~app/image";
-import { PrismaClient as prisma } from "~app/prisma";
-import { respond, useLoaderResponse } from "~app/util";
+import type { Page } from "~models";
+import { Image } from "~feat/image";
+import { PrismaClient as prisma } from "~feat/prisma";
+import { respond, useLoaderResponse } from "~lib/response";
 
-type LoaderData = z.infer<typeof PageModel> & {
+type LoaderData = z.infer<typeof Page> & {
 	status: number;
 };
 const getLoaderData = async (params: Params): Promise<LoaderData> => {

@@ -23,7 +23,7 @@ import {
 import { transparentize } from "@chakra-ui/theme-tools";
 import { memo } from "react";
 import { useNavigate } from "remix";
-import { NavLink } from "~app/links";
+import { NavLink } from "~feat/links";
 
 export default memo(function CmsNav({
 	page,

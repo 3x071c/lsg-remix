@@ -1,7 +1,7 @@
 import { redirect } from "remix";
 import superjson from "superjson";
-import { User } from "~app/models";
-import { fromEntries, keys } from "~app/util";
+import { User } from "~models";
+import { fromEntries, keys } from "~lib/util";
 import { getSession } from "./session.server";
 import { logout } from ".";
 

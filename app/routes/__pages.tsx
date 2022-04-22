@@ -1,8 +1,8 @@
 import type { LoaderFunction } from "remix";
 import { Outlet } from "remix";
 import { Nav } from "~tree";
-import { PrismaClient as prisma } from "~app/prisma";
-import { respond, useLoaderResponse } from "~app/util";
+import { PrismaClient as prisma } from "~feat/prisma";
+import { respond, useLoaderResponse } from "~lib/response";
 
 type LoaderData = {
 	groupedPages: {

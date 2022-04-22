@@ -1,6 +1,6 @@
 /* Modeled after official documentation: https://chakra-ui.com/docs/styled-system/features/color-mode#behavior-of-colormode */
 import type { ColorMode } from "@chakra-ui/react";
-import { theme } from "~app/chakra";
+import { theme } from "~feat/chakra";
 import setColorMode from "./setColorMode";
 
 /**

@@ -2,8 +2,8 @@ import type { LoaderFunction } from "remix";
 import { Container, chakra } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { Outlet, useLocation } from "remix";
-import { authorize } from "~app/auth";
-import { respond, useLoaderResponse } from "~app/util";
+import { authorize } from "~feat/auth";
+import { respond, useLoaderResponse } from "~lib/response";
 import { Nav } from "~tree/home/admin";
 
 type LoaderData = {
