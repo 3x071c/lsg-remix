@@ -18,6 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { transparentize } from "@chakra-ui/theme-tools";
 import { memo } from "react";
+import { maxContentWidth } from "~feat/chakra";
 import { Link, LinkButton } from "~feat/links";
 
 type NavbarProps = {
@@ -65,7 +66,7 @@ export default memo(function Nav({
 			}}>
 			<Flex
 				w="full"
-				maxW="7xl"
+				maxW={maxContentWidth}
 				mx="auto"
 				align="center"
 				h={height}

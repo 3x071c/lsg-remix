@@ -3,6 +3,7 @@ import { Container, chakra } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { Outlet, useLocation } from "remix";
 import { authorize } from "~feat/auth";
+import { maxContentWidth } from "~feat/chakra";
 import { respond, useLoaderResponse } from "~lib/response";
 import { Nav } from "~tree/home/admin";
 
@@ -41,9 +42,8 @@ export const pages: {
 		short: "schoolib",
 		url: "/admin/schoolib",
 	},
-	{ id: 3, long: "Admin", short: "Admin", url: "/admin" },
 	{
-		id: 4,
+		id: 3,
 		long: "Admin Lab only 😎",
 		short: "Lab",
 		url: "/admin/lab",
@@ -68,11 +68,16 @@ export default function Admin(): JSX.Element {
 				pages={pages}
 				page={
 					pages.find(({ url }) => url.endsWith(route))?.short ??
-					"<ERR>"
+					"Admin"
 				}
 			/>
 			<chakra.section pos="relative">
-				<Container w="full" maxW="7xl" mx="auto" py={8} centerContent>
+				<Container
+					w="full"
+					maxW={maxContentWidth}
+					mx="auto"
+					py={8}
+					centerContent>
 					<Outlet />
 				</Container>
 			</chakra.section>

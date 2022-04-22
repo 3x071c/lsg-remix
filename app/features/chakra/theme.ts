@@ -20,3 +20,5 @@ export const theme = extendTheme(
 ) as {
 	config: typeof config;
 };
+
+export const maxContentWidth = "7xl";

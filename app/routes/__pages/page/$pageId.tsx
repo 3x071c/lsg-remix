@@ -1,9 +1,17 @@
 import type { Params } from "react-router";
 import type { LoaderFunction } from "remix";
 import type { z } from "zod";
-import { chakra, Heading, useColorModeValue } from "@chakra-ui/react";
+import {
+	Box,
+	chakra,
+	Container,
+	Heading,
+	useColorModeValue,
+	Text,
+} from "@chakra-ui/react";
+import { bg } from "~assets";
 import type { Page } from "~models";
-import { Image } from "~feat/image";
+import { maxContentWidth } from "~feat/chakra";
 import { PrismaClient as prisma } from "~feat/prisma";
 import { respond, useLoaderResponse } from "~lib/response";
 
@@ -32,33 +40,24 @@ export const loader: LoaderFunction = async ({ params }) =>
 	respond<LoaderData>(await getLoaderData(params));
 
 export default function PageSlug() {
-	const { title } = useLoaderResponse<LoaderData>();
-	const bg = useColorModeValue("white", "gray.800");
+	const { title, content } = useLoaderResponse<LoaderData>();
+	const plain = useColorModeValue("white", "gray.800");
 
 	return (
-		<chakra.section
-			pos="relative"
+		<Box
 			w="full"
-			d="flex"
-			justifyContent="center"
-			alignItems="center">
-			<Image
-				w="full"
-				src={bg}
-				alt="Louise-Schroeder-Gymnasium Außenansicht"
-				priority
-			/>
-			<chakra.main
-				pos="absolute"
-				left={32}
-				right={32}
-				top={64}
-				minH="100vh"
-				bg={bg}>
-				<Heading as="h2" size="xl" p={6}>
-					{title}
-				</Heading>
-			</chakra.main>
-		</chakra.section>
+			minH="100vh"
+			bgImg={`url('${bg}')`}
+			bgRepeat="no-repeat"
+			bgSize="100%">
+			<Container w="full" maxW={maxContentWidth} mx="auto" centerContent>
+				<chakra.main w="full" mt={16} bg={plain}>
+					<Heading as="h2" size="xl" py={2}>
+						{title}
+					</Heading>
+					<Text fontSize="md">{content}</Text>
+				</chakra.main>
+			</Container>
+		</Box>
 	);
 }

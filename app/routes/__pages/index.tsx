@@ -1,10 +1,9 @@
 import { Heading, Text, chakra, Container } from "@chakra-ui/react";
+import { maxContentWidth } from "~feat/chakra";
 import { LinkButton } from "~feat/links";
 import { Hero, Certificates } from "~tree/home";
 
 export default function Index(): JSX.Element {
-	const maxContentWidth = "7xl";
-
 	return (
 		<Container w="full" maxW={maxContentWidth} mx="auto" centerContent>
 			<chakra.main w="full">
