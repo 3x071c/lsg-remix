@@ -20,8 +20,9 @@ import {
 	EmotionServerContext,
 	EmotionClientContext,
 } from "~tree";
-import { LinkButton } from "~app/links";
-import { keys, respond, useLoaderResponse } from "~app/util";
+import { LinkButton } from "~feat/links";
+import { respond, useLoaderResponse } from "~lib/response";
+import { keys } from "~lib/util";
 
 export const meta: MetaFunction = () => {
 	return { title: "LSG" };

@@ -11,8 +11,8 @@ import {
 	CircularProgress,
 } from "@chakra-ui/react";
 import { redirect } from "remix";
-import { useAuthCallback, authorize } from "~app/auth";
-import { respond } from "~app/util";
+import { useAuthCallback, authorize } from "~feat/auth";
+import { respond } from "~lib/response";
 
 type LoaderData = { status: number };
 const getLoaderData = async (request: Request): Promise<LoaderData> => {

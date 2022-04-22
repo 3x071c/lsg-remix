@@ -1,4 +1,4 @@
-import { InfoBoundary } from "~app/boundaries";
+import { InfoBoundary } from "~feat/boundaries";
 
 export default function Schoolib(): JSX.Element {
 	return (

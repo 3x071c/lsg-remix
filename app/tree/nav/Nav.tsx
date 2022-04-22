@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { transparentize } from "@chakra-ui/theme-tools";
 import { memo } from "react";
-import { Link, LinkButton } from "~app/links";
+import { Link, LinkButton } from "~feat/links";
 
 type NavbarProps = {
 	groupedPages: {

@@ -16,8 +16,8 @@ import {
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useSubmit, redirect } from "remix";
-import { useLogin, login as authenticate, authorize } from "~app/auth";
-import { respond } from "~app/util";
+import { useLogin, login as authenticate, authorize } from "~feat/auth";
+import { respond } from "~lib/response";
 
 type LoaderData = { status: number };
 const getLoaderData = async (request: Request): Promise<LoaderData> => {

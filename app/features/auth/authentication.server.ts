@@ -1,8 +1,8 @@
-import type { User } from "~app/models";
 import { redirect } from "remix";
 import superjson from "superjson";
-import { PrismaClient as prisma } from "~app/prisma";
-import { entries } from "~app/util";
+import type { User } from "~models";
+import { PrismaClient as prisma } from "~feat/prisma";
+import { entries } from "~lib/util";
 import { magicServer } from "./magic";
 import { getSession, commitSession, destroySession } from "./session.server";
 

@@ -11,9 +11,9 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useLocation } from "remix";
-import { authorize } from "~app/auth";
-import { LinkButton } from "~app/links";
-import { respond, useLoaderResponse } from "~app/util";
+import { authorize } from "~feat/auth";
+import { LinkButton } from "~feat/links";
+import { respond, useLoaderResponse } from "~lib/response";
 import { pages } from "../admin";
 
 type LoaderData = {

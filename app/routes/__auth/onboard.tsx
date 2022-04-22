@@ -11,10 +11,10 @@ import {
 import { withZod } from "@remix-validated-form/with-zod";
 import { redirect } from "remix";
 import { ValidatedForm, validationError } from "remix-validated-form";
-import { login as authenticate, useLogin, authorize } from "~app/auth";
-import { FormInput, SubmitButton } from "~app/form";
-import { User } from "~app/models";
-import { respond, useActionResponse } from "~app/util";
+import { User } from "~models";
+import { login as authenticate, useLogin, authorize } from "~feat/auth";
+import { FormInput, SubmitButton } from "~feat/form";
+import { respond, useActionResponse } from "~lib/response";
 
 type LoaderData = {
 	status: number;

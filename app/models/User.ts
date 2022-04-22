@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-redeclare -- Zod inferred typings */
 import type { User as PrismaUser } from "@prisma/client";
 import type { z } from "zod";
-import { UserModel } from "~models";
+import { UserModel } from "~db";
 
 export const User: z.ZodObject<{
 	[K in keyof PrismaUser]: z.ZodType<PrismaUser[K]>;

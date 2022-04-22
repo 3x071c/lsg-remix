@@ -1,5 +1,5 @@
 import { Heading, Text, chakra, Container } from "@chakra-ui/react";
-import { LinkButton } from "~app/links";
+import { LinkButton } from "~feat/links";
 import { Hero, Certificates } from "~tree/home";
 
 export default function Index(): JSX.Element {

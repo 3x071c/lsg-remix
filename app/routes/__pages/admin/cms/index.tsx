@@ -51,10 +51,11 @@ import { useTable, useSortBy } from "react-table";
 import { useTransition } from "remix";
 import { ValidatedForm, validationError } from "remix-validated-form";
 import { z } from "zod";
-import { FormInput, FormSelect, SubmitButton } from "~app/form";
-import { Page, PageCategory } from "~app/models";
-import { PrismaClient as prisma, toIndexedObject } from "~app/prisma";
-import { keys, respond, useActionResponse, useLoaderResponse } from "~app/util";
+import { Page, PageCategory } from "~models";
+import { FormInput, FormSelect, SubmitButton } from "~feat/form";
+import { PrismaClient as prisma, toIndexedObject } from "~feat/prisma";
+import { respond, useActionResponse, useLoaderResponse } from "~lib/response";
+import { keys } from "~lib/util";
 
 const pageValidatorData = Page.pick({
 	title: true,
