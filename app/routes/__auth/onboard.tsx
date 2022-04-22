@@ -15,14 +15,13 @@ import { login as authenticate, useLogin, authorize } from "~app/auth";
 import { FormInput, SubmitButton } from "~app/form";
 import { User } from "~app/models";
 import { respond, useActionResponse } from "~app/util";
-import { url as adminURL } from "~routes/__pages/admin/index";
 
 type LoaderData = {
 	status: number;
 };
 const getLoaderData = async (request: Request): Promise<LoaderData> => {
 	if (await authorize(request, { onboarding: true, required: false }))
-		throw redirect(adminURL);
+		throw redirect("/admin");
 	return { status: 200 };
 };
 export const loader: LoaderFunction = async ({ request }) =>
@@ -121,5 +120,3 @@ export default function Onboard() {
 		</Center>
 	);
 }
-
-export const url = "/onboard";

@@ -2,7 +2,6 @@ import { redirect } from "remix";
 import superjson from "superjson";
 import { User } from "~app/models";
 import { fromEntries, keys } from "~app/util";
-import { url as loginURL } from "~routes/__auth/login";
 import { getSession } from "./session.server";
 import { logout } from ".";
 
@@ -31,7 +30,7 @@ export async function authorize<
 	const session = await getSession(request.headers.get("Cookie"));
 
 	if (keys(session.data).length === 0) {
-		if (required) throw redirect(loginURL);
+		if (required) throw redirect("/login");
 		return undefined as O extends { required: false } | { onboarding: true }
 			? undefined
 			: Record<string, never>;

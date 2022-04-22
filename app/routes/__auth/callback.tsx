@@ -13,11 +13,10 @@ import {
 import { redirect } from "remix";
 import { useAuthCallback, authorize } from "~app/auth";
 import { respond } from "~app/util";
-import { url as adminURL } from "~routes/__pages/admin/index";
 
 type LoaderData = { status: number };
 const getLoaderData = async (request: Request): Promise<LoaderData> => {
-	if (await authorize(request, { required: false })) throw redirect(adminURL);
+	if (await authorize(request, { required: false })) throw redirect("/admin");
 	return { status: 200 };
 };
 export const loader: LoaderFunction = async ({ request }) =>
@@ -69,5 +68,3 @@ export default function Callback(): JSX.Element {
 		</Fade>
 	);
 }
-
-export const url = "/callback";

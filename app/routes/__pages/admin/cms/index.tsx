@@ -475,5 +475,3 @@ export default function Index(): JSX.Element {
 		</chakra.main>
 	);
 }
-
-export const url = "/admin/cms";

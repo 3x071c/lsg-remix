@@ -8,5 +8,3 @@ export default function Schoolib(): JSX.Element {
 		/>
 	);
 }
-
-export const url = "/admin/lab/schoolib";

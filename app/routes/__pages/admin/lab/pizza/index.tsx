@@ -8,5 +8,3 @@ export default function Pizza(): JSX.Element {
 		/>
 	);
 }
-
-export const url = "/admin/lab/pizza";

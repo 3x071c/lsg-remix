@@ -7,8 +7,9 @@ import {
 	ColorModeContext,
 	getColorModeCookie,
 	getInitialColorModeCookie,
-} from "~app/colormode";
-import { createEmotionCache, EmotionServerContext } from "~app/emotion";
+	createEmotionCache,
+	EmotionServerContext,
+} from "~tree";
 
 const cache = createEmotionCache(); // @todo Figure out if global style caching is a good idea
 // eslint-disable-next-line @typescript-eslint/unbound-method

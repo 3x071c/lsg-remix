@@ -1,7 +1,6 @@
 import { Heading, Text, chakra, Container } from "@chakra-ui/react";
-import { Certificates } from "~app/certificates";
-import { Hero } from "~app/hero";
 import { LinkButton } from "~app/links";
+import { Hero, Certificates } from "~tree/home";
 
 export default function Index(): JSX.Element {
 	const maxContentWidth = "7xl";
@@ -36,5 +35,3 @@ export default function Index(): JSX.Element {
 		</Container>
 	);
 }
-
-export const url = "/";

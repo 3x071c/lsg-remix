@@ -2,12 +2,9 @@ import type { LoaderFunction } from "remix";
 import { Container, chakra } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { Outlet, useLocation } from "remix";
-import { Nav as AdminNav } from "~app/admin";
 import { authorize } from "~app/auth";
 import { respond, useLoaderResponse } from "~app/util";
-import { url as cmsURL } from "~routes/__pages/admin/cms";
-import { url as adminURL } from "~routes/__pages/admin/index";
-import { url as labURL } from "~routes/__pages/admin/lab";
+import { Nav } from "~tree/home/admin";
 
 type LoaderData = {
 	firstname: string;
@@ -32,13 +29,24 @@ export const pages: {
 	short: string;
 	url: string;
 }[] = [
-	{ id: 1, long: "Content Management System", short: "CMS", url: cmsURL },
-	{ id: 2, long: "Home", short: "Home", url: adminURL },
 	{
-		id: 3,
+		id: 1,
+		long: "Content Management System",
+		short: "CMS",
+		url: "/admin/cms",
+	},
+	{
+		id: 2,
+		long: "Schoolib",
+		short: "schoolib",
+		url: "/admin/schoolib",
+	},
+	{ id: 3, long: "Admin", short: "Admin", url: "/admin" },
+	{
+		id: 4,
 		long: "Admin Lab only 😎",
 		short: "Lab",
-		url: labURL,
+		url: "/admin/lab",
 	},
 ];
 export default function Admin(): JSX.Element {
@@ -52,7 +60,7 @@ export default function Admin(): JSX.Element {
 
 	return (
 		<chakra.section pos="relative">
-			<AdminNav
+			<Nav
 				firstname={firstname}
 				lastname={lastname}
 				top="53px"

@@ -36,5 +36,3 @@ export default function Logout(): JSX.Element {
 		</Center>
 	);
 }
-
-export const url = "/logout";

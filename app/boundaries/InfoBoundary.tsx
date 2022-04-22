@@ -31,5 +31,3 @@ export default function InfoBoundary({
 		</Alert>
 	);
 }
-
-export const url = "/admin/lab/board";

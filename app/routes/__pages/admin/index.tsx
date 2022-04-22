@@ -9,6 +9,8 @@ import {
 	Flex,
 	chakra,
 } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { useLocation } from "remix";
 import { authorize } from "~app/auth";
 import { LinkButton } from "~app/links";
 import { respond, useLoaderResponse } from "~app/util";
@@ -33,6 +35,12 @@ export const loader: LoaderFunction = async ({ request }) =>
 
 export default function Index(): JSX.Element {
 	const { firstname, lastname } = useLoaderResponse<LoaderData>();
+	const location = useLocation();
+	const [route, setRoute] = useState<string>(location.pathname);
+
+	useEffect(() => {
+		setRoute(location.pathname);
+	}, [route, location.pathname]);
 
 	return (
 		<chakra.main w="full">
@@ -47,7 +55,7 @@ export default function Index(): JSX.Element {
 				mx="auto"
 				placeItems="center">
 				{pages
-					.filter(({ short }) => short !== "Home")
+					.filter(({ url }) => !url.endsWith(route))
 					.map(({ id, long, url }) => (
 						<Box
 							key={id}
@@ -86,5 +94,3 @@ export default function Index(): JSX.Element {
 		</chakra.main>
 	);
 }
-
-export const url = "/admin";

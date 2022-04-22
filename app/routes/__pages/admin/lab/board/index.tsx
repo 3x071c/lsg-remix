@@ -8,5 +8,3 @@ export default function Board(): JSX.Element {
 		/>
 	);
 }
-
-export const url = "/admin/lab/board";
