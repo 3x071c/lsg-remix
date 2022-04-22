@@ -14,8 +14,12 @@ import {
 	ScrollRestoration,
 	useCatch,
 } from "remix";
-import { ColorModeManager, ColorModeToggle } from "~app/colormode";
-import { EmotionServerContext, EmotionClientContext } from "~app/emotion";
+import {
+	ColorModeManager,
+	ColorModeToggle,
+	EmotionServerContext,
+	EmotionClientContext,
+} from "~tree";
 import { LinkButton } from "~app/links";
 import { keys, respond, useLoaderResponse } from "~app/util";
 

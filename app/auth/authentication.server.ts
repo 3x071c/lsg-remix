@@ -1,12 +1,9 @@
 import type { User } from "~app/models";
 import { redirect } from "remix";
 import superjson from "superjson";
-import { magicServer } from "~app/magic";
 import { PrismaClient as prisma } from "~app/prisma";
 import { entries } from "~app/util";
-import { url as logoutURL } from "~routes/__auth/logout";
-import { url as onboardingURL } from "~routes/__auth/onboard";
-import { url as adminURL } from "~routes/__pages/admin/index";
+import { magicServer } from "./magic";
 import { getSession, commitSession, destroySession } from "./session.server";
 
 const development = process.env.NODE_ENV === "development";
@@ -50,7 +47,7 @@ export async function login(
 			},
 		})) ||
 		(await (() => {
-			if (!data) throw redirect(onboardingURL);
+			if (!data) throw redirect("/onboard");
 			return prisma.user.create({
 				data: {
 					...data,
@@ -63,7 +60,7 @@ export async function login(
 	const session = await getSession(request.headers.get("Cookie"));
 	entries(user).map(([k, v]) => session.set(k, superjson.stringify(v)));
 
-	throw redirect(adminURL, {
+	throw redirect("/admin", {
 		headers: {
 			"Set-Cookie": await commitSession(session),
 		},
@@ -78,7 +75,7 @@ export async function login(
 export async function logout(request: Request): Promise<Response> {
 	const session = await getSession(request.headers.get("Cookie"));
 
-	return redirect(logoutURL, {
+	return redirect("/logout", {
 		headers: {
 			"Set-Cookie": await destroySession(session),
 		},

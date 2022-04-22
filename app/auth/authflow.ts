@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { magicClient } from "~app/magic";
-import { url as authURL } from "~routes/__auth/callback";
+import { magicClient } from "./magic";
 
 export function useLogin() {
 	const [loading, setLoading] = useState(true);
@@ -16,7 +15,7 @@ export function useLogin() {
 				try {
 					const token = await magicClient().auth.loginWithMagicLink({
 						email,
-						redirectURI: `${window.location.origin}${authURL}`,
+						redirectURI: `${window.location.origin}/callback"`,
 						showUI: true, // @todo Implement own UI
 					});
 					setData(token);

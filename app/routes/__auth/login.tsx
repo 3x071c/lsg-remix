@@ -18,11 +18,10 @@ import { useForm } from "react-hook-form";
 import { useSubmit, redirect } from "remix";
 import { useLogin, login as authenticate, authorize } from "~app/auth";
 import { respond } from "~app/util";
-import { url as adminURL } from "~routes/__pages/admin/index";
 
 type LoaderData = { status: number };
 const getLoaderData = async (request: Request): Promise<LoaderData> => {
-	if (await authorize(request, { required: false })) throw redirect(adminURL);
+	if (await authorize(request, { required: false })) throw redirect("/admin");
 	return { status: 200 };
 };
 export const loader: LoaderFunction = async ({ request }) =>
@@ -126,5 +125,3 @@ export default function Login(): JSX.Element {
 		</Center>
 	);
 }
-
-export const url = "/login";

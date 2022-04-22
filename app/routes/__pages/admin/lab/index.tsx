@@ -10,26 +10,22 @@ import {
 } from "@chakra-ui/react";
 import { LinkButton } from "~app/links";
 import { entries } from "~app/util";
-import { url as boardURL } from "./board";
-import { url as pizzaURL } from "./pizza";
-import { url as schoolibURL } from "./schoolib";
 
 export const pages: {
 	[key: string]: { long: string; short: string; url: string };
 } = {
-	1: { long: "Ticket Management Board", short: "Board", url: boardURL },
-	2: { long: "Pizzabestellung", short: "Pizza", url: pizzaURL },
-	3: {
-		long: "Schoolib",
-		short: "Schoolib",
-		url: schoolibURL,
+	1: {
+		long: "Ticket Management Board",
+		short: "Board",
+		url: "/admin/lab/board",
 	},
+	2: { long: "Pizzabestellung", short: "Pizza", url: "/admin/lab/pizza" },
 } as const;
 export default function Index(): JSX.Element {
 	return (
 		<chakra.main w="full">
-			<Heading as="h1">Ahoi Cäpt&apos;n ඞ😳🥺🫡</Heading>
-			<Text>Hier ist euer Abfall in unserem Projektordner verewigt:</Text>
+			<Heading as="h1">Ahoi Cäpt&apos;n 😳</Heading>
+			<Text>Alle internen Admin Lab Projekte:</Text>
 			<SimpleGrid
 				spacing="20px"
 				minChildWidth="200px"
@@ -76,5 +72,3 @@ export default function Index(): JSX.Element {
 		</chakra.main>
 	);
 }
-
-export const url = "/admin/lab";

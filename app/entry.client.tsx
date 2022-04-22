@@ -3,7 +3,7 @@ import { CacheProvider } from "@emotion/react";
 import { useMemo, useState } from "react";
 import { hydrate } from "react-dom";
 import { RemixBrowser } from "remix";
-import { createEmotionCache, EmotionClientContext } from "~app/emotion";
+import { createEmotionCache, EmotionClientContext } from "~tree";
 
 function ClientWrapper({ children }: PropsWithChildren<unknown>) {
 	const [cache, setCache] = useState(createEmotionCache());
