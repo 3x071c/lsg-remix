@@ -23,6 +23,7 @@ import {
 import { transparentize } from "@chakra-ui/theme-tools";
 import { memo } from "react";
 import { useNavigate } from "remix";
+import { maxContentWidth } from "~feat/chakra";
 import { NavLink } from "~feat/links";
 
 export default memo(function CmsNav({
@@ -72,7 +73,7 @@ export default memo(function CmsNav({
 			}}>
 			<Flex
 				w="full"
-				maxW="7xl"
+				maxW={maxContentWidth}
 				mx="auto"
 				align="center"
 				h={height}

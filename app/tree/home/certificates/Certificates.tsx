@@ -1,12 +1,9 @@
 /* eslint-disable sort-keys -- Don't sort the certificates by ID, that's stupid */
 import { Text, Wrap, WrapItem, useColorMode } from "@chakra-ui/react";
 import { memo } from "react";
+import { cae, cils, courage, delf } from "~assets";
 import { Image } from "~feat/image";
 import { entries } from "~lib/util";
-import cae from "./cert-cae.png";
-import cils from "./cert-cils-transparent.png";
-import courage from "./cert-courage-transparent.png";
-import delf from "./cert-delf-transparent.png";
 
 export default memo(function Awards() {
 	const { colorMode } = useColorMode();
