@@ -4,18 +4,23 @@ tasks:
     - before: |
           if [ ! -e .env ]; then
               echo "AUTH_SECRET=\"$(openssl rand -base64 40)\"" > .env
-              npm run up
               echo "DATABASE_URL=\"postgresql://postgres:postgres@localhost:5432/postgres\"" >> .env
               echo "MAGIC_KEY=\"pk_live_key\"" >> .env
               echo "MAGIC_SECRET=\"sk_live_secret\"" >> .env
           fi
-      init: npm install
+          npm run up
+      init: npm ci && npm run new
       command: npm run dev
 ports:
     - port: 3000
       onOpen: open-preview
+    - port: 5432
+      onOpen: ignore
     - port: 8002
       onOpen: ignore
+    - port: 9229
+      onOpen: ignore
+
 github:
     prebuilds:
         # enable for the default branch (defaults to true)
