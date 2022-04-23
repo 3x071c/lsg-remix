@@ -18,6 +18,7 @@ import {
 	OrderedList,
 	ListItem,
 	AccordionIcon,
+	List,
 } from "@chakra-ui/react";
 import type { Page } from "~models";
 import { maxContentWidth } from "~feat/chakra";
@@ -91,7 +92,7 @@ export default function PageSlug() {
 						top={{ base: "52px", md: 16 }}
 						bg={useColorModeValue("white", "gray.800")}
 						mx={{ base: 0, md: 4 }}
-						w={{ base: "full", md: "max-content" }}
+						w={{ base: "full" }}
 						px={{ base: 4, md: 6 }}
 						py={4}
 						borderRadius={{ base: "none", md: "lg" }}
@@ -119,16 +120,29 @@ export default function PageSlug() {
 							<AccordionPanel padding={0}>
 								<OrderedList fontSize="lg" mt={4} spacing={2}>
 									<ListItem>
-										Lorem ipsum dolor sit amet
+										It has been a long time. How have you
+										been? I have been *really* busy being
+										dead. You know, after you MURDERED ME?
 									</ListItem>
 									<ListItem>
-										Consectetur adipiscing elit
+										Could you just jump into that pit?
+										There.That deadly pit.
 									</ListItem>
 									<ListItem>
-										Integer molestie lorem at massa
+										Yes, hello! No, we are not stopping!
 									</ListItem>
 									<ListItem>
-										Facilisis in pretium nisl aliquet
+										Well, this is the part where he kills us
+									</ListItem>
+									<ListItem>
+										Oh. Hi. So. How are you holding up?
+										BECAUSE I AM A POTATO!
+									</ListItem>
+									<ListItem>
+										Maybe you should marry that thing since
+										you love it so much. Do you want to
+										marry it? WELL I WONT LET YOU. How does
+										that feel?
 									</ListItem>
 								</OrderedList>
 							</AccordionPanel>
