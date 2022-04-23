@@ -18,7 +18,6 @@ import {
 	OrderedList,
 	ListItem,
 	AccordionIcon,
-	List,
 } from "@chakra-ui/react";
 import type { Page } from "~models";
 import { maxContentWidth } from "~feat/chakra";
