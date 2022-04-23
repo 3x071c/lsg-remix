@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-no-constructed-context-values */
 import type { EntryContext } from "remix";
+import { CacheProvider } from "@emotion/react";
 import createEmotionServer from "@emotion/server/create-instance";
 import { renderToString } from "react-dom/server";
 import { RemixServer } from "remix";
@@ -8,11 +9,7 @@ import {
 	getColorModeCookie,
 	getInitialColorModeCookie,
 } from "~app/colormode";
-import { createEmotionCache, EmotionServerContext } from "~app/emotion";
-
-const cache = createEmotionCache(); // @todo Figure out if global style caching is a good idea
-// eslint-disable-next-line @typescript-eslint/unbound-method
-const { extractCriticalToChunks } = createEmotionServer(cache);
+import { createEmotionCache } from "~app/emotion";
 
 export default function handleRequest(
 	request: Request,
@@ -20,36 +17,56 @@ export default function handleRequest(
 	responseHeaders: Headers,
 	remixContext: EntryContext,
 ): Response {
-	const markup = (
-		<ColorModeContext.Provider
-			value={{
-				current: getColorModeCookie(
-					request.headers.get("Cookie") || "",
-				),
-				initial: getInitialColorModeCookie(
-					request.headers.get("Cookie") || "",
-				),
-			}}>
-			<RemixServer context={remixContext} url={request.url} />
-		</ColorModeContext.Provider>
+	const cache = createEmotionCache();
+	// eslint-disable-next-line @typescript-eslint/unbound-method
+	const { extractCriticalToChunks, constructStyleTagsFromChunks } =
+		createEmotionServer(cache);
+
+	const html = renderToString(
+		<CacheProvider value={cache}>
+			<ColorModeContext.Provider
+				value={{
+					current: getColorModeCookie(
+						request.headers.get("Cookie") || "",
+					),
+					initial: getInitialColorModeCookie(
+						request.headers.get("Cookie") || "",
+					),
+				}}>
+				<RemixServer context={remixContext} url={request.url} />
+			</ColorModeContext.Provider>
+		</CacheProvider>,
 	);
 
-	const prerender = renderToString(
-		<EmotionServerContext.Provider value={null}>
-			{markup}
-		</EmotionServerContext.Provider>,
-	);
-
-	const chunks = extractCriticalToChunks(prerender);
-	const render = renderToString(
-		<EmotionServerContext.Provider value={chunks.styles}>
-			{markup}
-		</EmotionServerContext.Provider>,
-	);
+	const chunks = extractCriticalToChunks(html);
+	const styles = constructStyleTagsFromChunks(chunks);
 
 	responseHeaders.set("Content-Type", "text/html");
-	return new Response(`<!DOCTYPE html>${render}`, {
-		headers: responseHeaders,
-		status: responseStatusCode,
-	});
+	return new Response(
+		`<!DOCTYPE html>
+		<html lang="de">
+			<head>
+				${styles}
+				<meta charSet="utf-8" />
+				<meta
+					name="viewport"
+					content="width=device-width,initial-scale=1"
+				/>
+				<title>LSG</title>
+			</head>
+			<body>
+				<div id="__remix">`
+			.trim()
+			.replaceAll(/\s+/g, " ") +
+			html +
+			`</div>
+			</body>
+		</html>`
+				.trim()
+				.replaceAll(/\s+/g, " "),
+		{
+			headers: responseHeaders,
+			status: responseStatusCode,
+		},
+	);
 }

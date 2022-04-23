@@ -1,30 +1,13 @@
-import type { PropsWithChildren } from "react";
 import { CacheProvider } from "@emotion/react";
-import { useMemo, useState } from "react";
 import { hydrate } from "react-dom";
 import { RemixBrowser } from "remix";
-import { createEmotionCache, EmotionClientContext } from "~app/emotion";
+import { createEmotionCache } from "~app/emotion";
 
-function ClientWrapper({ children }: PropsWithChildren<unknown>) {
-	const [cache, setCache] = useState(createEmotionCache());
-
-	const ctx = useMemo(
-		() => ({
-			reset: () => setCache(createEmotionCache()),
-		}),
-		[],
-	);
-
-	return (
-		<EmotionClientContext.Provider value={ctx}>
-			<CacheProvider value={cache}>{children}</CacheProvider>
-		</EmotionClientContext.Provider>
-	);
-}
+const cache = createEmotionCache();
 
 hydrate(
-	<ClientWrapper>
+	<CacheProvider value={cache}>
 		<RemixBrowser />
-	</ClientWrapper>,
-	document,
+	</CacheProvider>,
+	document.getElementById("__remix"),
 );
