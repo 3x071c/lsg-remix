@@ -9,8 +9,8 @@
 <p align="center">
   <a href="#introduction">Introduction</a> •
   <a href="#get-started-">Get Started</a> •
-    <a href="#recommendations-for-vscode">Recommendations</a> •
-    <a href="#helpful-resources">Help</a> •
+  <a href="#recommendations-for-vscode">Recommendations</a> •
+  <a href="#helpful-resources">Help</a> •
   <a href="#documentation">Documentation</a> •
   <a href="#contributing">Contributing</a> •
   <a href="#tech-stack">Tech Stack</a> •
