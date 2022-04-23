@@ -29,6 +29,7 @@
 			"matchPackagePrefixes": ["@remix-run/"]
 		},
 		{
+			"allowedVersions": "17",
 			"groupName": "React",
 			"matchPackageNames": [
 				"react",
