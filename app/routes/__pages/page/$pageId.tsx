@@ -143,6 +143,17 @@ export default function PageSlug() {
 										marry it? WELL I WONT LET YOU. How does
 										that feel?
 									</ListItem>
+									<ListItem>
+										Remember before when I was talking about
+										smelly garbage standing around being
+										useless? That was a metaphor. I was
+										actually talking about you. And I am
+										sorry. You did not react at the time, so
+										I was worried it sailed right over your
+										head. Which would have made this apology
+										seem insane. That is why I had to call
+										you garbage a second time just now.
+									</ListItem>
 								</OrderedList>
 							</AccordionPanel>
 						</AccordionItem>
