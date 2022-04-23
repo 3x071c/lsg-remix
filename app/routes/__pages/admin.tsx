@@ -5,7 +5,7 @@ import { Outlet, useLocation } from "remix";
 import { authorize } from "~feat/auth";
 import { maxContentWidth } from "~feat/chakra";
 import { respond, useLoaderResponse } from "~lib/response";
-import { Nav } from "~tree/home/admin";
+import { Nav } from "~tree/admin";
 
 type LoaderData = {
 	firstname: string;
