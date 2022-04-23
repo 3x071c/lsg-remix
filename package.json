@@ -187,5 +187,8 @@
 	"prisma": {
 		"schema": "db/schema.prisma",
 		"seed": "ts-node db/seed.ts"
+	},
+	"overrides": {
+		"minimist": ">=1.2.6"
 	}
 }
