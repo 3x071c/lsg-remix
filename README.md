@@ -9,7 +9,8 @@
 <p align="center">
   <a href="#introduction">Introduction</a> •
   <a href="#get-started-">Get Started</a> •
-    <a href="#recommendations-for-vscode">Recommendations</a> •
+  <a href="#recommendations-for-vscode">Recommendations</a> •
+  <a href="#helpful-resources">Help</a> •
   <a href="#documentation">Documentation</a> •
   <a href="#contributing">Contributing</a> •
   <a href="#tech-stack">Tech Stack</a> •
@@ -21,7 +22,7 @@
 ## Introduction
 
 👋 Hey!  
-You're looking at the source code behind the new [Louise-Schroeder-Gymnasium website](https://lsg.musin.de/) right now! 🤯 It houses a full-stack [Remix](https://remix.run/) application, loaded with TypeScript, Prisma and [a bunch of other goodies](#tech-stack). It's not out yet, but we're working on it. Wanna help out? 😇 See how to [get started](#get-started), take a look at the [tech stack](#tech-stack), or dig straight into the [documentation](#documentation). 👀
+You're looking at the source code behind the new [Louise-Schroeder-Gymnasium website](https://lsg.musin.de/) right now! 🤯 It houses a full-stack [Remix](https://remix.run/) application, loaded with TypeScript, Prisma and [a bunch of other goodies](#tech-stack). It's not out yet, but we're working on it. Wanna help out? 😇 See how to [get started](#get-started-), take a look at the [tech stack](#tech-stack), or dig straight into the [documentation](#documentation). 👀
 
 ## Public Money, Public Code
 
@@ -32,7 +33,21 @@ You're looking at the source code behind the new [Louise-Schroeder-Gymnasium web
 Impatient? Spin up a GitPod environment in seconds and you're good to go:  
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/3x071c/lsg)
 
-> NOTE: GitPod environments are largely untested. Please provide feedback and take a look at the guide below if things break unexpectedly.
+> Please provide feedback and take a look at [the guide](#get-started-) below if things break unexpectedly while following these steps carefully:
+>
+> 1. Click the button above to launch a [Visual Studio Code](https://code.visualstudio.com/) editor in your browser, without having to go through the setup below
+> 2. GitPod will prompt you to sign in with your GitHub account (do that)
+> 3. When the instance has started and VSCode opens in your browser, you will see a bunch of stuff going on in the Terminal (this is normal, don't freak out - your environment is being setup for you automatically using the commands that are detailed in the guide below)
+> 4. There will probably be a couple pop-ups in the bottom right. Look for the one that asks if you want to install the recommended extensions for this project, and select "Install" (or similar). You can close the others.
+> 5. While the extensions are being installed, you will be flooded with a bunch of tabs about them. These tabs can be closed with the "x" next to them in the VSCode tab bar at the top of the editor
+> 6. Once the terminal commands have completed, you will see a green checkmark saying "[SERVER] ✅ http://localhost:3000" in the terminal
+> 7. A preview of the app (at `localhost:3000`, a special internet address that goes directly to the webapp on GitPod) should open automatically in a "Simple Browser" tab (if it says "Port 3000 not found", hit "Try Again" after a couple seconds, and check if nothing has gone wrong in the terminal)
+> 8. From here, you should be able to browse the code from the file tree in the panel on the left. Try editing a file (such as `app/routes/__pages/index.tsx`) by adding or removing some text and watch the browser preview reload automatically, reflecting the changes you just made.
+> 9. Familiarize yourself with the [tech stack](#tech-stack), the [developer docs](#documentation), the [Contributing](#contributing) section and the guide below to get the most out of your coding session. If you don't know where to start, read the [Helpful Resources](#helpful-resources) recommendations.
+> 10. You may want to reload the GitPod environment before starting to code for the first time using <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> -> "Developer: Reload Window". If the keyboard shortcuts don't work, open the command palette manually by clicking the settings cogwheel in the bottom left corner, then selecting "Command Palette..."
+> 11. You're ready to code and build something awesome. Have fun! 😎
+>
+> When you're done, just close the browser tab/window, and GitPod will terminate your VSCode instance within a few minutes automatically. You can reopen it, and any changes you haven't permanently saved by committing them to this repository yet, within 14 days from the [GitPod dashboard](https://gitpod.io/workspaces). Read the sections below to learn more about Git and contributing to this repository, saving your changes and allowing intuitive collaboration with others. Remember you are encouraged to start developing locally (without the restrictions of a browser and GitPod) once you're ready for it using the guide below.
 
 ## Get Started 💨
 
@@ -75,7 +90,7 @@ Open the project in [Visual Studio Code](https://code.visualstudio.com/), our re
 $ code lsg
 ```
 
-**Make sure to trust the folder and install all recommended extensions** (If you're new to Visual Studio Code, check out the [next section](#recommendations-for-vscode) as well).
+**Make sure to trust the folder and install all recommended extensions** (If you're new to Visual Studio Code, check out the [next section](#recommendations-for-vscode) as well). You can close the automatically opened tabs with the installed extensions.
 
 > Installation instructions for Visual Studio Code:  
 > (Linux) `pacman -S code` (limited OSS version) / `yay -S visual-studio-code-bin` (Research required!)  
@@ -122,6 +137,8 @@ $ npm run up
 [Docker Compose](https://docs.docker.com/compose/) will orchestrate a PostgreSQL database from the included [docker-compose.yml](./docker-compose.yml) file for you!
 
 **Side note**: If you're working a lot with the build system, having a working docker installation around is going to save you a lot of time, as Fly deploys docker containers!
+
+> Use the connection string `postgresql://postgres:postgres@localhost:5432/postgres` to connect to the database (see the instructions on populating the `.env` file below)
 
 ---
 
@@ -245,6 +262,29 @@ Some extension recommendations:
 -   [Visual Studio IntelliCode](https://marketplace.visualstudio.com/items?itemName=VisualStudioExptTeam.vscodeintellicode)
 
 That's it, you're good to go! 🤩
+
+## Helpful Resources
+
+Here are some pointers to completely free, yet incredibly valuable learning resources if you've just started dipping your toes into web development in general, or are new to React, TypeScript, etc:
+
+-   [Brian Will](https://www.youtube.com/watch?v=vjtywpx2SDY&list=PL7141DE955793D3F0) published a playlist of videos teaching fundamental Programming Language principles
+-   [w3schools](https://www.w3schools.com/whatis/) targets newcomers to web development, approaching web development fundamentals in a simplified way
+-   [FreeCodeCamp](https://www.youtube.com/c/Freecodecamp/videos) hosts long video sessions, going through the entire web and software development process
+-   The [MDN Developer Web Development](https://developer.mozilla.org/en-US/docs/Learn) series provides a great starting point for both beginners and advanced developers (re-)exploring HTML, CSS and JavaScript
+-   The [Re-Introduction to JS](https://developer.mozilla.org/en-US/docs/Web/JavaScript/A_re-introduction_to_JavaScript) by MDN, if you already know "old-school" JavaScript, specifically focuses on more recent changes to the JavaScript landscape that have shaped the language, the ecosystem and this project, refreshing knowledge and bringing you up to speed with the latest developments
+-   [Traversy Media](https://www.youtube.com/c/TraversyMedia/videos) provides long videos showing the development with and integration of JavaScript stacks and projects
+-   Even though this project uses **Remix and NOT Next.js** (we used to, sometime ago), the [Next.js learning website](https://nextjs.org/learn) is a very well illustrated take on React and React framework familiarization. A lot of concepts in Next.js can be transferred to Remix, so don't hesitate learning them.
+-   The [React website](https://reactjs.org) itself has a getting started guide and a full tutorial, as well as an overview, about React and advanced JavaScript development
+-   [Fireship](https://www.youtube.com/c/Fireship/videos) does videos on the JavaScript landscape, with entertaining shorts and longer explorations
+-   If you're familiar with old JavaScript stacks and libraries, such as Knockout, Handlebars or MVC frameworks, then the official [Introduction to React.js](https://www.youtube.com/watch?v=XxVg_s8xAms), or (the more entertaining) [Rethinking best practices](https://www.youtube.com/watch?v=x7cQ3mrcKaY) talk by a React maintainer at Facebook, both from 2013 may be helpful (note that nowadays, React components have improved to mainly use functions instead of classes)
+-   [Ben Awad](https://www.youtube.com/c/BenAwad97/videos) makes comedic videos on TypeScript, React, related technologies and decision-making in one of the largest programming language ecosystems
+-   Understanding the [event loop (YouTube)](https://www.youtube.com/watch?v=8aGhZQkoFbQ) isn't necessary, but definitely helpful to understanding modern JavaScript performance and user experience optimization
+-   [Google's web.dev](https://web.dev/learn/) showcases advanced concepts and guides to intermediate developers
+-   The [Visual Studio Code YouTube channel](https://www.youtube.com/c/Code/videos) contains informative shorts on tips & tricks to optimize productivity with VSCode
+-   The [Remix YouTube channel](https://www.youtube.com/c/Remix-Run/videos) and [Chakra UI YouTube channel](https://www.youtube.com/channel/UC4TmDovH46TB4S0SM0Y4CIg) provide an audiovisual alternative to learn more about these dependencies
+-   [Luke Smith](https://www.youtube.com/c/LukeSmithxyz/featured) has some videos focusing on UNIX principles, educating about the usefulness of command-line utilities on operating systems such as macOS and GNU/Linux
+
+Want to contribute a helpful resource for others to learn from? Open an issue!
 
 ## Documentation
 
