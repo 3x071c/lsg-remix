@@ -1,7 +1,7 @@
 import { Heading, Text, chakra, Container } from "@chakra-ui/react";
 import { maxContentWidth } from "~feat/chakra";
+import { Hero, Certificates } from "~feat/home";
 import { LinkButton } from "~feat/links";
-import { Hero, Certificates } from "~tree/home";
 
 export default function Index(): JSX.Element {
 	return (

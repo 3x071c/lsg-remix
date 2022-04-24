@@ -59,7 +59,7 @@ export default function CmsNav({
 			w="full"
 			pos="sticky"
 			top={top}
-			zIndex={2}
+			zIndex={1}
 			bg={bg}
 			sx={{
 				"@supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none))":

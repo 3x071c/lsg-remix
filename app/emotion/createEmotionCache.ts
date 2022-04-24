@@ -9,6 +9,6 @@ import createCache from "@emotion/cache";
  * Creates an emotion style cache with a shared key
  * @returns An emotion style cache
  */
-export default function createEmotionCache(): EmotionCache {
+export const createEmotionCache = (): EmotionCache => {
 	return createCache({ key: "css" });
-}
+};

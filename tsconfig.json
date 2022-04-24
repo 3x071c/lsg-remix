@@ -43,8 +43,6 @@
 			"~models/*": ["app/models/*"],
 			"~routes": ["app/routes"],
 			"~routes/*": ["app/routes/*"],
-			"~tree": ["app/tree"],
-			"~tree/*": ["app/tree/*"],
 			"~app": ["app"],
 			"~app/*": ["app/*"],
 			"~db": ["db/zod"],

@@ -15,7 +15,7 @@ export function useLogin() {
 				try {
 					const token = await magicClient().auth.loginWithMagicLink({
 						email,
-						redirectURI: `${window.location.origin}/callback"`,
+						redirectURI: `${window.location.origin}/callback`,
 						showUI: true, // @todo Implement own UI
 					});
 					setData(token);
