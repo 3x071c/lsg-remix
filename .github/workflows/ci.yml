@@ -10,7 +10,7 @@ concurrency:
 
 jobs:
     lint:
-        name: ESLint # ESLint "lints" our TypeScript/JavaScript code, making sure it's correct, conforms to our style and isn't poorly written
+        name: Lint # This "lints" our entire project, making sure the code is correct, conforms to our style and isn't poorly written
         runs-on: ubuntu-latest # This used to be a matrix test on different platforms
         timeout-minutes: 15
         steps:
@@ -28,13 +28,13 @@ jobs:
                   max_attempts: 3
                   command: npm ci # Installs dependencies without modifying lockfile (for production installs)
                   retry_wait_seconds: 60
-            - name: Lint
+            - name: Run Linters
               run: npm run lint
               env:
                   ci: true
                   NODE_ENV: production
     typecheck:
-        name: TypeScript # TypeScript checks the static typings in our code
+        name: Type Checking # TypeScript checks the static typings in our code
         runs-on: ubuntu-latest
         timeout-minutes: 15
         steps:
@@ -52,7 +52,7 @@ jobs:
                   max_attempts: 3
                   command: npm ci # Installs dependencies without modifying lockfile (for production installs)
                   retry_wait_seconds: 60
-            - name: Run Tests
+            - name: Run TypeScript
               run: npm run check
               env:
                   ci: true
