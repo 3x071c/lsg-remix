@@ -21,12 +21,11 @@ import {
 	useTheme,
 } from "@chakra-ui/react";
 import { transparentize } from "@chakra-ui/theme-tools";
-import { memo } from "react";
 import { useNavigate } from "remix";
 import { maxContentWidth } from "~feat/chakra";
 import { NavLink } from "~feat/links";
 
-export default memo(function CmsNav({
+export default function CmsNav({
 	page,
 	pages,
 	top,
@@ -151,4 +150,4 @@ export default memo(function CmsNav({
 			</Flex>
 		</chakra.nav>
 	);
-});
+}

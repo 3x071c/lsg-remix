@@ -17,7 +17,6 @@ import {
 	useTheme,
 } from "@chakra-ui/react";
 import { transparentize } from "@chakra-ui/theme-tools";
-import { memo } from "react";
 import { maxContentWidth } from "~feat/chakra";
 import { Link, LinkButton } from "~feat/links";
 
@@ -32,7 +31,7 @@ type NavbarProps = {
 	}[];
 	height: LayoutProps["h"];
 };
-export default memo(function Nav({
+export default function Nav({
 	groupedPages,
 	height,
 }: NavbarProps): JSX.Element {
@@ -126,4 +125,4 @@ export default memo(function Nav({
 			</Flex>
 		</chakra.nav>
 	);
-});
+}

@@ -1,7 +1,7 @@
 import type { ColorMode, StorageManager } from "@chakra-ui/react";
 import type { PropsWithChildren } from "react";
-import { ChakraProvider } from "@chakra-ui/react";
-import { memo, useMemo } from "react";
+import { ChakraProvider, useColorMode } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { theme } from "~feat/chakra";
 import { setColorModeCookie } from "./colorModeCookie";
 import getColorMode from "./getColorMode";
@@ -23,26 +23,46 @@ const colorModeStorageManager = (mode?: ColorMode): StorageManager => ({
 	type: "cookie",
 });
 
-export default memo(function ColorModeManager({
-	// eslint-disable-next-line react/prop-types -- False positive
+function ColorModeManagerChild({
+	children,
+	initialColorMode,
+}: PropsWithChildren<{ initialColorMode?: ColorMode }>): JSX.Element {
+	const { colorMode, setColorMode } = useColorMode();
+
+	useEffect(() => {
+		const revalidatedColorMode = getColorMode({
+			current: colorMode,
+			initial: initialColorMode,
+		});
+		if (colorMode !== revalidatedColorMode)
+			setColorMode(revalidatedColorMode);
+	}, [colorMode, initialColorMode, setColorMode]);
+
+	// eslint-disable-next-line react/jsx-no-useless-fragment -- TS :vomit:
+	return <>{children}</>;
+}
+
+export default function ColorModeManager({
 	children,
 }: PropsWithChildren<unknown>) {
 	const colorModeCookie = useColorModeCookie();
-	const colorMode = getColorMode(
-		/* Compute the color mode to use */
-		colorModeCookie?.initial,
-		colorModeCookie?.current,
-	);
+	// const colorMode = getColorMode(
+	// 	/* Compute the color mode to use */
+	// 	colorModeCookie?.initial,
+	// 	colorModeCookie?.current,
+	// );
 
-	const child = useMemo(
-		() => (
-			<ChakraProvider
-				theme={theme}
-				colorModeManager={colorModeStorageManager(colorMode)}>
+	useEffect(() => {});
+
+	return (
+		<ChakraProvider
+			theme={theme}
+			colorModeManager={colorModeStorageManager(
+				colorModeCookie?.current,
+			)}>
+			<ColorModeManagerChild initialColorMode={colorModeCookie?.initial}>
 				{children}
-			</ChakraProvider>
-		),
-		[colorMode, children],
+			</ColorModeManagerChild>
+		</ChakraProvider>
 	);
-	return child;
-});
+}

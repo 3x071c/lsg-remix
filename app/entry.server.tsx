@@ -11,6 +11,17 @@ import {
 } from "~app/colormode";
 import { createEmotionCache } from "~app/emotion";
 
+const env = {
+	MAGIC_KEY: process.env["MAGIC_KEY"],
+	NODE_ENV: process.env.NODE_ENV,
+};
+
+declare global {
+	interface Window {
+		env: typeof env;
+	}
+}
+
 export default function handleRequest(
 	request: Request,
 	responseStatusCode: number,
@@ -47,11 +58,8 @@ export default function handleRequest(
 		<html lang="de">
 			<head>
 				${styles}
-				<meta charSet="utf-8" />
-				<meta
-					name="viewport"
-					content="width=device-width,initial-scale=1"
-				/>
+				<meta charset="utf-8" />
+				<meta name="viewport" content="width=device-width,initial-scale=1" />
 				<title>LSG</title>
 			</head>
 			<body>
@@ -60,6 +68,9 @@ export default function handleRequest(
 			.replaceAll(/\s+/g, " ") +
 			html +
 			`</div>
+			<script>
+			window.env = ${JSON.stringify(env)};
+			</script>
 			</body>
 		</html>`
 				.trim()

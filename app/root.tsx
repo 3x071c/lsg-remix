@@ -1,14 +1,6 @@
 /* eslint-disable no-console */
 import type { PropsWithChildren } from "react";
-import type { LoaderFunction } from "remix";
-import {
-	Center,
-	chakra,
-	Heading,
-	Text,
-	Code,
-	ChakraProvider,
-} from "@chakra-ui/react";
+import { Center, chakra, Heading, Text, Code } from "@chakra-ui/react";
 import {
 	LiveReload,
 	Outlet,
@@ -16,67 +8,29 @@ import {
 	ScrollRestoration,
 	useCatch,
 } from "remix";
-import { ColorModeToggle } from "~app/colormode";
-import { theme } from "~feat/chakra";
+import { ColorModeToggle, ColorModeManager } from "~app/colormode";
 import { LinkButton } from "~feat/links";
-import { respond, useLoaderResponse } from "~lib/response";
 import { keys } from "~lib/util";
-
-type LoaderData = {
-	env: {
-		MAGIC_KEY: string | undefined;
-		NODE_ENV: "development" | "production" | "test";
-	};
-	status: number;
-};
-const getLoaderData = (): LoaderData => {
-	return {
-		env: {
-			MAGIC_KEY: process.env["MAGIC_KEY"],
-			NODE_ENV: process.env.NODE_ENV,
-		},
-		status: 200,
-	};
-};
-export const loader: LoaderFunction = () =>
-	respond<LoaderData>(getLoaderData());
-
-declare global {
-	interface Window {
-		env: LoaderData["env"];
-	}
-}
 
 const Document = function InnerDocument({
 	children,
-	env,
-}: PropsWithChildren<{ env?: LoaderData["env"] }>) {
+}: PropsWithChildren<unknown>) {
 	return (
 		<>
-			<ChakraProvider theme={theme}>
+			<ColorModeManager>
 				<ColorModeToggle />
 				{children}
-			</ChakraProvider>
+			</ColorModeManager>
 			<ScrollRestoration />
 			<Scripts />
 			<LiveReload />
-			{env && (
-				<script
-					// eslint-disable-next-line react/no-danger
-					dangerouslySetInnerHTML={{
-						__html: `window.env = ${JSON.stringify(env)}`,
-					}}
-				/>
-			)}
 		</>
 	);
 };
 
 export default function App(): JSX.Element {
-	const { env } = useLoaderResponse<LoaderData>();
-
 	return (
-		<Document env={env}>
+		<Document>
 			<Outlet />
 		</Document>
 	);
