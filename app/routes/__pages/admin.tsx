@@ -63,7 +63,7 @@ export default function Admin(): JSX.Element {
 			<Nav
 				firstname={firstname}
 				lastname={lastname}
-				top="53px"
+				top="52px"
 				height="48px"
 				pages={pages}
 				page={

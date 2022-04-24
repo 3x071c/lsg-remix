@@ -1,3 +1,4 @@
+import "regenerator-runtime/runtime";
 import { CacheProvider } from "@emotion/react";
 import { hydrate } from "react-dom";
 import { RemixBrowser } from "remix";
