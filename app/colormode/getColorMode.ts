@@ -1,7 +1,7 @@
 /* Modeled after official documentation: https://chakra-ui.com/docs/styled-system/features/color-mode#behavior-of-colormode */
 import type { ColorMode } from "@chakra-ui/react";
 import { theme } from "~feat/chakra";
-import setColorMode from "./setColorMode";
+import { setInitialColorModeCookie } from "./colorModeCookie";
 
 /**
  * This little module takes care of computing the color mode to be used based on the theme and stored values
@@ -67,28 +67,25 @@ const getInitialColorMode = (): ColorMode | null => {
  * @param current The current color mode set by the client for the server to prerender
  * @returns The color mode to use
  */
-export default function getColorMode(
-	initial?: ColorMode,
-	current?: ColorMode,
-): ColorMode {
+export default function getColorMode({
+	initial,
+	current,
+}: {
+	initial?: ColorMode;
+	current?: ColorMode;
+}): ColorMode {
 	const systemColorMode = getSystemColorMode();
-	if (systemColorMode) {
-		if (initial !== systemColorMode)
-			return setColorMode(getColorMode(systemColorMode));
-		return setColorMode(systemColorMode);
-	}
+	if (systemColorMode) return systemColorMode;
 	const initialSystemColorMode = getInitialSystemColorMode();
-	if (initialSystemColorMode) {
-		if (initial !== initialSystemColorMode)
-			return setColorMode(getColorMode(initialSystemColorMode));
-		return current || initialSystemColorMode;
-	}
+	if (initialSystemColorMode)
+		return initial !== initialSystemColorMode || !current
+			? setInitialColorModeCookie(initialSystemColorMode)
+			: current;
 	const initialColorMode = getInitialColorMode();
-	if (initialColorMode) {
-		if (initial !== initialColorMode)
-			return setColorMode(getColorMode(initialColorMode));
-		return current || initialColorMode;
-	}
+	if (initialColorMode)
+		return initial !== initialColorMode || !current
+			? setInitialColorModeCookie(initialColorMode)
+			: current;
 	if (current) return current;
 	return "light" as ColorMode;
 }

@@ -5,5 +5,4 @@ export * from "./colorModeCookie";
 export { default as ColorModeManager } from "./ColorModeManager";
 export { default as ColorModeToggle } from "./ColorModeToggle";
 export { default as getColorMode } from "./getColorMode";
-export { default as setColorMode } from "./setColorMode";
 export { default as useColorModeCookie } from "./useColorModeCookie";
