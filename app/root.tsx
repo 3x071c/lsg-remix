@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import type { PropsWithChildren } from "react";
 import { Center, chakra, Heading, Text, Code } from "@chakra-ui/react";
+import { Provider as JotaiProvider } from "jotai";
 import {
 	LiveReload,
 	Outlet,
@@ -16,8 +17,10 @@ function Root({ children }: PropsWithChildren<unknown>) {
 	return (
 		<>
 			<ColorModeManager>
-				<ColorModeToggle />
-				{children}
+				<JotaiProvider>
+					<ColorModeToggle />
+					{children}
+				</JotaiProvider>
 			</ColorModeManager>
 			<ScrollRestoration />
 			<Scripts />

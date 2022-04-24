@@ -1,4 +1,5 @@
 /* eslint-disable react/jsx-no-constructed-context-values */
+import "regenerator-runtime/runtime";
 import type { EntryContext } from "remix";
 import { CacheProvider } from "@emotion/react";
 import createEmotionServer from "@emotion/server/create-instance";
