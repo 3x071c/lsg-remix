@@ -130,7 +130,10 @@
 		".husky",
 		"public/build",
 		".remix",
-		"postgres-data"
+		"postgres-data",
+		".env",
+		"db/migrations",
+		"db/data"
 	],
 	"include": ["remix-env.d.ts", "**/*", "**/.*"],
 	"ts-node": {
