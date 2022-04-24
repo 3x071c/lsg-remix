@@ -1,8 +1,7 @@
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { IconButton, useColorMode } from "@chakra-ui/react";
-import { memo } from "react";
 
-export default memo(function ColorModeToggle(): JSX.Element {
+export default function ColorModeToggle(): JSX.Element {
 	const { colorMode, toggleColorMode } = useColorMode();
 	const isLight = colorMode === "light";
 	const ColorModeIcon = isLight ? MoonIcon : SunIcon;
@@ -20,4 +19,4 @@ export default memo(function ColorModeToggle(): JSX.Element {
 			onClick={toggleColorMode}
 		/>
 	);
-});
+}
