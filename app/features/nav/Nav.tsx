@@ -48,27 +48,36 @@ export default function Nav({
 
 	return (
 		<chakra.nav
-			borderBottomWidth={1}
 			w="full"
 			pos="sticky"
 			top={0}
-			zIndex={3}
+			zIndex={2}
 			bg={bg}
+			borderBottomWidth={1}
 			sx={{
 				"@supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none))":
 					{
-						backdropFilter: "auto",
-						// eslint-disable-next-line sort-keys -- Blur has to come after `auto` filter for this to work!
-						backdropBlur: "md",
-						bg: bgTransparent,
+						/* According to the spec, backdrop-filters essentially can't be nested (only works on Safari), so we'll have to put those filters into pseudo elements for the other browsers */
+						_before: {
+							backdropFilter: "auto",
+							// eslint-disable-next-line sort-keys -- Blur has to come after `auto` filter for this to work!
+							backdropBlur: "md",
+							bg: bgTransparent,
+							content: '""',
+							h: "full",
+							pos: "absolute",
+							w: "full",
+							zIndex: -1,
+						},
+						bg: "transparent",
 					},
 			}}>
 			<Flex
 				w="full"
+				h={height}
 				maxW={maxContentWidth}
 				mx="auto"
 				align="center"
-				h={height}
 				overflow="hidden">
 				<Link href="/">
 					<Box p={2} px={4}>
@@ -107,9 +116,9 @@ export default function Nav({
 												({ id: pageId, title }) => (
 													<LinkButton
 														href={`/page/${pageId}`}
-														key={pageId}
+														w="full"
 														variant="ghost"
-														w="full">
+														key={pageId}>
 														{title}
 													</LinkButton>
 												),

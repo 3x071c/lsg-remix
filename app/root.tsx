@@ -12,9 +12,7 @@ import { ColorModeToggle, ColorModeManager } from "~app/colormode";
 import { LinkButton } from "~feat/links";
 import { keys } from "~lib/util";
 
-const Document = function InnerDocument({
-	children,
-}: PropsWithChildren<unknown>) {
+function Root({ children }: PropsWithChildren<unknown>) {
 	return (
 		<>
 			<ColorModeManager>
@@ -26,13 +24,13 @@ const Document = function InnerDocument({
 			<LiveReload />
 		</>
 	);
-};
+}
 
 export default function App(): JSX.Element {
 	return (
-		<Document>
+		<Root>
 			<Outlet />
-		</Document>
+		</Root>
 	);
 }
 
@@ -52,7 +50,7 @@ export function CatchBoundary(): JSX.Element {
 		: "Unbekannter Fehler - Bei wiederholtem, unvorhergesehenen Auftreten bitte melden 🤯";
 
 	return (
-		<Document>
+		<Root>
 			<Center minW="100vw" minH="100vh">
 				<chakra.main p={2} textAlign="center">
 					<Heading as="h1" size="xl">
@@ -69,7 +67,7 @@ export function CatchBoundary(): JSX.Element {
 					</LinkButton>
 				</chakra.main>
 			</Center>
-		</Document>
+		</Root>
 	);
 }
 
@@ -78,7 +76,7 @@ export function ErrorBoundary({ error }: { error: Error }): JSX.Element {
 	const { name, message } = error;
 
 	return (
-		<Document>
+		<Root>
 			<Center minW="100vw" minH="100vh">
 				<chakra.main p={2} textAlign="center">
 					<Heading as="h1" size="xl">
@@ -100,6 +98,6 @@ export function ErrorBoundary({ error }: { error: Error }): JSX.Element {
 					</LinkButton>
 				</chakra.main>
 			</Center>
-		</Document>
+		</Root>
 	);
 }

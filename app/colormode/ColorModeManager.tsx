@@ -29,6 +29,7 @@ function ColorModeManagerChild({
 }: PropsWithChildren<{ initialColorMode?: ColorMode }>): JSX.Element {
 	const { colorMode, setColorMode } = useColorMode();
 
+	/* Recompute and set (if necessary) the color mode on the client */
 	useEffect(() => {
 		const revalidatedColorMode = getColorMode({
 			current: colorMode,
@@ -38,7 +39,7 @@ function ColorModeManagerChild({
 			setColorMode(revalidatedColorMode);
 	}, [colorMode, initialColorMode, setColorMode]);
 
-	// eslint-disable-next-line react/jsx-no-useless-fragment -- TS :vomit:
+	// eslint-disable-next-line react/jsx-no-useless-fragment -- Can't return a ReactNode here, because TS is incompetent
 	return <>{children}</>;
 }
 
@@ -46,13 +47,6 @@ export default function ColorModeManager({
 	children,
 }: PropsWithChildren<unknown>) {
 	const colorModeCookie = useColorModeCookie();
-	// const colorMode = getColorMode(
-	// 	/* Compute the color mode to use */
-	// 	colorModeCookie?.initial,
-	// 	colorModeCookie?.current,
-	// );
-
-	useEffect(() => {});
 
 	return (
 		<ChakraProvider
