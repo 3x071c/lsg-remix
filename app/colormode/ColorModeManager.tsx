@@ -43,7 +43,6 @@ function ColorModeManagerChild({
 }
 
 export default function ColorModeManager({
-	// eslint-disable-next-line react/prop-types -- False positive
 	children,
 }: PropsWithChildren<unknown>) {
 	const colorModeCookie = useColorModeCookie();
