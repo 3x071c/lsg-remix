@@ -1,15 +1,12 @@
-/* eslint-disable react/jsx-no-constructed-context-values */
 import "regenerator-runtime/runtime";
+import type { ColorMode } from "@chakra-ui/react";
 import type { EntryContext } from "remix";
 import { CacheProvider } from "@emotion/react";
 import createEmotionServer from "@emotion/server/create-instance";
+import Cookie from "cookie";
 import { renderToString } from "react-dom/server";
 import { RemixServer } from "remix";
-import {
-	ColorModeContext,
-	getColorModeCookie,
-	getInitialColorModeCookie,
-} from "~app/colormode";
+import { ColorModeContext } from "~app/colormode";
 import { createEmotionCache } from "~app/emotion";
 
 const env = {
@@ -37,14 +34,11 @@ export default function handleRequest(
 	const html = renderToString(
 		<CacheProvider value={cache}>
 			<ColorModeContext.Provider
-				value={{
-					current: getColorModeCookie(
-						request.headers.get("Cookie") || "",
-					),
-					initial: getInitialColorModeCookie(
-						request.headers.get("Cookie") || "",
-					),
-				}}>
+				value={
+					Cookie.parse(request.headers.get("Cookie") || "")[
+						"colorMode"
+					] as ColorMode
+				}>
 				<RemixServer context={remixContext} url={request.url} />
 			</ColorModeContext.Provider>
 		</CacheProvider>,
