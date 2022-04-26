@@ -49,10 +49,8 @@ function ColorModeManagerChild({
 	skipRun.current = false;
 
 	useEffect(() => {
-		if (revalidatedColorMode !== colorMode) {
+		if (revalidatedColorMode !== colorMode)
 			setColorMode(revalidatedColorMode);
-			setColorModeStorage(revalidatedColorMode);
-		}
 	}, [colorMode, setColorMode, setColorModeStorage, revalidatedColorMode]);
 
 	useEffect(() => {
@@ -63,6 +61,7 @@ function ColorModeManagerChild({
 	}, [setColorMode, colorModeStorage]);
 
 	useEffect(() => {
+		// prevent infinite loop when colorModeStorage and colorMode/revalidatedColorMode set each other because of different values -> prioritize colorModeStorage, skip running this useEffect hook
 		if (!skipRun.current) setColorModeStorage(revalidatedColorMode);
 	}, [setColorModeStorage, revalidatedColorMode]);
 
