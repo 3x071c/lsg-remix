@@ -1,7 +1,8 @@
 /* Modeled after official documentation: https://chakra-ui.com/docs/styled-system/features/color-mode#behavior-of-colormode */
 import type { ColorMode } from "@chakra-ui/react";
+import { useAtom } from "jotai";
+import { atomWithStorage } from "jotai/utils";
 import { theme } from "~feat/chakra";
-import { setInitialColorModeCookie } from "./colorModeCookie";
 
 /**
  * This little module takes care of computing the color mode to be used based on the theme and stored values
@@ -11,6 +12,14 @@ import { setInitialColorModeCookie } from "./colorModeCookie";
 
 const isServer = typeof document === "undefined";
 const isClient = !isServer;
+
+/**
+ * This holds the backup color mode in localStorage, to synchronize it across all open tabs
+ */
+const backupColorModeAtom = atomWithStorage<ColorMode | undefined>(
+	"backupColorMode",
+	undefined,
+);
 
 /**
  * Checks if the browser is using a certain color scheme
@@ -63,29 +72,33 @@ const getInitialColorMode = (): ColorMode | null => {
 
 /**
  * Gets the color mode (light/dark) for chakra-ui
- * @param initial The initial color mode stored to trigger server-side re-evaluation
- * @param current The current color mode set by the client for the server to prerender
+ * @param colorMode The current color mode set by the client for the server to prerender
  * @returns The color mode to use
  */
-export default function getColorMode({
-	initial,
-	current,
-}: {
-	initial?: ColorMode;
-	current?: ColorMode;
-}): ColorMode {
+export function useRevalidatedColorMode(colorMode: ColorMode): ColorMode {
+	const [backupColorMode, setBackupColorMode] = useAtom(backupColorModeAtom);
+
 	const systemColorMode = getSystemColorMode();
 	if (systemColorMode) return systemColorMode;
+
 	const initialSystemColorMode = getInitialSystemColorMode();
-	if (initialSystemColorMode)
-		return initial !== initialSystemColorMode || !current
-			? setInitialColorModeCookie(initialSystemColorMode)
-			: current;
+	if (initialSystemColorMode) {
+		if (backupColorMode !== initialSystemColorMode || !colorMode) {
+			setBackupColorMode(initialSystemColorMode);
+			return initialSystemColorMode;
+		}
+		return colorMode;
+	}
+
 	const initialColorMode = getInitialColorMode();
-	if (initialColorMode)
-		return initial !== initialColorMode || !current
-			? setInitialColorModeCookie(initialColorMode)
-			: current;
-	if (current) return current;
+	if (initialColorMode) {
+		if (backupColorMode !== initialColorMode || !colorMode) {
+			setBackupColorMode(initialColorMode);
+			return initialColorMode;
+		}
+		return colorMode;
+	}
+
+	if (colorMode) return colorMode;
 	return "light" as ColorMode;
 }

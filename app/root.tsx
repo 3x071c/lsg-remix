@@ -1,6 +1,13 @@
 /* eslint-disable no-console */
 import type { PropsWithChildren } from "react";
-import { Center, chakra, Heading, Text, Code } from "@chakra-ui/react";
+import {
+	Center,
+	chakra,
+	Heading,
+	Text,
+	Code,
+	ChakraProvider,
+} from "@chakra-ui/react";
 import { Provider as JotaiProvider } from "jotai";
 import {
 	LiveReload,
@@ -10,18 +17,14 @@ import {
 	useCatch,
 } from "remix";
 import { ColorModeToggle, ColorModeManager } from "~app/colormode";
+import { theme } from "~feat/chakra";
 import { LinkButton } from "~feat/links";
 import { keys } from "~lib/util";
 
 function Root({ children }: PropsWithChildren<unknown>) {
 	return (
 		<>
-			<ColorModeManager>
-				<JotaiProvider>
-					<ColorModeToggle />
-					{children}
-				</JotaiProvider>
-			</ColorModeManager>
+			{children}
 			<ScrollRestoration />
 			<Scripts />
 			<LiveReload />
@@ -32,7 +35,12 @@ function Root({ children }: PropsWithChildren<unknown>) {
 export default function App(): JSX.Element {
 	return (
 		<Root>
-			<Outlet />
+			<JotaiProvider>
+				<ColorModeManager>
+					<ColorModeToggle />
+					<Outlet />
+				</ColorModeManager>
+			</JotaiProvider>
 		</Root>
 	);
 }
@@ -54,22 +62,24 @@ export function CatchBoundary(): JSX.Element {
 
 	return (
 		<Root>
-			<Center minW="100vw" minH="100vh">
-				<chakra.main p={2} textAlign="center">
-					<Heading as="h1" size="xl">
-						{statusText}
-					</Heading>
-					<Text fontSize="md">
-						Houston, we&apos;ve had a {status}
-					</Text>
-					<Text maxW="lg" my={2} fontSize="sm">
-						{message}
-					</Text>
-					<LinkButton href="/" variant="link">
-						Hier geht&apos;s zurück
-					</LinkButton>
-				</chakra.main>
-			</Center>
+			<ChakraProvider theme={theme}>
+				<Center minW="100vw" minH="100vh">
+					<chakra.main p={2} textAlign="center">
+						<Heading as="h1" size="xl">
+							{statusText}
+						</Heading>
+						<Text fontSize="md">
+							Houston, we&apos;ve had a {status}
+						</Text>
+						<Text maxW="lg" my={2} fontSize="sm">
+							{message}
+						</Text>
+						<LinkButton href="/" variant="link">
+							Hier geht&apos;s zurück
+						</LinkButton>
+					</chakra.main>
+				</Center>
+			</ChakraProvider>
 		</Root>
 	);
 }
@@ -80,27 +90,29 @@ export function ErrorBoundary({ error }: { error: Error }): JSX.Element {
 
 	return (
 		<Root>
-			<Center minW="100vw" minH="100vh">
-				<chakra.main p={2} textAlign="center">
-					<Heading as="h1" size="xl">
-						{name}
-					</Heading>
-					<Text fontSize="md">
-						Ein kritischer Fehler ist aufgetreten.
-					</Text>
-					<Code
-						d="block"
-						maxW="lg"
-						my={2}
-						colorScheme="red"
-						fontSize="sm">
-						{message}
-					</Code>
-					<LinkButton href="/" variant="link">
-						Hier geht&apos;s zurück
-					</LinkButton>
-				</chakra.main>
-			</Center>
+			<ChakraProvider theme={theme}>
+				<Center minW="100vw" minH="100vh">
+					<chakra.main p={2} textAlign="center">
+						<Heading as="h1" size="xl">
+							{name}
+						</Heading>
+						<Text fontSize="md">
+							Ein kritischer Fehler ist aufgetreten.
+						</Text>
+						<Code
+							d="block"
+							maxW="lg"
+							my={2}
+							colorScheme="red"
+							fontSize="sm">
+							{message}
+						</Code>
+						<LinkButton href="/" variant="link">
+							Hier geht&apos;s zurück
+						</LinkButton>
+					</chakra.main>
+				</Center>
+			</ChakraProvider>
 		</Root>
 	);
 }
