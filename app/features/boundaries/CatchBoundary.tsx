@@ -7,7 +7,7 @@ import {
 	Fade,
 } from "@chakra-ui/react";
 
-export default function CatchBoundary({
+export function CatchBoundary({
 	name,
 	message,
 }: {

@@ -6,8 +6,7 @@ declare global {
 	}
 }
 
-// eslint-disable-next-line no-return-assign
-export default () =>
+export const magicClient =
 	window.magicClient ||
 	(window.magicClient = new Magic(
 		typeof window.env.MAGIC_KEY === "string" ? window.env.MAGIC_KEY : "",

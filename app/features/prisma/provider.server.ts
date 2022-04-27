@@ -6,7 +6,8 @@ declare global {
 }
 
 // https://pris.ly/d/help/next-js-best-practices
-export default global.prisma ||
+export const prisma =
+	global.prisma ||
 	(process.env.NODE_ENV !== "development" && new PrismaClient()) ||
 	(global.prisma = new PrismaClient({
 		errorFormat: "pretty",

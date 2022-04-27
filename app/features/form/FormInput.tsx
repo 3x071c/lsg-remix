@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { useField } from "remix-validated-form";
 
-export default forwardRef<
+export const FormInput = forwardRef<
 	InputProps &
 		Pick<FormControlProps, "isDisabled"> & {
 			name: string;
@@ -18,7 +18,7 @@ export default forwardRef<
 			formId?: string;
 		},
 	"input"
->(function FormInput(
+>(function InnerFormInput(
 	{ name, label, helper, isDisabled, formId, ...props },
 	ref,
 ): JSX.Element {

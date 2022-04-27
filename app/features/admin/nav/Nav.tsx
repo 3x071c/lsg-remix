@@ -25,7 +25,7 @@ import { useNavigate } from "remix";
 import { maxContentWidth } from "~feat/chakra";
 import { NavLink } from "~feat/links";
 
-export default function CmsNav({
+export function CmsNav({
 	page,
 	pages,
 	top,

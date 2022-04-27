@@ -31,10 +31,7 @@ type NavbarProps = {
 	}[];
 	height: LayoutProps["h"];
 };
-export default function Nav({
-	groupedPages,
-	height,
-}: NavbarProps): JSX.Element {
+export function Nav({ groupedPages, height }: NavbarProps): JSX.Element {
 	const theme = useTheme();
 	const popoverBgTransparent = useColorModeValue(
 		"whiteAlpha.900",

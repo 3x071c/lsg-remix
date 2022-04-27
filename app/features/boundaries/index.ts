@@ -1,3 +1,3 @@
-export { default as CatchBoundary } from "./CatchBoundary";
-export { default as ErrorBoundary } from "./ErrorBoundary";
-export { default as InfoBoundary } from "./InfoBoundary";
+export * from "./CatchBoundary";
+export * from "./ErrorBoundary";
+export * from "./InfoBoundary";

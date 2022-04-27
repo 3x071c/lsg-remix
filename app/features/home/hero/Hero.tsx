@@ -1,9 +1,8 @@
 import { Heading, Wrap, WrapItem, Text, Box } from "@chakra-ui/react";
-import { memo } from "react";
 import { bg } from "~assets";
 import { Image } from "~feat/image";
 
-export default memo(function Hero() {
+export function Hero() {
 	return (
 		<Wrap spacing={8} align="center" justify="center" textAlign="center">
 			<WrapItem flex="1 1 0">
@@ -29,4 +28,4 @@ export default memo(function Hero() {
 			</WrapItem>
 		</Wrap>
 	);
-});
+}

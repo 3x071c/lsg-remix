@@ -7,7 +7,7 @@ import {
 	Fade,
 } from "@chakra-ui/react";
 
-export default function ErrorBoundary({
+export function ErrorBoundary({
 	name,
 	message,
 }: {

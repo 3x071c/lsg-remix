@@ -13,7 +13,7 @@ export function useLogin() {
 				setData(null);
 				setError(null);
 				try {
-					const token = await magicClient().auth.loginWithMagicLink({
+					const token = await magicClient.auth.loginWithMagicLink({
 						email,
 						redirectURI: `${window.location.origin}/callback`,
 						showUI: true, // @todo Implement own UI
@@ -30,10 +30,10 @@ export function useLogin() {
 	);
 
 	const logout = useCallback(async () => {
-		if (!loading && (await magicClient().user.isLoggedIn())) {
+		if (!loading && (await magicClient.user.isLoggedIn())) {
 			setLoading(true);
 			try {
-				await magicClient().user.logout();
+				await magicClient.user.logout();
 				setError(null);
 				setData(null);
 			} finally {
@@ -46,8 +46,8 @@ export function useLogin() {
 		const callback = async () => {
 			setLoading(true);
 			try {
-				if (await magicClient().user.isLoggedIn()) {
-					setData(await magicClient().user.getIdToken());
+				if (await magicClient.user.isLoggedIn()) {
+					setData(await magicClient.user.getIdToken());
 					setError(null);
 				}
 			} catch (e) {
@@ -74,7 +74,7 @@ export function useAuthCallback() {
 	useEffect(() => {
 		const callback = async () => {
 			try {
-				const token = await magicClient().auth.loginWithCredential();
+				const token = await magicClient.auth.loginWithCredential();
 				setData(token);
 			} catch (e) {
 				setError(e);

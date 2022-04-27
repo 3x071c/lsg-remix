@@ -1,5 +1,4 @@
 import "regenerator-runtime/runtime";
-import type { ColorMode } from "@chakra-ui/react";
 import type { EntryContext } from "remix";
 import { CacheProvider } from "@emotion/react";
 import createEmotionServer from "@emotion/server/create-instance";
@@ -37,7 +36,9 @@ export default function handleRequest(
 				value={
 					Cookie.parse(request.headers.get("Cookie") || "")[
 						"colorMode"
-					] as ColorMode
+					] === "dark"
+						? "dark"
+						: "light"
 				}>
 				<RemixServer context={remixContext} url={request.url} />
 			</ColorModeContext.Provider>

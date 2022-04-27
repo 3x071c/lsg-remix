@@ -4,7 +4,7 @@ import { cae, cils, courage, delf } from "~assets";
 import { Image } from "~feat/image";
 import { entries } from "~lib/util";
 
-export default function Awards() {
+export function Certificates() {
 	const { colorMode } = useColorMode();
 	const isDark = colorMode === "dark";
 

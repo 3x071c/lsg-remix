@@ -1,7 +1,7 @@
 import { redirect } from "remix";
 import superjson from "superjson";
 import type { User } from "~models";
-import { PrismaClient as prisma } from "~feat/prisma";
+import { prisma } from "~feat/prisma";
 import { entries } from "~lib/util";
 import { magicServer } from "./magic";
 import { getSession, commitSession, destroySession } from "./session.server";
@@ -93,9 +93,10 @@ export async function logout(request: Request): Promise<Response> {
  * magic.token.validate(didToken) -> Validate token
  * const user = await magic.users.getMetadataByToken(did) -> Get user metadata ({email})
  * setCookie() -> Sets user data as httpOnly/secure cookie
+ * - client
  * -- /callback
  * magic.auth.loginWithCredential() -> Completes callback
- * - client
+ * -- /something
  * magic.user.getMetadata() -> Gets user metadata ({email})
  * -- /logout
  * magic.user.logout() -> Invalidates session

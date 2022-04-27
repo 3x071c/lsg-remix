@@ -1,1 +1,1 @@
-export { default as Certificates } from "./Certificates";
+export * from "./Certificates";

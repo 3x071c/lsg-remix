@@ -2,7 +2,7 @@ import type { LoaderFunction } from "remix";
 import { Container, chakra } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { Outlet, useLocation } from "remix";
-import { Nav } from "~feat/admin";
+import { CmsNav } from "~feat/admin";
 import { authorize } from "~feat/auth";
 import { maxContentWidth } from "~feat/chakra";
 import { respond, useLoaderResponse } from "~lib/response";
@@ -60,7 +60,7 @@ export default function Admin(): JSX.Element {
 
 	return (
 		<chakra.section pos="relative">
-			<Nav
+			<CmsNav
 				firstname={firstname}
 				lastname={lastname}
 				top="52px"

@@ -26,7 +26,7 @@ const colorModeStorageManager = (mode?: ColorMode): StorageManager => ({
 	get(init?) {
 		if (isClient) {
 			const cookie = Cookie.get("colorMode");
-			if (cookie) return cookie as ColorMode;
+			if (cookie) return cookie === "dark" ? "dark" : "light";
 		}
 		if (mode) return mode;
 		return init;
@@ -71,9 +71,7 @@ function ColorModeManagerChild({
 
 export function ColorModeManager({ children }: PropsWithChildren<unknown>) {
 	const colorModeContext = useContext(ColorModeContext);
-	const colorMode = isClient
-		? (Cookie.get("colorMode") as ColorMode | undefined)
-		: colorModeContext;
+	const colorMode = isServer ? colorModeContext : undefined;
 
 	return (
 		<ChakraProvider
