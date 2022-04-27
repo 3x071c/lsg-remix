@@ -3,12 +3,12 @@ import type { PropsWithChildren } from "react";
 import { Button, forwardRef } from "@chakra-ui/react";
 import { useFormContext, useIsSubmitting } from "remix-validated-form";
 
-export default forwardRef<
+export const SubmitButton = forwardRef<
 	PropsWithChildren<ButtonProps> & {
 		formId?: string;
 	},
 	"button"
->(function SubmitButton(
+>(function InnerSubmitButton(
 	{ isLoading, disabled, formId, ...props },
 	ref,
 ): JSX.Element {

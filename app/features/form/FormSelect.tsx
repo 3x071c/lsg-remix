@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { useField } from "remix-validated-form";
 
-export default forwardRef<
+export const FormSelect = forwardRef<
 	SelectProps &
 		Pick<FormControlProps, "isDisabled"> & {
 			name: string;
@@ -21,7 +21,7 @@ export default forwardRef<
 			rightChild?: ReactNode;
 		},
 	"select"
->(function FormSelect(
+>(function InnerFormSelect(
 	{ name, label, helper, isDisabled, formId, rightChild, ...props },
 	ref,
 ): JSX.Element {

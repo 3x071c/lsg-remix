@@ -22,7 +22,7 @@ import {
 import type { Page } from "~models";
 import { maxContentWidth } from "~feat/chakra";
 import { Image } from "~feat/image";
-import { PrismaClient as prisma } from "~feat/prisma";
+import { prisma } from "~feat/prisma";
 import { respond, useLoaderResponse } from "~lib/response";
 
 type LoaderData = z.infer<typeof Page> & {

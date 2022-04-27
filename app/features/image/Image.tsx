@@ -3,7 +3,7 @@ import type { ImageProps } from "@chakra-ui/react";
 import { Box, Image as ChakraImage } from "@chakra-ui/react";
 import { useInView } from "react-intersection-observer";
 
-export default function Image({
+export function Image({
 	priority,
 	...props
 }: Omit<

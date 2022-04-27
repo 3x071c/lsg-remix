@@ -47,13 +47,35 @@ const getActionData = async (request: Request): Promise<ActionData> => {
 		await authenticate(request, didToken, data);
 		return { status: 200 };
 	} catch (e) {
-		if (e instanceof Error)
+		if (e instanceof Error) {
+			const errorJSON = JSON.parse(e.message) as unknown;
+			const parsed =
+				errorJSON &&
+				typeof errorJSON === "object" &&
+				Array.isArray(errorJSON)
+					? errorJSON
+							.map((m) =>
+								String(
+									(m &&
+										typeof m === "object" &&
+										typeof (m as Record<string, unknown>)[
+											"message"
+										] !== "undefined" &&
+										(m as Record<string, unknown>)[
+											"message"
+										]) ||
+										false,
+								),
+							)
+							.filter(Boolean)
+							.join(", ")
+					: false;
+
 			return {
-				formError: (JSON.parse(e.message) as { message: string }[])
-					.map((m) => m.message)
-					.join(", "),
+				formError: parsed || e.message,
 				status: 400,
 			};
+		}
 		throw e;
 	}
 };

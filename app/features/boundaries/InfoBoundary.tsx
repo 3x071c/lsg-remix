@@ -5,7 +5,7 @@ import {
 	AlertDescription,
 } from "@chakra-ui/react";
 
-export default function InfoBoundary({
+export function InfoBoundary({
 	title,
 	message,
 }: {

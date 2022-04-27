@@ -41,7 +41,7 @@ const getSystemColorMode = (): ColorMode | null => {
 				"dark",
 			); /* Probe for dark mode to prevent false positives */
 		if (prefersDarkColorScheme !== undefined)
-			return (prefersDarkColorScheme ? "dark" : "light") as ColorMode;
+			return prefersDarkColorScheme ? "dark" : "light";
 	}
 	return null;
 };
@@ -55,7 +55,7 @@ const getInitialSystemColorMode = (): ColorMode | null => {
 	if (isClient && theme.config.initialColorMode === "system") {
 		const prefersDarkColorScheme = prefersColorScheme("dark");
 		if (prefersDarkColorScheme !== undefined)
-			return (prefersDarkColorScheme ? "dark" : "light") as ColorMode;
+			return prefersDarkColorScheme ? "dark" : "light";
 	}
 	return null;
 };
@@ -65,8 +65,8 @@ const getInitialSystemColorMode = (): ColorMode | null => {
  * @returns The theme's explicit color mode setting, or null
  */
 const getInitialColorMode = (): ColorMode | null => {
-	if (theme.config.initialColorMode === "dark") "dark" as ColorMode;
-	if (theme.config.initialColorMode === "light") "light" as ColorMode;
+	if (theme.config.initialColorMode === "dark") return "dark";
+	if (theme.config.initialColorMode === "light") return "light";
 	return null;
 };
 
@@ -100,5 +100,5 @@ export function useRevalidatedColorMode(colorMode: ColorMode): ColorMode {
 	}
 
 	if (colorMode) return colorMode;
-	return "light" as ColorMode;
+	return "light";
 }

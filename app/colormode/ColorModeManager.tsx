@@ -1,6 +1,7 @@
 import type { ColorMode, StorageManager } from "@chakra-ui/react";
 import type { PropsWithChildren } from "react";
 import { ChakraProvider, useColorMode } from "@chakra-ui/react";
+import debug from "debug";
 import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import Cookie from "js-cookie";
@@ -9,6 +10,7 @@ import { theme } from "~feat/chakra";
 import { ColorModeContext } from "./ColorModeContext";
 import { useRevalidatedColorMode } from "./useRevalidatedColorMode";
 
+const log = debug("colorModeManager");
 const isServer = typeof document === "undefined";
 const isClient = !isServer;
 
@@ -26,14 +28,21 @@ const colorModeStorageManager = (mode?: ColorMode): StorageManager => ({
 	get(init?) {
 		if (isClient) {
 			const cookie = Cookie.get("colorMode");
-			if (cookie) return cookie as ColorMode;
+			log("Determining color mode: %s || %s || %s", cookie, mode, init);
+			if (cookie) return cookie === "dark" ? "dark" : "light";
+		} else {
+			log("Determining color mode: %s || %s", mode, init);
 		}
 		if (mode) return mode;
 		return init;
 	},
 	set(value) {
-		if (isClient)
+		if (isClient) {
+			log("Setting color mode to %s", value);
 			Cookie.set("colorMode", value, { expires: 365, sameSite: "Lax" });
+		} else {
+			log("Not setting color mode");
+		}
 	},
 	type: "cookie",
 });
@@ -45,25 +54,36 @@ function ColorModeManagerChild({
 		useAtom(colorModeStorageAtom);
 	const { colorMode, setColorMode } = useColorMode();
 	const revalidatedColorMode = useRevalidatedColorMode(colorMode);
-	const skipRun = useRef(false);
-	skipRun.current = false;
+	const watchColorModeStorage = useRef(true);
+	watchColorModeStorage.current = true;
+
+	log(
+		"colorMode (%s) | colorModeStorage (%s) | revalidatedColorMode (%s)",
+		colorMode,
+		colorModeStorage,
+		revalidatedColorMode,
+	);
 
 	useEffect(() => {
-		if (revalidatedColorMode !== colorMode)
-			setColorMode(revalidatedColorMode);
-	}, [colorMode, setColorMode, setColorModeStorage, revalidatedColorMode]);
+		log("reload | revalidatedColorMode changed");
+		log("Updating colorMode to revalidatedColorMode");
+		setColorMode(revalidatedColorMode);
+		log("Updating colorModeStorage to revalidatedColorMode");
+		setColorModeStorage(revalidatedColorMode); // update the color mode storage to make other tabs sync via the other hook
+		watchColorModeStorage.current = false; // prevent the other effect hook from running with bad values
+	}, [setColorMode, setColorModeStorage, revalidatedColorMode]);
 
+	/* the other effect hook :D (this one is just there for tab sync - if colorModeStorage changes because of activity in a different tab, then set the colorMode in this tab too) */
 	useEffect(() => {
-		if (colorModeStorage) {
+		log(
+			"reload | colorModeStorage changed | if %o, skipping.",
+			!watchColorModeStorage.current,
+		);
+		if (colorModeStorage && watchColorModeStorage.current) {
+			log("Overwriting colorMode to colorModeStorage");
 			setColorMode(colorModeStorage);
-			skipRun.current = true;
 		}
 	}, [setColorMode, colorModeStorage]);
-
-	useEffect(() => {
-		// prevent infinite loop when colorModeStorage and colorMode/revalidatedColorMode set each other because of different values -> prioritize colorModeStorage, skip running this useEffect hook
-		if (!skipRun.current) setColorModeStorage(revalidatedColorMode);
-	}, [setColorModeStorage, revalidatedColorMode]);
 
 	// eslint-disable-next-line react/jsx-no-useless-fragment -- Can't return a ReactNode here, because TS is incompetent
 	return <>{children}</>;
@@ -71,9 +91,7 @@ function ColorModeManagerChild({
 
 export function ColorModeManager({ children }: PropsWithChildren<unknown>) {
 	const colorModeContext = useContext(ColorModeContext);
-	const colorMode = isClient
-		? (Cookie.get("colorMode") as ColorMode | undefined)
-		: colorModeContext;
+	const colorMode = isServer ? colorModeContext : undefined;
 
 	return (
 		<ChakraProvider

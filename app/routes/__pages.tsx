@@ -1,7 +1,7 @@
 import type { LoaderFunction } from "remix";
 import { Outlet } from "remix";
 import { Nav } from "~feat/nav";
-import { PrismaClient as prisma } from "~feat/prisma";
+import { prisma } from "~feat/prisma";
 import { respond, useLoaderResponse } from "~lib/response";
 
 type LoaderData = {

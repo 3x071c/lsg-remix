@@ -19,7 +19,7 @@ import { Page, PageCategory } from "~models";
 import { PageModal } from "~feat/admin/pagemodal";
 import { PageTable, FilterInput } from "~feat/admin/pagetable";
 import { Statistics } from "~feat/admin/statistics";
-import { PrismaClient as prisma, toIndexedObject } from "~feat/prisma";
+import { prisma, toIndexedObject } from "~feat/prisma";
 import { respond, useActionResponse, useLoaderResponse } from "~lib/response";
 
 const pageValidatorData = Page.pick({
