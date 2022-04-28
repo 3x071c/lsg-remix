@@ -47,6 +47,8 @@
 			"~app/*": ["app/*"],
 			"~db": ["db/zod"],
 			"~db/*": ["db/zod/*"],
+			"~public": ["public"],
+			"~public/*": ["public/*"],
 			"~types": ["types"],
 			"~types/*": ["types/*"],
 			"~": ["."],

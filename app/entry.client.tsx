@@ -1,10 +1,10 @@
 import "regenerator-runtime/runtime";
+import createCache from "@emotion/cache";
 import { CacheProvider } from "@emotion/react";
 import { hydrate } from "react-dom";
 import { RemixBrowser } from "remix";
-import { createEmotionCache } from "~app/emotion";
 
-const cache = createEmotionCache();
+const cache = createCache({ key: "css" });
 
 hydrate(
 	<CacheProvider value={cache}>
