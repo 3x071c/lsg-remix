@@ -3,15 +3,9 @@
 ## Folder Structure
 
 -   Top-level folders separate concerns
--   `db/`:
-    -   Contains database-related files
-    -   Database schema (Prisma)
-    -   Database seeding instructions (Prisma)
--   `$app/`:
+-   `~app/`:
     -   Contains app source code
     -   Inspired by the [Redux recommended folder structure](https://redux.js.org/faq/code-structure#what-should-my-file-structure-look-like-how-should-i-group-my-action-creators-and-reducers-in-my-project-where-should-my-selectors-go)
-    -   Feature-folder style: sub-folders contain files all belonging to the same **feature** -> Nesting is encouraged for parent-client feature relationships, i.e. the parent imports children from its own feature folder exclusively
-    -   Generic helper scripts/files can be put directly inside the folder (discouraged, try finding a fitting feature)
     -   `entry.client.tsx`/`entry.server.tsx`:
         -   Entry points on the server/client side - This is where React first takes control of the DOM, and initial scripts run
         -   Allows for running custom code before React renders the DOM
@@ -19,8 +13,38 @@
         -   This is the "root layout" and the direct child of both entry points
         -   Other layouts and pages are then rendered into its `Outlet`
         -   Here's where global React logic goes (such as style caching, loading global data, etc.)
-    -   `$routes/`:
-        -   Contains the front-facing [Remix](https://remix.run/) pages, referencing components from `$app/`
+    -   `server.ts`:
+        -   Remix is configured to not run via its built-in app server, but with a custom [express](https://expressjs.com) configuration defined in this file
+        -   Express is a very mature (good old) server library that provides convenient helpers and, most importantly, is endorsed by Remix to be used with Fly deployments in their [example](https://github.com/remix-run/blues-stack)
+        -   Mostly ripped from said example
+        -   Allows for fine-grained routing and inspection of individual requests if ever desired (for example, to check certain headers, or do some magic with Fly regions)
+    -   `~assets/`:
+        -   Makes it more convenient to import assets
+        -   Put your static(!) assets here (media, images, etc) - They will be copied to `/public/build` when deployed and served over a faster CDN network with aggressive caching
+    -   `~colormode/`:
+        -   Contains helper components, functions etc. to deal with the challenge of rendering light/dark mode per user preference correctly on the server-side, syncing across tabs, switching automatically as time passes, etc.
+        -   Imported in top-level entry files, but not really needed in nested routes or components -> not a good fit for the `features/` folder
+    -   `features/` (`~feat/`):
+        -   Feature-folder style: sub-folders contain files all belonging to the same **feature** -> Nesting is encouraged for parent-client feature relationships
+    -   `~lib/`:
+        -   Contains general utility functions
+    -   `~models/`:
+        -   Imports and enhances the automatically generated [zod-prisma](https://github.com/CarterGrimmeisen/zod-prisma) type definitions for all Prisma models (/database tables)
+        -   These should ALWAYS be used whenever possible to validate untrusted user input BEFORE running sensitive code
+    -   `~routes/`:
+        -   Contains the front-facing [Remix](https://remix.run/) pages, referencing features from `~from/`
+-   `db/`:
+    -   Contains database-related files
+    -   `data/`: This is used by the seed script, not interesting
+    -   `migrations/`: This folder is managed by Prisma. DO NOT TOUCH ALREADY COMMITTED MIGRATIONS.
+    -   `zod/`: Contains automatically generated type definitions for every Prisma model using [zod-prisma](https://github.com/CarterGrimmeisen/zod-prisma) -> see `~models/` for in-app usage
+    -   `schema.prisma`: Database schema (For [prisma](https://www.prisma.io), a JavaScript ORM that makes it fairly easy and type-safe to query the database with JS/without SQL)
+    -   `seed.ts`: Database seeding instructions ("seeding": Feeding a local database with example garbage data for development/testing)
+-   `public/`:
+    -   Contains static files (assets, media, images, etc.) that are served directly from the CDN and are cached aggressively
+    -   Put your assets in `~assets/` instead for more convenient importing/usage
+-   `types/`:
+    -   Contains global TypeScript type definitions and utilities (these are all eradicated during compilation)
 
 ## (Code) Style
 
