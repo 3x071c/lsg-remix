@@ -13,7 +13,7 @@ env:
     APP_NAME: "lsg-pr-${{ github.event.number }}"
     APP_ORG: lsglab
     APP_REGION: fra
-    APP_DB: lsg-pr-db
+    APP_CLUSTER: lsg-pr-db
 
 jobs:
     deploy-pr:
@@ -43,7 +43,7 @@ jobs:
               run: |
                   flyctl launch --copy-config --name "${{ env.APP_NAME }}" --no-deploy --org "${{ env.APP_ORG }}" --region "${{ env.APP_REGION }}" --remote-only
                   flyctl secrets set --app "${{ env.APP_NAME }}" AUTH_SECRET="$(openssl rand -base64 40)" MAGIC_KEY="${{ secrets.MAGIC_KEY }}" MAGIC_SECRET="${{ secrets.MAGIC_SECRET }}"
-                  flyctl postgres attach --app "${{ env.APP_NAME }}" --postgres-app "${{ env.APP_DB }}"
+                  flyctl postgres attach --app "${{ env.APP_NAME }}" --postgres-app "${{ env.APP_CLUSTER }}"
             - name: Deploy
               id: deploy
               run: |
