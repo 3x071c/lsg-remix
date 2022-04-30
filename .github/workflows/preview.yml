@@ -52,7 +52,7 @@ jobs:
                   if tail "$DEPLOY_LOG" | grep -F '#EC2'; then
                     if tail -n 20 "$DEPLOY_LOG" | grep -F 'No deployment available to monitor'; then
                         sleep 15
-                    else; exit 1; fi
+                    else exit 1; fi
                   fi
                   flyctl status --app "${{ env.APP_NAME }}"
                   APP_STATUS=$(flyctl status --app "${{ env.APP_NAME }}" --json)
