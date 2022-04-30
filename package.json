@@ -69,7 +69,7 @@
 		"prisma:watch": "npm run prisma:generate -- --watch",
 		"prod": "npm run production",
 		"production": "cross-env NODE_ENV=production run-s clean build start",
-		"release": "npx --yes --package=prisma -c '(! case \"$FLY_APP_NAME\" in lsg-pr-*) false;; esac) && npm run new:preview || npm run new:prod'",
+		"release": "npx --yes --package=prisma -c 'printenv; echo \"🚨 FLY_APP_NAME=$FLY_APP_NAME\"; (! case \"$FLY_APP_NAME\" in lsg-pr-*) false;; esac) && npm run new:preview || npm run new:prod; sleep 15'",
 		"remix:build": "remix build",
 		"remix:dev": "remix watch",
 		"remix:server": "nodemon --inspect --require dotenv/config .remix/server/server.js --watch .remix/server",
