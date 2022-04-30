@@ -281,7 +281,6 @@ public/build/
 .github/
 .husky/
 .vscode/
-types/
 .cspell.json
 .czrc
 .editorconfig
@@ -297,7 +296,5 @@ COPYING
 docker-compose.yml
 DOCS.md
 README.md
-remix.env.d.ts
-tsconfig*
 
 # === End of specific rules ===
