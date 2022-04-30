@@ -47,7 +47,8 @@ jobs:
             - name: Deploy
               id: deploy
               run: |
-                  flyctl deploy --app "${{ env.APP_NAME }}" --now --remote-only --strategy immediate || ([ "${{ env.APP_EXISTS }}" != "true" ] && sleep 15)
+                  HAS_BEEN_DEPLOYED=$(flyctl status --app "${{ env.APP_NAME }}" --json | jq -r .Deployed)
+                  flyctl deploy --app "${{ env.APP_NAME }}" --now --remote-only --strategy immediate || ([ "$HAS_BEEN_DEPLOYED" != "true" ] && sleep 15)
                   flyctl status --app "${{ env.APP_NAME }}"
                   APP_STATUS=$(flyctl status --app "${{ env.APP_NAME }}" --json)
                   APP_HOSTNAME=$(printf '%s' "$APP_STATUS" | jq -r .Hostname)
