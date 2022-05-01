@@ -30,11 +30,7 @@ jobs:
               continue-on-error: true
               run: |
                   flyctl scale count 0 --app "${{ env.APP_NAME }}"
-                  flyctl postgres detach --app "${{ env.APP_NAME }}" --postgres-app "${{ env.APP_CLUSTER }}"
                   flyctl destroy ${{ env.APP_NAME }} --yes
-                  flyctl postgres connect -a "${{ env.APP_CLUSTER }}" <<EOF
-                  DROP DATABASE "${{ env.APP_DB }}"
-                  EOF
             - name: Clean up GitHub environment
               uses: strumwolf/delete-deployment-environment@v2.0.1
               with:

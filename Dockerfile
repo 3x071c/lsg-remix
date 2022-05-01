@@ -20,6 +20,10 @@ COPY --chown=node package*.json .
 
 # Install node-gyp dependencies on Alpine
 RUN apk add --no-cache --update --virtual .gyp python3 make g++
+# Don't run hooks unnecessarily
+RUN npm set-script prepare ""
+RUN npm set-script preinstall ""
+RUN npm set-script postinstall ""
 # Install all production dependencies "cleanly", i.e. from the lockfile (not modifying it)
 RUN npm ci --production=false
 # Clean up the node-gyp install

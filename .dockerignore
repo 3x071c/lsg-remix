@@ -277,4 +277,24 @@ public/build/
 
 # === End of generic rules ===
 # === Start of specific rules ===
+
+.github/
+.husky/
+.vscode/
+.cspell.json
+.czrc
+.editorconfig
+.env*
+.eslint*
+.git*
+.jscpd*
+.prettier*
+.secretlint*
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
+COPYING
+docker-compose.yml
+DOCS.md
+README.md
+
 # === End of specific rules ===

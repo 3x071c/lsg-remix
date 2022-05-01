@@ -42,12 +42,18 @@ jobs:
               continue-on-error: true
               run: |
                   flyctl launch --copy-config --name "${{ env.APP_NAME }}" --no-deploy --org "${{ env.APP_ORG }}" --region "${{ env.APP_REGION }}" --remote-only
-                  flyctl secrets set --app "${{ env.APP_NAME }}" AUTH_SECRET="$(openssl rand -base64 40)" MAGIC_KEY="${{ secrets.MAGIC_KEY }}" MAGIC_SECRET="${{ secrets.MAGIC_SECRET }}"
                   flyctl postgres attach --app "${{ env.APP_NAME }}" --postgres-app "${{ env.APP_CLUSTER }}"
+                  flyctl secrets set --app "${{ env.APP_NAME }}" AUTH_SECRET="$(openssl rand -base64 40)" MAGIC_KEY="${{ secrets.MAGIC_KEY }}" MAGIC_SECRET="${{ secrets.MAGIC_SECRET }}"
             - name: Deploy
               id: deploy
               run: |
-                  flyctl deploy --app "${{ env.APP_NAME }}" --now --remote-only --strategy immediate || ([ "${{ env.APP_EXISTS }}" != "true" ] && sleep 15)
+                  exec 5>&1
+                  DEPLOY_LOG=$((flyctl deploy --app "${{ env.APP_NAME }}" --now --remote-only --strategy immediate && echo '✅ DEPLOY SUCCESSFUL, following up with status checks... (#EC1)' || echo '❌ DEPLOY FAILED; Might be misleading error, checking... (#EC2)') | tee >(cat - >&5))
+                  if tail "$DEPLOY_LOG" | grep -F '#EC2'; then
+                    if tail -n 20 "$DEPLOY_LOG" | grep -F 'No deployment available to monitor'; then
+                        sleep 15
+                    else exit 1; fi
+                  fi
                   flyctl status --app "${{ env.APP_NAME }}"
                   APP_STATUS=$(flyctl status --app "${{ env.APP_NAME }}" --json)
                   APP_HOSTNAME=$(printf '%s' "$APP_STATUS" | jq -r .Hostname)
