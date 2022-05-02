@@ -48,7 +48,7 @@ jobs:
               id: deploy
               run: |
                   exec 5>&1
-                  DEPLOY_LOG=$((flyctl deploy --app "${{ env.APP_NAME }}" --now --remote-only --strategy immediate && echo '✅ DEPLOY SUCCESSFUL, following up with status checks... (#EC1)' || echo '❌ DEPLOY FAILED; Might be misleading error, checking... (#EC2)') | tee >(cat - >&5))
+                  DEPLOY_LOG=$((flyctl deploy --app "${{ env.APP_NAME }}" --now --remote-only --strategy immediate 2>&1 && echo '✅ DEPLOY SUCCESSFUL, following up with status checks... (#EC1)' || echo '❌ DEPLOY FAILED; Might be misleading error, checking... (#EC2)') | tee >(cat - >&5))
                   if echo "$DEPLOY_LOG" | grep -F '#EC2'; then
                     if echo "$DEPLOY_LOG" | grep -F 'No deployment available to monitor'; then
                         echo "🐛 Known bug, continuing..."
