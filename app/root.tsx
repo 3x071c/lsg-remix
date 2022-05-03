@@ -18,7 +18,7 @@ import {
 } from "remix";
 import { ColorModeToggle, ColorModeManager } from "~app/colormode";
 import { theme } from "~feat/chakra";
-import { LinkButton } from "~feat/links";
+import { Link } from "~feat/links";
 import { keys } from "~lib/util";
 
 function Root({ children }: PropsWithChildren<unknown>) {
@@ -74,9 +74,9 @@ export function CatchBoundary(): JSX.Element {
 						<Text maxW="lg" my={2} fontSize="sm">
 							{message}
 						</Text>
-						<LinkButton href="/" variant="link">
+						<Link href="/" variant="indicating">
 							Hier geht&apos;s zurück
-						</LinkButton>
+						</Link>
 					</chakra.main>
 				</Center>
 			</ChakraProvider>
@@ -107,9 +107,9 @@ export function ErrorBoundary({ error }: { error: Error }): JSX.Element {
 							fontSize="sm">
 							{message}
 						</Code>
-						<LinkButton href="/" variant="link">
+						<Link href="/" variant="indicating">
 							Hier geht&apos;s zurück
-						</LinkButton>
+						</Link>
 					</chakra.main>
 				</Center>
 			</ChakraProvider>
