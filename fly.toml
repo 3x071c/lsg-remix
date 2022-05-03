@@ -29,11 +29,11 @@ processes = []
 
 [[services.http_checks]]
   grace_period = "5s"
-  interval = 10000
+  interval = "10s"
   method = "get"
   path = "/"
   protocol = "http"
-  timeout = 2000
+  timeout = "2s"
   tls_skip_verify = false
 [services.http_checks.headers]
 
