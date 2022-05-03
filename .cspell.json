@@ -35,6 +35,7 @@
 		"donotpresent",
 		"dotenv",
 		"ehthumbs",
+		"esac",
 		"esbuild",
 		"esktop",
 		"ethr",
@@ -68,12 +69,12 @@
 		"Strg",
 		"traversy",
 		"tsbuildinfo",
+		"unstyled",
 		"vsix",
 		"vuepress",
 		"wqhd",
 		"wscript",
 		"wxga",
-		"zalgo",
-		"esac"
+		"zalgo"
 	]
 }

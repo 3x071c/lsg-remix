@@ -74,7 +74,7 @@ export function CatchBoundary(): JSX.Element {
 						<Text maxW="lg" my={2} fontSize="sm">
 							{message}
 						</Text>
-						<Link color="revert" href="/">
+						<Link href="/" variant="indicating">
 							Hier geht&apos;s zurück
 						</Link>
 					</chakra.main>
@@ -107,7 +107,7 @@ export function ErrorBoundary({ error }: { error: Error }): JSX.Element {
 							fontSize="sm">
 							{message}
 						</Code>
-						<Link color="revert" href="/">
+						<Link href="/" variant="indicating">
 							Hier geht&apos;s zurück
 						</Link>
 					</chakra.main>
