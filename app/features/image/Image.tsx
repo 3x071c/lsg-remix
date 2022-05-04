@@ -1,4 +1,3 @@
-/* eslint-disable sort-keys */
 import type { ImageProps } from "@chakra-ui/react";
 import { Image as ChakraImage } from "@chakra-ui/react";
 
