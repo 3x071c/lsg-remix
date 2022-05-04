@@ -55,10 +55,10 @@ export function CatchBoundary(): JSX.Element {
 		401: "Die Authentifizierung ist für den Zugriff fehlgeschlagen 😳",
 		404: "Wir haben überall gesucht 👉👈🥺",
 	};
-	const message = keys(messages).includes(status.toString())
-		? messages[status.toString()] ||
-		  "Hier haben sich mehrere Fehler eingeschlichen 🧐"
-		: "Unbekannter Fehler - Bei wiederholtem, unvorhergesehenen Auftreten bitte melden 🤯";
+	const message =
+		(keys(messages).includes(status.toString()) &&
+			messages[status.toString()]) ||
+		"Unbekannter Fehler - Bei wiederholtem, unvorhergesehenen Auftreten bitte melden 🤯";
 
 	return (
 		<Root>
