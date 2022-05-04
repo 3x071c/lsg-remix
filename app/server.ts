@@ -69,20 +69,15 @@ app.use(
 // Cache all other static assets too
 app.use(express.static("public", { maxAge: "1 week" }));
 
-app.use(morgan("tiny"));
+app.use(morgan("combined"));
 
-const { NODE_ENV } = process.env;
 const BUILD_DIR = resolve(".remix", "server");
 
 app.all(
 	"*",
-	NODE_ENV === "development"
-		? (...args) =>
-				createRequestHandler({
-					build: require(BUILD_DIR) as ServerBuild,
-					mode: NODE_ENV,
-				})(...args)
-		: createRequestHandler({ build: require(BUILD_DIR) as ServerBuild }),
+	createRequestHandler({
+		build: require(BUILD_DIR) as ServerBuild,
+	}),
 );
 
 const port = process.env["PORT"] || 3000;

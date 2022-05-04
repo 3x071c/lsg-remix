@@ -54,4 +54,4 @@ processes = []
 
 [[statics]]
   guest_path = "/lsg/public"
-  url_prefix = "/"
+  url_prefix = "/cdn"
