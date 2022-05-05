@@ -16,7 +16,9 @@
 		"db/data",
 		"*.tsbuildinfo"
 	],
-	"import": ["@cspell/dict-de-de/cspell-ext.json"],
+	"import": [
+		"@cspell/dict-de-de/cspell-ext.json"
+	],
 	"language": "en,de",
 	"useGitignore": true,
 	"words": [
@@ -26,6 +28,7 @@
 		"chakra",
 		"cils",
 		"CILS",
+		"clsx",
 		"csvg",
 		"Cygwin",
 		"delf",

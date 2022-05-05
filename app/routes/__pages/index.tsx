@@ -1,9 +1,17 @@
-import { Heading, Text, chakra, Container } from "@chakra-ui/react";
+import {
+	Heading,
+	Text,
+	chakra,
+	Container,
+	useColorModeValue,
+} from "@chakra-ui/react";
 import { maxContentWidth } from "~feat/chakra";
 import { Hero, Certificates } from "~feat/home";
 import { LinkButton } from "~feat/links";
 
 export default function Index(): JSX.Element {
+	const subtleColor = useColorModeValue("gray.600", "gray.400");
+
 	return (
 		<Container w="full" maxW={maxContentWidth} mx="auto" centerContent>
 			<chakra.main w="full">
@@ -16,6 +24,13 @@ export default function Index(): JSX.Element {
 					borderTopStyle="dashed"
 					borderBottomWidth={1}
 					borderBottomStyle="dashed">
+					<Text
+						py={2}
+						fontSize="lg"
+						textAlign="center"
+						color={subtleColor}>
+						Referenzschule der TU München
+					</Text>
 					<Certificates />
 				</chakra.section>
 				<chakra.section py={8} textAlign="center">

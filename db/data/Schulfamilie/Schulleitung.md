@@ -1,4 +1,0 @@
--   [Robert Laslop](https://lsg.musin.de/homepage/19-menschen/55-steckbrief-herr-laslop) Schulleiter
--   [Renate Karg](https://lsg.musin.de/homepage/19-menschen/57-steckbrief-frau-karg) Stellvertretende Schulleiterin
--   [Andrea Büchler](https://lsg.musin.de/homepage/schulfamilie/schulleitung/19-menschen/101-steckbrief-frau-buechler) Mitarbeiterin
--   [Corinna Dreyer](https://lsg.musin.de/homepage/schulfamilie/schulleitung/19-menschen/100-steckbrief-frau-dreyer) kommissarische Mitarbeiterin

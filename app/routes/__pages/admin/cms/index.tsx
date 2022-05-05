@@ -1,3 +1,4 @@
+import type { JSONContent } from "@tiptap/react";
 import type { Column } from "react-table";
 import type { ActionFunction, LoaderFunction } from "remix";
 import type { PageTableType } from "~feat/admin/pagetable";
@@ -14,6 +15,7 @@ import {
 import { withZod } from "@remix-validated-form/with-zod";
 import { useMemo } from "react";
 import { validationError } from "remix-validated-form";
+import superjson from "superjson";
 import { z } from "zod";
 import { Page, PageCategory } from "~models";
 import { PageModal } from "~feat/admin/pagemodal";
@@ -107,9 +109,13 @@ const getActionData = async (request: Request): Promise<ActionData> => {
 					"Die angegebene Kategorie konnte nicht ermittelt werden",
 				status: 400,
 			};
+
+		const emptyDocument: JSONContent = { content: [], type: "doc" };
+		const emptyDocumentString = superjson.stringify(emptyDocument);
+
 		return {
 			...(await prisma.page.create({
-				data: { categoryId, content: `Inhalt für ${title}`, title },
+				data: { categoryId, content: emptyDocumentString, title },
 			})),
 			status: 200,
 		};
