@@ -1,9 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable no-restricted-syntax */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-console */
-import { readdir as readDir, readFile } from "fs/promises";
-import { parse, resolve } from "path";
 import faker from "@faker-js/faker/locale/de";
 import { PrismaClient } from "@prisma/client";
 import { random } from "lodash";
@@ -67,56 +64,8 @@ export default async function main(): Promise<void> {
 	}
 	console.log("🧬 ...finished users ✅");
 
-	console.log("📃 Seeding pages...");
-	const base = resolve("db", "data");
-	for (const dirname of await readDir(base)) {
-		const { name } = parse(dirname);
-		console.log(`➡️ Creating category ${name}`);
-		const { id: categoryId } = await prisma.pageCategory.create({
-			data: {
-				name,
-			},
-			select: {
-				id: true,
-			},
-		});
-		for (const filename of await readDir(resolve(base, dirname))) {
-			const title = parse(filename).name;
-			const file = resolve(base, dirname, filename);
-			const content = (await readFile(file)).toString();
-			const createdAt = seedDate(wayback, today);
-
-			console.log(`⬇️ Creating page ${title}`);
-			console.log(
-				`↪️ ${content
-					.trim()
-					.replaceAll(/\s+/g, " ")
-					.replaceAll("\n", " ")
-					.replaceAll(/\s+/g, " ")
-					.substring(0, content.length > 80 ? 77 : 80)}${
-					content.length > 80
-						? ".".repeat(
-								Math.max(0, Math.min(3, content.length - 80)),
-						  )
-						: ""
-				}`,
-			);
-
-			await prisma.page.create({
-				data: {
-					categoryId,
-					content,
-					createdAt,
-					title,
-					updatedAt: seedDate(createdAt, today),
-				},
-				select: {
-					id: true,
-				},
-			});
-		}
-	}
-	console.log("📃 ...finished pages ✅");
+	console.log("⏭ Skipping page seeding (not implemented)");
+	console.log("⚠️ Create pages at /admin manually");
 
 	console.log(`✨ Seeding finished.`);
 }

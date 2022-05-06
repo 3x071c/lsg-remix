@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import type { Column, Row } from "react-table";
 import { TriangleDownIcon, TriangleUpIcon, UpDownIcon } from "@chakra-ui/icons";
 import {
@@ -29,6 +30,7 @@ export type PageTableType = {
 	createdAt: Date;
 	categoryId: number;
 	title: string;
+	id: number;
 };
 export type PageTableProps = {
 	columns: Column<PageTableType>[];
@@ -71,23 +73,20 @@ export function PageTable({ columns, data }: PageTableProps): JSX.Element {
 								<Th
 									{...column.getHeaderProps(
 										column.getSortByToggleProps(),
-									)}>
+									)}
+									d={column.hidden ? "none" : ""}
+									isNumeric={column.isNumeric}>
 									{column.render("Header")}
 									<chakra.span pl="4">
-										{(() => {
-											if (column.isSorted) {
-												if (column.isSortedDesc)
-													return (
-														<TriangleDownIcon aria-label="sorted descending" />
-													);
-												return (
-													<TriangleUpIcon aria-label="sorted ascending" />
-												);
-											}
-											return (
-												<UpDownIcon aria-label="Click to sort" />
-											);
-										})()}
+										{column.isSorted ? (
+											column.isSortedDesc ? (
+												<TriangleDownIcon aria-label="sorted descending" />
+											) : (
+												<TriangleUpIcon aria-label="sorted ascending" />
+											)
+										) : (
+											<UpDownIcon aria-label="Click to sort" />
+										)}
 									</chakra.span>
 								</Th>
 							))}
@@ -100,7 +99,9 @@ export function PageTable({ columns, data }: PageTableProps): JSX.Element {
 						return (
 							<Tr {...row.getRowProps()}>
 								{row.cells.map((cell) => (
-									<Td {...cell.getCellProps()}>
+									<Td
+										{...cell.getCellProps()}
+										isNumeric={cell.column.isNumeric}>
 										{cell.render("Cell")}
 									</Td>
 								))}

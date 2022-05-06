@@ -1,9 +1,6 @@
-import type {
-	ChakraTheme,
-	ThemeComponents,
-	ThemeConfig,
-} from "@chakra-ui/react";
+import type { ThemeComponents, ThemeConfig } from "@chakra-ui/react";
 import { extendTheme, withDefaultColorScheme } from "@chakra-ui/react";
+import { withProse } from "@nikolovlazar/chakra-ui-prose";
 
 /**
  * This is the chakra-ui theme configuration
@@ -56,20 +53,25 @@ const components: ThemeComponents = {
 			},
 		},
 	},
+	Text: {
+		baseStyle: {
+			hyphens: "auto",
+			overflowWrap: "break-word",
+		},
+	},
 };
 
-const all: Partial<ChakraTheme> = {
+const all = {
 	components,
 	config,
-};
+} as const;
 
 export const theme = extendTheme(
 	all,
 	withDefaultColorScheme({
 		colorScheme: "blue" /* Sets the accent color for the entire theme */,
 	}),
-) as {
-	config: typeof config;
-};
+	withProse(),
+) as typeof all;
 
 export const maxContentWidth = "7xl";

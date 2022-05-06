@@ -1,3 +1,4 @@
+import type { JSONContent } from "@tiptap/react";
 import type { Column } from "react-table";
 import type { ActionFunction, LoaderFunction } from "remix";
 import type { PageTableType } from "~feat/admin/pagetable";
@@ -12,14 +13,16 @@ import {
 	useDisclosure,
 } from "@chakra-ui/react";
 import { withZod } from "@remix-validated-form/with-zod";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { validationError } from "remix-validated-form";
+import superjson from "superjson";
 import { z } from "zod";
 import { Page, PageCategory } from "~models";
 import { PageModal } from "~feat/admin/pagemodal";
 import { PageTable, FilterInput } from "~feat/admin/pagetable";
 import { Statistics } from "~feat/admin/statistics";
-import { prisma, toIndexedObject } from "~feat/prisma";
+import { LinkButton } from "~feat/links";
+import { prisma, toIndexedObject } from "~lib/prisma";
 import { respond, useActionResponse, useLoaderResponse } from "~lib/response";
 
 const pageValidatorData = Page.pick({
@@ -107,9 +110,13 @@ const getActionData = async (request: Request): Promise<ActionData> => {
 					"Die angegebene Kategorie konnte nicht ermittelt werden",
 				status: 400,
 			};
+
+		const emptyDocument: JSONContent = { content: [], type: "doc" };
+		const emptyDocumentString = superjson.stringify(emptyDocument);
+
 		return {
 			...(await prisma.page.create({
-				data: { categoryId, content: `Inhalt für ${title}`, title },
+				data: { categoryId, content: emptyDocumentString, title },
 			})),
 			status: 200,
 		};
@@ -139,6 +146,10 @@ export default function Index(): JSX.Element {
 		[categoryData],
 	);
 	const memoizedWarningTwoIcon = useMemo(() => <WarningTwoIcon />, []);
+	const memoizedButton = useCallback(
+		(href: string) => <LinkButton href={href}>Go</LinkButton>,
+		[],
+	);
 	const dateOpts = useMemo(
 		() =>
 			({
@@ -176,8 +187,17 @@ export default function Index(): JSX.Element {
 				disableGlobalFilter: true,
 				Header: "Editiert am",
 			},
+			{
+				accessor: "id",
+				Cell: ({ value }) => {
+					return memoizedButton(`/admin/cms/page/${value}`);
+				},
+				disableGlobalFilter: true,
+				hidden: true,
+				isNumeric: true,
+			},
 		],
-		[memoizedWarningTwoIcon, dateOpts, indexedCategoryData],
+		[memoizedWarningTwoIcon, dateOpts, indexedCategoryData, memoizedButton],
 	);
 
 	return (
