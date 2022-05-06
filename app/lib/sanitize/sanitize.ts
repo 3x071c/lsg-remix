@@ -1,21 +1,20 @@
 import type { DOMPurifyI } from "dompurify";
 import DOMPurify from "dompurify";
-import { JSDOM } from "jsdom";
+import { serverPurifier } from "./sanitize.server";
 
 declare global {
-	interface Window {
-		purify: DOMPurifyI | undefined;
-	}
+	// eslint-disable-next-line no-var, vars-on-top
+	var purify: DOMPurifyI | undefined;
 }
 
 export const sanitizer =
-	window.purify ||
-	(window.purify =
-		typeof document !== undefined
+	globalThis.purify ||
+	(globalThis.purify =
+		typeof document !== "undefined" &&
+		typeof window !== "undefined" &&
+		DOMPurify.isSupported
 			? DOMPurify
-			: DOMPurify(
-					new JSDOM("<!DOCTYPE html>").window as unknown as Window,
-			  ));
+			: serverPurifier());
 
 export const sanitize = (dirty: string) =>
 	sanitizer.sanitize(dirty, {

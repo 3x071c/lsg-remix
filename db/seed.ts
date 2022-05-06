@@ -1,12 +1,8 @@
 /* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable no-restricted-syntax */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-console */
-import { readdir as readDir, readFile } from "fs/promises";
-import { parse, resolve } from "path";
 import faker from "@faker-js/faker/locale/de";
 import { PrismaClient } from "@prisma/client";
-import { generateJSON } from "@tiptap/html";
 import { random } from "lodash";
 
 const prisma = new PrismaClient();

@@ -16,9 +16,7 @@
 		"db/data",
 		"*.tsbuildinfo"
 	],
-	"import": [
-		"@cspell/dict-de-de/cspell-ext.json"
-	],
+	"import": ["@cspell/dict-de-de/cspell-ext.json"],
 	"language": "en,de",
 	"useGitignore": true,
 	"words": [
@@ -58,6 +56,7 @@
 		"Monokai",
 		"msix",
 		"musin",
+		"nikolovlazar",
 		"nuxt",
 		"pacman",
 		"pids",

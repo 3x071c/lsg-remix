@@ -10,7 +10,6 @@ import {
 	AccordionPanel,
 	useColorModeValue,
 	Box,
-	chakra,
 	Text,
 	AccordionIcon,
 	Heading,
@@ -19,15 +18,16 @@ import {
 	WrapItem,
 	VStack,
 	StackDivider,
+	Container,
 } from "@chakra-ui/react";
 import { Prose } from "@nikolovlazar/chakra-ui-prose";
-import { generateHTML } from "@tiptap/react";
+import { generateHTML } from "@tiptap/html";
 import { parse } from "superjson";
 import type { Page } from "~models";
 import { maxContentWidth } from "~feat/chakra";
 import { extensions } from "~feat/editor";
 import { Link } from "~feat/links";
-import { prisma } from "~feat/prisma";
+import { prisma } from "~lib/prisma";
 import { respond, useLoaderResponse } from "~lib/response";
 import { sanitize } from "~lib/sanitize";
 
@@ -65,7 +65,7 @@ export default function PageSlug() {
 	const readingTime = Math.ceil((html.match(/\s+/g)?.length ?? 0) / 150);
 
 	return (
-		<chakra.main
+		<Container
 			w="full"
 			maxW={maxContentWidth}
 			p={4}
@@ -92,15 +92,17 @@ export default function PageSlug() {
 					},
 				}}>
 				<WrapItem d="inline-block" flex="1 1 0" w="full" minW={215}>
-					<Text w="full" fontSize="lg">
-						<Prose dangerouslySetInnerHTML={{ __html: html }} />
-					</Text>
+					<Prose
+						as="main"
+						dangerouslySetInnerHTML={{ __html: html }}
+					/>
 				</WrapItem>
 				<WrapItem
 					w={{ base: "full", md: 230 }}
 					minW="min-content"
 					flex={{ md: "0 0 auto" }}>
 					<Accordion
+						as="aside"
 						allowToggle
 						w={{ base: "full", md: 230 }}
 						pos="sticky"
@@ -151,6 +153,6 @@ export default function PageSlug() {
 					</Accordion>
 				</WrapItem>
 			</Wrap>
-		</chakra.main>
+		</Container>
 	);
 }
