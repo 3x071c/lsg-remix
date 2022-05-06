@@ -16,27 +16,29 @@ datasource db {
 
 model User {
     /// The unique ID of the user
-    uuid              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    uuid              String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
     /// The unique DID used by Magic for authentication
-    did               String   @unique @db.VarChar(51) /// @zod.regex(/^did:ethr:0x[a-fA-F0-9]{40}$/, { message: "Invalide DID von Magic erhalten" })
+    did               String       @unique @db.VarChar(51) /// @zod.regex(/^did:ethr:0x[a-fA-F0-9]{40}$/, { message: "Invalide DID von Magic erhalten" })
     /// The user's email address
-    email             String   @unique @db.VarChar(60) /// @zod.email({ message: "Invalide E-Mail-Adresse" })
+    email             String       @unique @db.VarChar(60) /// @zod.email({ message: "Invalide E-Mail-Adresse" })
     /// The user's first name
-    firstname         String   @db.VarChar(20) /// @zod.min(3, { message: "Vorname zu kurz" }).max(20, { message: "Vorname zu lang" })
+    firstname         String       @db.VarChar(20) /// @zod.min(3, { message: "Vorname zu kurz" }).max(20, { message: "Vorname zu lang" })
     /// The user's last name
-    lastname          String   @db.VarChar(20) /// @zod.min(3, { message: "Nachname zu kurz" }).max(20, { message: "Nachname zu lang" })
+    lastname          String       @db.VarChar(20) /// @zod.min(3, { message: "Nachname zu kurz" }).max(20, { message: "Nachname zu lang" })
     /// Used to lock the user out of the app, i.e. preventing any privileged access
-    locked            Boolean  @default(true) /// @zod.default(true)
+    locked            Boolean      @default(true) /// @zod.default(true)
     /// Authorization/Permission for the CMS
-    canAccessCMS      Boolean  @default(false) /// @zod.default(false)
+    canAccessCMS      Boolean      @default(false) /// @zod.default(false)
     /// Authorization/Permission for the Lab
-    canAccessLab      Boolean  @default(false) /// @zod.default(false)
+    canAccessLab      Boolean      @default(false) /// @zod.default(false)
     /// Authorization/Permission for Schoolib
-    canAccessSchoolib Boolean  @default(false) /// @zod.default(false)
+    canAccessSchoolib Boolean      @default(false) /// @zod.default(false)
+    /// The pizza orders of this user
+    pizzaOrders       PizzaOrder[]
     /// This timestamp is updated on every mutation automatically
-    updatedAt         DateTime @default(now()) @updatedAt
+    updatedAt         DateTime     @default(now()) @updatedAt
     /// This timestamp is set on creation automatically
-    createdAt         DateTime @default(now())
+    createdAt         DateTime     @default(now())
 }
 
 model Page {
@@ -67,4 +69,28 @@ model PageCategory {
     updatedAt DateTime @default(now()) @updatedAt
     /// This timestamp is set on creation automatically
     createdAt DateTime @default(now())
+}
+
+model Pizza {
+    /// the unique ID of the pizza
+    id          Int          @id @default(autoincrement())
+    /// The pizza name
+    name        String       @unique
+    /// The price of the pizza
+    price       Float
+    /// All orders that belong to this pizza
+    pizzaOrders PizzaOrder[]
+}
+
+model PizzaOrder {
+    /// the unique ID of the order
+    id      Int   @id @default(autoincrement())
+    /// The pizza ordered
+    pizza   Pizza @relation(fields: [pizzaId], references: [id])
+    /// The foreign key of the pizza this order has a realation with
+    pizzaId Int
+    /// The user who ordered the pizza
+    user    User  @relation(fields: [userId], references: [id])
+    /// The foreign key ofhte user this order has a realtion with
+    userId  Int
 }

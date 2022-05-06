@@ -35,6 +35,53 @@ const seedDate = (start: Date, end: Date) =>
 const wayback = new Date("2020");
 const today = new Date();
 
+const seedPizzas = async () => {
+	await prisma.pizza.createMany({
+		data: [
+			{
+				name: "Diavola",
+				price: 7.9,
+			},
+			{
+				name: "Prosciutto",
+				price: 6.4,
+			},
+			{
+				name: "Calzone",
+				price: 7.9,
+			},
+			{
+				name: "Pane",
+				price: 3.5,
+			},
+			{
+				name: "Magherita",
+				price: 5.3,
+			},
+			{
+				name: "Monte Bianco",
+				price: 8.5,
+			},
+			{
+				name: "4 Kaese",
+				price: 7.9,
+			},
+			{
+				name: "Salami",
+				price: 6.4,
+			},
+			{
+				name: "Tonno",
+				price: 7.9,
+			},
+			{
+				name: "Regina",
+				price: 7.4,
+			},
+		],
+	});
+};
+
 export default async function main(): Promise<void> {
 	console.log(`Start seeding ✨`);
 
@@ -66,6 +113,8 @@ export default async function main(): Promise<void> {
 
 	console.log("⏭ Skipping page seeding (not implemented)");
 	console.log("⚠️ Create pages at /admin manually");
+
+	await seedPizzas();
 
 	console.log(`✨ Seeding finished.`);
 }
