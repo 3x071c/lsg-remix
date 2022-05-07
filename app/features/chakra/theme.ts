@@ -29,7 +29,6 @@ const components: ThemeComponents = {
 			browser: {
 				color: "revert",
 			},
-
 			indicating: {
 				_dark: {
 					_visited: {
@@ -73,5 +72,3 @@ export const theme = extendTheme(
 	}),
 	withProse(),
 ) as typeof all;
-
-export const maxContentWidth = "7xl";

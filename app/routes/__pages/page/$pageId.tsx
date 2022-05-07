@@ -72,10 +72,10 @@ export default function PageSlug() {
 			mx="auto"
 			mt={16}
 			bg={plain}>
-			<Heading as="h1" size="2xl" mb={4}>
+			<Heading as="h1" size="2xl">
 				{title}
 			</Heading>
-			<HStack spacing={2} borderBottomWidth={1}>
+			<HStack mt={2} spacing={2} borderBottomWidth={1}>
 				<TimeIcon />
 				<Text fontSize="xl">
 					{readingTime} Minute{readingTime !== 1 && "n"} Lesezeit

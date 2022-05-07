@@ -129,20 +129,17 @@ export default function Index(): JSX.Element {
 
 	return (
 		<chakra.main w="full" overflow="hidden">
-			<Link href="/admin/cms" variant="normal">
+			<Link href="/admin/cms" variant="indicating">
 				Zurück zur Übersicht
 			</Link>
-			<Heading as="h1" size="xl">
-				Seitendetails
+			<Heading as="h1" size="2xl">
+				{title}
 			</Heading>
-			<Text fontSize="md" mt={2}>
-				Einsehen und Bearbeiten
-			</Text>
 			<Editable
 				defaultValue={title}
 				isPreviewFocusable
 				selectAllOnFocus={false}>
-				<Tooltip label="Click to edit">
+				<Tooltip label="Editieren">
 					<EditablePreview
 						py={2}
 						px={4}
