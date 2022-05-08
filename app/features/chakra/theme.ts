@@ -29,7 +29,6 @@ const components: ThemeComponents = {
 			browser: {
 				color: "revert",
 			},
-
 			indicating: {
 				_dark: {
 					_visited: {
@@ -71,7 +70,71 @@ export const theme = extendTheme(
 	withDefaultColorScheme({
 		colorScheme: "blue" /* Sets the accent color for the entire theme */,
 	}),
-	withProse(),
+	withProse({
+		baseStyle: {
+			blockquote: {
+				my: { base: 3, md: 4 },
+			},
+			figure: {
+				figcaption: {
+					mt: 1,
+				},
+				my: 4,
+			},
+			h1: {
+				lineHeight: [1.2, null, 1],
+				mb: { base: 9, md: 10 },
+				mt: { base: 9, md: 10 },
+			},
+			h2: {
+				fontSize: { base: "3xl", md: "4xl" },
+				lineHeight: [1.33, null, 1.2],
+				mb: { base: 7, md: 8 },
+				mt: { base: 7, md: 8 },
+			},
+			h3: {
+				fontSize: { base: "2xl", md: "3xl" },
+				lineHeight: [1.33, null, 1.2],
+				mb: { base: 5, md: 6 },
+				mt: { base: 5, md: 6 },
+			},
+			h4: {
+				fontSize: "xl",
+				lineHeight: 1.2,
+				mb: { base: 3, md: 4 },
+				mt: { base: 3, md: 4 },
+			},
+			h5: {
+				fontSize: "lg",
+				lineHeight: 1.2,
+				mb: { base: 1, md: 2 },
+				mt: { base: 1, md: 2 },
+			},
+			h6: {
+				fontSize: "md",
+				lineHeight: 1.2,
+				mb: 1,
+				mt: 1,
+			},
+			hr: {
+				my: { base: 3, md: 4 },
+			},
+			li: {
+				my: 1,
+			},
+			p: {
+				lineHeight: 1,
+				my: 2,
+			},
+			table: {
+				my: 4,
+				td: {
+					p: { base: 1, md: 2 },
+				},
+				th: {
+					p: { base: 1, md: 2 },
+				},
+			},
+		},
+	}),
 ) as typeof all;
-
-export const maxContentWidth = "7xl";

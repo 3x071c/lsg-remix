@@ -2,7 +2,7 @@ import type { JSONContent } from "@tiptap/react";
 import type { Column } from "react-table";
 import type { ActionFunction, LoaderFunction } from "remix";
 import type { PageTableType } from "~feat/admin/pagetable";
-import { AddIcon, WarningTwoIcon } from "@chakra-ui/icons";
+import { AddIcon, EditIcon, WarningTwoIcon } from "@chakra-ui/icons";
 import {
 	Heading,
 	Text,
@@ -21,7 +21,7 @@ import { Page, PageCategory } from "~models";
 import { PageModal } from "~feat/admin/pagemodal";
 import { PageTable, FilterInput } from "~feat/admin/pagetable";
 import { Statistics } from "~feat/admin/statistics";
-import { LinkButton } from "~feat/links";
+import { LinkIconButton } from "~feat/links";
 import { prisma, toIndexedObject } from "~lib/prisma";
 import { respond, useActionResponse, useLoaderResponse } from "~lib/response";
 
@@ -147,7 +147,13 @@ export default function Index(): JSX.Element {
 	);
 	const memoizedWarningTwoIcon = useMemo(() => <WarningTwoIcon />, []);
 	const memoizedButton = useCallback(
-		(href: string) => <LinkButton href={href}>Go</LinkButton>,
+		(href: string) => (
+			<LinkIconButton
+				aria-label="Diese Seite editieren"
+				icon={<EditIcon />}
+				href={href}
+			/>
+		),
 		[],
 	);
 	const dateOpts = useMemo(
@@ -201,7 +207,7 @@ export default function Index(): JSX.Element {
 	);
 
 	return (
-		<chakra.main w="full" overflow="hidden">
+		<chakra.main w="full">
 			<Heading as="h1" size="xl">
 				Content Management
 			</Heading>
