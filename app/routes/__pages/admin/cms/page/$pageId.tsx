@@ -1,27 +1,26 @@
 import type { JSONContent } from "@tiptap/react";
 import type { Params } from "react-router";
 import type { ActionFunction, LoaderFunction } from "remix";
-import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
+import { ArrowBackIcon } from "@chakra-ui/icons";
 import {
-	Heading,
 	Text,
 	chakra,
 	EditablePreview,
 	useColorModeValue,
-	IconButton,
 	Input,
-	useEditableControls,
-	ButtonGroup,
 	Editable,
 	Tooltip,
 	EditableInput,
+	HStack,
 } from "@chakra-ui/react";
+import { Prose } from "@nikolovlazar/chakra-ui-prose";
 import { withZod } from "@remix-validated-form/with-zod";
 import { generateHTML } from "@tiptap/html";
+import { useEditor, EditorContent } from "@tiptap/react";
 import { validationError } from "remix-validated-form";
 import superjson from "superjson";
 import { Page } from "~models";
-import { Editor, extensions } from "~feat/editor";
+import { extensions, EditorBar } from "~feat/editor";
 import { Link } from "~feat/links";
 import { prisma } from "~lib/prisma";
 import { respond, useActionResponse, useLoaderResponse } from "~lib/response";
@@ -102,60 +101,82 @@ const getActionData = async (
 export const action: ActionFunction = async ({ request, params }) =>
 	respond<ActionData>(await getActionData(request, params));
 
-function EditableControls(): JSX.Element | null {
-	const { isEditing, getSubmitButtonProps, getCancelButtonProps } =
-		useEditableControls();
-
-	return isEditing ? (
-		<ButtonGroup justifyContent="end" size="sm" w="full" spacing={2} mt={2}>
-			<IconButton
-				aria-label="Submit"
-				icon={<CheckIcon />}
-				{...getSubmitButtonProps()}
-			/>
-			<IconButton
-				aria-label="Cancel"
-				icon={<CloseIcon boxSize={3} />}
-				{...getCancelButtonProps()}
-			/>
-		</ButtonGroup>
-	) : null;
-}
+const Editor = chakra(EditorContent);
 
 export default function Index(): JSX.Element {
 	const { json, title } = useLoaderResponse<LoaderData>();
 	const actionData = useActionResponse<ActionData>();
 	const html = sanitize(generateHTML(json, extensions));
+	const editableBg = useColorModeValue("gray.200", "gray.700");
+	const editor = useEditor({
+		content: html,
+		extensions,
+	});
 
 	return (
 		<chakra.main w="full" overflow="hidden">
-			<Link href="/admin/cms" variant="indicating">
-				Zurück zur Übersicht
-			</Link>
-			<Heading as="h1" size="2xl">
-				{title}
-			</Heading>
-			<Editable
-				defaultValue={title}
-				isPreviewFocusable
-				selectAllOnFocus={false}>
-				<Tooltip label="Editieren">
+			<HStack spacing={2}>
+				<Link href="/admin/cms" variant="indicating">
+					<ArrowBackIcon mr={2} />
+					Zurück zur Übersicht
+				</Link>
+			</HStack>
+			<Editable defaultValue={title} selectAllOnFocus={false}>
+				<Tooltip label="Editieren ✍️">
 					<EditablePreview
-						py={2}
-						px={4}
+						as="h1"
+						p={4}
+						pl={0}
+						fontSize={{ base: "4xl", md: "5xl" }}
+						fontFamily="heading"
+						fontWeight="bold"
+						lineHeight={{ base: 1.2, md: 1 }}
 						_hover={{
-							background: useColorModeValue(
-								"gray.100",
-								"gray.700",
-							),
+							bg: editableBg,
 						}}
 					/>
 				</Tooltip>
-				<Input py={2} px={4} as={EditableInput} />
-				<EditableControls />
+				<Input
+					as={EditableInput}
+					h={20}
+					p={4}
+					pl={0}
+					fontSize={{ base: "4xl", md: "5xl" }}
+					fontFamily="heading"
+					fontWeight="bold"
+					lineHeight={{ base: 1.2, md: 1 }}
+				/>
 			</Editable>
-			<Editor html={html} />
-			<Text>{JSON.stringify(actionData || "{}")}</Text>
+			{editor && (
+				<HStack
+					w="full"
+					mt={2}
+					pb={2}
+					spacing={4}
+					overflowY="auto"
+					borderBottomWidth={1}>
+					<EditorBar editor={editor} />
+				</HStack>
+			)}
+			<Prose as="section" mt={2}>
+				<Editor
+					editor={editor}
+					sx={{
+						">.ProseMirror": {
+							borderRadius: "md",
+							borderWidth: 2,
+							m: 2,
+							mt: 4,
+							p: 2,
+						},
+					}}
+				/>
+			</Prose>
+			<Text>
+				{Object.keys(actionData).length > 0
+					? JSON.stringify(actionData)
+					: "Eventuelle Änderungen wurden nicht gesichert!"}
+			</Text>
 		</chakra.main>
 	);
 }
