@@ -27,13 +27,13 @@ export function PageModal({
 }: {
 	categoryValidator: CategoryPopoverProps["categoryValidator"];
 	pageValidator: Validator<{
-		categoryId: string;
+		categoryUUID: string;
 		title: string;
 	}>;
 	isOpen: boolean;
 	onClose: () => void;
 	categoryData: {
-		id: number;
+		uuid: string;
 		name: string;
 	}[];
 	errorMessage?: string;
@@ -81,7 +81,7 @@ export function PageModal({
 						formId="pageForm"
 					/>
 					<FormSelect
-						name="categoryId"
+						name="categoryUUID"
 						placeholder="✍️ Kategorie auswählen"
 						helper="Die Kategorie der Seite, welche zur Eingliederung u.a. in der Navigationsleiste verwendet wird"
 						label="Die Kategorie"
@@ -93,8 +93,8 @@ export function PageModal({
 								setCloseable={setCloseable}
 							/>
 						}>
-						{categoryData.map(({ id, name }) => (
-							<option value={id} key={id}>
+						{categoryData.map(({ uuid, name }) => (
+							<option value={uuid} key={uuid}>
 								{name}
 							</option>
 						))}

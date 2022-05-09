@@ -22,10 +22,10 @@ import { Link, LinkButton } from "~feat/links";
 
 type NavbarProps = {
 	groupedPages: {
-		id: number;
+		uuid: string;
 		name: string;
 		pages: {
-			id: number;
+			uuid: string;
 			title: string;
 		}[];
 	}[];
@@ -85,8 +85,8 @@ export function Nav({ groupedPages, height }: NavbarProps): JSX.Element {
 				</Link>
 				<Spacer />
 				<HStack textAlign="center" spacing={2} overflowY="auto">
-					{groupedPages.map(({ id, name, pages }) => (
-						<Box key={id}>
+					{groupedPages.map(({ uuid, name, pages }) => (
+						<Box key={uuid}>
 							<Popover trigger="hover">
 								<PopoverTrigger>
 									<Button
@@ -110,7 +110,7 @@ export function Nav({ groupedPages, height }: NavbarProps): JSX.Element {
 									<PopoverBody>
 										<VStack spacing={4}>
 											{pages.map(
-												({ id: pageId, title }) => (
+												({ uuid: pageId, title }) => (
 													<LinkButton
 														href={`/page/${pageId}`}
 														w="full"

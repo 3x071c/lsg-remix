@@ -32,17 +32,22 @@ const pageValidatorData = Page.pick({
 });
 const pageValidator = withZod(pageValidatorData);
 
+const getUUID = (params: Params) => {
+	const uuid = params["pageUUID"];
+	if (!uuid)
+		throw new Response("Invalider Seitenaufruf", {
+			status: 400,
+		});
+	return uuid;
+};
+
 type LoaderData = {
 	json: JSONContent;
 	title: string;
 	status: number;
 };
 const getLoaderData = async (params: Params): Promise<LoaderData> => {
-	const id = Number(params["pageId"]);
-	if (!id)
-		throw new Response("Invalider Seitenaufruf", {
-			status: 400,
-		});
+	const uuid = getUUID(params);
 
 	const page = await prisma.page.findUnique({
 		select: {
@@ -50,7 +55,7 @@ const getLoaderData = async (params: Params): Promise<LoaderData> => {
 			title: true,
 		},
 		where: {
-			id,
+			uuid,
 		},
 	});
 	if (!page)
@@ -73,11 +78,8 @@ const getActionData = async (
 	request: Request,
 	params: Params,
 ): Promise<ActionData> => {
-	const id = Number(params["pageId"]);
-	if (!id)
-		throw new Response("Invalider Seitenaufruf", {
-			status: 400,
-		});
+	const uuid = getUUID(params);
+
 	const form = await request.formData();
 	const { error, data } = await pageValidator.validate(form);
 	if (error) throw validationError(error);
@@ -91,7 +93,7 @@ const getActionData = async (
 	await prisma.page.update({
 		data: { content, title },
 		select: {},
-		where: { id },
+		where: { uuid },
 	});
 
 	return {

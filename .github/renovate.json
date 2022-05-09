@@ -46,6 +46,18 @@
 		{
 			"groupName": "TypeScript-ESLint",
 			"matchPackagePrefixes": ["@typescript-eslint/"]
+		},
+		{
+			"groupName": "Prisma",
+			"matchPackageNames": [
+				"@prisma/client",
+				"prettier-plugin-prisma",
+				"prisma"
+			]
+		},
+		{
+			"groupName": "TipTap",
+			"matchPackagePrefixes": ["@tiptap/"]
 		}
 	],
 	"platformAutomerge": true,

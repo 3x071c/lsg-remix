@@ -34,9 +34,9 @@ export default function Index(): JSX.Element {
 				placeItems="center">
 				{entries(pages)
 					.filter(([, { short }]) => short !== "Home")
-					.map(([id, { long, url }]) => (
+					.map(([uuid, { long, url }]) => (
 						<Box
-							key={id}
+							key={uuid}
 							w="full"
 							p="5"
 							borderWidth="1px"
