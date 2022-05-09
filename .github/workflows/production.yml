@@ -10,25 +10,32 @@ concurrency:
     group: ${{ github.workflow }}-${{ github.head_ref || github.ref || github.run_id }}
     cancel-in-progress: true
 
+env:
+    FLY_API_TOKEN: "${{ secrets.FLY_API_TOKEN }}"
+
 jobs:
     deploy:
         name: Production Deploy
         runs-on: ubuntu-latest
-        timeout-minutes: 15
+        timeout-minutes: 30
         environment:
             name: Production
-            url: ${{ steps.deploy.outputs.url }}
+            url: ${{ steps.status.outputs.url }}
         steps:
             - name: Checkout
               uses: actions/checkout@v3.0.0
             - name: Setup
               uses: superfly/flyctl-actions/setup-flyctl@master
             - name: Deploy
-              id: deploy
-              env:
-                  FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+              uses: nick-fields/retry@v2.6.0 # Retry in case fly craps out o-o
+              with:
+                  timeout_minutes: 10
+                  max_attempts: 3
+                  command: flyctl deploy --now --remote-only
+                  retry_wait_seconds: 60
+            - name: Status
+              id: status
               run: |
-                  flyctl deploy --now --remote-only
                   flyctl status
                   APP_STATUS=$(flyctl status --json)
                   APP_HOSTNAME=$(printf '%s' "$APP_STATUS" | jq -r .Hostname)

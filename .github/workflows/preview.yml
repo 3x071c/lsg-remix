@@ -19,7 +19,7 @@ jobs:
     deploy-pr:
         name: PR Preview
         runs-on: ubuntu-latest
-        timeout-minutes: 15
+        timeout-minutes: 30
         environment:
             name: "Preview (PR #${{ github.event.number }})"
             url: "${{ steps.deploy.outputs.url }}"
