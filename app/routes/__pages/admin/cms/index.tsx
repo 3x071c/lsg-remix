@@ -2,16 +2,8 @@ import type { JSONContent } from "@tiptap/react";
 import type { Column } from "react-table";
 import type { ActionFunction, LoaderFunction } from "remix";
 import type { PageTableType } from "~feat/admin/pagetable";
-import { AddIcon, EditIcon, WarningTwoIcon } from "@chakra-ui/icons";
-import {
-	Heading,
-	Text,
-	chakra,
-	Wrap,
-	WrapItem,
-	Button,
-	useDisclosure,
-} from "@chakra-ui/react";
+import { EditIcon, WarningTwoIcon } from "@chakra-ui/icons";
+import { Heading, Text, chakra, useDisclosure } from "@chakra-ui/react";
 import { withZod } from "@remix-validated-form/with-zod";
 import { useCallback, useMemo } from "react";
 import { validationError } from "remix-validated-form";
@@ -19,7 +11,7 @@ import superjson from "superjson";
 import { z } from "zod";
 import { Page, PageCategory } from "~models";
 import { PageModal } from "~feat/admin/pagemodal";
-import { PageTable, FilterInput } from "~feat/admin/pagetable";
+import { PageTable } from "~feat/admin/pagetable";
 import { Statistics } from "~feat/admin/statistics";
 import { LinkIconButton } from "~feat/links";
 import { prisma, toIndexedObject } from "~lib/prisma";
@@ -215,20 +207,7 @@ export default function Index(): JSX.Element {
 				Seiten einsehen und bearbeiten
 			</Text>
 			<Statistics data={pageData} />
-			<Wrap spacing={2} align="center" justify="space-between">
-				<WrapItem>
-					<Heading as="h2" size="lg" my={4}>
-						Alle Seiten:
-					</Heading>
-				</WrapItem>
-				<WrapItem>
-					<FilterInput />
-					<Button ml={2} leftIcon={<AddIcon />} onClick={onOpen}>
-						Neu
-					</Button>
-				</WrapItem>
-			</Wrap>
-			<PageTable columns={columns} data={pageData} />
+			<PageTable columns={columns} data={pageData} onOpen={onOpen} />
 			<PageModal
 				categoryValidator={pageCategoryValidator}
 				pageValidator={pageValidator}

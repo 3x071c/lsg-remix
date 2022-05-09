@@ -1,6 +1,11 @@
 /* eslint-disable no-nested-ternary */
-import type { Column, Row } from "react-table";
-import { TriangleDownIcon, TriangleUpIcon, UpDownIcon } from "@chakra-ui/icons";
+import type { Column } from "react-table";
+import {
+	AddIcon,
+	TriangleDownIcon,
+	TriangleUpIcon,
+	UpDownIcon,
+} from "@chakra-ui/icons";
 import {
 	chakra,
 	Table,
@@ -10,20 +15,19 @@ import {
 	Tr,
 	Th,
 	Td,
+	Wrap,
+	WrapItem,
+	Button,
+	Heading,
+	Input,
 } from "@chakra-ui/react";
-import { atom, useAtom } from "jotai";
-import { useEffect } from "react";
-import { useTable, useSortBy, useGlobalFilter } from "react-table";
-
-export const preGlobalFilteredRowsAtom = atom<Row<PageTableType>[]>([]);
-export const rawGlobalFilterAtom = atom<unknown>(null);
-export const rawSetGlobalFilterAtom = atom<{
-	fn: (filterValue: unknown) => void;
-}>({ fn: () => {} });
-export const globalFilterAtom = atom(
-	(get) => get(rawGlobalFilterAtom),
-	(get, _set, filterValue) => get(rawSetGlobalFilterAtom).fn(filterValue),
-);
+import { useState } from "react";
+import {
+	useTable,
+	useSortBy,
+	useGlobalFilter,
+	useAsyncDebounce,
+} from "react-table";
 
 export type PageTableType = {
 	updatedAt: Date;
@@ -35,8 +39,13 @@ export type PageTableType = {
 export type PageTableProps = {
 	columns: Column<PageTableType>[];
 	data: PageTableType[];
+	onOpen: () => void;
 };
-export function PageTable({ columns, data }: PageTableProps): JSX.Element {
+export function PageTable({
+	columns,
+	data,
+	onOpen,
+}: PageTableProps): JSX.Element {
 	const {
 		getTableProps,
 		getTableBodyProps,
@@ -44,72 +53,88 @@ export function PageTable({ columns, data }: PageTableProps): JSX.Element {
 		rows,
 		prepareRow,
 		state,
-		preGlobalFilteredRows: preGlobalFilteredRowsRaw,
-		setGlobalFilter: setGlobalFilterRaw,
+		preGlobalFilteredRows,
+		setGlobalFilter,
 	} = useTable<PageTableType>({ columns, data }, useGlobalFilter, useSortBy);
-	const [, setPreGlobalFilteredRows] = useAtom(preGlobalFilteredRowsAtom);
-	const [, setRawGlobalFilter] = useAtom(rawGlobalFilterAtom);
-	const [, setRawSetGlobalFilter] = useAtom(rawSetGlobalFilterAtom);
 
-	useEffect(() => {
-		setPreGlobalFilteredRows(preGlobalFilteredRowsRaw);
-	}, [preGlobalFilteredRowsRaw, setPreGlobalFilteredRows]);
-
-	useEffect(() => {
-		setRawGlobalFilter(state.globalFilter);
-	}, [setRawGlobalFilter, state.globalFilter]);
-
-	useEffect(() => {
-		setRawSetGlobalFilter({ fn: setGlobalFilterRaw });
-	}, [setGlobalFilterRaw, setRawSetGlobalFilter]);
+	const count = preGlobalFilteredRows.length;
+	const [value, setValue] = useState<unknown>(state.globalFilter);
+	const onChange = useAsyncDebounce((v) => {
+		setGlobalFilter(v || undefined);
+	}, 200);
 
 	return (
-		<TableContainer>
-			<Table {...getTableProps()} variant="striped" colorScheme="gray">
-				<Thead>
-					{headerGroups.map((headerGroup) => (
-						<Tr {...headerGroup.getHeaderGroupProps()}>
-							{headerGroup.headers.map((column) => (
-								<Th
-									{...column.getHeaderProps(
-										column.getSortByToggleProps(),
-									)}
-									d={column.hidden ? "none" : ""}
-									isNumeric={column.isNumeric}>
-									{column.render("Header")}
-									<chakra.span pl="4">
-										{column.isSorted ? (
-											column.isSortedDesc ? (
-												<TriangleDownIcon aria-label="sorted descending" />
-											) : (
-												<TriangleUpIcon aria-label="sorted ascending" />
-											)
-										) : (
-											<UpDownIcon aria-label="Click to sort" />
+		<>
+			<Wrap spacing={2} align="center" justify="space-between">
+				<WrapItem>
+					<Heading as="h2" size="lg" my={4}>
+						Alle Seiten:
+					</Heading>
+				</WrapItem>
+				<WrapItem>
+					<Input
+						value={value ? String(value) : ""}
+						placeholder={`🔍 Filtern (${count})`}
+						onChange={(e) => {
+							setValue(e.target.value);
+							onChange(e.target.value);
+						}}
+					/>
+					<Button ml={2} leftIcon={<AddIcon />} onClick={onOpen}>
+						Neu
+					</Button>
+				</WrapItem>
+			</Wrap>
+			<TableContainer>
+				<Table
+					{...getTableProps()}
+					variant="striped"
+					colorScheme="gray">
+					<Thead>
+						{headerGroups.map((headerGroup) => (
+							<Tr {...headerGroup.getHeaderGroupProps()}>
+								{headerGroup.headers.map((column) => (
+									<Th
+										{...column.getHeaderProps(
+											column.getSortByToggleProps(),
 										)}
-									</chakra.span>
-								</Th>
-							))}
-						</Tr>
-					))}
-				</Thead>
-				<Tbody {...getTableBodyProps()}>
-					{rows.map((row) => {
-						prepareRow(row);
-						return (
-							<Tr {...row.getRowProps()}>
-								{row.cells.map((cell) => (
-									<Td
-										{...cell.getCellProps()}
-										isNumeric={cell.column.isNumeric}>
-										{cell.render("Cell")}
-									</Td>
+										d={column.hidden ? "none" : ""}
+										isNumeric={column.isNumeric}>
+										{column.render("Header")}
+										<chakra.span pl="4">
+											{column.isSorted ? (
+												column.isSortedDesc ? (
+													<TriangleDownIcon aria-label="sorted descending" />
+												) : (
+													<TriangleUpIcon aria-label="sorted ascending" />
+												)
+											) : (
+												<UpDownIcon aria-label="Click to sort" />
+											)}
+										</chakra.span>
+									</Th>
 								))}
 							</Tr>
-						);
-					})}
-				</Tbody>
-			</Table>
-		</TableContainer>
+						))}
+					</Thead>
+					<Tbody {...getTableBodyProps()}>
+						{rows.map((row) => {
+							prepareRow(row);
+							return (
+								<Tr {...row.getRowProps()}>
+									{row.cells.map((cell) => (
+										<Td
+											{...cell.getCellProps()}
+											isNumeric={cell.column.isNumeric}>
+											{cell.render("Cell")}
+										</Td>
+									))}
+								</Tr>
+							);
+						})}
+					</Tbody>
+				</Table>
+			</TableContainer>
+		</>
 	);
 }
