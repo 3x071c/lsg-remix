@@ -36,15 +36,13 @@ export async function authorize<
 			: Record<string, never>;
 	}
 	const user = fromEntries(
-		keys(User.shape).map(
-			(key) =>
-				[
-					key,
-					superjson.parse<User[typeof key]>(
-						session.get(key) as string,
-					),
-				] as const,
-		),
+		keys(User.shape)
+			.map((key) => {
+				const value = session.get(key) as string | undefined;
+				if (!value) return false;
+				return [key, superjson.parse<User[typeof key]>(value)] as const;
+			})
+			.filter(Boolean) as [PropertyKey, unknown][],
 	);
 
 	try {

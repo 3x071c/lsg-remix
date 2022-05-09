@@ -11,7 +11,7 @@ export type StatisticsProps = {
 	data: {
 		updatedAt: Date;
 		createdAt: Date;
-		categoryId: number;
+		categoryUUID: string;
 		title: string;
 	}[];
 };

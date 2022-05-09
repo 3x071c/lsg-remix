@@ -31,19 +31,25 @@ import { prisma } from "~lib/prisma";
 import { respond, useLoaderResponse } from "~lib/response";
 import { sanitize } from "~lib/sanitize";
 
+const getUUID = (params: Params) => {
+	const uuid = params["pageUUID"];
+	if (!uuid)
+		throw new Response("Invalider Seitenaufruf", {
+			status: 400,
+		});
+	return uuid;
+};
+
 type LoaderData = Pick<z.infer<typeof Page>, "title"> & {
 	json: JSONContent;
 	status: number;
 };
 const getLoaderData = async (params: Params): Promise<LoaderData> => {
-	const id = Number(params["pageId"]);
-	if (!id)
-		throw new Response("Invalider Seitenaufruf", {
-			status: 400,
-		});
+	const uuid = getUUID(params);
+
 	const page = await prisma.page.findUnique({
 		where: {
-			id,
+			uuid,
 		},
 	});
 	if (!page)

@@ -20,7 +20,7 @@ import { respond, useActionResponse, useLoaderResponse } from "~lib/response";
 const pageValidatorData = Page.pick({
 	title: true,
 }).extend({
-	categoryId: z.string({
+	categoryUUID: z.string({
 		description: "Die Kategorie",
 		invalid_type_error: "Kategorie konnte nicht korrekt übermittelt werden",
 		required_error: "Kategorie muss angegeben werden",
@@ -34,14 +34,14 @@ const pageCategoryValidator = withZod(pageCategoryValidatorData);
 
 type LoaderData = {
 	categoryData: {
-		id: number;
+		uuid: string;
 		name: string;
 	}[];
 	pageData: {
-		id: number;
+		uuid: string;
 		updatedAt: Date;
 		createdAt: Date;
-		categoryId: number;
+		categoryUUID: string;
 		title: string;
 	}[];
 	status: number;
@@ -49,18 +49,18 @@ type LoaderData = {
 const getLoaderData = async (): Promise<LoaderData> => {
 	const categoryData = await prisma.pageCategory.findMany({
 		select: {
-			id: true,
 			name: true,
+			uuid: true,
 		},
 	});
 
 	const pageData = await prisma.page.findMany({
 		select: {
-			categoryId: true,
+			categoryUUID: true,
 			createdAt: true,
-			id: true,
 			title: true,
 			updatedAt: true,
+			uuid: true,
 		},
 	});
 
@@ -94,9 +94,8 @@ const getActionData = async (request: Request): Promise<ActionData> => {
 				formError: "Es sind unzureichende Daten angekommen",
 				status: 400,
 			};
-		const { title, categoryId: categoryIdRaw } = data;
-		const categoryId = Number(categoryIdRaw);
-		if (!categoryId)
+		const { title, categoryUUID } = data;
+		if (!categoryUUID)
 			return {
 				formError:
 					"Die angegebene Kategorie konnte nicht ermittelt werden",
@@ -108,7 +107,7 @@ const getActionData = async (request: Request): Promise<ActionData> => {
 
 		return {
 			...(await prisma.page.create({
-				data: { categoryId, content: emptyDocumentString, title },
+				data: { categoryUUID, content: emptyDocumentString, title },
 			})),
 			status: 200,
 		};
@@ -165,7 +164,7 @@ export default function Index(): JSX.Element {
 				Header: "Titel",
 			},
 			{
-				accessor: "categoryId",
+				accessor: "categoryUUID",
 				Cell: ({ value }) =>
 					indexedCategoryData[value]?.name ?? memoizedWarningTwoIcon,
 				disableGlobalFilter: true,
@@ -186,7 +185,7 @@ export default function Index(): JSX.Element {
 				Header: "Editiert am",
 			},
 			{
-				accessor: "id",
+				accessor: "uuid",
 				Cell: ({ value }) => {
 					return memoizedButton(`/admin/cms/page/${value}`);
 				},
@@ -207,7 +206,7 @@ export default function Index(): JSX.Element {
 				Seiten einsehen und bearbeiten
 			</Text>
 			<Statistics data={pageData} />
-			<PageTable columns={columns} data={pageData} onOpen={onOpen} />
+			<PageTable columns={columns} data={pageData} newPage={onOpen} />
 			<PageModal
 				categoryValidator={pageCategoryValidator}
 				pageValidator={pageValidator}

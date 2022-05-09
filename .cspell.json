@@ -77,6 +77,8 @@
 		"wqhd",
 		"wscript",
 		"wxga",
-		"zalgo"
+		"zalgo",
+		"uuid",
+		"dbgenerated"
 	]
 }

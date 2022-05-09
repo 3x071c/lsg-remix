@@ -32,19 +32,19 @@ import {
 export type PageTableType = {
 	updatedAt: Date;
 	createdAt: Date;
-	categoryId: number;
+	categoryUUID: string;
 	title: string;
-	id: number;
+	uuid: string;
 };
 export type PageTableProps = {
 	columns: Column<PageTableType>[];
 	data: PageTableType[];
-	onOpen: () => void;
+	newPage: () => void;
 };
 export function PageTable({
 	columns,
 	data,
-	onOpen,
+	newPage,
 }: PageTableProps): JSX.Element {
 	const {
 		getTableProps,
@@ -80,7 +80,7 @@ export function PageTable({
 							onChange(e.target.value);
 						}}
 					/>
-					<Button ml={2} leftIcon={<AddIcon />} onClick={onOpen}>
+					<Button ml={2} leftIcon={<AddIcon />} onClick={newPage}>
 						Neu
 					</Button>
 				</WrapItem>

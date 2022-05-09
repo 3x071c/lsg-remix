@@ -7,10 +7,10 @@ import { respond, useLoaderResponse } from "~lib/response";
 type LoaderData = {
 	groupedPages: {
 		pages: {
-			id: number;
+			uuid: string;
 			title: string;
 		}[];
-		id: number;
+		uuid: string;
 		name: string;
 	}[];
 	status: number;
@@ -18,14 +18,14 @@ type LoaderData = {
 const getLoaderData = async (): Promise<LoaderData> => {
 	const groupedPages = await prisma.pageCategory.findMany({
 		select: {
-			id: true,
 			name: true,
 			pages: {
 				select: {
-					id: true,
 					title: true,
+					uuid: true,
 				},
 			},
+			uuid: true,
 		},
 	});
 
