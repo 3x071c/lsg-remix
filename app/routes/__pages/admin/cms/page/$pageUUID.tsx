@@ -116,7 +116,7 @@ export default function Index(): JSX.Element {
 			<SmartInput
 				as="h1"
 				defaultValue={title}
-				label="Titel editieren ✍️"
+				hint="Titel editieren ✍️"
 				height={20}
 				p={4}
 				pl={0}
