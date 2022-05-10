@@ -1,7 +1,7 @@
 import type { IconButtonProps } from "@chakra-ui/react";
 import { IconButton, forwardRef } from "@chakra-ui/react";
 import { Link as RemixLink } from "remix";
-import { isExternal } from "./isExternal";
+import { isExternal } from ".";
 
 export const LinkIconButton = forwardRef<
 	Overwrite<IconButtonProps, { href: string }>,
