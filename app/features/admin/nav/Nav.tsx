@@ -23,7 +23,7 @@ import {
 import { transparentize } from "@chakra-ui/theme-tools";
 import { useNavigate } from "remix";
 import { maxContentWidth } from "~feat/chakra";
-import { NavLink } from "~feat/links";
+import { Link, NavLink } from "~feat/links";
 
 export function CmsNav({
 	page,
@@ -121,19 +121,11 @@ export function CmsNav({
 						<MenuList>
 							<MenuGroup
 								title={`${user.firstname} ${user.lastname}`}>
-								<MenuItem
-									icon={<SettingsIcon />}
-									onClick={() =>
-										toast({
-											description: `Noch nicht implementiert`,
-											duration: 3000,
-											isClosable: false,
-											status: "info",
-											title: "Aktuell nicht möglich",
-										})
-									}>
-									Einstellungen
-								</MenuItem>
+								<Link href="/admin/user">
+									<MenuItem icon={<SettingsIcon />}>
+										Einstellungen
+									</MenuItem>
+								</Link>
 								<MenuItem
 									icon={<QuestionIcon />}
 									onClick={() =>
