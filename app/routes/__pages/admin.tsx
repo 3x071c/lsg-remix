@@ -1,10 +1,11 @@
 import type { LoaderFunction } from "remix";
-import { Container, chakra } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { Container, chakra, Portal } from "@chakra-ui/react";
+import { useContext, useEffect, useState } from "react";
 import { Outlet, useLocation } from "remix";
 import { CmsNav } from "~feat/admin";
 import { authorize } from "~feat/auth";
 import { maxContentWidth } from "~feat/chakra";
+import { HeaderPortalContext } from "~feat/headerPortal";
 import { respond, useLoaderResponse } from "~lib/response";
 
 type LoaderData = {
@@ -59,6 +60,7 @@ export const pages: {
 ];
 export default function Admin(): JSX.Element {
 	const { firstname, lastname } = useLoaderResponse<LoaderData>();
+	const headerPortal = useContext(HeaderPortalContext);
 	const location = useLocation();
 	const [route, setRoute] = useState<string>(location.pathname);
 	const current = pages.find(({ url }) => url.endsWith(route));
@@ -69,18 +71,20 @@ export default function Admin(): JSX.Element {
 
 	return (
 		<chakra.section pos="relative">
-			<CmsNav
-				user={
-					firstname && lastname ? { firstname, lastname } : undefined
-				}
-				top="52px"
-				height="48px"
-				pages={pages.filter(({ hidden }) => !hidden)}
-				page={{
-					short: current?.short ?? "Admin",
-					url: current?.url ?? ".",
-				}}
-			/>
+			<Portal containerRef={headerPortal}>
+				<CmsNav
+					user={
+						firstname && lastname
+							? { firstname, lastname }
+							: undefined
+					}
+					pages={pages.filter(({ hidden }) => !hidden)}
+					page={{
+						short: current?.short ?? "Admin",
+						url: current?.url ?? ".",
+					}}
+				/>
+			</Portal>
 			<chakra.section pos="relative">
 				<Container
 					w="full"

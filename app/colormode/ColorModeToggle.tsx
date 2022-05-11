@@ -21,7 +21,7 @@ export function ColorModeToggle(): JSX.Element {
 			bottom="0"
 			right="0"
 			transform="translate(-50%, -50%)" /* Relative instead of fixed positioning 😎 */
-			zIndex={4}
+			zIndex={1}
 			onClick={toggleColorMode}
 		/>
 	);

@@ -112,7 +112,7 @@ export default function Index(): JSX.Element {
 	});
 
 	return (
-		<chakra.main w="full" overflow="hidden">
+		<chakra.main w="full">
 			<HStack spacing={2}>
 				<Link href="/admin/cms" variant="indicating">
 					<ArrowBackIcon mr={2} />

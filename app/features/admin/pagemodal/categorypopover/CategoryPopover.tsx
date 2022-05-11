@@ -27,7 +27,7 @@ export function CategoryPopover({
 	const { onOpen, onClose, isOpen } = useDisclosure();
 	const transition = useTransition();
 	const [submitted, setSubmitted] = useState(false);
-	const firstFieldRef = useRef(null);
+	const firstFieldRef = useRef<HTMLInputElement | null>(null);
 
 	useEffect(() => {
 		if (transition.state === "loading" && submitted) {
