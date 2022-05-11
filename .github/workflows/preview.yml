@@ -39,7 +39,6 @@ jobs:
                   fi
             - name: Launch
               if: ${{ env.APP_EXISTS != 'true' }}
-              continue-on-error: true
               run: |
                   flyctl launch --copy-config --name "${{ env.APP_NAME }}" --no-deploy --org "${{ env.APP_ORG }}" --region "${{ env.APP_REGION }}" --remote-only
                   flyctl postgres attach --app "${{ env.APP_NAME }}" --postgres-app "${{ env.APP_CLUSTER }}"
