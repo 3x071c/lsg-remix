@@ -1,4 +1,3 @@
-import type { LayoutProps, PositionProps } from "@chakra-ui/react";
 import { LockIcon, QuestionIcon, SettingsIcon } from "@chakra-ui/icons";
 import {
 	Box,
@@ -16,11 +15,8 @@ import {
 	Button,
 	Avatar,
 	StackDivider,
-	useColorModeValue,
 	useToast,
-	useTheme,
 } from "@chakra-ui/react";
-import { transparentize } from "@chakra-ui/theme-tools";
 import { useNavigate } from "remix";
 import { maxContentWidth } from "~feat/chakra";
 import { Link, NavLink } from "~feat/links";
@@ -28,8 +24,6 @@ import { Link, NavLink } from "~feat/links";
 export function CmsNav({
 	page,
 	pages,
-	top,
-	height,
 	user,
 }: {
 	page: {
@@ -41,8 +35,6 @@ export function CmsNav({
 		url: string;
 		short: string;
 	}[];
-	top: PositionProps["top"];
-	height: LayoutProps["height"];
 	user?: {
 		firstname: string;
 		lastname: string;
@@ -50,37 +42,10 @@ export function CmsNav({
 }): JSX.Element {
 	const navigate = useNavigate();
 	const toast = useToast();
-	const theme = useTheme();
-	const bg = useColorModeValue("white", "gray.800");
-	const bgTransparent = useColorModeValue(
-		"whiteAlpha.900",
-		transparentize("gray.800", 0.9)(theme),
-	);
 
 	return (
-		<chakra.nav
-			borderBottomWidth={1}
-			w="full"
-			pos="sticky"
-			top={top}
-			zIndex={1}
-			bg={bg}
-			sx={{
-				"@supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none))":
-					{
-						backdropFilter: "auto",
-						// eslint-disable-next-line sort-keys -- Blur has to come after `auto` filter for this to work!
-						backdropBlur: "md",
-						bg: bgTransparent,
-					},
-			}}>
-			<Flex
-				w="full"
-				maxW={maxContentWidth}
-				mx="auto"
-				align="center"
-				h={height}
-				overflow="hidden">
+		<chakra.nav borderBottomWidth={1} w="full">
+			<Flex w="full" maxW={maxContentWidth} mx="auto" align="center">
 				<NavLink href="." end>
 					<Box p={2} px={4}>
 						<Heading as="h2" size="md">

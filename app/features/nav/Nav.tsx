@@ -1,4 +1,3 @@
-import type { LayoutProps } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
 	Box,
@@ -29,53 +28,17 @@ type NavbarProps = {
 			title: string;
 		}[];
 	}[];
-	height: LayoutProps["h"];
 };
-export function Nav({ groupedPages, height }: NavbarProps): JSX.Element {
+export function Nav({ groupedPages }: NavbarProps): JSX.Element {
 	const theme = useTheme();
-	const popoverBgTransparent = useColorModeValue(
-		"whiteAlpha.900",
-		transparentize("gray.700", 0.9)(theme),
-	);
-	const bg = useColorModeValue("white", "gray.800");
-	const bgTransparent = useColorModeValue(
-		"whiteAlpha.900",
-		transparentize("gray.800", 0.9)(theme),
+	const bg = useColorModeValue(
+		"whiteAlpha.800",
+		transparentize("gray.700", 0.8)(theme),
 	);
 
 	return (
-		<chakra.nav
-			w="full"
-			pos="sticky"
-			top={0}
-			zIndex={2}
-			bg={bg}
-			borderBottomWidth={1}
-			sx={{
-				"@supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none))":
-					{
-						/* According to the spec, backdrop-filters essentially can't be nested (only works on Safari), so we'll have to put those filters into pseudo elements for the other browsers */
-						_before: {
-							backdropFilter: "auto",
-							// eslint-disable-next-line sort-keys -- Blur has to come after `auto` filter for this to work!
-							backdropBlur: "md",
-							bg: bgTransparent,
-							content: '""',
-							h: "full",
-							pos: "absolute",
-							w: "full",
-							zIndex: -1,
-						},
-						bg: "transparent",
-					},
-			}}>
-			<Flex
-				w="full"
-				h={height}
-				maxW={maxContentWidth}
-				mx="auto"
-				align="center"
-				overflow="hidden">
+		<chakra.nav w="full" borderBottomWidth={1}>
+			<Flex w="full" maxW={maxContentWidth} mx="auto" align="center">
 				<Link href="/">
 					<Box p={2} px={4}>
 						<Heading as="h1" size="lg">
@@ -104,7 +67,7 @@ export function Nav({ groupedPages, height }: NavbarProps): JSX.Element {
 												backdropFilter: "auto",
 												// eslint-disable-next-line sort-keys -- Blur has to come after `auto` filter for this to work!
 												backdropBlur: "md",
-												bg: popoverBgTransparent,
+												bg,
 											},
 									}}>
 									<PopoverBody>

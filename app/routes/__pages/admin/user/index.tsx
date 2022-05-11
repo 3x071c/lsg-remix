@@ -89,7 +89,7 @@ export default function Settings() {
 	const actionData = useActionResponse<ActionData>();
 
 	return (
-		<chakra.main w="full" overflow="hidden">
+		<chakra.main w="full">
 			<Heading as="h1" size="2xl">
 				Profil
 			</Heading>

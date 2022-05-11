@@ -1,5 +1,8 @@
 import type { LoaderFunction } from "remix";
+import { Portal } from "@chakra-ui/react";
+import { useContext } from "react";
 import { Outlet } from "remix";
+import { HeaderPortalContext } from "~feat/headerPortal";
 import { Nav } from "~feat/nav";
 import { prisma } from "~lib/prisma";
 import { respond, useLoaderResponse } from "~lib/response";
@@ -39,10 +42,13 @@ export const loader: LoaderFunction = async () =>
 
 export default function Pages() {
 	const { groupedPages } = useLoaderResponse<LoaderData>();
+	const headerPortal = useContext(HeaderPortalContext);
 
 	return (
 		<>
-			<Nav groupedPages={groupedPages} height="52px" />
+			<Portal containerRef={headerPortal}>
+				<Nav groupedPages={groupedPages} />
+			</Portal>
 			<Outlet />
 		</>
 	);

@@ -112,7 +112,7 @@ export default function PageSlug() {
 						allowToggle
 						w={{ base: "full", md: 230 }}
 						pos="sticky"
-						top="calc(0.25rem + 53px)"
+						top="calc(53px + 2rem)" /* TODO figure out how to make this dynamic, right now this is based on fixed calculations (what if the nav height changes? :O ) */
 						borderRadius="lg"
 						boxShadow="xl">
 						<AccordionItem border="none">
