@@ -35,7 +35,7 @@ export async function revalidateToSession(request: Request, _did: User["did"]) {
 	if (user.email !== email)
 		await prisma.user.update({
 			data: { email },
-			select: {},
+			select: { uuid: true },
 			where: { did },
 		});
 
