@@ -10,6 +10,7 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import { validationError } from "remix-validated-form";
 import superjson from "superjson";
 import { Page } from "~models";
+import { authorize } from "~feat/auth";
 import { extensions, EditorBar } from "~feat/editor";
 import { Link } from "~feat/links";
 import { SmartInput } from "~feat/smartinput";
@@ -37,7 +38,12 @@ type LoaderData = {
 	title: string;
 	status: number;
 };
-const getLoaderData = async (params: Params): Promise<LoaderData> => {
+const getLoaderData = async (
+	request: Request,
+	params: Params,
+): Promise<LoaderData> => {
+	await authorize(request);
+
 	const uuid = getUUID(params);
 
 	const page = await prisma.page.findUnique({
@@ -58,8 +64,8 @@ const getLoaderData = async (params: Params): Promise<LoaderData> => {
 
 	return { json, status: 200, title: page.title };
 };
-export const loader: LoaderFunction = async ({ params }) =>
-	respond<LoaderData>(await getLoaderData(params));
+export const loader: LoaderFunction = async ({ request, params }) =>
+	respond<LoaderData>(await getLoaderData(request, params));
 
 type ActionData = {
 	status: number;

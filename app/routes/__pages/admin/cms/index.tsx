@@ -13,6 +13,7 @@ import { Page, PageCategory } from "~models";
 import { PageModal } from "~feat/admin/pagemodal";
 import { PageTable } from "~feat/admin/pagetable";
 import { Statistics } from "~feat/admin/statistics";
+import { authorize } from "~feat/auth";
 import { LinkIconButton } from "~feat/links";
 import { prisma, toIndexedObject } from "~lib/prisma";
 import { respond, useActionResponse, useLoaderResponse } from "~lib/response";
@@ -46,7 +47,9 @@ type LoaderData = {
 	}[];
 	status: number;
 };
-const getLoaderData = async (): Promise<LoaderData> => {
+const getLoaderData = async (request: Request): Promise<LoaderData> => {
+	await authorize(request);
+
 	const categoryData = await prisma.pageCategory.findMany({
 		select: {
 			name: true,
@@ -70,8 +73,8 @@ const getLoaderData = async (): Promise<LoaderData> => {
 		status: 200,
 	};
 };
-export const loader: LoaderFunction = async () =>
-	respond<LoaderData>(await getLoaderData());
+export const loader: LoaderFunction = async ({ request }) =>
+	respond<LoaderData>(await getLoaderData(request));
 
 type ActionData = (
 	| Page
