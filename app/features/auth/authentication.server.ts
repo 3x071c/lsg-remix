@@ -1,64 +1,18 @@
 import { redirect } from "remix";
-import superjson from "superjson";
-import type { User } from "~models";
-import { prisma } from "~lib/prisma";
-import { entries } from "~lib/util";
 import { magicServer } from "./magic";
-import { getSession, commitSession, destroySession } from "./session.server";
+import {
+	getSession,
+	commitSession,
+	destroySession,
+	authorize,
+	revalidateToSession,
+	safeIssuer,
+} from ".";
 
-const development = process.env.NODE_ENV === "development";
+export async function authenticate(request: Request, token: string) {
+	const did = safeIssuer(token);
 
-export async function login(
-	request: Request,
-	didToken: unknown,
-	data?: Pick<User, "firstname" | "lastname">,
-) {
-	if (!didToken || typeof didToken !== "string")
-		throw new Error(
-			"Authentifizierung aufgrund fehlendem Tokens fehlgeschlagen",
-		);
-
-	/* Magic Test Mode in development produces invalid tokens, so skip this step */
-	if (!development) {
-		try {
-			magicServer.token.validate(
-				didToken,
-			); /* 🚨 Important: Make sure the token is valid and **hasn't expired**, before authorizing access to user data! */
-		} catch (e) {
-			throw new Error("Die Anmeldung ist fehlgeschlagen");
-		}
-	}
-
-	/* Get the DID (and other Magic info) of the user (in test mode during development, the token is invalid, so mock it instead) */
-	const { issuer: did, email } = development
-		? { email: "test@magic.link", issuer: `did:ethr:0x${"0".repeat(40)}` }
-		: await magicServer.users.getMetadataByToken(didToken);
-
-	if (!did || !email)
-		throw new Error(
-			"Es wurden nicht alle erforderlichen Daten gesichert und übermittelt",
-		);
-
-	/* Get all user data to save in the session, or create a new one (by onboarding) if the user is new */
-	const user =
-		(await prisma.user.findUnique({
-			where: {
-				did,
-			},
-		})) ||
-		(await (() => {
-			if (!data) throw redirect("/onboard");
-			return prisma.user.create({
-				data: {
-					...data,
-					did,
-					email,
-				},
-			});
-		})());
-
-	const session = await getSession(request.headers.get("Cookie"));
-	entries(user).map(([k, v]) => session.set(k, superjson.stringify(v)));
+	const session = await revalidateToSession(request, did);
 
 	throw redirect("/admin", {
 		headers: {
@@ -72,8 +26,12 @@ export async function login(
  * @param request The incoming request
  * @returns Redirects to the login
  */
-export async function logout(request: Request): Promise<Response> {
+export async function invalidate(request: Request): Promise<Response> {
 	const session = await getSession(request.headers.get("Cookie"));
+	try {
+		const user = await authorize(request, { ignore: true });
+		await magicServer.users.logoutByIssuer(user.did);
+	} catch (e) {}
 
 	return redirect("/logout", {
 		headers: {

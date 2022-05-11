@@ -30,17 +30,19 @@ export function useLogin() {
 	);
 
 	const logout = useCallback(async () => {
-		if (!loading && (await magicClient.user.isLoggedIn())) {
+		if (!loading && data) {
 			setLoading(true);
 			try {
 				await magicClient.user.logout();
 				setError(null);
 				setData(null);
+			} catch (e) {
+				setError(e);
 			} finally {
 				setLoading(false);
 			}
 		}
-	}, [loading]);
+	}, [data, loading]);
 
 	useEffect(() => {
 		const callback = async () => {

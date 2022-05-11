@@ -8,12 +8,12 @@ import { maxContentWidth } from "~feat/chakra";
 import { respond, useLoaderResponse } from "~lib/response";
 
 type LoaderData = {
-	firstname: string;
-	lastname: string;
+	firstname?: string;
+	lastname?: string;
 	status: number;
 };
 const getLoaderData = async (request: Request): Promise<LoaderData> => {
-	const { firstname, lastname } = await authorize(request);
+	const { firstname, lastname } = await authorize(request, { ignore: true });
 
 	return {
 		firstname,
@@ -25,6 +25,7 @@ export const loader: LoaderFunction = async ({ request }) =>
 	respond<LoaderData>(await getLoaderData(request));
 
 export const pages: {
+	hidden?: boolean;
 	id: number;
 	long: string;
 	short: string;
@@ -48,11 +49,19 @@ export const pages: {
 		short: "Lab",
 		url: "/admin/lab",
 	},
+	{
+		hidden: true,
+		id: 4,
+		long: "Nutzer",
+		short: "Nutzer",
+		url: "/admin/user",
+	},
 ];
 export default function Admin(): JSX.Element {
 	const { firstname, lastname } = useLoaderResponse<LoaderData>();
 	const location = useLocation();
 	const [route, setRoute] = useState<string>(location.pathname);
+	const current = pages.find(({ url }) => url.endsWith(route));
 
 	useEffect(() => {
 		setRoute(location.pathname);
@@ -61,15 +70,16 @@ export default function Admin(): JSX.Element {
 	return (
 		<chakra.section pos="relative">
 			<CmsNav
-				firstname={firstname}
-				lastname={lastname}
+				user={
+					firstname && lastname ? { firstname, lastname } : undefined
+				}
 				top="52px"
 				height="48px"
-				pages={pages}
-				page={
-					pages.find(({ url }) => url.endsWith(route))?.short ??
-					"Admin"
-				}
+				pages={pages.filter(({ hidden }) => !hidden)}
+				page={{
+					short: current?.short ?? "Admin",
+					url: current?.url ?? ".",
+				}}
 			/>
 			<chakra.section pos="relative">
 				<Container

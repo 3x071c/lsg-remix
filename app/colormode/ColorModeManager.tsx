@@ -7,8 +7,7 @@ import { atomWithStorage } from "jotai/utils";
 import Cookie from "js-cookie";
 import { useRef, useContext, useEffect } from "react";
 import { theme } from "~feat/chakra";
-import { ColorModeContext } from "./ColorModeContext";
-import { useRevalidatedColorMode } from "./useRevalidatedColorMode";
+import { ColorModeContext, useRevalidatedColorMode } from ".";
 
 const log = debug("colorModeManager");
 const isServer = typeof document === "undefined";

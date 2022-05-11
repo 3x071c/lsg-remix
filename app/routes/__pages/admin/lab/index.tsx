@@ -1,3 +1,4 @@
+import type { LoaderFunction } from "remix";
 import { LinkIcon } from "@chakra-ui/icons";
 import {
 	Heading,
@@ -8,8 +9,23 @@ import {
 	Badge,
 	Flex,
 } from "@chakra-ui/react";
+import { authorize } from "~feat/auth";
 import { LinkButton } from "~feat/links";
+import { respond } from "~lib/response";
 import { entries } from "~lib/util";
+
+type LoaderData = {
+	status: number;
+};
+const getLoaderData = async (request: Request): Promise<LoaderData> => {
+	await authorize(request);
+
+	return {
+		status: 200,
+	};
+};
+export const loader: LoaderFunction = async ({ request }) =>
+	respond<LoaderData>(await getLoaderData(request));
 
 export const pages: {
 	[key: string]: { long: string; short: string; url: string };

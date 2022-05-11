@@ -16,7 +16,7 @@ import {
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useSubmit, redirect } from "remix";
-import { useLogin, login as authenticate, authorize } from "~feat/auth";
+import { useLogin, authenticate, authorize } from "~feat/auth";
 import { respond } from "~lib/response";
 
 type LoaderData = { status: number };
@@ -29,9 +29,14 @@ export const loader: LoaderFunction = async ({ request }) =>
 
 export const action: ActionFunction = async ({ request }) => {
 	const form = await request.formData();
-	const didToken = form.get("_authorization");
+	const token = form.get("_authorization");
 
-	return authenticate(request, didToken);
+	if (!token || typeof token !== "string")
+		throw new Error(
+			"Authentifizierung aufgrund fehlendem Tokens fehlgeschlagen",
+		);
+
+	return authenticate(request, token);
 };
 
 export default function Login(): JSX.Element {

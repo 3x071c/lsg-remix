@@ -99,17 +99,18 @@ export function PageTable({
 											column.getSortByToggleProps(),
 										)}
 										d={column.hidden ? "none" : ""}
-										isNumeric={column.isNumeric}>
+										isNumeric={column.isNumeric}
+										title="Sortieren">
 										{column.render("Header")}
 										<chakra.span pl="4">
 											{column.isSorted ? (
 												column.isSortedDesc ? (
-													<TriangleDownIcon aria-label="sorted descending" />
+													<TriangleDownIcon aria-label="Absteigend sortiert" />
 												) : (
-													<TriangleUpIcon aria-label="sorted ascending" />
+													<TriangleUpIcon aria-label="Aufsteigend sortiert" />
 												)
 											) : (
-												<UpDownIcon aria-label="Click to sort" />
+												<UpDownIcon aria-label="Klicken zum Sortieren" />
 											)}
 										</chakra.span>
 									</Th>

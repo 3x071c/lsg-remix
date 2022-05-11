@@ -2,14 +2,14 @@ import type { LoaderFunction } from "remix";
 import { Center, CircularProgress } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useNavigate } from "remix";
-import { useLogin, authorize, logout as invalidate } from "~feat/auth";
+import { useLogin, authorize, invalidate } from "~feat/auth";
 import { respond } from "~lib/response";
 
 type LoaderData = {
 	status: number;
 };
 const getLoaderData = async (request: Request): Promise<LoaderData> => {
-	if (await authorize(request, { required: false }))
+	if (await authorize(request, { ignore: true, required: false }))
 		throw await invalidate(request);
 	return { status: 200 };
 };

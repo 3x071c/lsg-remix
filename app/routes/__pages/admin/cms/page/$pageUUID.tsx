@@ -2,17 +2,7 @@ import type { JSONContent } from "@tiptap/react";
 import type { Params } from "react-router";
 import type { ActionFunction, LoaderFunction } from "remix";
 import { ArrowBackIcon } from "@chakra-ui/icons";
-import {
-	Text,
-	chakra,
-	EditablePreview,
-	useColorModeValue,
-	Input,
-	Editable,
-	Tooltip,
-	EditableInput,
-	HStack,
-} from "@chakra-ui/react";
+import { Text, chakra, HStack } from "@chakra-ui/react";
 import { Prose } from "@nikolovlazar/chakra-ui-prose";
 import { withZod } from "@remix-validated-form/with-zod";
 import { generateHTML } from "@tiptap/html";
@@ -20,8 +10,10 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import { validationError } from "remix-validated-form";
 import superjson from "superjson";
 import { Page } from "~models";
+import { authorize } from "~feat/auth";
 import { extensions, EditorBar } from "~feat/editor";
 import { Link } from "~feat/links";
+import { SmartInput } from "~feat/smartinput";
 import { prisma } from "~lib/prisma";
 import { respond, useActionResponse, useLoaderResponse } from "~lib/response";
 import { sanitize } from "~lib/sanitize";
@@ -46,7 +38,12 @@ type LoaderData = {
 	title: string;
 	status: number;
 };
-const getLoaderData = async (params: Params): Promise<LoaderData> => {
+const getLoaderData = async (
+	request: Request,
+	params: Params,
+): Promise<LoaderData> => {
+	await authorize(request);
+
 	const uuid = getUUID(params);
 
 	const page = await prisma.page.findUnique({
@@ -67,8 +64,8 @@ const getLoaderData = async (params: Params): Promise<LoaderData> => {
 
 	return { json, status: 200, title: page.title };
 };
-export const loader: LoaderFunction = async ({ params }) =>
-	respond<LoaderData>(await getLoaderData(params));
+export const loader: LoaderFunction = async ({ request, params }) =>
+	respond<LoaderData>(await getLoaderData(request, params));
 
 type ActionData = {
 	status: number;
@@ -109,7 +106,6 @@ export default function Index(): JSX.Element {
 	const { json, title } = useLoaderResponse<LoaderData>();
 	const actionData = useActionResponse<ActionData>();
 	const html = sanitize(generateHTML(json, extensions));
-	const editableBg = useColorModeValue("gray.200", "gray.700");
 	const editor = useEditor({
 		content: html,
 		extensions,
@@ -123,32 +119,18 @@ export default function Index(): JSX.Element {
 					Zurück zur Übersicht
 				</Link>
 			</HStack>
-			<Editable defaultValue={title} selectAllOnFocus={false}>
-				<Tooltip label="Editieren ✍️">
-					<EditablePreview
-						as="h1"
-						p={4}
-						pl={0}
-						fontSize={{ base: "4xl", md: "5xl" }}
-						fontFamily="heading"
-						fontWeight="bold"
-						lineHeight={{ base: 1.2, md: 1 }}
-						_hover={{
-							bg: editableBg,
-						}}
-					/>
-				</Tooltip>
-				<Input
-					as={EditableInput}
-					h={20}
-					p={4}
-					pl={0}
-					fontSize={{ base: "4xl", md: "5xl" }}
-					fontFamily="heading"
-					fontWeight="bold"
-					lineHeight={{ base: 1.2, md: 1 }}
-				/>
-			</Editable>
+			<SmartInput
+				as="h1"
+				defaultValue={title}
+				hint="Titel editieren ✍️"
+				height={20}
+				p={4}
+				pl={0}
+				fontSize={{ base: "4xl", md: "5xl" }}
+				fontFamily="heading"
+				fontWeight="bold"
+				lineHeight={{ base: 1.2, md: 1 }}
+			/>
 			{editor && (
 				<HStack
 					w="full"

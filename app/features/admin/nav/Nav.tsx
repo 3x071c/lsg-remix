@@ -23,17 +23,19 @@ import {
 import { transparentize } from "@chakra-ui/theme-tools";
 import { useNavigate } from "remix";
 import { maxContentWidth } from "~feat/chakra";
-import { NavLink } from "~feat/links";
+import { Link, NavLink } from "~feat/links";
 
 export function CmsNav({
 	page,
 	pages,
 	top,
 	height,
-	firstname,
-	lastname,
+	user,
 }: {
-	page: string;
+	page: {
+		url: string;
+		short: string;
+	};
 	pages: {
 		id: number;
 		url: string;
@@ -41,8 +43,10 @@ export function CmsNav({
 	}[];
 	top: PositionProps["top"];
 	height: LayoutProps["height"];
-	firstname: string;
-	lastname: string;
+	user?: {
+		firstname: string;
+		lastname: string;
+	};
 }): JSX.Element {
 	const navigate = useNavigate();
 	const toast = useToast();
@@ -80,7 +84,7 @@ export function CmsNav({
 				<NavLink href="." end>
 					<Box p={2} px={4}>
 						<Heading as="h2" size="md">
-							{page}
+							{page.short}
 						</Heading>
 					</Box>
 				</NavLink>
@@ -91,62 +95,60 @@ export function CmsNav({
 					overflowY="auto"
 					divider={<StackDivider />}>
 					{pages
-						.filter(({ short }) => short !== page)
+						.filter(({ short }) => short !== page.short)
 						.map(({ id, short, url }) => (
 							<Box key={id}>
-								<NavLink href={url} variant="link" end>
+								<NavLink href={url} end>
 									{short}
 								</NavLink>
 							</Box>
 						))}
 				</HStack>
 				<Spacer />
-				<Menu>
-					<MenuButton
-						as={Button}
-						p={2}
-						px={4}
-						rounded="full"
-						variant="link">
-						<Avatar size="sm" name={`${firstname} ${lastname}`} />
-					</MenuButton>
-					<MenuList>
-						<MenuGroup title={`${firstname} ${lastname}`}>
+				{user && (
+					<Menu>
+						<MenuButton
+							as={Button}
+							p={2}
+							px={4}
+							rounded="full"
+							variant="link">
+							<Avatar
+								size="sm"
+								name={`${user.firstname} ${user.lastname}`}
+							/>
+						</MenuButton>
+						<MenuList>
+							<MenuGroup
+								title={`${user.firstname} ${user.lastname}`}>
+								<Link href="/admin/user">
+									<MenuItem icon={<SettingsIcon />}>
+										Einstellungen
+									</MenuItem>
+								</Link>
+								<MenuItem
+									icon={<QuestionIcon />}
+									onClick={() =>
+										toast({
+											description: `Noch nicht implementiert`,
+											duration: 3000,
+											isClosable: false,
+											status: "info",
+											title: "Aktuell nicht möglich",
+										})
+									}>
+									Hilfe
+								</MenuItem>
+							</MenuGroup>
+							<MenuDivider />
 							<MenuItem
-								icon={<SettingsIcon />}
-								onClick={() =>
-									toast({
-										description: `Noch nicht implementiert`,
-										duration: 3000,
-										isClosable: false,
-										status: "info",
-										title: "Aktuell nicht möglich",
-									})
-								}>
-								Einstellungen
+								icon={<LockIcon />}
+								onClick={() => navigate("/logout")}>
+								Abmelden
 							</MenuItem>
-							<MenuItem
-								icon={<QuestionIcon />}
-								onClick={() =>
-									toast({
-										description: `Noch nicht implementiert`,
-										duration: 3000,
-										isClosable: false,
-										status: "info",
-										title: "Aktuell nicht möglich",
-									})
-								}>
-								Hilfe
-							</MenuItem>
-						</MenuGroup>
-						<MenuDivider />
-						<MenuItem
-							icon={<LockIcon />}
-							onClick={() => navigate("/logout")}>
-							Abmelden
-						</MenuItem>
-					</MenuList>
-				</Menu>
+						</MenuList>
+					</Menu>
+				)}
 			</Flex>
 		</chakra.nav>
 	);
