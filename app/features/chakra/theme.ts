@@ -77,44 +77,44 @@ export const theme = extendTheme(
 			},
 			figure: {
 				figcaption: {
-					mt: 1,
+					mt: 0,
 				},
 				my: 4,
 			},
 			h1: {
 				lineHeight: [1.2, null, 1],
 				mb: { base: 9, md: 10 },
-				mt: { base: 9, md: 10 },
+				mt: 0,
 			},
 			h2: {
 				fontSize: { base: "3xl", md: "4xl" },
 				lineHeight: [1.33, null, 1.2],
 				mb: { base: 7, md: 8 },
-				mt: { base: 7, md: 8 },
+				mt: 0,
 			},
 			h3: {
 				fontSize: { base: "2xl", md: "3xl" },
 				lineHeight: [1.33, null, 1.2],
 				mb: { base: 5, md: 6 },
-				mt: { base: 5, md: 6 },
+				mt: 0,
 			},
 			h4: {
 				fontSize: "xl",
 				lineHeight: 1.2,
 				mb: { base: 3, md: 4 },
-				mt: { base: 3, md: 4 },
+				mt: 0,
 			},
 			h5: {
 				fontSize: "lg",
 				lineHeight: 1.2,
 				mb: { base: 1, md: 2 },
-				mt: { base: 1, md: 2 },
+				mt: 0,
 			},
 			h6: {
 				fontSize: "md",
 				lineHeight: 1.2,
 				mb: 1,
-				mt: 1,
+				mt: 0,
 			},
 			hr: {
 				my: { base: 3, md: 4 },

@@ -98,10 +98,9 @@ export default function PageSlug() {
 					},
 				}}>
 				<WrapItem d="inline-block" flex="1 1 0" w="full" minW={215}>
-					<Prose
-						as="main"
-						dangerouslySetInnerHTML={{ __html: html }}
-					/>
+					<Prose as="main">
+						<Box dangerouslySetInnerHTML={{ __html: html }} />
+					</Prose>
 				</WrapItem>
 				<WrapItem
 					w={{ base: "full", md: 230 }}

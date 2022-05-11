@@ -4,12 +4,15 @@ import type { ActionFunction, LoaderFunction } from "remix";
 import type { PageTableType } from "~feat/admin/pagetable";
 import { EditIcon, WarningTwoIcon } from "@chakra-ui/icons";
 import { Heading, Text, chakra, useDisclosure } from "@chakra-ui/react";
-import { withZod } from "@remix-validated-form/with-zod";
 import { useCallback, useMemo } from "react";
 import { validationError } from "remix-validated-form";
 import superjson from "superjson";
-import { z } from "zod";
-import { Page, PageCategory } from "~models";
+import {
+	PageData,
+	PageCategoryValidator,
+	PageValidator,
+	PageCategoryData,
+} from "~models";
 import { PageModal } from "~feat/admin/pagemodal";
 import { PageTable } from "~feat/admin/pagetable";
 import { Statistics } from "~feat/admin/statistics";
@@ -17,21 +20,6 @@ import { authorize } from "~feat/auth";
 import { LinkIconButton } from "~feat/links";
 import { prisma, toIndexedObject } from "~lib/prisma";
 import { respond, useActionResponse, useLoaderResponse } from "~lib/response";
-
-const pageValidatorData = Page.pick({
-	title: true,
-}).extend({
-	categoryUUID: z.string({
-		description: "Die Kategorie",
-		invalid_type_error: "Kategorie konnte nicht korrekt übermittelt werden",
-		required_error: "Kategorie muss angegeben werden",
-	}),
-});
-const pageValidator = withZod(pageValidatorData);
-const pageCategoryValidatorData = PageCategory.pick({
-	name: true,
-});
-const pageCategoryValidator = withZod(pageCategoryValidatorData);
 
 type LoaderData = {
 	categoryData: {
@@ -76,13 +64,8 @@ const getLoaderData = async (request: Request): Promise<LoaderData> => {
 export const loader: LoaderFunction = async ({ request }) =>
 	respond<LoaderData>(await getLoaderData(request));
 
-type ActionData = (
-	| Page
-	| PageCategory
-	| {
-			formError: string;
-	  }
-) & {
+type ActionData = {
+	formError?: string;
 	status: number;
 };
 const getActionData = async (request: Request): Promise<ActionData> => {
@@ -90,41 +73,40 @@ const getActionData = async (request: Request): Promise<ActionData> => {
 	const subject = form.get("_subject");
 
 	if (subject === "page") {
-		const { error, data } = await pageValidator.validate(form);
-		if (error) throw validationError(error);
-		if (!data)
-			return {
-				formError: "Es sind unzureichende Daten angekommen",
-				status: 400,
-			};
-		const { title, categoryUUID } = data;
-		if (!categoryUUID)
-			return {
-				formError:
-					"Die angegebene Kategorie konnte nicht ermittelt werden",
-				status: 400,
-			};
-
 		const emptyDocument: JSONContent = { content: [], type: "doc" };
 		const emptyDocumentString = superjson.stringify(emptyDocument);
+		form.append("content", emptyDocumentString);
+
+		const { error, data: formData } = await PageValidator.validate(form);
+		if (error) throw validationError(error);
+
+		const page = PageData.safeParse({ ...formData });
+		if (!page.success)
+			throw new Error("Seite konnte nicht validiert werden");
+
+		await prisma.page.create({
+			data: page.data,
+		});
 
 		return {
-			...(await prisma.page.create({
-				data: { categoryUUID, content: emptyDocumentString, title },
-			})),
 			status: 200,
 		};
 	}
 	if (subject === "pageCategory") {
-		const { error, data } = await pageCategoryValidator.validate(form);
+		const { error, data: formData } = await PageCategoryValidator.validate(
+			form,
+		);
 		if (error) throw validationError(error);
-		if (!data)
-			return {
-				formError: "Es sind unzureichende Daten angekommen",
-				status: 400,
-			};
-		return { ...(await prisma.pageCategory.create({ data })), status: 200 };
+
+		const pageCategory = PageCategoryData.safeParse({ ...formData });
+		if (!pageCategory.success)
+			throw new Error("Kategorie konnte nicht validiert werden");
+
+		await prisma.pageCategory.create({ data: pageCategory.data });
+
+		return { status: 200 };
 	}
+
 	return { formError: "Es fehlen interne Daten der Anfrage", status: 400 };
 };
 export const action: ActionFunction = async ({ request }) =>
@@ -133,7 +115,7 @@ export const action: ActionFunction = async ({ request }) =>
 export default function Index(): JSX.Element {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { categoryData, pageData } = useLoaderResponse<LoaderData>();
-	const actionData = useActionResponse<ActionData>();
+	const { formError } = useActionResponse<ActionData>();
 
 	const indexedCategoryData = useMemo(
 		() => toIndexedObject(categoryData),
@@ -211,14 +193,10 @@ export default function Index(): JSX.Element {
 			<Statistics data={pageData} />
 			<PageTable columns={columns} data={pageData} newPage={onOpen} />
 			<PageModal
-				categoryValidator={pageCategoryValidator}
-				pageValidator={pageValidator}
 				categoryData={categoryData}
 				isOpen={isOpen}
 				onClose={onClose}
-				errorMessage={
-					(actionData as { formError?: string } | null)?.formError
-				}
+				errorMessage={formError}
 			/>
 		</chakra.main>
 	);

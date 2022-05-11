@@ -17,7 +17,7 @@ import {
 } from "@chakra-ui/react";
 import { transparentize } from "@chakra-ui/theme-tools";
 import { maxContentWidth } from "~feat/chakra";
-import { Link, LinkButton } from "~feat/links";
+import { Link, LinkButton, NavLink } from "~feat/links";
 
 type NavbarProps = {
 	groupedPages: {
@@ -28,8 +28,9 @@ type NavbarProps = {
 			title: string;
 		}[];
 	}[];
+	isLoggedIn: boolean;
 };
-export function Nav({ groupedPages }: NavbarProps): JSX.Element {
+export function Nav({ groupedPages, isLoggedIn }: NavbarProps): JSX.Element {
 	const theme = useTheme();
 	const bg = useColorModeValue(
 		"whiteAlpha.800",
@@ -91,6 +92,13 @@ export function Nav({ groupedPages }: NavbarProps): JSX.Element {
 					))}
 				</HStack>
 				<Spacer />
+				{isLoggedIn && (
+					<NavLink
+						href="/admin"
+						sx={{ "&.active": { display: "none" } }}>
+						<Button>Administration</Button>
+					</NavLink>
+				)}
 			</Flex>
 		</chakra.nav>
 	);

@@ -1,4 +1,3 @@
-import type { Validator } from "remix-validated-form";
 import { AddIcon } from "@chakra-ui/icons";
 import {
 	useDisclosure,
@@ -14,14 +13,13 @@ import { useEffect, useRef, useState } from "react";
 import FocusLock from "react-focus-lock";
 import { useTransition } from "remix";
 import { ValidatedForm } from "remix-validated-form";
+import { PageCategoryValidator } from "~models";
 import { FormInput, SubmitButton } from "~feat/form";
 
 export type CategoryPopoverProps = {
-	categoryValidator: Validator<{ name: string }>;
 	setCloseable: (arg: boolean) => void;
 };
 export function CategoryPopover({
-	categoryValidator,
 	setCloseable,
 }: CategoryPopoverProps): JSX.Element {
 	const { onOpen, onClose, isOpen } = useDisclosure();
@@ -59,7 +57,9 @@ export function CategoryPopover({
 				<FocusLock returnFocus persistentFocus={false}>
 					<PopoverArrow />
 					<PopoverCloseButton />
-					<ValidatedForm validator={categoryValidator} method="post">
+					<ValidatedForm
+						validator={PageCategoryValidator}
+						method="post">
 						<input
 							type="hidden"
 							name="_subject"
