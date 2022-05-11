@@ -13,6 +13,7 @@ import { SmartInput } from "~feat/smartinput";
 export const FormSmartInput = forwardRef<
 	SmartInputProps &
 		Pick<FormControlProps, "isDisabled"> & {
+			clean?: boolean;
 			name: string;
 			label: string;
 			helper: string;
@@ -20,7 +21,7 @@ export const FormSmartInput = forwardRef<
 		},
 	"input"
 >(function InnerFormSmartInput(
-	{ name, label, helper, isDisabled, formId, ...props },
+	{ clean, name, label, helper, isDisabled, formId, ...props },
 	ref,
 ): JSX.Element {
 	const { error, getInputProps } = useField(name, { formId });
@@ -31,12 +32,15 @@ export const FormSmartInput = forwardRef<
 			isInvalid={!!error}
 			isDisabled={isDisabled}
 			my={2}>
-			<FormLabel htmlFor={name} fontWeight="semibold">
+			<FormLabel
+				d={clean ? "none" : undefined}
+				htmlFor={name}
+				fontWeight="semibold">
 				{label}
 			</FormLabel>
 			<SmartInput {...props} {...getInputProps()} id={name} ref={ref} />
 			{!error ? (
-				<FormHelperText>{helper}</FormHelperText>
+				<FormHelperText>{clean ? "\u00A0" : helper}</FormHelperText>
 			) : (
 				<FormErrorMessage>{error}</FormErrorMessage>
 			)}

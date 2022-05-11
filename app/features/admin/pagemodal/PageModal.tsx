@@ -1,5 +1,3 @@
-import type { CategoryPopoverProps } from "./categorypopover";
-import type { Validator } from "remix-validated-form";
 import {
 	Text,
 	Modal,
@@ -14,22 +12,16 @@ import {
 import { useEffect, useState } from "react";
 import { useTransition } from "remix";
 import { ValidatedForm } from "remix-validated-form";
+import { PageValidator } from "~models";
 import { FormInput, FormSelect, SubmitButton } from "~feat/form";
 import { CategoryPopover } from "./categorypopover";
 
 export function PageModal({
-	categoryValidator,
-	pageValidator,
 	isOpen,
 	onClose,
 	categoryData,
 	errorMessage,
 }: {
-	categoryValidator: CategoryPopoverProps["categoryValidator"];
-	pageValidator: Validator<{
-		categoryUUID: string;
-		title: string;
-	}>;
 	isOpen: boolean;
 	onClose: () => void;
 	categoryData: {
@@ -60,7 +52,7 @@ export function PageModal({
 				<ModalHeader>Neue Seite</ModalHeader>
 				{closeable && <ModalCloseButton />}
 				<ValidatedForm
-					validator={pageValidator}
+					validator={PageValidator}
 					method="post"
 					id="pageForm"
 				/>
@@ -88,10 +80,7 @@ export function PageModal({
 						form="pageForm"
 						formId="pageForm"
 						rightChild={
-							<CategoryPopover
-								categoryValidator={categoryValidator}
-								setCloseable={setCloseable}
-							/>
+							<CategoryPopover setCloseable={setCloseable} />
 						}>
 						{categoryData.map(({ uuid, name }) => (
 							<option value={uuid} key={uuid}>

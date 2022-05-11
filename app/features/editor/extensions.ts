@@ -24,7 +24,7 @@ import Underline from "@tiptap/extension-underline";
 
 export const headingLevels = Array.from(
 	{ length: 3 },
-	(_, i) => i + 1,
+	(_, i) => i + 2,
 ) as Level[];
 
 export const extensions = [

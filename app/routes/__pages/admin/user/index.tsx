@@ -1,9 +1,8 @@
 import type { ActionFunction, LoaderFunction } from "remix";
 import { Heading, chakra, Text, VStack, Box } from "@chakra-ui/react";
-import { withZod } from "@remix-validated-form/with-zod";
 import { redirect } from "remix";
 import { ValidatedForm, validationError } from "remix-validated-form";
-import { User } from "~models";
+import { User, UserData, UserValidator } from "~models";
 import {
 	revalidateFromSession,
 	revalidateToSession,
@@ -13,21 +12,13 @@ import { FormSmartInput, SubmitButton } from "~feat/form";
 import { prisma } from "~lib/prisma";
 import { respond, useActionResponse, useLoaderResponse } from "~lib/response";
 
-const validatorData = User.omit({
-	createdAt: true,
-	did: true,
-	email: true,
-	updatedAt: true,
-	uuid: true,
-});
-const validator = withZod(validatorData);
-
 type LoaderData = Partial<User> & {
 	message: string;
 	status: number;
 };
 const getLoaderData = async (request: Request): Promise<LoaderData> => {
 	const { did } = await revalidateFromSession(request);
+
 	const user = await prisma.user.findUnique({ where: { did } });
 
 	if (!user)
@@ -62,14 +53,18 @@ type ActionData = {
 };
 const getActionData = async (request: Request): Promise<ActionData> => {
 	const { did, email } = await revalidateFromSession(request);
+
 	const form = await request.formData();
-	const { error, data } = await validator.validate(form);
+	const { error, data: formData } = await UserValidator.validate(form);
 	if (error) throw validationError(error);
 
+	const user = UserData.safeParse({ ...formData, did, email });
+	if (!user.success) throw new Error("Nutzer konnte nicht validiert werden");
+
 	await prisma.user.upsert({
-		create: { ...data, did, email },
+		create: user.data,
 		select: { uuid: true },
-		update: { ...data, did, email },
+		update: user.data,
 		where: { did },
 	});
 
@@ -86,7 +81,7 @@ export const action: ActionFunction = async ({ request }) =>
 
 export default function Settings() {
 	const { message, firstname, lastname } = useLoaderResponse<LoaderData>();
-	const actionData = useActionResponse<ActionData>();
+	const { formError } = useActionResponse<ActionData>();
 
 	return (
 		<chakra.main w="full">
@@ -96,7 +91,7 @@ export default function Settings() {
 			<Text fontSize="lg" mt={2} mb={4}>
 				{message}
 			</Text>
-			<ValidatedForm validator={validator} method="post">
+			<ValidatedForm validator={UserValidator} method="post">
 				<VStack spacing={4}>
 					<Box w="full">
 						<FormSmartInput
@@ -133,9 +128,9 @@ export default function Settings() {
 					<Box w="full">
 						<SubmitButton>Speichern</SubmitButton>
 					</Box>
-					{actionData.formError && (
+					{formError && (
 						<Text maxW="sm" mt={2} color="red.400">
-							Fehler: {String(actionData?.formError)}
+							Fehler: {String(formError)}
 						</Text>
 					)}
 				</VStack>
