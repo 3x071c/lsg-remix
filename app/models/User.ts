@@ -16,7 +16,11 @@ export const UserData = User.omit({
 });
 
 export const UserValidatorData = UserData.omit({
+	canAccessCMS: true,
+	canAccessLab: true,
+	canAccessSchoolib: true,
 	did: true,
 	email: true,
+	locked: true,
 });
 export const UserValidator = withZod(UserValidatorData);

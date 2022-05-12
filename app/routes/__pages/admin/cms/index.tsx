@@ -1,4 +1,3 @@
-import type { JSONContent } from "@tiptap/react";
 import type { Column } from "react-table";
 import type { ActionFunction, LoaderFunction } from "remix";
 import type { PageTableType } from "~feat/admin/pagetable";
@@ -6,7 +5,6 @@ import { EditIcon, WarningTwoIcon } from "@chakra-ui/icons";
 import { Heading, Text, chakra, useDisclosure } from "@chakra-ui/react";
 import { useCallback, useMemo } from "react";
 import { validationError } from "remix-validated-form";
-import superjson from "superjson";
 import {
 	PageData,
 	PageCategoryValidator,
@@ -36,7 +34,7 @@ type LoaderData = {
 	status: number;
 };
 const getLoaderData = async (request: Request): Promise<LoaderData> => {
-	await authorize(request);
+	await authorize(request, { cms: true });
 
 	const categoryData = await prisma.pageCategory.findMany({
 		select: {
@@ -73,10 +71,6 @@ const getActionData = async (request: Request): Promise<ActionData> => {
 	const subject = form.get("_subject");
 
 	if (subject === "page") {
-		const emptyDocument: JSONContent = { content: [], type: "doc" };
-		const emptyDocumentString = superjson.stringify(emptyDocument);
-		form.append("content", emptyDocumentString);
-
 		const { error, data: formData } = await PageValidator.validate(form);
 		if (error) throw validationError(error);
 

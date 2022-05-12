@@ -8,58 +8,84 @@ import { maxContentWidth } from "~feat/chakra";
 import { HeaderPortalContext } from "~feat/headerPortal";
 import { respond, useLoaderResponse } from "~lib/response";
 
+export const getPages = ({
+	canAccessCMS,
+	canAccessLab,
+	canAccessSchoolib,
+}: {
+	canAccessCMS?: boolean;
+	canAccessLab?: boolean;
+	canAccessSchoolib?: boolean;
+}) => {
+	return [
+		{
+			authorized: canAccessCMS,
+			id: 1,
+			long: "Content Management System",
+			short: "CMS",
+			url: "/admin/cms",
+		},
+		{
+			authorized: canAccessSchoolib,
+			id: 2,
+			long: "Schoolib",
+			short: "schoolib",
+			url: "/admin/schoolib",
+		},
+		{
+			authorized: canAccessLab,
+			id: 3,
+			long: "Admin Lab only 😎",
+			short: "Lab",
+			url: "/admin/lab",
+		},
+		{
+			authorized: true,
+			hidden: true,
+			id: 4,
+			long: "Nutzer",
+			short: "Nutzer",
+			url: "/admin/user",
+		},
+	];
+};
+
 type LoaderData = {
 	firstname?: string;
 	lastname?: string;
+	pages: {
+		authorized?: boolean;
+		hidden?: boolean;
+		id: number;
+		long: string;
+		short: string;
+		url: string;
+	}[];
 	status: number;
 };
 const getLoaderData = async (request: Request): Promise<LoaderData> => {
-	const { firstname, lastname } = await authorize(request, { ignore: true });
+	const {
+		firstname,
+		lastname,
+		canAccessCMS,
+		canAccessLab,
+		canAccessSchoolib,
+	} = await authorize(request, { ignore: true, lock: true });
+
+	const pages = getPages({ canAccessCMS, canAccessLab, canAccessSchoolib });
 
 	return {
 		firstname,
 		lastname,
+		pages,
 		status: 200,
 	};
 };
 export const loader: LoaderFunction = async ({ request }) =>
 	respond<LoaderData>(await getLoaderData(request));
 
-export const pages: {
-	hidden?: boolean;
-	id: number;
-	long: string;
-	short: string;
-	url: string;
-}[] = [
-	{
-		id: 1,
-		long: "Content Management System",
-		short: "CMS",
-		url: "/admin/cms",
-	},
-	{
-		id: 2,
-		long: "Schoolib",
-		short: "schoolib",
-		url: "/admin/schoolib",
-	},
-	{
-		id: 3,
-		long: "Admin Lab only 😎",
-		short: "Lab",
-		url: "/admin/lab",
-	},
-	{
-		hidden: true,
-		id: 4,
-		long: "Nutzer",
-		short: "Nutzer",
-		url: "/admin/user",
-	},
-];
 export default function Admin(): JSX.Element {
-	const { firstname, lastname } = useLoaderResponse<LoaderData>();
+	const { firstname, lastname, pages } = useLoaderResponse<LoaderData>();
 	const headerPortal = useContext(HeaderPortalContext);
 	const location = useLocation();
 	const [route, setRoute] = useState<string>(location.pathname);
@@ -78,7 +104,9 @@ export default function Admin(): JSX.Element {
 							? { firstname, lastname }
 							: undefined
 					}
-					pages={pages.filter(({ hidden }) => !hidden)}
+					pages={pages.filter(
+						({ hidden, authorized }) => authorized && !hidden,
+					)}
 					page={{
 						short: current?.short ?? "Admin",
 						url: current?.url ?? ".",

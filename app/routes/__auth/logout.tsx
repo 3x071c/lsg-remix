@@ -9,7 +9,7 @@ type LoaderData = {
 	status: number;
 };
 const getLoaderData = async (request: Request): Promise<LoaderData> => {
-	if (await authorize(request, { ignore: true, required: false }))
+	if (await authorize(request, { ignore: true, lock: true, required: false }))
 		throw await invalidate(request);
 	return { status: 200 };
 };

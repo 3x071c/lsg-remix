@@ -12,8 +12,12 @@ import { getSession, invalidate } from ".";
  */
 export async function authorize<
 	O extends {
+		cms?: boolean;
+		lab?: boolean;
+		schoolib?: boolean;
 		required?: boolean;
 		ignore?: boolean;
+		lock?: boolean;
 	},
 >(
 	request: Request,
@@ -25,8 +29,12 @@ export async function authorize<
 			? PartialExcept<User, "did">
 			: Record<string, never>)
 > {
+	const cms = options?.cms ?? false;
+	const lab = options?.lab ?? false;
+	const schoolib = options?.schoolib ?? false;
 	const required = options?.required ?? true;
 	const ignore = options?.ignore ?? false;
+	const lock = options?.lock ?? false;
 	const session = await getSession(request.headers.get("Cookie"));
 
 	if (keys(session.data).length === 0) {
@@ -35,7 +43,7 @@ export async function authorize<
 			? null
 			: Record<string, never>;
 	}
-	const user = fromEntries(
+	const partialUser = fromEntries(
 		keys(User.shape)
 			.map((key) => {
 				const value = session.get(key) as string | null;
@@ -45,14 +53,25 @@ export async function authorize<
 			.filter(Boolean) as [PropertyKey, unknown][],
 	);
 
-	try {
-		return User.parse(user);
-	} catch (e) {
-		if (!user["did"]) throw await invalidate(request);
+	const parsedUser = User.safeParse(partialUser);
+	if (!parsedUser.success) {
+		if (!partialUser["did"]) throw await invalidate(request);
 		if (ignore)
-			return user as O extends { ignore: true }
+			return partialUser as O extends { ignore: true }
 				? PartialExcept<User, "did">
 				: Record<string, never>;
 		throw redirect("/admin/user");
 	}
+	const user = parsedUser.data;
+
+	if (user.locked && !lock) throw redirect("/admin/locked");
+
+	if (
+		(cms && !user.canAccessCMS) ||
+		(lab && !user.canAccessLab) ||
+		(schoolib && !user.canAccessSchoolib)
+	)
+		throw redirect("/admin");
+
+	return user;
 }

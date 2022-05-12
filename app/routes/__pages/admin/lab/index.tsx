@@ -18,7 +18,7 @@ type LoaderData = {
 	status: number;
 };
 const getLoaderData = async (request: Request): Promise<LoaderData> => {
-	await authorize(request);
+	await authorize(request, { lab: true });
 
 	return {
 		status: 200,

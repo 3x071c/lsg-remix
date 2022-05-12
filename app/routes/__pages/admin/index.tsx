@@ -14,19 +14,36 @@ import { useLocation } from "remix";
 import { authorize } from "~feat/auth";
 import { LinkButton } from "~feat/links";
 import { respond, useLoaderResponse } from "~lib/response";
-import { pages } from "../admin";
+import { getPages } from "../admin";
 
 type LoaderData = {
-	firstname: string;
-	lastname: string;
+	firstname?: string;
+	lastname?: string;
+	pages: {
+		authorized?: boolean;
+		hidden?: boolean;
+		id: number;
+		long: string;
+		short: string;
+		url: string;
+	}[];
 	status: number;
 };
 const getLoaderData = async (request: Request): Promise<LoaderData> => {
-	const { firstname, lastname } = await authorize(request);
+	const {
+		firstname,
+		lastname,
+		canAccessCMS,
+		canAccessLab,
+		canAccessSchoolib,
+	} = await authorize(request);
+
+	const pages = getPages({ canAccessCMS, canAccessLab, canAccessSchoolib });
 
 	return {
 		firstname,
 		lastname,
+		pages,
 		status: 200,
 	};
 };
@@ -34,7 +51,7 @@ export const loader: LoaderFunction = async ({ request }) =>
 	respond<LoaderData>(await getLoaderData(request));
 
 export default function Index(): JSX.Element {
-	const { firstname, lastname } = useLoaderResponse<LoaderData>();
+	const { firstname, lastname, pages } = useLoaderResponse<LoaderData>();
 	const location = useLocation();
 	const [route, setRoute] = useState<string>(location.pathname);
 
@@ -56,7 +73,8 @@ export default function Index(): JSX.Element {
 				placeItems="center">
 				{pages
 					.filter(({ url }) => !url.endsWith(route))
-					.map(({ id, long, url }) => (
+					.filter(({ hidden }) => !hidden)
+					.map(({ authorized, id, long, url }) => (
 						<Box
 							key={id}
 							w="full"
@@ -81,11 +99,12 @@ export default function Index(): JSX.Element {
 							</Text>
 							<Flex justifyContent="flex-end">
 								<LinkButton
-									href={url}
+									href={authorized ? url : "."}
 									size="xs"
 									variant="outline"
-									rightIcon={<LinkIcon />}>
-									Besuchen
+									rightIcon={<LinkIcon />}
+									isDisabled={!authorized}>
+									{authorized ? "Besuchen" : "Kein Zugriff"}
 								</LinkButton>
 							</Flex>
 						</Box>

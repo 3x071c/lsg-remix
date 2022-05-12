@@ -38,7 +38,7 @@ const getLoaderData = async (
 	request: Request,
 	params: Params,
 ): Promise<LoaderData> => {
-	await authorize(request);
+	await authorize(request, { cms: true });
 
 	const uuid = getUUID(params);
 

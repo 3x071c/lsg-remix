@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "User" ADD COLUMN     "canAccessCMS" BOOLEAN NOT NULL DEFAULT false,
+ADD COLUMN     "canAccessLab" BOOLEAN NOT NULL DEFAULT false,
+ADD COLUMN     "canAccessSchoolib" BOOLEAN NOT NULL DEFAULT false,
+ADD COLUMN     "locked" BOOLEAN NOT NULL DEFAULT true;
