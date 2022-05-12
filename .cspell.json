@@ -8,13 +8,14 @@
 		".*cache",
 		".*ignore",
 		".husky",
-		"public/build",
+		"*.tsbuildinfo",
 		".remix",
+		"public/build",
 		"postgres-data",
 		".env",
 		"db/migrations",
 		"db/data",
-		"*.tsbuildinfo"
+		"db/zod"
 	],
 	"import": ["@cspell/dict-de-de/cspell-ext.json"],
 	"language": "en,de",

@@ -21,7 +21,11 @@ type LoaderData = {
 	status: number;
 };
 const getLoaderData = async (request: Request): Promise<LoaderData> => {
-	const user = await authorize(request, { required: false });
+	const user = await authorize(request, {
+		ignore: true,
+		lock: true,
+		required: false,
+	});
 	const isLoggedIn = !!user;
 
 	const groupedPages = await prisma.pageCategory.findMany({

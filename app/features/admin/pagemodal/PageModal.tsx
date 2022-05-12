@@ -1,3 +1,4 @@
+import type { JSONContent } from "@tiptap/react";
 import {
 	Text,
 	Modal,
@@ -12,6 +13,7 @@ import {
 import { useEffect, useState } from "react";
 import { useTransition } from "remix";
 import { ValidatedForm } from "remix-validated-form";
+import superjson from "superjson";
 import { PageValidator } from "~models";
 import { FormInput, FormSelect, SubmitButton } from "~feat/form";
 import { CategoryPopover } from "./categorypopover";
@@ -33,6 +35,8 @@ export function PageModal({
 	const transition = useTransition();
 	const [submitted, setSubmitted] = useState(false);
 	const [closeable, setCloseable] = useState(true);
+	const emptyDocument: JSONContent = { content: [], type: "doc" };
+	const emptyDocumentString = superjson.stringify(emptyDocument);
 
 	useEffect(() => {
 		if (transition.state === "loading" && submitted) {
@@ -60,6 +64,12 @@ export function PageModal({
 					type="hidden"
 					name="_subject"
 					value="page"
+					form="pageForm"
+				/>
+				<input
+					type="hidden"
+					name="content"
+					value={emptyDocumentString}
 					form="pageForm"
 				/>
 				<ModalBody>
