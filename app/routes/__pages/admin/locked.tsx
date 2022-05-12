@@ -1,34 +1,19 @@
 import type { LoaderFunction } from "remix";
 import { chakra, Heading, Text } from "@chakra-ui/react";
 import { redirect } from "remix";
-import { authorize, commitSession, invalidate, revalidate } from "~feat/auth";
-import { prisma } from "~lib/prisma";
+import { authorize } from "~feat/auth";
 import { respond } from "~lib/response";
 
 type LoaderData = {
+	headers: HeadersInit;
 	status: number;
 };
 const getLoaderData = async (request: Request): Promise<LoaderData> => {
-	const { did, locked } = await authorize(request, { lock: true });
+	const [{ locked }, headers] = await authorize(request, { lock: true });
 	if (!locked) throw redirect("/admin");
 
-	const user = await prisma.user.findUnique({
-		select: { locked: true },
-		where: { did },
-	});
-	if (!user) throw await invalidate(request);
-
-	if (!user.locked) {
-		const session = await revalidate(request, did);
-
-		throw redirect("/admin", {
-			headers: {
-				"Set-Cookie": await commitSession(session),
-			},
-		});
-	}
-
 	return {
+		headers,
 		status: 200,
 	};
 };

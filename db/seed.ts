@@ -73,8 +73,6 @@ const seedPizzas = async (users: User[]) => {
 			(user) => ({ uuid: user.uuid }),
 		);
 
-		console.log(connect);
-
 		console.log(
 			`👉 Creating pizza ${name} (for €${(price / 100).toFixed(2)})`,
 		);

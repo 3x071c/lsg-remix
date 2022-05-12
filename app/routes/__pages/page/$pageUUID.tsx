@@ -41,6 +41,7 @@ const getUUID = (params: Params) => {
 };
 
 type LoaderData = Pick<z.infer<typeof Page>, "title"> & {
+	headers: HeadersInit;
 	json: JSONContent;
 	status: number;
 };
@@ -59,7 +60,7 @@ const getLoaderData = async (params: Params): Promise<LoaderData> => {
 
 	const json = parse<JSONContent>(page.content);
 
-	return { json, status: 200, title: page.title };
+	return { headers: {}, json, status: 200, title: page.title };
 };
 export const loader: LoaderFunction = async ({ params }) =>
 	respond<LoaderData>(await getLoaderData(params));

@@ -4,7 +4,7 @@ import { withZod } from "@remix-validated-form/with-zod";
 import { redirect } from "remix";
 import { ValidatedForm, validationError } from "remix-validated-form";
 import { User, UserData } from "~models";
-import { revalidate, commitSession, authorize } from "~feat/auth";
+import { authorize } from "~feat/auth";
 import { FormSmartInput, SubmitButton } from "~feat/form";
 import { prisma } from "~lib/prisma";
 import { respond, useActionResponse, useLoaderResponse } from "~lib/response";
@@ -17,19 +17,20 @@ const UserValidator = withZod(UserValidatorData);
 
 type LoaderData = {
 	firstname?: string;
+	headers: HeadersInit;
 	lastname?: string;
 	message: string;
 	status: number;
 };
 const getLoaderData = async (request: Request): Promise<LoaderData> => {
-	const sessionData = await authorize(request, { ignore: true });
-	const { did } = sessionData;
-
-	const user = await prisma.user.findUnique({
-		where: { did },
+	const [user, headers] = await authorize(request, {
+		ignore: true,
+		lock: true,
 	});
-	if (!user)
+
+	if (!user.uuid)
 		return {
+			headers,
 			message:
 				"Willkommen! 👋 Um die Registration abzuschließen, müssen folgende Daten hinterlegt werden:",
 			status: 200,
@@ -39,6 +40,7 @@ const getLoaderData = async (request: Request): Promise<LoaderData> => {
 	if (!parsedUser.success)
 		return {
 			firstname: user.firstname,
+			headers,
 			lastname: user.lastname,
 			message:
 				"Willkommen zurück! 🍻 Bitte überprüfen und ergänzen Sie ihre inzwischen unvollständigen Nutzerdaten.",
@@ -46,18 +48,9 @@ const getLoaderData = async (request: Request): Promise<LoaderData> => {
 		};
 	const { firstname, lastname } = parsedUser.data;
 
-	const parsedSession = User.safeParse(sessionData);
-	if (!parsedSession.success) {
-		const session = await revalidate(request, did);
-		throw redirect("/admin", {
-			headers: {
-				"Set-Cookie": await commitSession(session),
-			},
-		});
-	}
-
 	return {
 		firstname,
+		headers,
 		lastname,
 		message: "Einstellungen anpassen und Nutzerdaten aktualisieren",
 		status: 200,
@@ -68,10 +61,13 @@ export const loader: LoaderFunction = async ({ request }) =>
 
 type ActionData = {
 	formError?: string;
+	headers: HeadersInit;
 	status: number;
 };
 const getActionData = async (request: Request): Promise<ActionData> => {
-	const { did, email } = await authorize(request, { ignore: true });
+	const [{ did, email }, headers] = await authorize(request, {
+		ignore: true,
+	});
 
 	const form = await request.formData();
 	const { error, data } = await UserValidator.validate(form);
@@ -84,12 +80,8 @@ const getActionData = async (request: Request): Promise<ActionData> => {
 		where: { did },
 	});
 
-	const session = await revalidate(request, did);
-
 	throw redirect("/admin", {
-		headers: {
-			"Set-Cookie": await commitSession(session),
-		},
+		headers,
 	});
 };
 export const action: ActionFunction = async ({ request }) =>

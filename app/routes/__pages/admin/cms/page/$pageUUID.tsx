@@ -35,6 +35,7 @@ const getUUID = (params: Params) => {
 type LoaderData = {
 	categoryUUID: string;
 	content: string;
+	headers: HeadersInit;
 	status: number;
 	title: string;
 };
@@ -42,7 +43,7 @@ const getLoaderData = async (
 	request: Request,
 	params: Params,
 ): Promise<LoaderData> => {
-	await authorize(request, { cms: true });
+	const [, headers] = await authorize(request, { cms: true });
 
 	const uuid = getUUID(params);
 
@@ -64,6 +65,7 @@ const getLoaderData = async (
 	return {
 		categoryUUID: page.categoryUUID,
 		content: page.content,
+		headers,
 		status: 200,
 		title: page.title,
 	};
@@ -72,6 +74,7 @@ export const loader: LoaderFunction = async ({ request, params }) =>
 	respond<LoaderData>(await getLoaderData(request, params));
 
 type ActionData = {
+	headers: HeadersInit;
 	status: number;
 	formError?: string;
 };
@@ -79,6 +82,7 @@ const getActionData = async (
 	request: Request,
 	params: Params,
 ): Promise<ActionData> => {
+	const [, headers] = await authorize(request, { cms: true });
 	const uuid = getUUID(params);
 
 	const form = await request.formData();
@@ -95,6 +99,7 @@ const getActionData = async (
 	});
 
 	return {
+		headers,
 		status: 200,
 	};
 };

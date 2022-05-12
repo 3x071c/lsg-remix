@@ -23,6 +23,7 @@ type LoaderData = {
 		uuid: string;
 		name: string;
 	}[];
+	headers: HeadersInit;
 	pageData: {
 		uuid: string;
 		updatedAt: Date;
@@ -33,7 +34,7 @@ type LoaderData = {
 	status: number;
 };
 const getLoaderData = async (request: Request): Promise<LoaderData> => {
-	await authorize(request, { cms: true });
+	const [, headers] = await authorize(request, { cms: true });
 
 	const categoryData = await prisma.pageCategory.findMany({
 		select: {
@@ -54,6 +55,7 @@ const getLoaderData = async (request: Request): Promise<LoaderData> => {
 
 	return {
 		categoryData,
+		headers,
 		pageData,
 		status: 200,
 	};
@@ -63,10 +65,11 @@ export const loader: LoaderFunction = async ({ request }) =>
 
 type ActionData = {
 	formError?: string;
+	headers: HeadersInit;
 	status: number;
 };
 const getActionData = async (request: Request): Promise<ActionData> => {
-	await authorize(request, { cms: true });
+	const [, headers] = await authorize(request, { cms: true });
 
 	const form = await request.formData();
 	const subject = form.get("_subject");
@@ -84,6 +87,7 @@ const getActionData = async (request: Request): Promise<ActionData> => {
 		});
 
 		return {
+			headers,
 			status: 200,
 		};
 	}
@@ -99,10 +103,14 @@ const getActionData = async (request: Request): Promise<ActionData> => {
 
 		await prisma.pageCategory.create({ data: pageCategory.data });
 
-		return { status: 200 };
+		return { headers, status: 200 };
 	}
 
-	return { formError: "Es fehlen interne Daten der Anfrage", status: 400 };
+	return {
+		formError: "Es fehlen interne Daten der Anfrage",
+		headers,
+		status: 400,
+	};
 };
 export const action: ActionFunction = async ({ request }) =>
 	respond<ActionData>(await getActionData(request));

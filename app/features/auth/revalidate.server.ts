@@ -1,19 +1,23 @@
+import type { Session } from "remix";
 import superjson from "superjson";
 import { User } from "~models";
 import { prisma } from "~lib/prisma";
 import { entries } from "~lib/util";
 import { getSession, safeMetadata } from ".";
 
-export async function revalidate(request: Request, _did: User["did"]) {
+export async function revalidate(
+	request: Request,
+	did: User["did"],
+): Promise<[PartialExcept<User, "did" | "email">, Session]> {
 	/* Validate the DID */
-	const rawDID = User.shape.did.safeParse(_did);
+	const rawDID = User.shape.did.safeParse(did);
 	if (!rawDID.success)
 		throw new Error(
 			"Nutzeridentifikation wurden nicht korrekt übermittelt",
 		);
 
 	/* Revalidate user data via Magic */
-	const { issuer: did, email } = await safeMetadata(rawDID.data);
+	const { email } = await safeMetadata(rawDID.data);
 	if (!(did && email))
 		throw new Error(
 			"Der Nutzer wurde nicht erfolgreich bei Magic angelegt",
@@ -38,5 +42,5 @@ export async function revalidate(request: Request, _did: User["did"]) {
 	const session = await getSession(request.headers.get("Cookie"));
 	entries(user).map(([k, v]) => session.set(k, superjson.stringify(v)));
 
-	return session;
+	return [user, session];
 }

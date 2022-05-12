@@ -18,6 +18,7 @@ import { getPages } from "../admin";
 
 type LoaderData = {
 	firstname?: string;
+	headers: HeadersInit;
 	lastname?: string;
 	pages: {
 		authorized?: boolean;
@@ -30,18 +31,16 @@ type LoaderData = {
 	status: number;
 };
 const getLoaderData = async (request: Request): Promise<LoaderData> => {
-	const {
-		firstname,
-		lastname,
-		canAccessCMS,
-		canAccessLab,
-		canAccessSchoolib,
-	} = await authorize(request);
+	const [
+		{ firstname, lastname, canAccessCMS, canAccessLab, canAccessSchoolib },
+		headers,
+	] = await authorize(request);
 
 	const pages = getPages({ canAccessCMS, canAccessLab, canAccessSchoolib });
 
 	return {
 		firstname,
+		headers,
 		lastname,
 		pages,
 		status: 200,

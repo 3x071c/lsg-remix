@@ -19,10 +19,11 @@ import { useSubmit, redirect } from "remix";
 import { useLogin, authenticate, authorize } from "~feat/auth";
 import { respond } from "~lib/response";
 
-type LoaderData = { status: number };
+type LoaderData = { headers: HeadersInit; status: number };
 const getLoaderData = async (request: Request): Promise<LoaderData> => {
-	if (await authorize(request, { required: false })) throw redirect("/admin");
-	return { status: 200 };
+	const [user, headers] = await authorize(request, { required: false });
+	if (user) throw redirect("/admin");
+	return { headers, status: 200 };
 };
 export const loader: LoaderFunction = async ({ request }) =>
 	respond<LoaderData>(await getLoaderData(request));

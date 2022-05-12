@@ -17,11 +17,12 @@ type LoaderData = {
 		uuid: string;
 		name: string;
 	}[];
+	headers: HeadersInit;
 	isLoggedIn: boolean;
 	status: number;
 };
 const getLoaderData = async (request: Request): Promise<LoaderData> => {
-	const user = await authorize(request, {
+	const [user, headers] = await authorize(request, {
 		ignore: true,
 		lock: true,
 		required: false,
@@ -43,6 +44,7 @@ const getLoaderData = async (request: Request): Promise<LoaderData> => {
 
 	return {
 		groupedPages,
+		headers,
 		isLoggedIn,
 		status: 200,
 	};
