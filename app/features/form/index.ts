@@ -2,4 +2,5 @@
 export * from "./FormInput";
 export * from "./FormSelect";
 export * from "./FormSmartInput";
+export * from "./FormSwitch";
 export * from "./SubmitButton";

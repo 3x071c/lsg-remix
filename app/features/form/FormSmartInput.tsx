@@ -1,5 +1,5 @@
+import type { SmartInputProps } from "./smartinput";
 import type { FormControlProps } from "@chakra-ui/react";
-import type { SmartInputProps } from "~feat/smartinput";
 import {
 	FormControl,
 	FormErrorMessage,
@@ -8,7 +8,7 @@ import {
 	forwardRef,
 } from "@chakra-ui/react";
 import { useField } from "remix-validated-form";
-import { SmartInput } from "~feat/smartinput";
+import { SmartInput } from "./smartinput";
 
 export const FormSmartInput = forwardRef<
 	SmartInputProps &

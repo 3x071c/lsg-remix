@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/icons";
 import {
 	chakra,
-	Table,
+	Table as ChakraTable,
 	TableContainer,
 	Thead,
 	Tbody,
@@ -29,23 +29,18 @@ import {
 	useAsyncDebounce,
 } from "react-table";
 
-export type PageTableType = {
-	updatedAt: Date;
-	createdAt: Date;
-	categoryUUID: string;
-	title: string;
-	uuid: string;
+export type TableProps<T extends object> = {
+	columns: Column<T>[];
+	data: T[];
+	heading: string;
+	trigger: () => void;
 };
-export type PageTableProps = {
-	columns: Column<PageTableType>[];
-	data: PageTableType[];
-	newPage: () => void;
-};
-export function PageTable({
+export function Table<T extends object>({
 	columns,
 	data,
-	newPage,
-}: PageTableProps): JSX.Element {
+	trigger,
+	heading,
+}: TableProps<T>): JSX.Element {
 	const {
 		getTableProps,
 		getTableBodyProps,
@@ -55,7 +50,7 @@ export function PageTable({
 		state,
 		preGlobalFilteredRows,
 		setGlobalFilter,
-	} = useTable<PageTableType>({ columns, data }, useGlobalFilter, useSortBy);
+	} = useTable<T>({ columns, data }, useGlobalFilter, useSortBy);
 
 	const count = preGlobalFilteredRows.length;
 	const [value, setValue] = useState<unknown>(state.globalFilter);
@@ -68,7 +63,7 @@ export function PageTable({
 			<Wrap spacing={2} align="center" justify="space-between">
 				<WrapItem>
 					<Heading as="h2" size="lg" my={4}>
-						Alle Seiten:
+						{heading}
 					</Heading>
 				</WrapItem>
 				<WrapItem>
@@ -80,13 +75,13 @@ export function PageTable({
 							onChange(e.target.value);
 						}}
 					/>
-					<Button ml={2} leftIcon={<AddIcon />} onClick={newPage}>
+					<Button ml={2} leftIcon={<AddIcon />} onClick={trigger}>
 						Neu
 					</Button>
 				</WrapItem>
 			</Wrap>
 			<TableContainer>
-				<Table
+				<ChakraTable
 					{...getTableProps()}
 					variant="striped"
 					colorScheme="gray">
@@ -134,7 +129,7 @@ export function PageTable({
 							);
 						})}
 					</Tbody>
-				</Table>
+				</ChakraTable>
 			</TableContainer>
 		</>
 	);

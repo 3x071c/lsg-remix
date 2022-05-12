@@ -14,6 +14,7 @@ import { getSession, invalidate, revalidate, commitSession } from ".";
 export async function authorize<
 	O extends {
 		cms?: boolean;
+		did?: string;
 		lab?: boolean;
 		schoolib?: boolean;
 		required?: boolean;
@@ -36,6 +37,7 @@ export async function authorize<
 	]
 > {
 	const cms = options?.cms ?? false;
+	const did = options?.did;
 	const lab = options?.lab ?? false;
 	const schoolib = options?.schoolib ?? false;
 	const required = options?.required ?? true;
@@ -63,23 +65,22 @@ export async function authorize<
 	) as Partial<User>;
 
 	if (!partialUser.did || !partialUser.email) throw await invalidate(request);
-	const { did } = partialUser;
 
 	const dbUser = await prisma.user.findUnique({
 		select: { updatedAt: true },
-		where: { did },
+		where: { did: partialUser.did },
 	});
 
 	const [newUser, newSession] =
 		(partialUser.updatedAt?.getTime() ?? null) !==
 		(dbUser?.updatedAt?.getTime() ?? null)
-			? await revalidate(request, did)
+			? await revalidate(request, partialUser.did)
 			: [partialUser, null];
 	const headers = newSession
 		? {
 				"Set-Cookie": await commitSession(newSession),
 		  }
-		: null;
+		: ({} as Record<string, never>);
 
 	const parsedUser = User.safeParse(newUser);
 	if (!parsedUser.success) {
@@ -88,20 +89,23 @@ export async function authorize<
 				newUser as O extends { ignore: true }
 					? PartialExcept<User, "did" | "email">
 					: Record<string, never>,
-				headers || {},
+				headers,
 			];
-		throw redirect("/admin/user");
+		throw redirect(`/admin/users/user/${newUser.did!}`, { headers });
 	}
 	const user = parsedUser.data;
 
-	if (user.locked && !lock) throw redirect("/admin/locked");
+	if (user.locked && !lock) throw redirect("/admin/locked", { headers });
 
 	if (
 		(cms && !user.canAccessCMS) ||
 		(lab && !user.canAccessLab) ||
 		(schoolib && !user.canAccessSchoolib)
 	)
-		throw redirect("/admin");
+		throw redirect("/admin", { headers });
 
-	return [user, headers || {}];
+	if (did && did !== user.did && !user.canAccessUsers)
+		throw redirect(`/admin/users/user/${user.did}`, { headers });
+
+	return [user, headers];
 }

@@ -108,7 +108,7 @@ export const action: ActionFunction = async ({ request, params }) =>
 
 const Editor = chakra(EditorContent);
 
-export default function Index(): JSX.Element {
+export default function CMSPage(): JSX.Element {
 	const {
 		categoryUUID,
 		content: loaderContent,

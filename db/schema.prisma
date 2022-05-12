@@ -33,6 +33,8 @@ model User {
     canAccessLab      Boolean  @default(false)
     /// Authorization/Permission for Schoolib
     canAccessSchoolib Boolean  @default(false)
+    /// Authorization/Permission for User Management
+    canAccessUsers    Boolean  @default(false)
     /// (LAB) Current pizza selection
     pizza             Pizza?   @relation(fields: [pizzaUUID], references: [uuid])
     /// (LAB) The foreign key of the pizza selection this user has a relation with
