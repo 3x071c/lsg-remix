@@ -2,7 +2,6 @@
 import type { z } from "zod";
 import { UserModel } from "~db";
 
-/* todo better type checking */
 export const User = UserModel;
 export type User = z.infer<typeof User>;
 

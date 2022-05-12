@@ -83,7 +83,7 @@ model Pizza {
     /// The pizza name
     name      String   @unique
     /// The price of the pizza (in cents, because floating point arithmetic drives me nuts)
-    price     Int      @db.SmallInt
+    price     Decimal  @db.Decimal(4, 2) /// @zod.positive().max(20)
     /// This timestamp is updated on every mutation automatically
     updatedAt DateTime @default(now()) @updatedAt
     /// This timestamp is set on creation automatically
