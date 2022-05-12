@@ -25,7 +25,7 @@ model User {
     firstname         String   @db.VarChar(20) /// @zod.min(3, { message: "Vorname zu kurz" }).max(20, { message: "Vorname zu lang" })
     /// The user's last name
     lastname          String   @db.VarChar(20) /// @zod.min(3, { message: "Nachname zu kurz" }).max(20, { message: "Nachname zu lang" })
-    /// Used to lock the user out of the app, i.e. preventing any priviledged access
+    /// Used to lock the user out of the app, i.e. preventing any privileged access
     locked            Boolean  @default(true) /// @zod.default(true)
     /// Authorization/Permission for the CMS
     canAccessCMS      Boolean  @default(false) /// @zod.default(false)

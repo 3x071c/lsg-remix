@@ -1,12 +1,10 @@
 /* eslint-disable @typescript-eslint/no-redeclare -- Zod inferred typings */
-import type { User as PrismaUser } from "@prisma/client";
 import type { z } from "zod";
 import { withZod } from "@remix-validated-form/with-zod";
 import { UserModel } from "~db";
 
-export const User: z.ZodObject<{
-	[K in keyof PrismaUser]: z.ZodType<PrismaUser[K]>;
-}> = UserModel;
+/* todo better type checking */
+export const User = UserModel;
 export type User = z.infer<typeof User>;
 
 export const UserData = User.omit({
