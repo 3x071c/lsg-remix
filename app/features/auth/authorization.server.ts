@@ -26,7 +26,7 @@ export async function authorize<
 	| User
 	| (O extends { required: false } ? null : Record<string, never>)
 	| (O extends { ignore: true }
-			? PartialExcept<User, "did">
+			? PartialExcept<User, "did" | "email">
 			: Record<string, never>)
 > {
 	const cms = options?.cms ?? false;
@@ -51,14 +51,15 @@ export async function authorize<
 				return [key, superjson.parse<User[typeof key]>(value)] as const;
 			})
 			.filter(Boolean) as [PropertyKey, unknown][],
-	);
+	) as Partial<User>;
 
 	const parsedUser = User.safeParse(partialUser);
 	if (!parsedUser.success) {
-		if (!partialUser["did"]) throw await invalidate(request);
+		if (!partialUser.did || !partialUser.email)
+			throw await invalidate(request);
 		if (ignore)
 			return partialUser as O extends { ignore: true }
-				? PartialExcept<User, "did">
+				? PartialExcept<User, "did" | "email">
 				: Record<string, never>;
 		throw redirect("/admin/user");
 	}

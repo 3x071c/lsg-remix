@@ -5,13 +5,12 @@ import { EditIcon, WarningTwoIcon } from "@chakra-ui/icons";
 import { Heading, Text, chakra, useDisclosure } from "@chakra-ui/react";
 import { useCallback, useMemo } from "react";
 import { validationError } from "remix-validated-form";
+import { PageData, PageCategoryData } from "~models";
 import {
-	PageData,
-	PageCategoryValidator,
+	PageModal,
 	PageValidator,
-	PageCategoryData,
-} from "~models";
-import { PageModal } from "~feat/admin/pagemodal";
+	PageCategoryValidator,
+} from "~feat/admin/pagemodal";
 import { PageTable } from "~feat/admin/pagetable";
 import { Statistics } from "~feat/admin/statistics";
 import { authorize } from "~feat/auth";
@@ -67,6 +66,8 @@ type ActionData = {
 	status: number;
 };
 const getActionData = async (request: Request): Promise<ActionData> => {
+	await authorize(request, { cms: true });
+
 	const form = await request.formData();
 	const subject = form.get("_subject");
 

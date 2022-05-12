@@ -1,26 +1,33 @@
 import type { ActionFunction, LoaderFunction } from "remix";
 import { Heading, chakra, Text, VStack, Box } from "@chakra-ui/react";
+import { withZod } from "@remix-validated-form/with-zod";
 import { redirect } from "remix";
 import { ValidatedForm, validationError } from "remix-validated-form";
-import { User, UserData, UserValidator } from "~models";
-import {
-	revalidateFromSession,
-	revalidateToSession,
-	commitSession,
-} from "~feat/auth";
+import { User, UserData } from "~models";
+import { revalidate, commitSession, authorize } from "~feat/auth";
 import { FormSmartInput, SubmitButton } from "~feat/form";
 import { prisma } from "~lib/prisma";
 import { respond, useActionResponse, useLoaderResponse } from "~lib/response";
 
-type LoaderData = Partial<User> & {
+const UserValidatorData = UserData.pick({
+	firstname: true,
+	lastname: true,
+});
+const UserValidator = withZod(UserValidatorData);
+
+type LoaderData = {
+	firstname?: string;
+	lastname?: string;
 	message: string;
 	status: number;
 };
 const getLoaderData = async (request: Request): Promise<LoaderData> => {
-	const { did } = await revalidateFromSession(request);
+	const sessionData = await authorize(request, { ignore: true });
+	const { did } = sessionData;
 
-	const user = await prisma.user.findUnique({ where: { did } });
-
+	const user = await prisma.user.findUnique({
+		where: { did },
+	});
 	if (!user)
 		return {
 			message:
@@ -28,7 +35,8 @@ const getLoaderData = async (request: Request): Promise<LoaderData> => {
 			status: 200,
 		};
 
-	if (!User.safeParse(user).success)
+	const parsedUser = User.safeParse(user);
+	if (!parsedUser.success)
 		return {
 			firstname: user.firstname,
 			lastname: user.lastname,
@@ -36,10 +44,21 @@ const getLoaderData = async (request: Request): Promise<LoaderData> => {
 				"Willkommen zurück! 🍻 Bitte überprüfen und ergänzen Sie ihre inzwischen unvollständigen Nutzerdaten.",
 			status: 200,
 		};
+	const { firstname, lastname } = parsedUser.data;
+
+	const parsedSession = User.safeParse(sessionData);
+	if (!parsedSession.success) {
+		const session = await revalidate(request, did);
+		throw redirect("/admin", {
+			headers: {
+				"Set-Cookie": await commitSession(session),
+			},
+		});
+	}
 
 	return {
-		firstname: user.firstname,
-		lastname: user.lastname,
+		firstname,
+		lastname,
 		message: "Einstellungen anpassen und Nutzerdaten aktualisieren",
 		status: 200,
 	};
@@ -52,23 +71,20 @@ type ActionData = {
 	status: number;
 };
 const getActionData = async (request: Request): Promise<ActionData> => {
-	const { did, email } = await revalidateFromSession(request);
+	const { did, email } = await authorize(request, { ignore: true });
 
 	const form = await request.formData();
-	const { error, data: formData } = await UserValidator.validate(form);
+	const { error, data } = await UserValidator.validate(form);
 	if (error) throw validationError(error);
 
-	const user = UserData.safeParse({ ...formData, did, email });
-	if (!user.success) throw new Error("Nutzer konnte nicht validiert werden");
-
 	await prisma.user.upsert({
-		create: user.data,
+		create: { ...data, did, email },
 		select: { uuid: true },
-		update: user.data,
+		update: data,
 		where: { did },
 	});
 
-	const session = await revalidateToSession(request, did);
+	const session = await revalidate(request, did);
 
 	throw redirect("/admin", {
 		headers: {

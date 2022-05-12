@@ -1,37 +1,32 @@
 import superjson from "superjson";
-import type { User } from "~models";
+import { User } from "~models";
 import { prisma } from "~lib/prisma";
 import { entries } from "~lib/util";
-import { authorize, invalidate, getSession, safeMetadata } from ".";
+import { getSession, safeMetadata } from ".";
 
-const revalidateByDID = async (_did: User["did"]) => {
-	const { issuer: did, email } = await safeMetadata(_did);
-	if (!(did && email))
+export async function revalidate(request: Request, _did: User["did"]) {
+	/* Validate the DID */
+	const rawDID = User.shape.did.safeParse(_did);
+	if (!rawDID.success)
 		throw new Error(
-			"Es wurden nicht alle erforderlichen Daten gesichert und übermittelt",
+			"Nutzeridentifikation wurden nicht korrekt übermittelt",
 		);
 
-	return { did, email };
-};
+	/* Revalidate user data via Magic */
+	const { issuer: did, email } = await safeMetadata(rawDID.data);
+	if (!(did && email))
+		throw new Error(
+			"Der Nutzer wurde nicht erfolgreich bei Magic angelegt",
+		);
 
-export async function revalidateFromSession(request: Request) {
-	const user = await authorize(request, { ignore: true });
-	if (!user.did) throw await invalidate(request);
-
-	return revalidateByDID(user.did);
-}
-
-export async function revalidateToSession(request: Request, _did: User["did"]) {
-	const { did, email } = await revalidateByDID(_did);
-
-	/* Get all user data to save in the session, if any */
+	/* Get database user data to save in the session, if any */
 	const user = (await prisma.user.findUnique({
 		where: {
 			did,
 		},
 	})) || { did, email };
 
-	/* Sync the User email to the one stored with Magic */
+	/* Overwrite database user data with Magic user data, if there are discrepancies */
 	if (user.email !== email)
 		await prisma.user.update({
 			data: { email },

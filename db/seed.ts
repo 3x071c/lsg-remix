@@ -3,7 +3,8 @@
 /* eslint-disable no-console */
 import faker from "@faker-js/faker/locale/de";
 import { PrismaClient } from "@prisma/client";
-import { random } from "lodash";
+import { random, sampleSize } from "lodash";
+import type { User } from "~models";
 
 const prisma = new PrismaClient();
 const uniqueData: string[] = [];
@@ -32,14 +33,13 @@ const seedDate = (start: Date, end: Date) =>
 		start.getTime() +
 			Math.max(Math.random() * (end.getTime() - start.getTime()), 0),
 	);
-const wayback = new Date("2020");
-const today = new Date();
+const past = new Date("2020");
+const present = new Date();
 
-export default async function main(): Promise<void> {
-	console.log(`Start seeding ✨`);
-
-	console.log("🧬 Seeding users...");
+const seedUsers = async () => {
 	for (let i = 0; i < random(10, 30); i += 1) {
+		const createdAt = seedDate(past, present);
+		const did = `did:ethr:${faker.datatype.hexadecimal(40)}`;
 		let firstname = "";
 		let lastname = "";
 		const email = getUnique(() => {
@@ -47,8 +47,7 @@ export default async function main(): Promise<void> {
 			lastname = faker.name.lastName();
 			return faker.internet.email(firstname, lastname);
 		});
-		const createdAt = seedDate(wayback, today);
-		const did = `did:ethr:${faker.datatype.hexadecimal(40)}`;
+		const updatedAt = seedDate(createdAt, present);
 
 		console.log(`👉 Creating user ${firstname} ${lastname} (${email})`);
 		await prisma.user.create({
@@ -58,11 +57,53 @@ export default async function main(): Promise<void> {
 				email,
 				firstname,
 				lastname,
-				updatedAt: seedDate(createdAt, today),
+				updatedAt,
 			},
 		});
 	}
+};
+
+const seedPizzas = async (users: User[]) => {
+	for (let i = 0; i < random(10, 30); i += 1) {
+		const createdAt = seedDate(past, present);
+		const name = faker.commerce.productName();
+		const price = random(1, 1000);
+		const updatedAt = seedDate(createdAt, present);
+		const connect = sampleSize(users, random(1, users.length)).map(
+			(user) => ({ uuid: user.uuid }),
+		);
+
+		console.log(connect);
+
+		console.log(
+			`👉 Creating pizza ${name} (for €${(price / 100).toFixed(2)})`,
+		);
+		await prisma.pizza.create({
+			data: {
+				createdAt,
+				name,
+				price,
+				updatedAt,
+				users: {
+					connect,
+				},
+			},
+		});
+	}
+};
+
+export default async function main(): Promise<void> {
+	console.log(`Start seeding ✨`);
+
+	console.log("🧬 Seeding users...");
+	await seedUsers();
 	console.log("🧬 ...finished users ✅");
+
+	const users = await prisma.user.findMany();
+
+	console.log("🍕 Seeding pizzas...");
+	await seedPizzas(users);
+	console.log("🍕 ...finished pizzas ✅");
 
 	console.log("⏭ Skipping page seeding (not implemented)");
 	console.log("⚠️ Create pages at /admin manually");

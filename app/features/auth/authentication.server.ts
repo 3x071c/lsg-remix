@@ -5,14 +5,14 @@ import {
 	commitSession,
 	destroySession,
 	authorize,
-	revalidateToSession,
+	revalidate,
 	safeIssuer,
 } from ".";
 
 export async function authenticate(request: Request, token: string) {
 	const did = safeIssuer(token);
 
-	const session = await revalidateToSession(request, did);
+	const session = await revalidate(request, did);
 
 	throw redirect("/admin", {
 		headers: {

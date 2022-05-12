@@ -26,13 +26,17 @@ model User {
     /// The user's last name
     lastname          String   @db.VarChar(20) /// @zod.min(3, { message: "Nachname zu kurz" }).max(20, { message: "Nachname zu lang" })
     /// Used to lock the user out of the app, i.e. preventing any privileged access
-    locked            Boolean  @default(true) /// @zod.default(true)
+    locked            Boolean  @default(true)
     /// Authorization/Permission for the CMS
-    canAccessCMS      Boolean  @default(false) /// @zod.default(false)
+    canAccessCMS      Boolean  @default(false)
     /// Authorization/Permission for the Lab
-    canAccessLab      Boolean  @default(false) /// @zod.default(false)
+    canAccessLab      Boolean  @default(false)
     /// Authorization/Permission for Schoolib
-    canAccessSchoolib Boolean  @default(false) /// @zod.default(false)
+    canAccessSchoolib Boolean  @default(false)
+    /// (LAB) Current pizza selection
+    pizza             Pizza?   @relation(fields: [pizzaUUID], references: [uuid])
+    /// (LAB) The foreign key of the pizza selection this user has a relation with
+    pizzaUUID         String?  @db.Uuid
     /// This timestamp is updated on every mutation automatically
     updatedAt         DateTime @default(now()) @updatedAt
     /// This timestamp is set on creation automatically
@@ -63,6 +67,21 @@ model PageCategory {
     pages     Page[]
     /// The category name
     name      String   @db.VarChar(40) /// @zod.min(3, { message: "Name zu kurz" }).max(40, { message: "Name zu lang" })
+    /// This timestamp is updated on every mutation automatically
+    updatedAt DateTime @default(now()) @updatedAt
+    /// This timestamp is set on creation automatically
+    createdAt DateTime @default(now())
+}
+
+model Pizza {
+    /// The unique ID of the pizza
+    uuid      String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    /// All users that have selected this pizza
+    users     User[]
+    /// The pizza name
+    name      String   @unique
+    /// The price of the pizza (in cents, because floating point arithmetic drives me nuts)
+    price     Int      @db.SmallInt
     /// This timestamp is updated on every mutation automatically
     updatedAt DateTime @default(now()) @updatedAt
     /// This timestamp is set on creation automatically
