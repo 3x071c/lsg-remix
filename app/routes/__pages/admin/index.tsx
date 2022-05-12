@@ -41,7 +41,7 @@ const getLoaderData = async (request: Request): Promise<LoaderData> => {
 			canAccessUsers,
 		},
 		headers,
-	] = await authorize(request, { ignore: true, lock: true });
+	] = await authorize(request);
 
 	const pages = getPages({
 		canAccessCMS,
