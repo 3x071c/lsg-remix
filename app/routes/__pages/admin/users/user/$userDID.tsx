@@ -22,7 +22,7 @@ const UserValidatorData = UserData.pick({
 	firstname: true,
 	lastname: true,
 }).extend({
-	canAccess: zfd.repeatable().optional(),
+	canAccess: zfd.repeatable(),
 });
 const UserValidator = withZod(UserValidatorData);
 
@@ -39,6 +39,7 @@ const getDID = (params: Params) => {
 type LoaderData = {
 	canAccessCMS: boolean;
 	canAccessLab: boolean;
+	canAccessLocked: boolean;
 	canAccessSchoolib: boolean;
 	firstname?: string;
 	headers: HeadersInit;
@@ -46,6 +47,7 @@ type LoaderData = {
 	message: string;
 	showAccessCMS: boolean;
 	showAccessLab: boolean;
+	showAccessLocked: boolean;
 	showAccessSchoolib: boolean;
 	status: number;
 };
@@ -71,12 +73,14 @@ const getLoaderData = async (
 			return {
 				canAccessCMS: false,
 				canAccessLab: false,
+				canAccessLocked: true,
 				canAccessSchoolib: false,
 				headers,
 				message:
 					"Willkommen! 👋 Um die Registration abzuschließen, müssen folgende Daten hinterlegt werden:",
 				showAccessCMS: showAccessCMS ?? false,
 				showAccessLab: showAccessLab ?? false,
+				showAccessLocked: false,
 				showAccessSchoolib: showAccessSchoolib ?? false,
 				status: 200,
 			};
@@ -91,6 +95,7 @@ const getLoaderData = async (
 		return {
 			canAccessCMS: target.canAccessCMS ?? false,
 			canAccessLab: target.canAccessLab ?? false,
+			canAccessLocked: target.locked ?? false,
 			canAccessSchoolib: target.canAccessSchoolib ?? false,
 			firstname: target.firstname,
 			headers,
@@ -101,6 +106,7 @@ const getLoaderData = async (
 					: "⚠️ Dieser Nutzer ist unvollständig, vor weiterer Aktivität müssen die Daten ergänzt werden",
 			showAccessCMS: showAccessCMS ?? false,
 			showAccessLab: showAccessLab ?? false,
+			showAccessLocked: target.locked !== undefined && did !== user.did,
 			showAccessSchoolib: showAccessSchoolib ?? false,
 			status: 200,
 		};
@@ -110,12 +116,14 @@ const getLoaderData = async (
 		canAccessLab,
 		canAccessSchoolib,
 		firstname,
+		locked: canAccessLocked,
 		lastname,
 	} = parsed.data;
 
 	return {
 		canAccessCMS: canAccessCMS ?? false,
 		canAccessLab: canAccessLab ?? false,
+		canAccessLocked,
 		canAccessSchoolib: canAccessSchoolib ?? false,
 		firstname,
 		headers,
@@ -123,6 +131,7 @@ const getLoaderData = async (
 		message: "Einstellungen anpassen und Nutzerdaten aktualisieren",
 		showAccessCMS: showAccessCMS ?? false,
 		showAccessLab: showAccessLab ?? false,
+		showAccessLocked: did !== user.did,
 		showAccessSchoolib: showAccessSchoolib ?? false,
 		status: 200,
 	};
@@ -154,35 +163,39 @@ const getActionData = async (
 	if (error) throw validationError(error);
 
 	const { firstname, lastname, canAccess } = data;
-	const canAccessCMS =
-		(canAccess?.includes("cms") && user.canAccessCMS) || false;
-	const canAccessLab =
-		(canAccess?.includes("lab") && user.canAccessLab) || false;
-	const canAccessSchoolib =
-		(canAccess?.includes("schoolib") && user.canAccessSchoolib) || false;
+	const canAccessCMS = user.canAccessCMS
+		? canAccess?.includes("cms")
+		: undefined;
+	const canAccessLab = user.canAccessLab
+		? canAccess?.includes("lab")
+		: undefined;
+	const canAccessLocked =
+		user.did !== did ? canAccess?.includes("locked") : undefined;
+	const canAccessSchoolib = user.canAccessSchoolib
+		? canAccess?.includes("schoolib")
+		: undefined;
+
+	const update = {
+		canAccessCMS,
+		canAccessLab,
+		canAccessSchoolib,
+		firstname,
+		lastname,
+		locked: canAccessLocked,
+	};
 
 	await prisma.user.upsert({
 		create: {
-			canAccessCMS,
-			canAccessLab,
-			canAccessSchoolib,
+			...update,
 			did,
 			email,
-			firstname,
-			lastname,
 		},
 		select: { uuid: true },
-		update: {
-			canAccessCMS,
-			canAccessLab,
-			canAccessSchoolib,
-			firstname,
-			lastname,
-		},
+		update,
 		where: { did },
 	});
 
-	throw redirect("/admin", {
+	throw redirect("/admin/users", {
 		headers,
 	});
 };
@@ -200,6 +213,8 @@ export default function AdminUser() {
 		message,
 		firstname,
 		lastname,
+		canAccessLocked,
+		showAccessLocked,
 	} = useLoaderResponse<LoaderData>();
 	const { formError } = useActionResponse<ActionData>();
 
@@ -274,6 +289,15 @@ export default function AdminUser() {
 								name="canAccess"
 								value="schoolib"
 								defaultChecked={canAccessSchoolib}
+							/>
+						)}
+						{showAccessLocked && (
+							<FormSwitch
+								label="Sperre"
+								helper="Ob dieser Nutzer aus der Benutzung der Applikation gesperrt wurde"
+								name="canAccess"
+								value="locked"
+								defaultChecked={canAccessLocked}
 							/>
 						)}
 					</SimpleGrid>
