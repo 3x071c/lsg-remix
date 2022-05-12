@@ -1,6 +1,5 @@
 import type { Column } from "react-table";
 import type { ActionFunction, LoaderFunction } from "remix";
-import type { PageTableType } from "~feat/admin/pagetable";
 import { EditIcon, WarningTwoIcon } from "@chakra-ui/icons";
 import { Heading, Text, chakra, useDisclosure } from "@chakra-ui/react";
 import { useCallback, useMemo } from "react";
@@ -11,10 +10,10 @@ import {
 	PageValidator,
 	PageCategoryValidator,
 } from "~feat/admin/pagemodal";
-import { PageTable } from "~feat/admin/pagetable";
 import { Statistics } from "~feat/admin/statistics";
 import { authorize } from "~feat/auth";
 import { LinkIconButton } from "~feat/links";
+import { Table } from "~feat/table";
 import { prisma, toIndexedObject } from "~lib/prisma";
 import { respond, useActionResponse, useLoaderResponse } from "~lib/response";
 
@@ -115,7 +114,7 @@ const getActionData = async (request: Request): Promise<ActionData> => {
 export const action: ActionFunction = async ({ request }) =>
 	respond<ActionData>(await getActionData(request));
 
-export default function Index(): JSX.Element {
+export default function CMS(): JSX.Element {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { categoryData, pageData } = useLoaderResponse<LoaderData>();
 	const { formError } = useActionResponse<ActionData>();
@@ -124,7 +123,7 @@ export default function Index(): JSX.Element {
 		() => toIndexedObject(categoryData),
 		[categoryData],
 	);
-	const memoizedWarningTwoIcon = useMemo(() => <WarningTwoIcon />, []);
+	const memoizedWarningIcon = useMemo(() => <WarningTwoIcon />, []);
 	const memoizedButton = useCallback(
 		(href: string) => (
 			<LinkIconButton
@@ -145,16 +144,25 @@ export default function Index(): JSX.Element {
 			} as const),
 		[],
 	);
-	const columns = useMemo<Column<PageTableType>[]>(
+	const columns = useMemo<
+		Column<{
+			updatedAt: Date;
+			createdAt: Date;
+			categoryUUID: string;
+			title: string;
+			uuid: string;
+		}>[]
+	>(
 		() => [
 			{
 				accessor: "title",
+				Cell: ({ value }) => value || memoizedWarningIcon,
 				Header: "Titel",
 			},
 			{
 				accessor: "categoryUUID",
 				Cell: ({ value }) =>
-					indexedCategoryData[value]?.name ?? memoizedWarningTwoIcon,
+					indexedCategoryData[value]?.name ?? memoizedWarningIcon,
 				disableGlobalFilter: true,
 				Header: "Kategorie",
 			},
@@ -182,7 +190,7 @@ export default function Index(): JSX.Element {
 				isNumeric: true,
 			},
 		],
-		[memoizedWarningTwoIcon, dateOpts, indexedCategoryData, memoizedButton],
+		[memoizedWarningIcon, dateOpts, indexedCategoryData, memoizedButton],
 	);
 
 	return (
@@ -194,7 +202,12 @@ export default function Index(): JSX.Element {
 				Seiten einsehen und bearbeiten
 			</Text>
 			<Statistics data={pageData} />
-			<PageTable columns={columns} data={pageData} newPage={onOpen} />
+			<Table
+				heading="Alle Seiten:"
+				columns={columns}
+				data={pageData}
+				trigger={onOpen}
+			/>
 			<PageModal
 				categoryData={categoryData}
 				isOpen={isOpen}

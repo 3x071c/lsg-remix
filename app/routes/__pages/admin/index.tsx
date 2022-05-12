@@ -32,11 +32,23 @@ type LoaderData = {
 };
 const getLoaderData = async (request: Request): Promise<LoaderData> => {
 	const [
-		{ firstname, lastname, canAccessCMS, canAccessLab, canAccessSchoolib },
+		{
+			firstname,
+			lastname,
+			canAccessCMS,
+			canAccessLab,
+			canAccessSchoolib,
+			canAccessUsers,
+		},
 		headers,
-	] = await authorize(request);
+	] = await authorize(request, { ignore: true, lock: true });
 
-	const pages = getPages({ canAccessCMS, canAccessLab, canAccessSchoolib });
+	const pages = getPages({
+		canAccessCMS,
+		canAccessLab,
+		canAccessSchoolib,
+		canAccessUsers,
+	});
 
 	return {
 		firstname,

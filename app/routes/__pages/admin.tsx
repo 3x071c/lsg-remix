@@ -12,10 +12,12 @@ export const getPages = ({
 	canAccessCMS,
 	canAccessLab,
 	canAccessSchoolib,
+	canAccessUsers,
 }: {
 	canAccessCMS?: boolean;
 	canAccessLab?: boolean;
 	canAccessSchoolib?: boolean;
+	canAccessUsers?: boolean;
 }) => {
 	return [
 		{
@@ -40,17 +42,17 @@ export const getPages = ({
 			url: "/admin/lab",
 		},
 		{
-			authorized: true,
-			hidden: true,
+			authorized: canAccessUsers,
 			id: 4,
-			long: "Nutzer",
+			long: "Nutzerverwaltung",
 			short: "Nutzer",
-			url: "/admin/user",
+			url: "/admin/users",
 		},
 	];
 };
 
 type LoaderData = {
+	did?: string;
 	firstname?: string;
 	headers: HeadersInit;
 	lastname?: string;
@@ -66,13 +68,27 @@ type LoaderData = {
 };
 const getLoaderData = async (request: Request): Promise<LoaderData> => {
 	const [
-		{ firstname, lastname, canAccessCMS, canAccessLab, canAccessSchoolib },
+		{
+			did,
+			firstname,
+			lastname,
+			canAccessCMS,
+			canAccessLab,
+			canAccessSchoolib,
+			canAccessUsers,
+		},
 		headers,
 	] = await authorize(request, { ignore: true, lock: true });
 
-	const pages = getPages({ canAccessCMS, canAccessLab, canAccessSchoolib });
+	const pages = getPages({
+		canAccessCMS,
+		canAccessLab,
+		canAccessSchoolib,
+		canAccessUsers,
+	});
 
 	return {
+		did,
 		firstname,
 		headers,
 		lastname,
@@ -84,7 +100,7 @@ export const loader: LoaderFunction = async ({ request }) =>
 	respond<LoaderData>(await getLoaderData(request));
 
 export default function Admin(): JSX.Element {
-	const { firstname, lastname, pages } = useLoaderResponse<LoaderData>();
+	const { did, firstname, lastname, pages } = useLoaderResponse<LoaderData>();
 	const headerPortal = useContext(HeaderPortalContext);
 	const location = useLocation();
 	const [route, setRoute] = useState<string>(location.pathname);
@@ -99,8 +115,8 @@ export default function Admin(): JSX.Element {
 			<Portal containerRef={headerPortal}>
 				<CmsNav
 					user={
-						firstname && lastname
-							? { firstname, lastname }
+						did && firstname && lastname
+							? { did, firstname, lastname }
 							: undefined
 					}
 					pages={pages.filter(

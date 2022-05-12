@@ -155,7 +155,8 @@
 		"remix": "1.4.1",
 		"remix-validated-form": "4.3.0",
 		"superjson": "1.8.1",
-		"zod": "3.14.4"
+		"zod": "3.14.4",
+		"zod-form-data": "1.2.0"
 	},
 	"devDependencies": {
 		"@babel/core": "7.17.9",
