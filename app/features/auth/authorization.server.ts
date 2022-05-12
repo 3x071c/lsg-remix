@@ -95,6 +95,8 @@ export async function authorize<
 	}
 	const user = parsedUser.data;
 
+	if (!dbUser) throw await invalidate(request);
+
 	if (user.locked && !lock) throw redirect("/admin/locked", { headers });
 
 	if (
