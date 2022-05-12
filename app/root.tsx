@@ -20,7 +20,7 @@ import {
 	useCatch,
 } from "remix";
 import { ColorModeToggle, ColorModeManager } from "~app/colormode";
-import { HeaderPortalContext } from "~feat/headerPortal";
+import { HeaderPortalContext } from "~feat/headerportal";
 import { Link } from "~feat/links";
 import { keys } from "~lib/util";
 

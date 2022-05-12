@@ -4,13 +4,14 @@ import type { ActionFunction, LoaderFunction } from "remix";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import { chakra, HStack, Input, Text } from "@chakra-ui/react";
 import { Prose } from "@nikolovlazar/chakra-ui-prose";
+import { withZod } from "@remix-validated-form/with-zod";
 import { generateHTML } from "@tiptap/html";
 import { useEditor, EditorContent } from "@tiptap/react";
 import { debounce } from "lodash";
 import { useState } from "react";
 import { ValidatedForm, validationError } from "remix-validated-form";
 import superjson from "superjson";
-import { PageData, PageValidator } from "~models";
+import { PageData } from "~models";
 import { authorize } from "~feat/auth";
 import { extensions, EditorBar } from "~feat/editor";
 import { FormSmartInput, SubmitButton } from "~feat/form";
@@ -18,6 +19,9 @@ import { Link } from "~feat/links";
 import { prisma } from "~lib/prisma";
 import { respond, useActionResponse, useLoaderResponse } from "~lib/response";
 import { sanitize } from "~lib/sanitize";
+
+const PageValidatorData = PageData;
+const PageValidator = withZod(PageValidatorData);
 
 const getUUID = (params: Params) => {
 	const uuid = params["pageUUID"];

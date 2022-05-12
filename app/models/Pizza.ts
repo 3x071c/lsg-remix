@@ -7,3 +7,9 @@ export const Pizza: z.ZodObject<{
 	[K in keyof PrismaPizza]: z.ZodType<PrismaPizza[K]>;
 }> = PizzaModel;
 export type Pizza = z.infer<typeof Pizza>;
+
+export const PizzaData = Pizza.omit({
+	createdAt: true,
+	updatedAt: true,
+	uuid: true,
+});

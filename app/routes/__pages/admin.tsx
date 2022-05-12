@@ -5,7 +5,7 @@ import { Outlet, useLocation } from "remix";
 import { CmsNav } from "~feat/admin";
 import { authorize } from "~feat/auth";
 import { maxContentWidth } from "~feat/chakra";
-import { HeaderPortalContext } from "~feat/headerPortal";
+import { HeaderPortalContext } from "~feat/headerportal";
 import { respond, useLoaderResponse } from "~lib/response";
 
 export const getPages = ({

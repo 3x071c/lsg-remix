@@ -10,13 +10,18 @@ import {
 	ModalCloseButton,
 	VStack,
 } from "@chakra-ui/react";
+import { withZod } from "@remix-validated-form/with-zod";
 import { useEffect, useState } from "react";
 import { useTransition } from "remix";
 import { ValidatedForm } from "remix-validated-form";
 import superjson from "superjson";
-import { PageValidator } from "~models";
+import { PageData } from "~models";
 import { FormInput, FormSelect, SubmitButton } from "~feat/form";
 import { CategoryPopover } from "./categorypopover";
+
+export * from "./categorypopover";
+export const PageValidatorData = PageData;
+export const PageValidator = withZod(PageValidatorData);
 
 export function PageModal({
 	isOpen,

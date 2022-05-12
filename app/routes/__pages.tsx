@@ -3,7 +3,7 @@ import { Portal } from "@chakra-ui/react";
 import { useContext } from "react";
 import { Outlet } from "remix";
 import { authorize } from "~feat/auth";
-import { HeaderPortalContext } from "~feat/headerPortal";
+import { HeaderPortalContext } from "~feat/headerportal";
 import { Nav } from "~feat/nav";
 import { prisma } from "~lib/prisma";
 import { respond, useLoaderResponse } from "~lib/response";

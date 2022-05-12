@@ -9,12 +9,16 @@ import {
 	ButtonGroup,
 	IconButton,
 } from "@chakra-ui/react";
+import { withZod } from "@remix-validated-form/with-zod";
 import { useEffect, useRef, useState } from "react";
 import FocusLock from "react-focus-lock";
 import { useTransition } from "remix";
 import { ValidatedForm } from "remix-validated-form";
-import { PageCategoryValidator } from "~models";
+import { PageCategoryData } from "~models";
 import { FormInput, SubmitButton } from "~feat/form";
+
+export const PageCategoryValidatorData = PageCategoryData;
+export const PageCategoryValidator = withZod(PageCategoryValidatorData);
 
 export type CategoryPopoverProps = {
 	setCloseable: (arg: boolean) => void;
