@@ -14,7 +14,7 @@ import { withZod } from "@remix-validated-form/with-zod";
 import { useState } from "react";
 import { ValidatedForm, validationError } from "remix-validated-form";
 import { UserData } from "~models";
-import { authorize, commitSession, revalidate } from "~feat/auth";
+import { authorize } from "~feat/auth";
 import { SubmitButton } from "~feat/form";
 import { prisma } from "~lib/prisma";
 import { respond, useActionResponse, useLoaderResponse } from "~lib/response";
@@ -25,6 +25,7 @@ const UserValidatorData = UserData.pick({
 const UserValidator = withZod(UserValidatorData);
 
 type LoaderData = {
+	headers: HeadersInit;
 	pizzas: {
 		price: number;
 		name: string;
@@ -34,7 +35,7 @@ type LoaderData = {
 	status: number;
 };
 const getLoaderData = async (request: Request): Promise<LoaderData> => {
-	const { pizzaUUID } = await authorize(request, { lab: true });
+	const [{ pizzaUUID }, headers] = await authorize(request, { lab: true });
 
 	const pizzas = await prisma.pizza.findMany({
 		orderBy: {
@@ -48,6 +49,7 @@ const getLoaderData = async (request: Request): Promise<LoaderData> => {
 	});
 
 	return {
+		headers,
 		pizzas,
 		pizzaUUID,
 		status: 200,
@@ -58,11 +60,11 @@ export const loader: LoaderFunction = async ({ request }) =>
 
 type ActionData = {
 	formError?: string;
-	headers?: HeadersInit;
+	headers: HeadersInit;
 	status: number;
 };
 const getActionData = async (request: Request): Promise<ActionData> => {
-	const { did } = await authorize(request, { lab: true });
+	const [{ did }, headers] = await authorize(request, { lab: true });
 
 	const form = await request.formData();
 	const { error, data } = await UserValidator.validate(form);
@@ -78,12 +80,8 @@ const getActionData = async (request: Request): Promise<ActionData> => {
 		},
 	});
 
-	const session = await revalidate(request, did);
-
 	return {
-		headers: {
-			"Set-Cookie": await commitSession(session),
-		},
+		headers,
 		status: 200,
 	};
 };

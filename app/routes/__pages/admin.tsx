@@ -52,6 +52,7 @@ export const getPages = ({
 
 type LoaderData = {
 	firstname?: string;
+	headers: HeadersInit;
 	lastname?: string;
 	pages: {
 		authorized?: boolean;
@@ -64,18 +65,16 @@ type LoaderData = {
 	status: number;
 };
 const getLoaderData = async (request: Request): Promise<LoaderData> => {
-	const {
-		firstname,
-		lastname,
-		canAccessCMS,
-		canAccessLab,
-		canAccessSchoolib,
-	} = await authorize(request, { ignore: true, lock: true });
+	const [
+		{ firstname, lastname, canAccessCMS, canAccessLab, canAccessSchoolib },
+		headers,
+	] = await authorize(request, { ignore: true, lock: true });
 
 	const pages = getPages({ canAccessCMS, canAccessLab, canAccessSchoolib });
 
 	return {
 		firstname,
+		headers,
 		lastname,
 		pages,
 		status: 200,

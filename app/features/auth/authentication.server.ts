@@ -12,7 +12,7 @@ import {
 export async function authenticate(request: Request, token: string) {
 	const did = safeIssuer(token);
 
-	const session = await revalidate(request, did);
+	const [, session] = await revalidate(request, did);
 
 	throw redirect("/admin", {
 		headers: {
@@ -29,7 +29,7 @@ export async function authenticate(request: Request, token: string) {
 export async function invalidate(request: Request): Promise<Response> {
 	const session = await getSession(request.headers.get("Cookie"));
 	try {
-		const user = await authorize(request, { ignore: true });
+		const [user] = await authorize(request, { ignore: true });
 		await magicServer.users.logoutByIssuer(user.did);
 	} catch (e) {}
 

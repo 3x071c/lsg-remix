@@ -6,12 +6,18 @@ import { useLogin, authorize, invalidate } from "~feat/auth";
 import { respond } from "~lib/response";
 
 type LoaderData = {
+	headers: HeadersInit;
 	status: number;
 };
 const getLoaderData = async (request: Request): Promise<LoaderData> => {
-	if (await authorize(request, { ignore: true, lock: true, required: false }))
-		throw await invalidate(request);
-	return { status: 200 };
+	const [user, headers] = await authorize(request, {
+		ignore: true,
+		lock: true,
+		required: false,
+	});
+	if (user) throw await invalidate(request);
+
+	return { headers, status: 200 };
 };
 export const loader: LoaderFunction = async ({ request }) =>
 	respond<LoaderData>(await getLoaderData(request));

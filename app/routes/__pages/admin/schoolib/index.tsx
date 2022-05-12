@@ -4,12 +4,14 @@ import { InfoBoundary } from "~feat/boundaries";
 import { respond } from "~lib/response";
 
 type LoaderData = {
+	headers: HeadersInit;
 	status: number;
 };
 const getLoaderData = async (request: Request): Promise<LoaderData> => {
-	await authorize(request, { schoolib: true });
+	const [, headers] = await authorize(request, { schoolib: true });
 
 	return {
+		headers,
 		status: 200,
 	};
 };

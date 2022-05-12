@@ -1,8 +1,9 @@
 import { redirect } from "remix";
 import superjson from "superjson";
 import { User } from "~models";
+import { prisma } from "~lib/prisma";
 import { fromEntries, keys } from "~lib/util";
-import { getSession, invalidate } from ".";
+import { getSession, invalidate, revalidate, commitSession } from ".";
 
 /**
  * Authorize an incoming request by checking the session data and returning it
@@ -23,11 +24,16 @@ export async function authorize<
 	request: Request,
 	options?: O,
 ): Promise<
-	| User
-	| (O extends { required: false } ? null : Record<string, never>)
-	| (O extends { ignore: true }
-			? PartialExcept<User, "did" | "email">
-			: Record<string, never>)
+	[
+		(
+			| User
+			| (O extends { required: false } ? null : Record<string, never>)
+			| (O extends { ignore: true }
+					? PartialExcept<User, "did" | "email">
+					: Record<string, never>)
+		),
+		HeadersInit,
+	]
 > {
 	const cms = options?.cms ?? false;
 	const lab = options?.lab ?? false;
@@ -39,9 +45,12 @@ export async function authorize<
 
 	if (keys(session.data).length === 0) {
 		if (required) throw redirect("/login");
-		return null as O extends { required: false }
-			? null
-			: Record<string, never>;
+		return [
+			null as O extends { required: false }
+				? null
+				: Record<string, never>,
+			{},
+		];
 	}
 	const partialUser = fromEntries(
 		keys(User.shape)
@@ -53,14 +62,34 @@ export async function authorize<
 			.filter(Boolean) as [PropertyKey, unknown][],
 	) as Partial<User>;
 
-	const parsedUser = User.safeParse(partialUser);
+	if (!partialUser.did || !partialUser.email) throw await invalidate(request);
+	const { did } = partialUser;
+
+	const dbUser = await prisma.user.findUnique({
+		select: { updatedAt: true },
+		where: { did },
+	});
+
+	const [newUser, newSession] =
+		(partialUser.updatedAt?.getTime() ?? null) !==
+		(dbUser?.updatedAt?.getTime() ?? null)
+			? await revalidate(request, did)
+			: [partialUser, null];
+	const headers = newSession
+		? {
+				"Set-Cookie": await commitSession(newSession),
+		  }
+		: null;
+
+	const parsedUser = User.safeParse(newUser);
 	if (!parsedUser.success) {
-		if (!partialUser.did || !partialUser.email)
-			throw await invalidate(request);
 		if (ignore)
-			return partialUser as O extends { ignore: true }
-				? PartialExcept<User, "did" | "email">
-				: Record<string, never>;
+			return [
+				newUser as O extends { ignore: true }
+					? PartialExcept<User, "did" | "email">
+					: Record<string, never>,
+				headers || {},
+			];
 		throw redirect("/admin/user");
 	}
 	const user = parsedUser.data;
@@ -74,5 +103,5 @@ export async function authorize<
 	)
 		throw redirect("/admin");
 
-	return user;
+	return [user, headers || {}];
 }
