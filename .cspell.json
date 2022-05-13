@@ -21,6 +21,7 @@
 	"language": "en,de",
 	"useGitignore": true,
 	"words": [
+		"luxon",
 		"apdisk",
 		"awad",
 		"Cäpt",
