@@ -14,6 +14,7 @@ import {
 import { withZod } from "@remix-validated-form/with-zod";
 import { useState } from "react";
 import { ValidatedForm, validationError } from "remix-validated-form";
+import type { User } from "~models";
 import { UserData } from "~models";
 import { authorize } from "~feat/auth";
 import { SubmitButton } from "~feat/form";
@@ -32,12 +33,20 @@ type LoaderData = {
 		price: string;
 		name: string;
 		uuid: string;
+		users?: User[];
 	}[];
 	pizzaUUID?: string | null;
 	status: number;
 };
 const getLoaderData = async (request: Request): Promise<LoaderData> => {
 	const [{ pizzaUUID }, headers] = await authorize(request, { lab: true });
+
+	const showTime = new Date();
+	showTime.setUTCHours(11); // GMT+2 = 13:05
+	showTime.setUTCMinutes(5);
+
+	// eslint-disable-next-line no-console
+	console.log("⏰", showTime.toUTCString());
 
 	const pizzas = (
 		await prisma.pizza.findMany({
@@ -47,6 +56,9 @@ const getLoaderData = async (request: Request): Promise<LoaderData> => {
 			select: {
 				name: true,
 				price: true,
+				users:
+					new Date().getDay() === 5 &&
+					new Date().getTime() >= showTime.getTime(),
 				uuid: true,
 			},
 		})
@@ -97,6 +109,7 @@ export default function Pizza(): JSX.Element {
 	const { formError } = useActionResponse<ActionData>();
 	const [pizza, setPizza] = useState(pizzaUUID);
 	const checkColor = useColorModeValue("green.600", "green.400");
+	const grayColor = useColorModeValue("gray.600", "gray.400");
 
 	return (
 		<chakra.main w="full">
@@ -113,12 +126,22 @@ export default function Pizza(): JSX.Element {
 					my={4}
 					name="pizzaUUID">
 					<VStack>
-						{pizzas.map(({ name, price, uuid }) => (
+						{pizzas.map(({ name, price, uuid, users }) => (
 							<Box w="full" key={uuid}>
 								<Radio value={uuid}>
 									{name} ({price}€){" "}
 									{pizzaUUID === uuid && (
 										<CheckIcon mr={2} color={checkColor} />
+									)}
+									{users && (
+										<Text color={grayColor}>
+											{users
+												.map(
+													({ firstname }) =>
+														firstname,
+												)
+												.join(", ")}
+										</Text>
 									)}
 								</Radio>
 							</Box>
