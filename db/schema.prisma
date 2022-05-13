@@ -35,10 +35,12 @@ model User {
     canAccessSchoolib Boolean  @default(false)
     /// Authorization/Permission for User Management
     canAccessUsers    Boolean  @default(false)
-    /// (LAB) Current pizza selection
-    pizza             Pizza?   @relation(fields: [pizzaUUID], references: [uuid])
+    /// (LAB) The pizza selection for orders
+    pizza             Pizza?   @relation("UserPizza", fields: [pizzaUUID], references: [uuid])
     /// (LAB) The foreign key of the pizza selection this user has a relation with
     pizzaUUID         String?  @db.Uuid
+    /// (LAB) Pizzas this user created
+    createdPizzas     Pizza[]  @relation("UserCreatedPizzas")
     /// This timestamp is updated on every mutation automatically
     updatedAt         DateTime @default(now()) @updatedAt
     /// This timestamp is set on creation automatically
@@ -77,15 +79,19 @@ model PageCategory {
 
 model Pizza {
     /// The unique ID of the pizza
-    uuid      String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    uuid          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
     /// All users that have selected this pizza
-    users     User[]
+    users         User[]   @relation("UserPizza")
     /// The pizza name
-    name      String   @unique
+    name          String   @unique
     /// The price of the pizza (in cents, because floating point arithmetic drives me nuts)
-    price     Decimal  @db.Decimal(4, 2) /// @zod.positive().max(20)
+    price         Decimal  @db.Decimal(4, 2) /// @zod.positive().max(20)
     /// This timestamp is updated on every mutation automatically
-    updatedAt DateTime @default(now()) @updatedAt
+    updatedAt     DateTime @default(now()) @updatedAt
     /// This timestamp is set on creation automatically
-    createdAt DateTime @default(now())
+    createdAt     DateTime @default(now())
+    /// The user that created this pizza
+    createdBy     User     @relation("UserCreatedPizzas", fields: [createdByUUID], references: [uuid])
+    /// The foreign key to the UUID of the user this pizza has been created by
+    createdByUUID String   @db.Uuid
 }

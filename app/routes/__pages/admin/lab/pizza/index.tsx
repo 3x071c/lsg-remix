@@ -14,7 +14,6 @@ import {
 import { withZod } from "@remix-validated-form/with-zod";
 import { useState } from "react";
 import { ValidatedForm, validationError } from "remix-validated-form";
-import type { User } from "~models";
 import { UserData } from "~models";
 import { authorize } from "~feat/auth";
 import { SubmitButton } from "~feat/form";
@@ -33,7 +32,7 @@ type LoaderData = {
 		price: string;
 		name: string;
 		uuid: string;
-		users?: User[];
+		usernames?: string[];
 	}[];
 	pizzaUUID?: string | null;
 	status: number;
@@ -58,11 +57,24 @@ const getLoaderData = async (request: Request): Promise<LoaderData> => {
 				price: true,
 				users:
 					new Date().getDay() === 5 &&
-					new Date().getTime() >= showTime.getTime(),
+					new Date().getTime() >= showTime.getTime()
+						? {
+								select: {
+									firstname: true,
+									lastname: true,
+								},
+						  }
+						: undefined,
 				uuid: true,
 			},
 		})
-	).map(({ price, ...data }) => ({ ...data, price: price.toFixed(2) }));
+	).map(({ price, users, ...data }) => ({
+		...data,
+		price: price.toFixed(2),
+		usernames: users.map(
+			({ firstname, lastname }) => `${firstname} ${lastname}`,
+		),
+	}));
 
 	return {
 		headers,
@@ -126,21 +138,16 @@ export default function Pizza(): JSX.Element {
 					my={4}
 					name="pizzaUUID">
 					<VStack>
-						{pizzas.map(({ name, price, uuid, users }) => (
+						{pizzas.map(({ name, price, uuid, usernames }) => (
 							<Box w="full" key={uuid}>
 								<Radio value={uuid}>
 									{name} ({price}€){" "}
 									{pizzaUUID === uuid && (
 										<CheckIcon mr={2} color={checkColor} />
 									)}
-									{users && (
+									{usernames && (
 										<Text color={grayColor}>
-											{users
-												.map(
-													({ firstname }) =>
-														firstname,
-												)
-												.join(", ")}
+											{usernames.join(", ")}
 										</Text>
 									)}
 								</Radio>
