@@ -4,7 +4,7 @@
 import faker from "@faker-js/faker/locale/de";
 import { PrismaClient } from "@prisma/client";
 import { random, round, sample } from "lodash";
-import type { User } from "~models";
+import type { User } from "@prisma/client";
 
 const prisma = new PrismaClient();
 const uniqueData: string[] = [];

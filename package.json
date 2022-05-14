@@ -70,7 +70,7 @@
 		"prisma:watch": "npm run prisma:generate -- --watch",
 		"prod": "npm run production",
 		"production": "cross-env NODE_ENV=production run-s clean build start",
-		"release": "npx --yes -p prisma -c 'npm run new:prod'",
+		"release": "npm i -g @faker-js/faker lodash; npx --yes -p npm-run-all -p prisma -p ts-node -p typescript -c '(! case \"$FLY_APP_NAME\" in lsg-pr-*) false;; esac) && npm run new:preview || npm run new:prod''",
 		"remix:build": "remix build",
 		"remix:dev": "remix watch",
 		"remix:server": "nodemon --inspect --require dotenv/config .remix/server/server.js --watch .remix/server",
@@ -216,7 +216,6 @@
 		"rimraf": "3.0.2",
 		"secretlint": "5.2.0",
 		"ts-node": "10.7.0",
-		"tsconfig-paths": "4.0.0",
 		"typescript": "4.6.3",
 		"zod-prisma": "0.5.4"
 	},
