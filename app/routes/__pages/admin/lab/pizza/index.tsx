@@ -43,12 +43,6 @@ const getLoaderData = async (request: Request): Promise<LoaderData> => {
 		lab: true,
 	});
 
-	// const showTime = new Date();
-	// showTime.setUTCHours(11); // GMT+2 = 13:05
-	// showTime.setUTCMinutes(5);
-	// const isShowTime =
-	// 	new Date().getDay() === 5 && new Date().getTime() >= showTime.getTime();
-
 	const zone = "Europe/Berlin";
 	const locale = "de-DE";
 	const today = DateTime.now().setZone(zone).setLocale(locale);
@@ -78,14 +72,12 @@ const getLoaderData = async (request: Request): Promise<LoaderData> => {
 			select: {
 				name: true,
 				price: true,
-				users: isShowTime
-					? {
-							select: {
-								firstname: true,
-								lastname: true,
-							},
-					  }
-					: undefined,
+				users: isShowTime && {
+					select: {
+						firstname: true,
+						lastname: true,
+					},
+				},
 				uuid: true,
 			},
 		})
@@ -93,11 +85,11 @@ const getLoaderData = async (request: Request): Promise<LoaderData> => {
 		...data,
 		price: price.toFixed(2),
 		usernames: users
-			.filter(
+			?.filter(
 				({ pizzaUpdatedAt: _pizzaUpdatedAt }) =>
 					!!_pizzaUpdatedAt && isPizzaCurrent(_pizzaUpdatedAt),
 			)
-			.map(({ firstname, lastname }) => `${firstname} ${lastname}`),
+			?.map(({ firstname, lastname }) => `${firstname} ${lastname}`),
 	}));
 
 	return {
