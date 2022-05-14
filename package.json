@@ -70,7 +70,7 @@
 		"prisma:watch": "npm run prisma:generate -- --watch",
 		"prod": "npm run production",
 		"production": "cross-env NODE_ENV=production run-s clean build start",
-		"release": "npx --yes -p ts-node -p typescript -c 'if (! case \"$FLY_APP_NAME\" in lsg-pr-*) false;; esac); then npm i -g @faker-js/faker; export NODE_PATH=$(npm root -g); npm run new:preview; npm un -g @faker-js/faker; else npm run new:prod; fi'",
+		"release": "npx --yes -p ts-node -p typescript -c 'if (! case \"$FLY_APP_NAME\" in lsg-pr-*) false;; esac); then npm i -g @faker-js/faker; npm root -g; ls -la ~/.npm-global; ls -la /home/node/.npm-global; ls -la /home/node/.npm-global/bin; npm run new:preview; npm un -g @faker-js/faker; else npm run new:prod; fi'",
 		"remix:build": "remix build",
 		"remix:dev": "remix watch",
 		"remix:server": "nodemon --inspect --require dotenv/config .remix/server/server.js --watch .remix/server",

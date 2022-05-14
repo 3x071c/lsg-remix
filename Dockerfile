@@ -5,8 +5,9 @@ FROM node:18-alpine as base
 # Default to production everything
 ENV NODE_ENV production
 # Best practices: https://github.com/nodejs/docker-node/blob/main/docs/BestPractices.md
-ENV NPM_CONFIG_REFIX=/home/node/.npm-global
+ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
 ENV PATH=$PATH:/home/node/.npm-global/bin
+ENV NODE_PATH=/home/node/.npm-global/lib/node_modules
 
 # Install dependencies via apk (Alpine's package manager) for prisma and security
 RUN apk add --no-cache --update openssl dumb-init
