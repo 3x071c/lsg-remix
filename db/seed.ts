@@ -59,6 +59,7 @@ const seedUsers = async () => {
 				lastname,
 				updatedAt,
 			},
+			select: { uuid: true },
 		});
 	}
 };
@@ -80,6 +81,7 @@ const seedPizzas = async (users: User[]) => {
 				price,
 				updatedAt,
 			},
+			select: { uuid: true },
 		});
 	}
 };
@@ -90,6 +92,23 @@ export default async function main(): Promise<void> {
 	console.log("🧬 Seeding users...");
 	await seedUsers();
 	console.log("🧬 ...finished users ✅");
+
+	console.log("🧬 Seeding superuser...");
+	await prisma.user.create({
+		data: {
+			canAccessCMS: true,
+			canAccessLab: true,
+			canAccessSchoolib: true,
+			canAccessUsers: true,
+			did: `did:ethr:0x${"0".repeat(40)}`,
+			email: "test@magic.link",
+			firstname: "Firstname",
+			lastname: "Lastname",
+			locked: false,
+		},
+		select: { uuid: true },
+	});
+	console.log("🧬 ...finished superuser ✅");
 
 	const users = await prisma.user.findMany();
 
