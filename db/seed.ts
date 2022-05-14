@@ -3,7 +3,7 @@
 /* eslint-disable no-console */
 import faker from "@faker-js/faker/locale/de";
 import { PrismaClient } from "@prisma/client";
-import { random, round, sampleSize } from "lodash";
+import { random, round, sample } from "lodash";
 import type { User } from "~models";
 
 const prisma = new PrismaClient();
@@ -69,20 +69,16 @@ const seedPizzas = async (users: User[]) => {
 		const name = faker.commerce.productName();
 		const price = round(random(0, 20, true), 2);
 		const updatedAt = seedDate(createdAt, present);
-		const connect = sampleSize(users, random(1, users.length)).map(
-			(user) => ({ uuid: user.uuid }),
-		);
+		const createdByUUID = sample(users)!.uuid;
 
 		console.log(`👉 Creating pizza ${name} (for €${price})`);
 		await prisma.pizza.create({
 			data: {
 				createdAt,
+				createdByUUID,
 				name,
 				price,
 				updatedAt,
-				users: {
-					connect,
-				},
 			},
 		});
 	}
