@@ -12,9 +12,9 @@ import {
 	HStack,
 } from "@chakra-ui/react";
 import { withZod } from "@remix-validated-form/with-zod";
+import { DateTime, Interval } from "luxon";
 import { useState } from "react";
 import { ValidatedForm, validationError } from "remix-validated-form";
-import type { User } from "~models";
 import { UserData } from "~models";
 import { authorize } from "~feat/auth";
 import { SubmitButton } from "~feat/form";
@@ -33,20 +33,42 @@ type LoaderData = {
 		price: string;
 		name: string;
 		uuid: string;
-		users?: User[];
+		usernames?: string[];
 	}[];
 	pizzaUUID?: string | null;
 	status: number;
 };
 const getLoaderData = async (request: Request): Promise<LoaderData> => {
-	const [{ pizzaUUID }, headers] = await authorize(request, { lab: true });
+	const [{ pizzaUUID, pizzaUpdatedAt }, headers] = await authorize(request, {
+		lab: true,
+	});
 
-	const showTime = new Date();
-	showTime.setUTCHours(11); // GMT+2 = 13:05
-	showTime.setUTCMinutes(5);
+	// const showTime = new Date();
+	// showTime.setUTCHours(11); // GMT+2 = 13:05
+	// showTime.setUTCMinutes(5);
+	// const isShowTime =
+	// 	new Date().getDay() === 5 && new Date().getTime() >= showTime.getTime();
 
-	// eslint-disable-next-line no-console
-	console.log("⏰", showTime.toUTCString());
+	const zone = "Europe/Berlin";
+	const locale = "de-DE";
+	const today = DateTime.now().setZone(zone).setLocale(locale);
+	const thisFriday = DateTime.fromObject(
+		{ hour: 13, minute: 5, weekday: 5 },
+		{ locale, zone },
+	);
+	const thisSaturday = DateTime.fromObject({ weekday: 6 }, { locale, zone });
+	const lastSaturday = today
+		.minus({ days: 5 })
+		.set({ weekday: 6 })
+		.startOf("day"); // = thisSaturday if after this Saturday, else last weeks Saturday
+
+	const isShowTime = Interval.fromDateTimes(
+		thisFriday,
+		thisSaturday,
+	).contains(today);
+
+	const isPizzaCurrent = (date: Date) =>
+		DateTime.fromJSDate(date, { zone }).setLocale(locale) > lastSaturday;
 
 	const pizzas = (
 		await prisma.pizza.findMany({
@@ -56,18 +78,34 @@ const getLoaderData = async (request: Request): Promise<LoaderData> => {
 			select: {
 				name: true,
 				price: true,
-				users:
-					new Date().getDay() === 5 &&
-					new Date().getTime() >= showTime.getTime(),
+				users: isShowTime
+					? {
+							select: {
+								firstname: true,
+								lastname: true,
+							},
+					  }
+					: undefined,
 				uuid: true,
 			},
 		})
-	).map(({ price, ...data }) => ({ ...data, price: price.toFixed(2) }));
+	).map(({ price, users, ...data }) => ({
+		...data,
+		price: price.toFixed(2),
+		usernames: users
+			.filter(
+				({ pizzaUpdatedAt: _pizzaUpdatedAt }) =>
+					!!_pizzaUpdatedAt && isPizzaCurrent(_pizzaUpdatedAt),
+			)
+			.map(({ firstname, lastname }) => `${firstname} ${lastname}`),
+	}));
 
 	return {
 		headers,
 		pizzas,
-		pizzaUUID,
+		pizzaUUID:
+			(pizzaUpdatedAt && isPizzaCurrent(pizzaUpdatedAt) && pizzaUUID) ||
+			null,
 		status: 200,
 	};
 };
@@ -87,7 +125,7 @@ const getActionData = async (request: Request): Promise<ActionData> => {
 	if (error) throw validationError(error);
 
 	await prisma.user.update({
-		data,
+		data: { ...data, pizzaUpdatedAt: new Date() },
 		select: {
 			uuid: true,
 		},
@@ -126,21 +164,16 @@ export default function Pizza(): JSX.Element {
 					my={4}
 					name="pizzaUUID">
 					<VStack>
-						{pizzas.map(({ name, price, uuid, users }) => (
+						{pizzas.map(({ name, price, uuid, usernames }) => (
 							<Box w="full" key={uuid}>
 								<Radio value={uuid}>
 									{name} ({price}€){" "}
 									{pizzaUUID === uuid && (
 										<CheckIcon mr={2} color={checkColor} />
 									)}
-									{users && (
+									{usernames && (
 										<Text color={grayColor}>
-											{users
-												.map(
-													({ firstname }) =>
-														firstname,
-												)
-												.join(", ")}
+											{usernames.join(", ")}
 										</Text>
 									)}
 								</Radio>
@@ -149,7 +182,7 @@ export default function Pizza(): JSX.Element {
 					</VStack>
 				</RadioGroup>
 				<HStack spacing={4} mt={4}>
-					<SubmitButton m={0}>:D</SubmitButton>
+					<SubmitButton m={0}>Yay</SubmitButton>
 					<LinkButton href="./new" variant="outline">
 						Neu
 					</LinkButton>

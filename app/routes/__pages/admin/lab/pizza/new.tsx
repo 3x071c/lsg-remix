@@ -10,7 +10,9 @@ import { SubmitButton, FormInput, FormNumberInput } from "~feat/form";
 import { prisma } from "~lib/prisma";
 import { respond, useActionResponse } from "~lib/response";
 
-const PizzaValidatorData = PizzaData.extend({
+const PizzaValidatorData = PizzaData.omit({
+	createdByUUID: true,
+}).extend({
 	price: zfd.numeric(PizzaData.shape.price),
 });
 const PizzaValidator = withZod(PizzaValidatorData);
@@ -36,14 +38,14 @@ type ActionData = {
 	status: number;
 };
 const getActionData = async (request: Request): Promise<ActionData> => {
-	const [, headers] = await authorize(request, { lab: true });
+	const [{ uuid }, headers] = await authorize(request, { lab: true });
 
 	const form = await request.formData();
 	const { error, data } = await PizzaValidator.validate(form);
 	if (error) throw validationError(error);
 
 	await prisma.pizza.create({
-		data,
+		data: { ...data, createdByUUID: uuid },
 		select: { uuid: true },
 	});
 
