@@ -142,9 +142,6 @@
 		"compilerOptions": {
 			"module": "CommonJS"
 		},
-		"files": true,
-		"require": ["tsconfig-paths/register"],
-		"transpileOnly": true,
-		"swc": true
+		"transpileOnly": true
 	}
 }

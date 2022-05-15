@@ -1,10 +1,10 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-console */
+import type { User } from "@prisma/client";
 import faker from "@faker-js/faker/locale/de";
 import { PrismaClient } from "@prisma/client";
 import { random, round, sample } from "lodash";
-import type { User } from "~models";
 
 const prisma = new PrismaClient();
 const uniqueData: string[] = [];
