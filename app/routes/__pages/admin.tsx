@@ -12,11 +12,13 @@ export const getPages = ({
 	canAccessCMS,
 	canAccessLab,
 	canAccessSchoolib,
+	canAccessTicker,
 	canAccessUsers,
 }: {
 	canAccessCMS?: boolean;
 	canAccessLab?: boolean;
 	canAccessSchoolib?: boolean;
+	canAccessTicker?: boolean;
 	canAccessUsers?: boolean;
 }) => {
 	return [
@@ -28,22 +30,29 @@ export const getPages = ({
 			url: "/admin/cms",
 		},
 		{
-			authorized: canAccessSchoolib,
-			id: 2,
-			long: "Schoolib",
-			short: "schoolib",
-			url: "/admin/schoolib",
-		},
-		{
 			authorized: canAccessLab,
-			id: 3,
+			id: 2,
 			long: "Admin Lab only 😎",
 			short: "Lab",
 			url: "/admin/lab",
 		},
 		{
-			authorized: canAccessUsers,
+			authorized: canAccessSchoolib,
+			id: 3,
+			long: "Schoolib",
+			short: "schoolib",
+			url: "/admin/schoolib",
+		},
+		{
+			authorized: canAccessTicker,
 			id: 4,
+			long: "Ticker setzen",
+			short: "Ticker",
+			url: "/admin/ticker",
+		},
+		{
+			authorized: canAccessUsers,
+			id: 5,
 			long: "Nutzerverwaltung",
 			short: "Nutzer",
 			url: "/admin/users",
@@ -75,6 +84,7 @@ const getLoaderData = async (request: Request): Promise<LoaderData> => {
 			canAccessCMS,
 			canAccessLab,
 			canAccessSchoolib,
+			canAccessTicker,
 			canAccessUsers,
 		},
 		headers,
@@ -84,6 +94,7 @@ const getLoaderData = async (request: Request): Promise<LoaderData> => {
 		canAccessCMS,
 		canAccessLab,
 		canAccessSchoolib,
+		canAccessTicker,
 		canAccessUsers,
 	});
 

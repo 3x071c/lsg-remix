@@ -41,6 +41,7 @@ type LoaderData = {
 	canAccessLab: boolean;
 	canAccessLocked: boolean;
 	canAccessSchoolib: boolean;
+	canAccessTicker: boolean;
 	firstname?: string;
 	headers: HeadersInit;
 	lastname?: string;
@@ -49,6 +50,7 @@ type LoaderData = {
 	showAccessLab: boolean;
 	showAccessLocked: boolean;
 	showAccessSchoolib: boolean;
+	showAccessTicker: boolean;
 	status: number;
 };
 const getLoaderData = async (
@@ -65,6 +67,7 @@ const getLoaderData = async (
 		canAccessCMS: showAccessCMS,
 		canAccessLab: showAccessLab,
 		canAccessSchoolib: showAccessSchoolib,
+		canAccessTicker: showAccessTicker,
 	} = user;
 
 	let target: Partial<User> | null = null;
@@ -75,6 +78,7 @@ const getLoaderData = async (
 				canAccessLab: false,
 				canAccessLocked: true,
 				canAccessSchoolib: false,
+				canAccessTicker: false,
 				headers,
 				message:
 					"Willkommen! 👋 Um die Registration abzuschließen, müssen folgende Daten hinterlegt werden:",
@@ -82,6 +86,7 @@ const getLoaderData = async (
 				showAccessLab: showAccessLab ?? false,
 				showAccessLocked: false,
 				showAccessSchoolib: showAccessSchoolib ?? false,
+				showAccessTicker: showAccessTicker ?? false,
 				status: 200,
 			};
 		target = user;
@@ -97,6 +102,7 @@ const getLoaderData = async (
 			canAccessLab: target.canAccessLab ?? false,
 			canAccessLocked: target.locked ?? false,
 			canAccessSchoolib: target.canAccessSchoolib ?? false,
+			canAccessTicker: target.canAccessTicker ?? false,
 			firstname: target.firstname,
 			headers,
 			lastname: target.lastname,
@@ -108,6 +114,7 @@ const getLoaderData = async (
 			showAccessLab: showAccessLab ?? false,
 			showAccessLocked: target.locked !== undefined && did !== user.did,
 			showAccessSchoolib: showAccessSchoolib ?? false,
+			showAccessTicker: showAccessTicker ?? false,
 			status: 200,
 		};
 	}
@@ -115,6 +122,7 @@ const getLoaderData = async (
 		canAccessCMS,
 		canAccessLab,
 		canAccessSchoolib,
+		canAccessTicker,
 		firstname,
 		locked: canAccessLocked,
 		lastname,
@@ -125,6 +133,7 @@ const getLoaderData = async (
 		canAccessLab: canAccessLab ?? false,
 		canAccessLocked,
 		canAccessSchoolib: canAccessSchoolib ?? false,
+		canAccessTicker: canAccessTicker ?? false,
 		firstname,
 		headers,
 		lastname,
@@ -133,6 +142,7 @@ const getLoaderData = async (
 		showAccessLab: showAccessLab ?? false,
 		showAccessLocked: did !== user.did,
 		showAccessSchoolib: showAccessSchoolib ?? false,
+		showAccessTicker: showAccessTicker ?? false,
 		status: 200,
 	};
 };
@@ -174,11 +184,15 @@ const getActionData = async (
 	const canAccessSchoolib = user.canAccessSchoolib
 		? canAccess?.includes("schoolib")
 		: undefined;
+	const canAccessTicker = user.canAccessTicker
+		? canAccess?.includes("ticker")
+		: undefined;
 
 	const update = {
 		canAccessCMS,
 		canAccessLab,
 		canAccessSchoolib,
+		canAccessTicker,
 		firstname,
 		lastname,
 		locked: canAccessLocked,
@@ -206,15 +220,17 @@ export default function AdminUser() {
 	const {
 		canAccessCMS,
 		canAccessLab,
+		canAccessLocked,
 		canAccessSchoolib,
-		showAccessCMS,
-		showAccessLab,
-		showAccessSchoolib,
-		message,
+		canAccessTicker,
 		firstname,
 		lastname,
-		canAccessLocked,
+		message,
+		showAccessCMS,
+		showAccessLab,
 		showAccessLocked,
+		showAccessSchoolib,
+		showAccessTicker,
 	} = useLoaderResponse<LoaderData>();
 	const { formError } = useActionResponse<ActionData>();
 
@@ -264,6 +280,15 @@ export default function AdminUser() {
 						<SubmitButton>Speichern</SubmitButton>
 					</Box>
 					<SimpleGrid minChildWidth="300px" w="full">
+						{showAccessLocked && (
+							<FormSwitch
+								label="Sperre"
+								helper="Ob dieser Nutzer aus der Benutzung der Applikation gesperrt wurde"
+								name="canAccess"
+								value="locked"
+								defaultChecked={canAccessLocked}
+							/>
+						)}
 						{showAccessCMS && (
 							<FormSwitch
 								label="CMS Zugriff"
@@ -291,13 +316,13 @@ export default function AdminUser() {
 								defaultChecked={canAccessSchoolib}
 							/>
 						)}
-						{showAccessLocked && (
+						{showAccessTicker && (
 							<FormSwitch
-								label="Sperre"
-								helper="Ob dieser Nutzer aus der Benutzung der Applikation gesperrt wurde"
+								label="Ticker Zugriff"
+								helper="Ob dieser Nutzer den Inhalt des Tickers modifizieren darf"
 								name="canAccess"
-								value="locked"
-								defaultChecked={canAccessLocked}
+								value="ticker"
+								defaultChecked={canAccessTicker}
 							/>
 						)}
 					</SimpleGrid>

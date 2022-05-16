@@ -38,6 +38,7 @@ const getLoaderData = async (request: Request): Promise<LoaderData> => {
 			canAccessCMS,
 			canAccessLab,
 			canAccessSchoolib,
+			canAccessTicker,
 			canAccessUsers,
 		},
 		headers,
@@ -47,6 +48,7 @@ const getLoaderData = async (request: Request): Promise<LoaderData> => {
 		canAccessCMS,
 		canAccessLab,
 		canAccessSchoolib,
+		canAccessTicker,
 		canAccessUsers,
 	});
 

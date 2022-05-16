@@ -15,11 +15,12 @@ export async function authorize<
 	O extends {
 		cms?: boolean;
 		did?: string;
-		lab?: boolean;
-		schoolib?: boolean;
-		required?: boolean;
 		ignore?: boolean;
+		lab?: boolean;
 		lock?: boolean;
+		required?: boolean;
+		schoolib?: boolean;
+		ticker?: boolean;
 	},
 >(
 	request: Request,
@@ -36,14 +37,15 @@ export async function authorize<
 		HeadersInit,
 	]
 > {
+	const session = await getSession(request.headers.get("Cookie"));
 	const cms = options?.cms ?? false;
 	const did = options?.did;
-	const lab = options?.lab ?? false;
-	const schoolib = options?.schoolib ?? false;
-	const required = options?.required ?? true;
 	const ignore = options?.ignore ?? false;
+	const lab = options?.lab ?? false;
 	const lock = options?.lock ?? false;
-	const session = await getSession(request.headers.get("Cookie"));
+	const required = options?.required ?? true;
+	const schoolib = options?.schoolib ?? false;
+	const ticker = options?.ticker ?? false;
 
 	if (keys(session.data).length === 0) {
 		if (required) throw redirect("/login");
@@ -102,7 +104,8 @@ export async function authorize<
 	if (
 		(cms && !user.canAccessCMS) ||
 		(lab && !user.canAccessLab) ||
-		(schoolib && !user.canAccessSchoolib)
+		(schoolib && !user.canAccessSchoolib) ||
+		(ticker && !user.canAccessTicker)
 	)
 		throw redirect("/admin", { headers });
 
