@@ -20,7 +20,7 @@ model User {
     /// The unique DID used by Magic for authentication
     did               String    @unique @db.VarChar(51) /// @zod.regex(/^did:ethr:0x[a-fA-F0-9]{40}$/, { message: "Invalide DID von Magic erhalten" })
     /// The user's email address
-    email             String    @unique @db.VarChar(60) /// @zod.email({ message: "Invalide E-Mail-Adresse" })
+    email             String    @unique @db.VarChar(60) /// @zod.email({ message: "Invalide E-Mail-Adresse" }).min(3, { message: "E-Mail zu kurz" }).max(60, { message: "E-Mail zu lang" })
     /// The user's first name
     firstname         String    @db.VarChar(20) /// @zod.min(3, { message: "Vorname zu kurz" }).max(20, { message: "Vorname zu lang" })
     /// The user's last name
@@ -35,6 +35,8 @@ model User {
     canAccessSchoolib Boolean   @default(false)
     /// Authorization/Permission for User Management
     canAccessUsers    Boolean   @default(false)
+    /// Authorization/Permission for Ticker
+    canAccessTicker   Boolean   @default(false)
     /// (LAB) The pizza selection for orders
     pizza             Pizza?    @relation("UserPizza", fields: [pizzaUUID], references: [uuid])
     /// (LAB) The foreign key of the pizza selection this user has a relation with
@@ -43,6 +45,8 @@ model User {
     pizzaUpdatedAt    DateTime?
     /// (LAB) Pizzas this user created
     createdPizzas     Pizza[]   @relation("UserCreatedPizzas")
+    /// (TICKER) Tickers this user created
+    createdTickers    Ticker[]  @relation("UserCreatedTickers")
     /// This timestamp is updated on every mutation automatically
     updatedAt         DateTime  @default(now()) @updatedAt
     /// This timestamp is set on creation automatically
@@ -94,6 +98,21 @@ model Pizza {
     createdAt     DateTime @default(now())
     /// The user that created this pizza
     createdBy     User     @relation("UserCreatedPizzas", fields: [createdByUUID], references: [uuid])
+    /// The foreign key to the UUID of the user this pizza has been created by
+    createdByUUID String   @db.Uuid
+}
+
+model Ticker {
+    /// The unique ID of the ticker item
+    uuid          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    /// The page's title
+    content       String   @db.VarChar(260) /// @zod.min(3, { message: "Ticker zu kurz" }).max(260, { message: "Ticker zu lang" })
+    /// This timestamp is updated on every mutation automatically
+    updatedAt     DateTime @default(now()) @updatedAt
+    /// This timestamp is set on creation automatically
+    createdAt     DateTime @default(now())
+    /// The user that created this pizza
+    createdBy     User     @relation("UserCreatedTickers", fields: [createdByUUID], references: [uuid])
     /// The foreign key to the UUID of the user this pizza has been created by
     createdByUUID String   @db.Uuid
 }

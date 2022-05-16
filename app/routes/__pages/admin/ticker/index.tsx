@@ -1,0 +1,82 @@
+import type { ActionFunction, LoaderFunction } from "remix";
+import { Heading, Text, chakra } from "@chakra-ui/react";
+import { withZod } from "@remix-validated-form/with-zod";
+import { redirect } from "remix";
+import { ValidatedForm, validationError } from "remix-validated-form";
+import { TickerData } from "~models";
+import { authorize } from "~feat/auth";
+import { SubmitButton, FormInput } from "~feat/form";
+import { prisma } from "~lib/prisma";
+import { respond, useActionResponse } from "~lib/response";
+
+const TickerValidatorData = TickerData.omit({
+	createdByUUID: true,
+});
+const TickerValidator = withZod(TickerValidatorData);
+
+type LoaderData = {
+	headers: HeadersInit;
+	status: number;
+};
+const getLoaderData = async (request: Request): Promise<LoaderData> => {
+	const [, headers] = await authorize(request, { ticker: true });
+
+	return {
+		headers,
+		status: 200,
+	};
+};
+export const loader: LoaderFunction = async ({ request }) =>
+	respond<LoaderData>(await getLoaderData(request));
+
+type ActionData = {
+	formError?: string;
+	headers: HeadersInit;
+	status: number;
+};
+const getActionData = async (request: Request): Promise<ActionData> => {
+	const [{ uuid }, headers] = await authorize(request, { ticker: true });
+
+	const form = await request.formData();
+	const { error, data } = await TickerValidator.validate(form);
+	if (error) throw validationError(error);
+
+	await prisma.ticker.create({
+		data: { ...data, createdByUUID: uuid },
+		select: { uuid: true },
+	});
+
+	throw redirect("/admin", { headers });
+};
+export const action: ActionFunction = async ({ request }) =>
+	respond<ActionData>(await getActionData(request));
+
+export default function Ticker(): JSX.Element {
+	const { formError } = useActionResponse<ActionData>();
+
+	return (
+		<chakra.main w="full">
+			<Heading as="h1" size="xl">
+				Ticker - Neu
+			</Heading>
+			<Text fontSize="md" mt={2}>
+				Neuen Ticker veröffentlichen
+			</Text>
+			<ValidatedForm validator={TickerValidator} method="post">
+				<FormInput
+					type="text"
+					name="content"
+					placeholder="✍️ Inhalt"
+					helper="Inhalt des neuen Tickers"
+					label="Der Inhalt"
+				/>
+				<SubmitButton>Erstellen</SubmitButton>
+			</ValidatedForm>
+			{formError && (
+				<Text maxW="2xl" fontSize="md" color="red.400">
+					{formError}
+				</Text>
+			)}
+		</chakra.main>
+	);
+}

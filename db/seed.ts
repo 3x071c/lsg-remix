@@ -99,6 +99,7 @@ export default async function main(): Promise<void> {
 			canAccessCMS: true,
 			canAccessLab: true,
 			canAccessSchoolib: true,
+			canAccessTicker: true,
 			canAccessUsers: true,
 			did: `did:ethr:0x${"0".repeat(40)}`,
 			email: "test@magic.link",
