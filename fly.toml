@@ -35,7 +35,7 @@ processes = []
   protocol = "http"
   timeout = "5s"
   tls_skip_verify = false
-  restart_limit = 72
+  restart_limit = 12
 [services.http_checks.headers]
 
 [[services.ports]]
@@ -50,7 +50,7 @@ processes = []
 [[services.tcp_checks]]
   grace_period = "1m"
   interval = "1m"
-  restart_limit = 360
+  restart_limit = 60
   timeout = "5s"
 
 [[statics]]
