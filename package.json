@@ -26,7 +26,7 @@
 	],
 	"scripts": {
 		"build": "cross-env NODE_ENV=production npm run build:internal",
-		"build:internal": "run-s clean postinstall generate remix:build server:build",
+		"build:internal": "run-s clean postinstall remix:build server:build",
 		"check": "tsc --noEmit",
 		"clean": "run-s \"clean:*\"",
 		"clean:1": "rimraf .remix",
@@ -37,7 +37,7 @@
 		"cspell:report": "npm run cspell:individual -- \"**\" \".**\"",
 		"cz": "cz",
 		"dev": "npm run development",
-		"development": "cross-env NODE_ENV=development run-s build:internal development:internal",
+		"development": "cross-env NODE_ENV=development run-s build:internal generate development:internal",
 		"development:internal": "run-p prisma:watch remix:dev remix:server server:watch",
 		"eslint:fix": "npm run eslint:template -- --fix .",
 		"eslint:individual": "npm run eslint:template -- --fix",

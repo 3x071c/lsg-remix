@@ -28,13 +28,14 @@ processes = []
   type = "connections"
 
 [[services.http_checks]]
-  grace_period = "5s"
-  interval = "10s"
+  grace_period = "1m"
+  interval = "5m"
   method = "get"
   path = "/"
   protocol = "http"
-  timeout = "2s"
+  timeout = "5s"
   tls_skip_verify = false
+  restart_limit = 72
 [services.http_checks.headers]
 
 [[services.ports]]
@@ -47,10 +48,10 @@ processes = []
   port = 443
 
 [[services.tcp_checks]]
-  grace_period = "1s"
-  interval = "15s"
-  restart_limit = 0
-  timeout = "2s"
+  grace_period = "1m"
+  interval = "1m"
+  restart_limit = 360
+  timeout = "5s"
 
 [[statics]]
   guest_path = "/lsg/public"
