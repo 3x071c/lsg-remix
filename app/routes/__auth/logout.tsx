@@ -37,7 +37,7 @@ export default function Logout(): JSX.Element {
 	}, [loading, logout, navigate]);
 
 	return (
-		<Center minW="100vw" minH="100vh" p={2}>
+		<Center w="100%" minH="100%" p={2}>
 			<CircularProgress isIndeterminate capIsRound />
 		</Center>
 	);

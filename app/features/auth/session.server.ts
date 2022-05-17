@@ -4,8 +4,9 @@ import { createCookieSessionStorage } from "remix";
 const { AUTH_SECRET } = process.env;
 
 if (!AUTH_SECRET || typeof AUTH_SECRET !== "string") {
-	throw new Error(
+	throw new Response(
 		"API Authorization secret is undefined, server can't handle requests at the moment.",
+		{ status: 500, statusText: "Internes Problem" },
 	);
 }
 

@@ -3,6 +3,7 @@ import type { ActionFunction, LoaderFunction } from "remix";
 import { EditIcon, WarningTwoIcon } from "@chakra-ui/icons";
 import { Heading, Text, chakra, useDisclosure } from "@chakra-ui/react";
 import { useCallback, useMemo } from "react";
+import { useCatch } from "remix";
 import { validationError } from "remix-validated-form";
 import { PageData, PageCategoryData } from "~models";
 import {
@@ -12,8 +13,13 @@ import {
 } from "~feat/admin/pagemodal";
 import { Statistics } from "~feat/admin/statistics";
 import { authorize } from "~feat/auth";
+import {
+	CatchBoundary as NestedCatchBoundary,
+	ErrorBoundary as NestedErrorBoundary,
+} from "~feat/boundaries";
 import { LinkIconButton } from "~feat/links";
 import { Table } from "~feat/table";
+import { catchMessage } from "~lib/catch";
 import { prisma, toIndexedObject } from "~lib/prisma";
 import { respond, useActionResponse, useLoaderResponse } from "~lib/response";
 
@@ -79,7 +85,10 @@ const getActionData = async (request: Request): Promise<ActionData> => {
 
 		const page = PageData.safeParse({ ...formData });
 		if (!page.success)
-			throw new Error("Seite konnte nicht validiert werden");
+			throw new Response("Seite konnte nicht validiert werden", {
+				status: 400,
+				statusText: "Schlechte Anfrage",
+			});
 
 		await prisma.page.create({
 			data: page.data,
@@ -98,7 +107,10 @@ const getActionData = async (request: Request): Promise<ActionData> => {
 
 		const pageCategory = PageCategoryData.safeParse({ ...formData });
 		if (!pageCategory.success)
-			throw new Error("Kategorie konnte nicht validiert werden");
+			throw new Response("Kategorie konnte nicht validiert werden", {
+				status: 400,
+				statusText: "Schlechte Anfrage",
+			});
 
 		await prisma.pageCategory.create({ data: pageCategory.data });
 
@@ -216,4 +228,28 @@ export default function CMS(): JSX.Element {
 			/>
 		</chakra.main>
 	);
+}
+
+export function CatchBoundary(): JSX.Element {
+	const caught = useCatch();
+	// eslint-disable-next-line no-console -- Log the caught message
+	console.error("⚠️ Caught:", caught);
+	const { status, statusText } = caught;
+	const message = catchMessage(status);
+
+	return (
+		<NestedCatchBoundary
+			message={message}
+			status={status}
+			statusText={statusText}
+		/>
+	);
+}
+
+export function ErrorBoundary({ error }: { error: Error }): JSX.Element {
+	// eslint-disable-next-line no-console -- Log the error message
+	console.error("🚨 ERROR:", error);
+	const { message } = error;
+
+	return <NestedErrorBoundary message={message} name="CMS" />;
 }

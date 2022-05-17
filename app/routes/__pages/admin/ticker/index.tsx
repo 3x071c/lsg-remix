@@ -1,11 +1,16 @@
 import type { ActionFunction, LoaderFunction } from "remix";
 import { Heading, Text, chakra } from "@chakra-ui/react";
 import { withZod } from "@remix-validated-form/with-zod";
-import { redirect } from "remix";
+import { redirect, useCatch } from "remix";
 import { ValidatedForm, validationError } from "remix-validated-form";
 import { TickerData } from "~models";
 import { authorize } from "~feat/auth";
+import {
+	CatchBoundary as NestedCatchBoundary,
+	ErrorBoundary as NestedErrorBoundary,
+} from "~feat/boundaries";
 import { SubmitButton, FormInput } from "~feat/form";
+import { catchMessage } from "~lib/catch";
 import { prisma } from "~lib/prisma";
 import { respond, useActionResponse } from "~lib/response";
 
@@ -78,5 +83,31 @@ export default function Ticker(): JSX.Element {
 				</Text>
 			)}
 		</chakra.main>
+	);
+}
+
+export function CatchBoundary(): JSX.Element {
+	const caught = useCatch();
+	// eslint-disable-next-line no-console -- Log the caught message
+	console.error("⚠️ Caught:", caught);
+	const { status, statusText } = caught;
+	const message = catchMessage(status);
+
+	return (
+		<NestedCatchBoundary
+			message={message}
+			status={status}
+			statusText={statusText}
+		/>
+	);
+}
+
+export function ErrorBoundary({ error }: { error: Error }): JSX.Element {
+	// eslint-disable-next-line no-console -- Log the error message
+	console.error("🚨 ERROR:", error);
+	const { message } = error;
+
+	return (
+		<NestedErrorBoundary message={message} name="Ticker-Einstellungen" />
 	);
 }

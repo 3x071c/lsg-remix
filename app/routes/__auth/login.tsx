@@ -33,8 +33,9 @@ export const action: ActionFunction = async ({ request }) => {
 	const token = form.get("_authorization");
 
 	if (!token || typeof token !== "string")
-		throw new Error(
+		throw new Response(
 			"Authentifizierung aufgrund fehlendem Tokens fehlgeschlagen",
+			{ status: 400, statusText: "Schlechte Anfrage" },
 		);
 
 	return authenticate(request, token);
@@ -62,14 +63,14 @@ export default function Login(): JSX.Element {
 
 	if (token) {
 		return (
-			<Center minW="100vw" minH="100vh" p={2}>
+			<Center w="100%" minH="100%" p={2}>
 				<CircularProgress isIndeterminate capIsRound />
 			</Center>
 		);
 	}
 
 	return (
-		<Center minW="100vw" minH="100vh">
+		<Center w="100%" minH="100%" p={4}>
 			<chakra.main p={8} rounded="md" bg={background}>
 				<Heading as="h1" textAlign="center">
 					Login

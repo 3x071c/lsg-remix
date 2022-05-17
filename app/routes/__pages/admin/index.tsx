@@ -10,9 +10,14 @@ import {
 	chakra,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { useLocation } from "remix";
+import { useLocation, useCatch } from "remix";
 import { authorize } from "~feat/auth";
+import {
+	CatchBoundary as NestedCatchBoundary,
+	ErrorBoundary as NestedErrorBoundary,
+} from "~feat/boundaries";
 import { LinkButton } from "~feat/links";
+import { catchMessage } from "~lib/catch";
 import { respond, useLoaderResponse } from "~lib/response";
 import { getPages } from "../admin";
 
@@ -80,7 +85,7 @@ export default function Index(): JSX.Element {
 			<Text>Auf Dienste zugreifen:</Text>
 			<SimpleGrid
 				spacing="20px"
-				minChildWidth="200px"
+				minChildWidth="270px"
 				mt={8}
 				mx="auto"
 				placeItems="center">
@@ -124,5 +129,31 @@ export default function Index(): JSX.Element {
 					))}
 			</SimpleGrid>
 		</chakra.main>
+	);
+}
+
+export function CatchBoundary(): JSX.Element {
+	const caught = useCatch();
+	// eslint-disable-next-line no-console -- Log the caught message
+	console.error("⚠️ Caught:", caught);
+	const { status, statusText } = caught;
+	const message = catchMessage(status);
+
+	return (
+		<NestedCatchBoundary
+			message={message}
+			status={status}
+			statusText={statusText}
+		/>
+	);
+}
+
+export function ErrorBoundary({ error }: { error: Error }): JSX.Element {
+	// eslint-disable-next-line no-console -- Log the error message
+	console.error("🚨 ERROR:", error);
+	const { message } = error;
+
+	return (
+		<NestedErrorBoundary message={message} name="Administrationsseite" />
 	);
 }

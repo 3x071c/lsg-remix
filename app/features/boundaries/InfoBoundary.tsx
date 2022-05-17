@@ -15,7 +15,7 @@ export function InfoBoundary({
 	return (
 		<Alert
 			status="info"
-			minW="100%"
+			w="100%"
 			minH="100%"
 			flexDirection="column"
 			alignItems="center"

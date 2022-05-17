@@ -3,22 +3,23 @@ import {
 	AlertIcon,
 	AlertTitle,
 	AlertDescription,
-	Code,
 	Fade,
 } from "@chakra-ui/react";
 
 export function CatchBoundary({
-	name,
+	status,
+	statusText,
 	message,
 }: {
-	name: string;
+	status: number;
+	statusText: string;
 	message: string;
 }): JSX.Element {
 	return (
 		<Fade in>
 			<Alert
 				status="warning"
-				minW="100%"
+				w="100%"
 				minH="100%"
 				flexDirection="column"
 				alignItems="center"
@@ -28,15 +29,13 @@ export function CatchBoundary({
 				borderRadius="xl">
 				<AlertIcon boxSize="40px" mr={0} />
 				<AlertTitle mt={4} mb={1} fontSize="lg">
-					Hier könnte ihre Werbung stehen 😅
+					{statusText}
 				</AlertTitle>
-				<AlertDescription maxW="xl">
-					Es gab ein Problem beim Laden der {name}
+				<AlertDescription>
+					Houston, we&apos;ve had a {status}: {message}
 				</AlertDescription>
-				<AlertDescription maxW="lg">
-					<Code d="block" my={2} colorScheme="yellow" fontSize="sm">
-						{String(message)}
-					</Code>
+				<AlertDescription maxW="lg" my={2}>
+					{message}
 				</AlertDescription>
 			</Alert>
 		</Fade>
