@@ -18,7 +18,7 @@ export function ErrorBoundary({
 		<Fade in>
 			<Alert
 				status="error"
-				minW="100%"
+				w="100%"
 				minH="100%"
 				flexDirection="column"
 				alignItems="center"

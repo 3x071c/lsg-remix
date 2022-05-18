@@ -7,5 +7,9 @@ export const respond = <
 	headers,
 	...data
 }: T): Response => {
-	return json(serialize(data), { ...data, headers });
+	return json(serialize(data), {
+		headers,
+		status: data.status,
+		statusText: data.statusText,
+	});
 };

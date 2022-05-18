@@ -1,11 +1,16 @@
 import type { LoaderFunction } from "remix";
 import { Container, chakra, Portal } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
-import { Outlet, useLocation } from "remix";
+import { Outlet, useLocation, useCatch } from "remix";
 import { CmsNav } from "~feat/admin";
 import { authorize } from "~feat/auth";
+import {
+	ErrorBoundary as NestedErrorBoundary,
+	CatchBoundary as NestedCatchBoundary,
+} from "~feat/boundaries";
 import { maxContentWidth } from "~feat/chakra";
 import { HeaderPortalContext } from "~feat/headerportal";
+import { catchMessage } from "~lib/catch";
 import { respond, useLoaderResponse } from "~lib/response";
 
 export const getPages = ({
@@ -151,4 +156,28 @@ export default function Admin(): JSX.Element {
 			</chakra.section>
 		</chakra.section>
 	);
+}
+
+export function CatchBoundary(): JSX.Element {
+	const caught = useCatch();
+	// eslint-disable-next-line no-console -- Log the caught message
+	console.error("⚠️ Caught:", caught);
+	const { status, statusText } = caught;
+	const message = catchMessage(status);
+
+	return (
+		<NestedCatchBoundary
+			message={message}
+			status={status}
+			statusText={statusText}
+		/>
+	);
+}
+
+export function ErrorBoundary({ error }: { error: Error }): JSX.Element {
+	// eslint-disable-next-line no-console -- Log the error message
+	console.error("🚨 ERROR:", error);
+	const { message } = error;
+
+	return <NestedErrorBoundary message={message} name="Administration" />;
 }

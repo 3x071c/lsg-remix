@@ -14,11 +14,17 @@ import {
 import { withZod } from "@remix-validated-form/with-zod";
 import { DateTime, Interval } from "luxon";
 import { useState } from "react";
+import { useCatch } from "remix";
 import { ValidatedForm, validationError } from "remix-validated-form";
 import { UserData } from "~models";
 import { authorize } from "~feat/auth";
+import {
+	CatchBoundary as NestedCatchBoundary,
+	ErrorBoundary as NestedErrorBoundary,
+} from "~feat/boundaries";
 import { SubmitButton } from "~feat/form";
 import { LinkButton } from "~feat/links";
+import { catchMessage } from "~lib/catch";
 import { prisma } from "~lib/prisma";
 import { respond, useActionResponse, useLoaderResponse } from "~lib/response";
 
@@ -187,4 +193,28 @@ export default function Pizza(): JSX.Element {
 			)}
 		</chakra.main>
 	);
+}
+
+export function CatchBoundary(): JSX.Element {
+	const caught = useCatch();
+	// eslint-disable-next-line no-console -- Log the caught message
+	console.error("⚠️ Caught:", caught);
+	const { status, statusText } = caught;
+	const message = catchMessage(status);
+
+	return (
+		<NestedCatchBoundary
+			message={message}
+			status={status}
+			statusText={statusText}
+		/>
+	);
+}
+
+export function ErrorBoundary({ error }: { error: Error }): JSX.Element {
+	// eslint-disable-next-line no-console -- Log the error message
+	console.error("🚨 ERROR:", error);
+	const { message } = error;
+
+	return <NestedErrorBoundary message={message} name="Pizza-Bestellungen" />;
 }

@@ -9,12 +9,17 @@ import {
 	SimpleGrid,
 } from "@chakra-ui/react";
 import { withZod } from "@remix-validated-form/with-zod";
-import { redirect } from "remix";
+import { redirect, useCatch } from "remix";
 import { ValidatedForm, validationError } from "remix-validated-form";
 import { zfd } from "zod-form-data";
 import { User, UserData } from "~models";
 import { authorize, safeMetadata } from "~feat/auth";
+import {
+	CatchBoundary as NestedCatchBoundary,
+	ErrorBoundary as NestedErrorBoundary,
+} from "~feat/boundaries";
 import { FormSmartInput, FormSwitch, SubmitButton } from "~feat/form";
+import { catchMessage } from "~lib/catch";
 import { prisma } from "~lib/prisma";
 import { respond, useActionResponse, useLoaderResponse } from "~lib/response";
 
@@ -335,4 +340,28 @@ export default function AdminUser() {
 			</ValidatedForm>
 		</chakra.main>
 	);
+}
+
+export function CatchBoundary(): JSX.Element {
+	const caught = useCatch();
+	// eslint-disable-next-line no-console -- Log the caught message
+	console.error("⚠️ Caught:", caught);
+	const { status, statusText } = caught;
+	const message = catchMessage(status);
+
+	return (
+		<NestedCatchBoundary
+			message={message}
+			status={status}
+			statusText={statusText}
+		/>
+	);
+}
+
+export function ErrorBoundary({ error }: { error: Error }): JSX.Element {
+	// eslint-disable-next-line no-console -- Log the error message
+	console.error("🚨 ERROR:", error);
+	const { message } = error;
+
+	return <NestedErrorBoundary message={message} name="Nutzeransicht" />;
 }

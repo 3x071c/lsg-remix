@@ -6,9 +6,15 @@ import {
 	Container,
 	useColorModeValue,
 } from "@chakra-ui/react";
+import { useCatch } from "remix";
+import {
+	ErrorBoundary as NestedErrorBoundary,
+	CatchBoundary as NestedCatchBoundary,
+} from "~feat/boundaries";
 import { maxContentWidth } from "~feat/chakra";
 import { Hero, Certificates } from "~feat/home";
 import { LinkButton } from "~feat/links";
+import { catchMessage } from "~lib/catch";
 import { prisma } from "~lib/prisma";
 import { respond, useLoaderResponse } from "~lib/response";
 
@@ -79,4 +85,28 @@ export default function Index(): JSX.Element {
 			</chakra.main>
 		</Container>
 	);
+}
+
+export function CatchBoundary(): JSX.Element {
+	const caught = useCatch();
+	// eslint-disable-next-line no-console -- Log the caught message
+	console.error("⚠️ Caught:", caught);
+	const { status, statusText } = caught;
+	const message = catchMessage(status);
+
+	return (
+		<NestedCatchBoundary
+			message={message}
+			status={status}
+			statusText={statusText}
+		/>
+	);
+}
+
+export function ErrorBoundary({ error }: { error: Error }): JSX.Element {
+	// eslint-disable-next-line no-console -- Log the error message
+	console.error("🚨 ERROR:", error);
+	const { message } = error;
+
+	return <NestedErrorBoundary message={message} name="Startseite" />;
 }

@@ -22,11 +22,17 @@ import {
 } from "@chakra-ui/react";
 import { Prose } from "@nikolovlazar/chakra-ui-prose";
 import { generateHTML } from "@tiptap/html";
+import { useCatch } from "remix";
 import { parse } from "superjson";
 import type { Page } from "~models";
+import {
+	CatchBoundary as NestedCatchBoundary,
+	ErrorBoundary as NestedErrorBoundary,
+} from "~feat/boundaries";
 import { maxContentWidth } from "~feat/chakra";
 import { extensions } from "~feat/editor";
 import { Link } from "~feat/links";
+import { catchMessage } from "~lib/catch";
 import { prisma } from "~lib/prisma";
 import { respond, useLoaderResponse } from "~lib/response";
 import { sanitize } from "~lib/sanitize";
@@ -161,4 +167,28 @@ export default function PageSlug() {
 			</Wrap>
 		</Container>
 	);
+}
+
+export function CatchBoundary(): JSX.Element {
+	const caught = useCatch();
+	// eslint-disable-next-line no-console -- Log the caught message
+	console.error("⚠️ Caught:", caught);
+	const { status, statusText } = caught;
+	const message = catchMessage(status);
+
+	return (
+		<NestedCatchBoundary
+			message={message}
+			status={status}
+			statusText={statusText}
+		/>
+	);
+}
+
+export function ErrorBoundary({ error }: { error: Error }): JSX.Element {
+	// eslint-disable-next-line no-console -- Log the error message
+	console.error("🚨 ERROR:", error);
+	const { message } = error;
+
+	return <NestedErrorBoundary message={message} name="Unterseite" />;
 }

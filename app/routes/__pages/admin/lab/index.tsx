@@ -9,8 +9,14 @@ import {
 	Badge,
 	Flex,
 } from "@chakra-ui/react";
+import { useCatch } from "remix";
 import { authorize } from "~feat/auth";
+import {
+	CatchBoundary as NestedCatchBoundary,
+	ErrorBoundary as NestedErrorBoundary,
+} from "~feat/boundaries";
 import { LinkButton } from "~feat/links";
+import { catchMessage } from "~lib/catch";
 import { respond } from "~lib/response";
 import { entries } from "~lib/util";
 
@@ -89,4 +95,28 @@ export default function Index(): JSX.Element {
 			</SimpleGrid>
 		</chakra.main>
 	);
+}
+
+export function CatchBoundary(): JSX.Element {
+	const caught = useCatch();
+	// eslint-disable-next-line no-console -- Log the caught message
+	console.error("⚠️ Caught:", caught);
+	const { status, statusText } = caught;
+	const message = catchMessage(status);
+
+	return (
+		<NestedCatchBoundary
+			message={message}
+			status={status}
+			statusText={statusText}
+		/>
+	);
+}
+
+export function ErrorBoundary({ error }: { error: Error }): JSX.Element {
+	// eslint-disable-next-line no-console -- Log the error message
+	console.error("🚨 ERROR:", error);
+	const { message } = error;
+
+	return <NestedErrorBoundary message={message} name="Admin Lab Übersicht" />;
 }

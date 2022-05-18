@@ -12,15 +12,23 @@ export async function revalidate(
 	/* Validate the DID */
 	const rawDID = User.shape.did.safeParse(did);
 	if (!rawDID.success)
-		throw new Error(
+		throw new Response(
 			"Nutzeridentifikation wurden nicht korrekt übermittelt",
+			{
+				status: 400,
+				statusText: "Schlechte Anfrage",
+			},
 		);
 
 	/* Revalidate user data via Magic */
 	const { email } = await safeMetadata(rawDID.data);
 	if (!(did && email))
-		throw new Error(
+		throw new Response(
 			"Der Nutzer wurde nicht erfolgreich bei Magic angelegt",
+			{
+				status: 500,
+				statusText: "Interner Fehler",
+			},
 		);
 
 	/* Get database user data to save in the session, if any */

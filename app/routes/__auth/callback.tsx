@@ -28,7 +28,7 @@ export default function Callback(): JSX.Element {
 
 	if (loading) {
 		return (
-			<Center minW="100vw" minH="100vh" p={2}>
+			<Center w="100%" minH="100%" p={2}>
 				<CircularProgress isIndeterminate capIsRound />
 			</Center>
 		);
@@ -38,8 +38,8 @@ export default function Callback(): JSX.Element {
 		<Fade in={!loading} unmountOnExit>
 			<Alert
 				status={data ? "success" : "error"}
-				minW="100vw"
-				minH="100vh"
+				w="100%"
+				minH="100%"
 				flexDirection="column"
 				alignItems="center"
 				justifyContent="center"

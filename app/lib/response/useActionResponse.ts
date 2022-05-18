@@ -7,5 +7,6 @@ export const useActionResponse = <T>():
 	| Omit<T, "headers">
 	| Record<string, never> => {
 	const response = useActionData<SuperJSONResult>();
+
 	return useMemo(() => deserialize<T>(response ?? { json: {} }), [response]);
 };

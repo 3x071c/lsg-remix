@@ -15,7 +15,10 @@ export function safeValidate(token: string) {
 				token,
 			); /* 🚨 Important: Make sure the token is valid and **hasn't expired**, before authorizing access to user data! */
 		} catch (e) {
-			throw new Error("Die Anmeldung ist fehlgeschlagen");
+			throw new Response("Die Anmeldung ist fehlgeschlagen", {
+				status: 400,
+				statusText: "Schlechte Anfrage",
+			});
 		}
 	}
 	return true;

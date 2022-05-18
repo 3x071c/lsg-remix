@@ -107,7 +107,7 @@ export function CatchBoundary(): JSX.Element {
 
 	return (
 		<Root>
-			<Center minW="100vw" minH="100vh">
+			<Center w="100%" minH="100%" p={4}>
 				<chakra.main p={2} textAlign="center">
 					<Heading as="h1" size="xl">
 						{statusText}
@@ -133,7 +133,7 @@ export function ErrorBoundary({ error }: { error: Error }): JSX.Element {
 
 	return (
 		<Root>
-			<Center minW="100vw" minH="100vh">
+			<Center w="100%" minH="100%" p={4}>
 				<chakra.main p={2} textAlign="center">
 					<Heading as="h1" size="xl">
 						{name}
