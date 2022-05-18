@@ -21,13 +21,8 @@ import {
 	Heading,
 	Input,
 } from "@chakra-ui/react";
-import { useState } from "react";
-import {
-	useTable,
-	useSortBy,
-	useGlobalFilter,
-	useAsyncDebounce,
-} from "react-table";
+import { debounce } from "lodash";
+import { useTable, useSortBy, useGlobalFilter } from "react-table";
 
 export type TableProps<T extends object> = {
 	columns: Column<T>[];
@@ -53,9 +48,8 @@ export function Table<T extends object>({
 	} = useTable<T>({ columns, data }, useGlobalFilter, useSortBy);
 
 	const count = preGlobalFilteredRows.length;
-	const [value, setValue] = useState<unknown>(state.globalFilter);
-	const onChange = useAsyncDebounce((v) => {
-		setGlobalFilter(v || undefined);
+	const onChange = debounce((e: React.ChangeEvent<HTMLInputElement>) => {
+		setGlobalFilter(e.target.value || undefined);
 	}, 200);
 
 	return (
@@ -68,12 +62,9 @@ export function Table<T extends object>({
 				</WrapItem>
 				<WrapItem>
 					<Input
-						value={value ? String(value) : ""}
+						defaultValue={String(state.globalFilter || "")}
 						placeholder={`🔍 Filtern (${count})`}
-						onChange={(e) => {
-							setValue(e.target.value);
-							onChange(e.target.value);
-						}}
+						onChange={onChange}
 					/>
 					<Button ml={2} leftIcon={<AddIcon />} onClick={trigger}>
 						Neu
