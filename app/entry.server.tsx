@@ -1,4 +1,3 @@
-import "regenerator-runtime/runtime";
 import type { EntryContext } from "remix";
 import createCache from "@emotion/cache";
 import { CacheProvider } from "@emotion/react";
