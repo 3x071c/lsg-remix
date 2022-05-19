@@ -1,0 +1,30 @@
+-- AlterTable
+ALTER TABLE "Page" ALTER COLUMN "title" SET DATA TYPE TEXT;
+
+-- AlterTable
+ALTER TABLE "PageCategory" ALTER COLUMN "name" SET DATA TYPE TEXT;
+
+-- AlterTable
+ALTER TABLE "Ticker" ALTER COLUMN "content" SET DATA TYPE TEXT;
+
+-- AlterTable
+ALTER TABLE "User" ALTER COLUMN "did" SET DATA TYPE TEXT,
+ALTER COLUMN "email" SET DATA TYPE TEXT,
+ALTER COLUMN "firstname" SET DATA TYPE TEXT,
+ALTER COLUMN "lastname" SET DATA TYPE TEXT;
+
+-- CreateTable
+CREATE TABLE "Event" (
+    "uuid" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "title" TEXT NOT NULL,
+    "startsAt" TIMESTAMP(3) NOT NULL,
+    "endsAt" TIMESTAMP(3) NOT NULL,
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdByUUID" UUID NOT NULL,
+
+    CONSTRAINT "Event_pkey" PRIMARY KEY ("uuid")
+);
+
+-- AddForeignKey
+ALTER TABLE "Event" ADD CONSTRAINT "Event_createdByUUID_fkey" FOREIGN KEY ("createdByUUID") REFERENCES "User"("uuid") ON DELETE RESTRICT ON UPDATE CASCADE;
