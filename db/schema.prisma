@@ -18,24 +18,24 @@ model User {
     /// The unique ID of the user
     uuid              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
     /// The unique DID used by Magic for authentication
-    did               String    @unique @db.VarChar(51) /// @zod.regex(/^did:ethr:0x[a-fA-F0-9]{40}$/, { message: "Invalide DID von Magic erhalten" })
+    did               String    @unique @db.Text /// @zod.regex(/^did:ethr:0x[a-fA-F0-9]{40}$/, { message: "Invalide DID von Magic erhalten" })
     /// The user's email address
-    email             String    @unique @db.VarChar(60) /// @zod.email({ message: "Invalide E-Mail-Adresse" }).min(3, { message: "E-Mail zu kurz" }).max(60, { message: "E-Mail zu lang" })
+    email             String    @unique @db.Text /// @zod.email({ message: "Invalide E-Mail-Adresse" }).min(3, { message: "E-Mail zu kurz" }).max(60, { message: "E-Mail zu lang" })
     /// The user's first name
-    firstname         String    @db.VarChar(20) /// @zod.min(3, { message: "Vorname zu kurz" }).max(20, { message: "Vorname zu lang" })
+    firstname         String    @db.Text /// @zod.min(3, { message: "Vorname zu kurz" }).max(20, { message: "Vorname zu lang" })
     /// The user's last name
-    lastname          String    @db.VarChar(20) /// @zod.min(3, { message: "Nachname zu kurz" }).max(20, { message: "Nachname zu lang" })
+    lastname          String    @db.Text /// @zod.min(3, { message: "Nachname zu kurz" }).max(20, { message: "Nachname zu lang" })
     /// Used to lock the user out of the app, i.e. preventing any privileged access
     locked            Boolean   @default(true)
-    /// Authorization/Permission for the CMS
+    /// (AUTH) CMS Permission
     canAccessCMS      Boolean   @default(false)
-    /// Authorization/Permission for the Lab
+    /// (AUTH) LAB Permission
     canAccessLab      Boolean   @default(false)
-    /// Authorization/Permission for Schoolib
+    /// (AUTH) SCHOOLIB Permission
     canAccessSchoolib Boolean   @default(false)
-    /// Authorization/Permission for User Management
+    /// (AUTH) USER MANAGEMENT Permission
     canAccessUsers    Boolean   @default(false)
-    /// Authorization/Permission for Ticker
+    /// (AUTH) TICKER MANAGEMENT Permission
     canAccessTicker   Boolean   @default(false)
     /// (LAB) The pizza selection for orders
     pizza             Pizza?    @relation("UserPizza", fields: [pizzaUUID], references: [uuid])
@@ -47,6 +47,8 @@ model User {
     createdPizzas     Pizza[]   @relation("UserCreatedPizzas")
     /// (TICKER) Tickers this user created
     createdTickers    Ticker[]  @relation("UserCreatedTickers")
+    /// (EVENTS) Events this user created
+    createdEvents     Event[]   @relation("UserCreatedEvents")
     /// This timestamp is updated on every mutation automatically
     updatedAt         DateTime  @default(now()) @updatedAt
     /// This timestamp is set on creation automatically
@@ -61,7 +63,7 @@ model Page {
     /// The foreign key of the category this page has a relation with
     categoryUUID String       @db.Uuid
     /// The page's title
-    title        String       @db.VarChar(40) /// @zod.min(3, { message: "Titel zu kurz" }).max(40, { message: "Titel zu lang" })
+    title        String       @db.Text /// @zod.min(3, { message: "Titel zu kurz" }).max(40, { message: "Titel zu lang" })
     /// The page's content
     content      String       @db.Text
     /// This timestamp is updated on every mutation automatically
@@ -76,7 +78,7 @@ model PageCategory {
     /// The pages that belong to this category
     pages     Page[]
     /// The category name
-    name      String   @db.VarChar(40) /// @zod.min(3, { message: "Name zu kurz" }).max(40, { message: "Name zu lang" })
+    name      String   @db.Text /// @zod.min(3, { message: "Name zu kurz" }).max(40, { message: "Name zu lang" })
     /// This timestamp is updated on every mutation automatically
     updatedAt DateTime @default(now()) @updatedAt
     /// This timestamp is set on creation automatically
@@ -105,14 +107,33 @@ model Pizza {
 model Ticker {
     /// The unique ID of the ticker item
     uuid          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-    /// The page's title
-    content       String   @db.VarChar(260) /// @zod.min(3, { message: "Ticker zu kurz" }).max(260, { message: "Ticker zu lang" })
+    /// The ticker content
+    content       String   @db.Text /// @zod.min(3, { message: "Ticker zu kurz" }).max(255, { message: "Ticker zu lang" })
     /// This timestamp is updated on every mutation automatically
     updatedAt     DateTime @default(now()) @updatedAt
     /// This timestamp is set on creation automatically
     createdAt     DateTime @default(now())
-    /// The user that created this pizza
+    /// The user that created this ticker
     createdBy     User     @relation("UserCreatedTickers", fields: [createdByUUID], references: [uuid])
-    /// The foreign key to the UUID of the user this pizza has been created by
+    /// The foreign key to the UUID of the user this ticker has been created by
+    createdByUUID String   @db.Uuid
+}
+
+model Event {
+    /// The unique ID of the event
+    uuid          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    /// The event title
+    title         String   @db.Text /// @zod.min(3, { message: "Titel zu kurz" }).max(255, { message: "Titel zu lang" })
+    /// The event start timestamp
+    startsAt      DateTime
+    /// The event end timestamp
+    endsAt        DateTime
+    /// This timestamp is updated on every mutation automatically
+    updatedAt     DateTime @default(now()) @updatedAt
+    /// This timestamp is set on creation automatically
+    createdAt     DateTime @default(now())
+    /// The user that created this event
+    createdBy     User     @relation("UserCreatedEvents", fields: [createdByUUID], references: [uuid])
+    /// The foreign key to the UUID of the user this event has been created by
     createdByUUID String   @db.Uuid
 }

@@ -16,13 +16,13 @@ import { prisma } from "~lib/prisma";
 import { respond, useLoaderResponse } from "~lib/response";
 
 type TableType = {
+	createdAt: Date;
 	did: string;
 	email: string;
 	firstname: string;
 	lastname: string;
 	locked: boolean;
 	updatedAt: Date;
-	createdAt: Date;
 };
 
 type LoaderData = {

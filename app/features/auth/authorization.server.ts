@@ -9,17 +9,27 @@ import { getSession, invalidate, revalidate, commitSession } from ".";
  * Authorize an incoming request by checking the session data and returning it
  * @param request The incoming request
  * @param options Options to modify behavior
- * @returns Returns all stored data or redirects to login if required (default behavior), else returns null
+ * @returns Returns a tuple with index [0]: user data as requested or null, [1] headers to pass down to the final response
  */
 export async function authorize<
 	O extends {
+		/** Restrict access on CMS pages */
 		cms?: boolean;
+		/** Restrict access by access to DID */
 		did?: string;
+		/** Ignore missing user properties (don't redirect to the user configuration) */
 		ignore?: boolean;
+		/** Restrict access on Admin Lab pages */
 		lab?: boolean;
+		/** Bypass all (not required) redirects, e.g. for layout routes to not redirect when visiting child routes which might have a different set of access restrictions (currently implies `{ ignore: true, lock: true }`) */
+		bypass?: boolean;
+		/** Restrict access on lock pages (pages the user is allowed to visit when locked) */
 		lock?: boolean;
+		/** Don't throw if the user isn't signed in (f.e. to provide additional functionality for authenticated users, without requiring it), when required=false */
 		required?: boolean;
+		/** Restrict access on Schoolib pages */
 		schoolib?: boolean;
+		/** Restrict access on Ticker pages */
 		ticker?: boolean;
 	},
 >(
@@ -30,7 +40,7 @@ export async function authorize<
 		(
 			| User
 			| (O extends { required: false } ? null : Record<string, never>)
-			| (O extends { ignore: true }
+			| (O extends { ignore: true } | { bypass: true }
 					? PartialExcept<User, "did" | "email">
 					: Record<string, never>)
 		),
@@ -42,6 +52,7 @@ export async function authorize<
 	const did = options?.did;
 	const ignore = options?.ignore ?? false;
 	const lab = options?.lab ?? false;
+	const bypass = options?.bypass ?? false;
 	const lock = options?.lock ?? false;
 	const required = options?.required ?? true;
 	const schoolib = options?.schoolib ?? false;
@@ -86,9 +97,9 @@ export async function authorize<
 
 	const parsedUser = User.safeParse(newUser);
 	if (!parsedUser.success) {
-		if (ignore)
+		if (ignore || bypass)
 			return [
-				newUser as O extends { ignore: true }
+				newUser as O extends { ignore: true } | { bypass: true }
 					? PartialExcept<User, "did" | "email">
 					: Record<string, never>,
 				headers,
@@ -99,7 +110,8 @@ export async function authorize<
 
 	if (!dbUser) throw await invalidate(request);
 
-	if (user.locked && !lock) throw redirect("/admin/locked", { headers });
+	if (user.locked && !lock && !bypass)
+		throw redirect("/admin/locked", { headers });
 
 	if (
 		(cms && !user.canAccessCMS) ||

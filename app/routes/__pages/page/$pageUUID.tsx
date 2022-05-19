@@ -8,7 +8,6 @@ import {
 	AccordionItem,
 	AccordionButton,
 	AccordionPanel,
-	useColorModeValue,
 	Box,
 	Text,
 	AccordionIcon,
@@ -74,17 +73,10 @@ export const loader: LoaderFunction = async ({ params }) =>
 export default function PageSlug() {
 	const { title, json } = useLoaderResponse<LoaderData>();
 	const html = sanitize(generateHTML(json, extensions));
-	const plain = useColorModeValue("white", "gray.800");
 	const readingTime = Math.ceil((html.match(/\s+/g)?.length ?? 0) / 150);
 
 	return (
-		<Container
-			w="full"
-			maxW={maxContentWidth}
-			p={4}
-			mx="auto"
-			mt={16}
-			bg={plain}>
+		<Container w="full" maxW={maxContentWidth} p={4} mx="auto" mt={16}>
 			<Heading as="h1" size="2xl">
 				{title}
 			</Heading>

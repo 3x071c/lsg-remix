@@ -64,9 +64,8 @@ const getLoaderData = async (
 ): Promise<LoaderData> => {
 	const did = getDID(params);
 	const [user, headers] = await authorize(request, {
+		bypass: true,
 		did,
-		ignore: true,
-		lock: true,
 	});
 	const {
 		canAccessCMS: showAccessCMS,
@@ -166,8 +165,7 @@ const getActionData = async (
 	const did = getDID(params);
 	const [user, headers] = await authorize(request, {
 		did,
-		ignore: true,
-		lock: true,
+		layout: true,
 	});
 	const { email } = await safeMetadata(did);
 	if (!email)
