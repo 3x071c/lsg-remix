@@ -96,7 +96,7 @@ export default function Events() {
 
 	return (
 		<Container w="full" maxW={maxContentWidth} p={4} mx="auto" mt={16}>
-			<Heading as="h1" size="2xl" borderBottomWidth={1}>
+			<Heading as="h1" size="2xl" borderBottomWidth={2}>
 				Termine
 			</Heading>
 			<Table
