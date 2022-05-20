@@ -1,3 +1,4 @@
+import type { Decimal } from "@prisma/client/runtime";
 import type { ActionFunction, LoaderFunction } from "remix";
 import { CheckIcon } from "@chakra-ui/icons";
 import {
@@ -70,24 +71,33 @@ const getLoaderData = async (request: Request): Promise<LoaderData> => {
 	const isPizzaCurrent = (date: Date) =>
 		DateTime.fromJSDate(date, { zone }).setLocale(locale) > lastSaturday;
 
-	const pizzas = (
-		await prisma.pizza.findMany({
-			orderBy: {
-				price: "asc",
-			},
-			select: {
-				name: true,
-				price: true,
-				users: isShowTime && {
-					select: {
-						firstname: true,
-						lastname: true,
-					},
+	const dbPizzas: {
+		users: {
+			firstname: string;
+			lastname: string;
+			pizzaUpdatedAt: Date | null;
+		}[];
+		price: Decimal;
+		name: string;
+		uuid: string;
+	}[] = await prisma.pizza.findMany({
+		orderBy: {
+			price: "asc",
+		},
+		select: {
+			name: true,
+			price: true,
+			users: isShowTime && {
+				select: {
+					firstname: true,
+					lastname: true,
+					pizzaUpdatedAt: true,
 				},
-				uuid: true,
 			},
-		})
-	).map(({ price, users, ...data }) => ({
+			uuid: true,
+		},
+	});
+	const pizzas = dbPizzas.map(({ price, users, ...data }) => ({
 		...data,
 		price: price.toFixed(2),
 		usernames: users
