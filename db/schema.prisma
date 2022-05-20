@@ -18,13 +18,13 @@ model User {
     /// The unique ID of the user
     uuid              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
     /// The unique DID used by Magic for authentication
-    did               String    @unique @db.Text /// @zod.regex(/^did:ethr:0x[a-fA-F0-9]{40}$/, { message: "Invalide DID von Magic erhalten" })
+    did               String    @unique /// @zod.regex(/^did:ethr:0x[a-fA-F0-9]{40}$/, { message: "Invalide DID von Magic erhalten" })
     /// The user's email address
-    email             String    @unique @db.Text /// @zod.email({ message: "Invalide E-Mail-Adresse" }).min(3, { message: "E-Mail zu kurz" }).max(60, { message: "E-Mail zu lang" })
+    email             String    @unique /// @zod.email({ message: "Invalide E-Mail-Adresse" }).min(3, { message: "E-Mail zu kurz" }).max(60, { message: "E-Mail zu lang" })
     /// The user's first name
-    firstname         String    @db.Text /// @zod.min(3, { message: "Vorname zu kurz" }).max(20, { message: "Vorname zu lang" })
+    firstname         String /// @zod.min(3, { message: "Vorname zu kurz" }).max(20, { message: "Vorname zu lang" })
     /// The user's last name
-    lastname          String    @db.Text /// @zod.min(3, { message: "Nachname zu kurz" }).max(20, { message: "Nachname zu lang" })
+    lastname          String /// @zod.min(3, { message: "Nachname zu kurz" }).max(20, { message: "Nachname zu lang" })
     /// Used to lock the user out of the app, i.e. preventing any privileged access
     locked            Boolean   @default(true)
     /// (AUTH) CMS Permission
@@ -63,9 +63,9 @@ model Page {
     /// The foreign key of the category this page has a relation with
     categoryUUID String       @db.Uuid
     /// The page's title
-    title        String       @db.Text /// @zod.min(3, { message: "Titel zu kurz" }).max(40, { message: "Titel zu lang" })
+    title        String /// @zod.min(3, { message: "Titel zu kurz" }).max(40, { message: "Titel zu lang" })
     /// The page's content
-    content      String       @db.Text
+    content      String
     /// This timestamp is updated on every mutation automatically
     updatedAt    DateTime     @default(now()) @updatedAt
     /// This timestamp is set on creation automatically
@@ -78,7 +78,7 @@ model PageCategory {
     /// The pages that belong to this category
     pages     Page[]
     /// The category name
-    name      String   @db.Text /// @zod.min(3, { message: "Name zu kurz" }).max(40, { message: "Name zu lang" })
+    name      String /// @zod.min(3, { message: "Name zu kurz" }).max(40, { message: "Name zu lang" })
     /// This timestamp is updated on every mutation automatically
     updatedAt DateTime @default(now()) @updatedAt
     /// This timestamp is set on creation automatically
@@ -108,7 +108,7 @@ model Ticker {
     /// The unique ID of the ticker item
     uuid          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
     /// The ticker content
-    content       String   @db.Text /// @zod.min(3, { message: "Ticker zu kurz" }).max(255, { message: "Ticker zu lang" })
+    content       String /// @zod.min(3, { message: "Ticker zu kurz" }).max(255, { message: "Ticker zu lang" })
     /// This timestamp is updated on every mutation automatically
     updatedAt     DateTime @default(now()) @updatedAt
     /// This timestamp is set on creation automatically
@@ -123,7 +123,7 @@ model Event {
     /// The unique ID of the event
     uuid          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
     /// The event title
-    title         String   @db.Text /// @zod.min(3, { message: "Titel zu kurz" }).max(255, { message: "Titel zu lang" })
+    title         String /// @zod.min(3, { message: "Titel zu kurz" }).max(255, { message: "Titel zu lang" })
     /// The event start timestamp
     startsAt      DateTime
     /// The event end timestamp

@@ -1,19 +1,26 @@
 import type { Column } from "react-table";
-import type { LoaderFunction } from "remix";
+import type { ActionFunction, LoaderFunction } from "remix";
 import { WarningTwoIcon } from "@chakra-ui/icons";
-import { Heading, Container, useToast } from "@chakra-ui/react";
+import { Heading, Container, useDisclosure } from "@chakra-ui/react";
+import { DateTime } from "luxon";
 import { useMemo } from "react";
 import { useCatch } from "remix";
+import { validationError } from "remix-validated-form";
+import { EventData } from "~models";
 import { authorize } from "~feat/auth";
 import {
 	CatchBoundary as NestedCatchBoundary,
 	ErrorBoundary as NestedErrorBoundary,
 } from "~feat/boundaries";
 import { maxContentWidth } from "~feat/chakra";
+import { EventModal, EventValidator } from "~feat/events/eventmodal";
 import { Table } from "~feat/table";
 import { catchMessage } from "~lib/catch";
 import { prisma } from "~lib/prisma";
-import { respond, useLoaderResponse } from "~lib/response";
+import { respond, useActionResponse, useLoaderResponse } from "~lib/response";
+
+const zone = "Europe/Berlin";
+const locale = "de-DE";
 
 type TableType = {
 	startsAt: Date;
@@ -43,8 +50,8 @@ const getLoaderData = async (request: Request): Promise<LoaderData> => {
 			title: true,
 		},
 		where: {
-			startsAt: {
-				gte: new Date(),
+			endsAt: {
+				gte: DateTime.now().startOf("minute").toJSDate(),
 			},
 		},
 	});
@@ -54,21 +61,51 @@ const getLoaderData = async (request: Request): Promise<LoaderData> => {
 export const loader: LoaderFunction = async ({ request }) =>
 	respond<LoaderData>(await getLoaderData(request));
 
+type ActionData = {
+	formError?: string;
+	headers: HeadersInit;
+	status: number;
+};
+const getActionData = async (request: Request): Promise<ActionData> => {
+	const [{ uuid }, headers] = await authorize(request, { cms: true });
+
+	const form = await request.formData();
+	const { error, data: formData } = await EventValidator.validate(form);
+	if (error) throw validationError(error);
+
+	const event = EventData.safeParse({
+		createdByUUID: uuid,
+		endsAt: DateTime.fromISO(formData.endsAt, { locale, zone }).toJSDate(),
+		startsAt: DateTime.fromISO(formData.startsAt, {
+			locale,
+			zone,
+		}).toJSDate(),
+		title: formData.title,
+	});
+	if (!event.success)
+		throw new Response("Termin konnte nicht validiert werden", {
+			status: 400,
+			statusText: "Schlechte Anfrage",
+		});
+
+	await prisma.event.create({
+		data: event.data,
+	});
+
+	return {
+		headers,
+		status: 200,
+	};
+};
+export const action: ActionFunction = async ({ request }) =>
+	respond<ActionData>(await getActionData(request));
+
 export default function Events() {
 	const { did, events } = useLoaderResponse<LoaderData>();
-	const toast = useToast();
+	const { formError } = useActionResponse<ActionData>();
+	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	const memoizedWarningIcon = useMemo(() => <WarningTwoIcon />, []);
-	const dateOpts = useMemo(
-		() =>
-			({
-				day: "numeric",
-				dayPeriod: "short",
-				month: "numeric",
-				year: "2-digit",
-			} as const),
-		[],
-	);
 	const columns = useMemo<Column<TableType>[]>(
 		() => [
 			{
@@ -79,19 +116,23 @@ export default function Events() {
 			{
 				accessor: "startsAt",
 				Cell: ({ value }) =>
-					new Date(value).toLocaleString("de", dateOpts),
+					DateTime.fromJSDate(value)
+						.setLocale(locale)
+						.toLocaleString(DateTime.DATETIME_SHORT),
 				disableGlobalFilter: true,
 				Header: "Von",
 			},
 			{
 				accessor: "endsAt",
 				Cell: ({ value }) =>
-					new Date(value).toLocaleString("de", dateOpts),
+					DateTime.fromJSDate(value)
+						.setLocale(locale)
+						.toLocaleString(DateTime.DATETIME_SHORT),
 				disableGlobalFilter: true,
 				Header: "Bis",
 			},
 		],
-		[dateOpts, memoizedWarningIcon],
+		[memoizedWarningIcon],
 	);
 
 	return (
@@ -103,18 +144,12 @@ export default function Events() {
 				columns={columns}
 				data={events}
 				heading="Alle Termine:"
-				trigger={
-					did
-						? () =>
-								toast({
-									description: `Aktuell nicht implementiert`,
-									duration: 3000,
-									isClosable: false,
-									status: "error",
-									title: "Nicht implementiert",
-								})
-						: undefined
-				}
+				trigger={did ? onOpen : undefined}
+			/>
+			<EventModal
+				isOpen={isOpen}
+				onClose={onClose}
+				errorMessage={formError}
 			/>
 		</Container>
 	);
