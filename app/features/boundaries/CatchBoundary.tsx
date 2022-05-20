@@ -32,7 +32,7 @@ export function CatchBoundary({
 					{statusText}
 				</AlertTitle>
 				<AlertDescription>
-					Houston, we&apos;ve had a {status}: {message}
+					Houston, we&apos;ve had a {status}
 				</AlertDescription>
 				<AlertDescription maxW="lg" my={2}>
 					{message}

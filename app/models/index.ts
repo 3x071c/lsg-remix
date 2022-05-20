@@ -1,3 +1,4 @@
+export * from "./Event";
 export * from "./Page";
 export * from "./PageCategory";
 export * from "./Pizza";

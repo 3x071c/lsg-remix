@@ -28,7 +28,7 @@ export type TableProps<T extends object> = {
 	columns: Column<T>[];
 	data: T[];
 	heading: string;
-	trigger: () => void;
+	trigger?: () => void;
 };
 export function Table<T extends object>({
 	columns,
@@ -66,9 +66,11 @@ export function Table<T extends object>({
 						placeholder={`🔍 Filtern (${count})`}
 						onChange={onChange}
 					/>
-					<Button ml={2} leftIcon={<AddIcon />} onClick={trigger}>
-						Neu
-					</Button>
+					{trigger && (
+						<Button ml={2} leftIcon={<AddIcon />} onClick={trigger}>
+							Neu
+						</Button>
+					)}
 				</WrapItem>
 			</Wrap>
 			<TableContainer>

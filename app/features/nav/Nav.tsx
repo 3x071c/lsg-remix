@@ -92,9 +92,17 @@ export function Nav({ groupedPages, isLoggedIn }: NavbarProps): JSX.Element {
 					))}
 				</HStack>
 				<Spacer />
+				<NavLink
+					href="/events"
+					mr={isLoggedIn ? 2 : 4}
+					sx={{ "&.active": { display: "none" } }}>
+					<Button variant="outline">Termine</Button>
+				</NavLink>
 				{isLoggedIn && (
 					<NavLink
 						href="/admin"
+						d={{ base: "none", sm: "block" }}
+						mr={4}
 						sx={{ "&.active": { display: "none" } }}>
 						<Button>Administration</Button>
 					</NavLink>

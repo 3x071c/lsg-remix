@@ -11,8 +11,7 @@ type LoaderData = {
 };
 const getLoaderData = async (request: Request): Promise<LoaderData> => {
 	const [user, headers] = await authorize(request, {
-		ignore: true,
-		lock: true,
+		bypass: true,
 		required: false,
 	});
 	if (user) throw await invalidate(request);
