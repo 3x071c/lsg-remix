@@ -2,13 +2,13 @@
 
 ## Trunk-based development
 
-This repository follows the guidelines of [Trunk based development](https://trunkbaseddevelopment.com/), using the 'scalable' approach of branching off and merging (actually, squashing) into `trunk` using pull requests. Remember that this part is automatically handled by `kodiak` (bot).
+This repository follows the guidelines of [Trunk based development](https://trunkbaseddevelopment.com/), using the 'scalable' approach of branching off and merging (actually, squashing) into `trunk` using pull requests. Remember that this part is automated by `kodiak` (bot).
 
 ## Git Usage
 
-> Git is a distributed version control system. As a result of its nature, the _remote_ (online repository hosted on GitHub, often called `origin` (check `git remote -v` to see the name of your remote)) and your local repository are treated separately, may diverge, not stay in sync, get out of date etc. Here's a great [tutorial](https://www.atlassian.com/git/tutorials/setting-up-a-repository) on the basics of git collaboration.
+> Git is a distributed version control system. As a result of its nature, the _remote_ (online repository hosted on GitHub, often called `origin` (check `git remote -v` to see the name of your remote)) and your local repository are treated separately, may diverge, not stay in sync, get out of date etc. [Click here for a great tutorial](https://www.atlassian.com/git/tutorials/setting-up-a-repository) on the basics of git collaboration.
 
-Squashing and rebasing over merging is encouraged. PRs can only be squashed onto trunk. Here is a reference for some common git operations:
+Squashing and rebasing over merging is encouraged. PRs can only be squashed onto trunk (linear git history is enforced). Here is a reference for some common git operations:
 
 -   `git status` - Information about your local git status
 -   `git checkout -b <name>` - Create a new branch off of the current one and switch to it (always create a separate branch before working)
@@ -27,7 +27,3 @@ Squashing and rebasing over merging is encouraged. PRs can only be squashed onto
 ## Issues and Discussions
 
 Issues are exclusively for feature requests and bug fixes; support and vague ideas should be posted in the dedicated GitHub discussions tab.
-
-## Dependencies
-
-Make sure to keep dependencies up to date. Use tools such as [VSCode Version Lens](https://marketplace.visualstudio.com/items?itemName=pflannery.vscode-versionlens) to bump packages which "satisfy" a later version and do major version updates (make sure to check that everything works before committing). Some dependencies are fixed/"pinned" on a certain (outdated) version (range), due to incompatibilities or bugs. It is worth checking every once in a while if these issues still arise when upgrading.
