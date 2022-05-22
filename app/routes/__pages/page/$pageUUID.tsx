@@ -21,6 +21,7 @@ import {
 } from "@chakra-ui/react";
 import { Prose } from "@nikolovlazar/chakra-ui-prose";
 import { generateHTML } from "@tiptap/html";
+import { last } from "lodash";
 import { useCatch } from "remix";
 import { parse } from "superjson";
 import type { Page } from "~models";
@@ -73,6 +74,14 @@ export const loader: LoaderFunction = async ({ params }) =>
 export default function PageSlug() {
 	const { title, json } = useLoaderResponse<LoaderData>();
 	const html = sanitize(generateHTML(json, extensions));
+	const headingRegex = /<h(?<tag>.+?)>(?<heading>.+?)<\/h/g;
+	const htmlWithHeadingIds = html.replaceAll(
+		headingRegex,
+		(...args) =>
+			`<h${(last(args) as Record<string, string>)?.["tag"] ?? "6"} id="${
+				(last(args) as Record<string, string>)?.["heading"] ?? ""
+			}">${(last(args) as Record<string, string>)?.["heading"] ?? ""}</h`,
+	);
 	const readingTime = Math.ceil((html.match(/\s+/g)?.length ?? 0) / 150);
 
 	return (
@@ -98,7 +107,11 @@ export default function PageSlug() {
 				}}>
 				<WrapItem d="inline-block" flex="1 1 0" w="full" minW={215}>
 					<Prose as="main">
-						<Box dangerouslySetInnerHTML={{ __html: html }} />
+						<Box
+							dangerouslySetInnerHTML={{
+								__html: htmlWithHeadingIds,
+							}}
+						/>
 					</Prose>
 				</WrapItem>
 				<WrapItem
@@ -129,11 +142,16 @@ export default function PageSlug() {
 									align="stretch"
 									spacing={2}
 									divider={<StackDivider />}>
-									{[
-										...html.matchAll(
-											/<h\d>(?<heading>.+?)<\/h/g,
-										),
-									].map(
+									<Box>
+										{/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+										<Link
+											href="#"
+											fontSize="lg"
+											isTruncated>
+											{title}
+										</Link>
+									</Box>
+									{[...html.matchAll(headingRegex)].map(
 										({ index, groups }) =>
 											groups?.["heading"] && (
 												<Box key={index}>
@@ -144,6 +162,7 @@ export default function PageSlug() {
 															/[^A-Z0-9]/gi,
 															"-",
 														)}`}
+														pl={2}
 														fontSize="md"
 														isTruncated>
 														{groups["heading"]}
