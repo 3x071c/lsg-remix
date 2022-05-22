@@ -78,7 +78,7 @@ export default function Index(): JSX.Element {
 						Alle demnächst anstehenden Termine des
 						Louise-Schroeder-Gymnasiums:
 					</Text>
-					<LinkButton href="/" mt={4}>
+					<LinkButton href="/events" mt={4}>
 						Zu allen Terminen
 					</LinkButton>
 				</chakra.section>

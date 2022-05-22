@@ -16,11 +16,9 @@ import { maxContentWidth } from "~feat/chakra";
 import { EventModal, EventValidator } from "~feat/events/eventmodal";
 import { Table } from "~feat/table";
 import { catchMessage } from "~lib/catch";
+import { locale, zone } from "~lib/globals";
 import { prisma } from "~lib/prisma";
 import { respond, useActionResponse, useLoaderResponse } from "~lib/response";
-
-const zone = "Europe/Berlin";
-const locale = "de-DE";
 
 type TableType = {
 	startsAt: Date;
