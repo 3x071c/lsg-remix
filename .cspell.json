@@ -17,9 +17,7 @@
 		"db/data",
 		"db/zod"
 	],
-	"import": [
-		"@cspell/dict-de-de/cspell-ext.json"
-	],
+	"import": ["@cspell/dict-de-de/cspell-ext.json"],
 	"language": "en,de",
 	"useGitignore": true,
 	"words": [
