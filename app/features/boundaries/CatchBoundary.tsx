@@ -21,13 +21,13 @@ export function CatchBoundary({
 				status="warning"
 				w="100%"
 				minH="100%"
+				p={4}
 				flexDirection="column"
 				alignItems="center"
 				justifyContent="center"
-				p={4}
 				textAlign="center"
 				borderRadius="xl">
-				<AlertIcon boxSize="40px" mr={0} />
+				<AlertIcon mr={0} boxSize="40px" />
 				<AlertTitle mt={4} mb={1} fontSize="lg">
 					{statusText}
 				</AlertTitle>

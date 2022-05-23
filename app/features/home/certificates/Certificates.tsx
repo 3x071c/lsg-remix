@@ -9,7 +9,7 @@ export function Certificates() {
 	const isDark = colorMode === "dark";
 
 	return (
-		<Wrap w="full" spacing={8} align="center" justify="space-between">
+		<Wrap spacing={8} align="center" justify="space-between" w="full">
 			{entries({
 				[courage]: "'Schule ohne Rassismus, Schule mit Courage' Logo",
 				[delf]: "'DELF' Sprachzertifikat Logo (französisch)",
@@ -18,17 +18,17 @@ export function Certificates() {
 			}).map(([src, alt]) => (
 				<WrapItem
 					key={src}
-					flex="1 1 0"
+					maxH={100}
 					d="flex"
+					flex="1 1 0"
 					alignItems="center"
-					justifyContent="center"
-					maxH={100}>
+					justifyContent="center">
 					<Image
 						src={src}
 						alt={alt}
-						maxH="inherit"
-						h="inherit"
 						w="auto"
+						h="inherit"
+						maxH="inherit"
 						filter="auto"
 						invert={isDark ? "1" : undefined}
 						sx={{

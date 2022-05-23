@@ -58,6 +58,7 @@ export const loader: LoaderFunction = async ({ request }) =>
 
 export default function Users() {
 	const { users } = useLoaderResponse<LoaderData>();
+	const toast = useToast();
 
 	const memoizedLockIcon = useMemo(() => <LockIcon />, []);
 	const memoizedWarningIcon = useMemo(() => <WarningTwoIcon />, []);
@@ -124,14 +125,12 @@ export default function Users() {
 		[memoizedButton, memoizedLockIcon, memoizedWarningIcon],
 	);
 
-	const toast = useToast();
-
 	return (
 		<chakra.main w="full">
 			<Heading as="h1" size="xl">
 				Nutzerverwaltung
 			</Heading>
-			<Text fontSize="md" mt={2}>
+			<Text mt={2} fontSize="md">
 				Nutzer einsehen und bearbeiten
 			</Text>
 			<Table

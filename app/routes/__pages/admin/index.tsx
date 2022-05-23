@@ -68,7 +68,7 @@ const getLoaderData = async (request: Request): Promise<LoaderData> => {
 export const loader: LoaderFunction = async ({ request }) =>
 	respond<LoaderData>(await getLoaderData(request));
 
-export default function Index(): JSX.Element {
+export default function Admin(): JSX.Element {
 	const { firstname, lastname, pages } = useLoaderResponse<LoaderData>();
 	const location = useLocation();
 	const [route, setRoute] = useState<string>(location.pathname);
@@ -84,8 +84,8 @@ export default function Index(): JSX.Element {
 			</Heading>
 			<Text>Auf Dienste zugreifen:</Text>
 			<SimpleGrid
-				spacing="20px"
-				minChildWidth="270px"
+				minChildWidth={270}
+				spacing={4}
 				mt={8}
 				mx="auto"
 				placeItems="center">
@@ -97,13 +97,13 @@ export default function Index(): JSX.Element {
 							key={id}
 							w="full"
 							p="5"
-							borderWidth="1px"
+							borderWidth={1}
 							borderRadius="lg">
 							<Flex align="baseline">
 								<Badge
-									borderRadius="full"
 									px="2"
-									colorScheme="teal">
+									colorScheme="teal"
+									borderRadius="full">
 									Dienst
 								</Badge>
 							</Flex>
@@ -115,13 +115,13 @@ export default function Index(): JSX.Element {
 								isTruncated>
 								{long}
 							</Text>
-							<Flex justifyContent="flex-end">
+							<Flex justify="flex-end">
 								<LinkButton
 									href={authorized ? url : "."}
-									size="xs"
-									variant="outline"
 									rightIcon={<LinkIcon />}
-									isDisabled={!authorized}>
+									isDisabled={!authorized}
+									size="xs"
+									variant="outline">
 									{authorized ? "Besuchen" : "Kein Zugriff"}
 								</LinkButton>
 							</Flex>

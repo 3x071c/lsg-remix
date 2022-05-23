@@ -13,16 +13,16 @@ export function ColorModeToggle(): JSX.Element {
 
 	return (
 		<IconButton
+			size="lg"
 			aria-label={`Toggle ${isLight ? "dark" : "light"} mode`}
 			icon={<ColorModeIcon />}
-			isRound
-			size="lg"
 			pos="fixed"
+			zIndex={1}
 			bottom="0"
 			right="0"
 			transform="translate(-50%, -50%)" /* Relative instead of fixed positioning 😎 */
-			zIndex={1}
 			onClick={toggleColorMode}
+			isRound
 		/>
 	);
 }

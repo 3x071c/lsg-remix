@@ -18,7 +18,6 @@ export const SubmitButton = forwardRef<
 
 	return (
 		<Button
-			mt={2}
 			{...props}
 			type="submit"
 			disabled={isDisabled}

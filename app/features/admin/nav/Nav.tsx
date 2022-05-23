@@ -45,8 +45,8 @@ export function CmsNav({
 	const toast = useToast();
 
 	return (
-		<chakra.nav borderBottomWidth={1} w="full">
-			<Flex w="full" maxW={maxContentWidth} mx="auto" align="center">
+		<chakra.nav w="full" borderBottomWidth={1}>
+			<Flex align="center" w="full" maxW={maxContentWidth} mx="auto">
 				<NavLink href="." end>
 					<Box p={2} px={4}>
 						<Heading as="h2" size="md">
@@ -56,10 +56,10 @@ export function CmsNav({
 				</NavLink>
 				<Spacer />
 				<HStack
-					textAlign="center"
+					divider={<StackDivider />}
 					spacing={2}
 					overflowY="auto"
-					divider={<StackDivider />}>
+					textAlign="center">
 					{pages
 						.filter(({ short }) => short !== page.short)
 						.map(({ id, short, url }) => (
@@ -77,8 +77,8 @@ export function CmsNav({
 							as={Button}
 							p={2}
 							px={4}
-							rounded="full"
-							variant="link">
+							variant="link"
+							rounded="full">
 							<Avatar
 								size="sm"
 								name={`${user.firstname} ${user.lastname}`}

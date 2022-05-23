@@ -71,6 +71,7 @@ export const theme = extendTheme(
 		colorScheme: "blue" /* Sets the accent color for the entire theme */,
 	}),
 	withProse({
+		/* The margins in the default prose styles are far too large */
 		baseStyle: {
 			blockquote: {
 				my: { base: 3, md: 4 },

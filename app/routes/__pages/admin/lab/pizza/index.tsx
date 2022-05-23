@@ -162,22 +162,22 @@ export default function Pizza(): JSX.Element {
 			<Heading as="h1" size="xl">
 				Pizza
 			</Heading>
-			<Text fontSize="md" mt={2}>
+			<Text mt={2} fontSize="md">
 				Bestellung für den nächsten Freitag abgeben
 			</Text>
 			<ValidatedForm validator={UserValidator} method="post">
 				<RadioGroup
-					onChange={setPizza}
+					name="pizzaUUID"
 					value={pizza || undefined}
-					my={4}
-					name="pizzaUUID">
+					onChange={setPizza}
+					my={4}>
 					<VStack>
 						{pizzas.map(({ name, price, uuid, usernames }) => (
-							<Box w="full" key={uuid}>
+							<Box key={uuid} w="full">
 								<Radio value={uuid}>
 									{name} ({price}€){" "}
 									{pizzaUUID === uuid && (
-										<CheckIcon mr={2} color={checkColor} />
+										<CheckIcon ml={2} color={checkColor} />
 									)}
 									{usernames && (
 										<Text color={grayColor}>
@@ -190,7 +190,7 @@ export default function Pizza(): JSX.Element {
 					</VStack>
 				</RadioGroup>
 				<HStack spacing={4} mt={4}>
-					<SubmitButton m={0}>Yay</SubmitButton>
+					<SubmitButton>Yay</SubmitButton>
 					<LinkButton href="./new" variant="outline">
 						Neu
 					</LinkButton>

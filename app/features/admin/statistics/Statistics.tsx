@@ -17,12 +17,8 @@ export type StatisticsProps = {
 };
 export function Statistics({ data }: StatisticsProps): JSX.Element {
 	return (
-		<StatGroup
-			mt={8}
-			borderWidth="1px"
-			borderRadius="2xl"
-			textAlign="center">
-			<Stat borderRightWidth="1px">
+		<StatGroup mt={8} textAlign="center" borderWidth={1} borderRadius="2xl">
+			<Stat borderRightWidth={1}>
 				<StatLabel>Seiten</StatLabel>
 				<StatNumber>{keys(data).length}</StatNumber>
 				<StatHelpText>Anzahl</StatHelpText>

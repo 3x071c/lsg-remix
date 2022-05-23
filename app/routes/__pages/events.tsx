@@ -27,7 +27,7 @@ type TableType = {
 };
 
 type LoaderData = {
-	did?: string;
+	canAccessEvents?: boolean;
 	events: TableType[];
 	headers: HeadersInit;
 	status: number;
@@ -54,7 +54,12 @@ const getLoaderData = async (request: Request): Promise<LoaderData> => {
 		},
 	});
 
-	return { did: user?.did, events, headers, status: 200 };
+	return {
+		canAccessEvents: user?.canAccessEvents,
+		events,
+		headers,
+		status: 200,
+	};
 };
 export const loader: LoaderFunction = async ({ request }) =>
 	respond<LoaderData>(await getLoaderData(request));
@@ -65,7 +70,7 @@ type ActionData = {
 	status: number;
 };
 const getActionData = async (request: Request): Promise<ActionData> => {
-	const [{ uuid }, headers] = await authorize(request, { cms: true });
+	const [{ uuid }, headers] = await authorize(request, { events: true });
 
 	const form = await request.formData();
 	const { error, data: formData } = await EventValidator.validate(form);
@@ -99,7 +104,7 @@ export const action: ActionFunction = async ({ request }) =>
 	respond<ActionData>(await getActionData(request));
 
 export default function Events() {
-	const { did, events } = useLoaderResponse<LoaderData>();
+	const { canAccessEvents, events } = useLoaderResponse<LoaderData>();
 	const { formError } = useActionResponse<ActionData>();
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -139,16 +144,18 @@ export default function Events() {
 				Termine
 			</Heading>
 			<Table
+				heading="Alle Termine:"
 				columns={columns}
 				data={events}
-				heading="Alle Termine:"
-				trigger={did ? onOpen : undefined}
+				trigger={canAccessEvents ? onOpen : undefined}
 			/>
-			<EventModal
-				isOpen={isOpen}
-				onClose={onClose}
-				errorMessage={formError}
-			/>
+			{canAccessEvents && (
+				<EventModal
+					isOpen={isOpen}
+					onClose={onClose}
+					errorMessage={formError}
+				/>
+			)}
 		</Container>
 	);
 }

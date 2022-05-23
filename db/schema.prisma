@@ -29,6 +29,8 @@ model User {
     locked            Boolean   @default(true)
     /// (AUTH) CMS Permission
     canAccessCMS      Boolean   @default(false)
+    /// (AUTH) EVENTS Permission
+    canAccessEvents   Boolean   @default(false)
     /// (AUTH) LAB Permission
     canAccessLab      Boolean   @default(false)
     /// (AUTH) SCHOOLIB Permission

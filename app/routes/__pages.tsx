@@ -56,7 +56,7 @@ const getLoaderData = async (request: Request): Promise<LoaderData> => {
 export const loader: LoaderFunction = async ({ request }) =>
 	respond<LoaderData>(await getLoaderData(request));
 
-export default function Pages() {
+export default function PageLayout() {
 	const { groupedPages, isLoggedIn } = useLoaderResponse<LoaderData>();
 	const headerPortal = useContext(HeaderPortalContext);
 

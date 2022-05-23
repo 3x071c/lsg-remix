@@ -45,11 +45,11 @@ export function CategoryPopover({
 	return (
 		<Popover
 			isOpen={isOpen}
-			initialFocusRef={firstFieldRef}
 			onOpen={onOpen}
 			onClose={onClose}
-			placement="right"
 			closeOnBlur={false}
+			initialFocusRef={firstFieldRef}
+			placement="right"
 			isLazy>
 			<PopoverTrigger>
 				<IconButton
@@ -58,7 +58,7 @@ export function CategoryPopover({
 				/>
 			</PopoverTrigger>
 			<PopoverContent p={5}>
-				<FocusLock returnFocus persistentFocus={false}>
+				<FocusLock persistentFocus={false} returnFocus>
 					<PopoverArrow />
 					<PopoverCloseButton />
 					<ValidatedForm
@@ -73,12 +73,14 @@ export function CategoryPopover({
 							type="text"
 							name="name"
 							placeholder="🪪 Name"
-							helper="Wie soll die neue Kategorie heißen?"
 							label="Kategorie"
+							helper="Wie soll die neue Kategorie heißen?"
 							ref={firstFieldRef}
 						/>
 						<ButtonGroup d="flex" justifyContent="flex-end">
-							<SubmitButton onClick={() => setSubmitted(true)}>
+							<SubmitButton
+								mt={2}
+								onClick={() => setSubmitted(true)}>
 								Erstellen
 							</SubmitButton>
 						</ButtonGroup>

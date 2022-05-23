@@ -31,7 +31,7 @@ export default function Locked(): JSX.Element {
 			<Heading as="h1" size="2xl">
 				Account ist aktuell gesperrt
 			</Heading>
-			<Text fontSize="lg" mt={2}>
+			<Text mt={2} fontSize="lg">
 				Dies kann daran liegen, dass ihr Nutzer suspendiert wurde.
 				Außerdem müssen neue Nutzer zuerst intern freigegeben werden,
 				bevor auf privilegierte Funktionen zugegriffen werden kann.

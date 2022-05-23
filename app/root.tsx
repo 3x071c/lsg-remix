@@ -22,7 +22,7 @@ import {
 import { ColorModeToggle, ColorModeManager } from "~app/colormode";
 import { HeaderPortalContext } from "~feat/headerportal";
 import { Link } from "~feat/links";
-import { keys } from "~lib/util";
+import { catchMessage } from "~lib/catch";
 
 function Root({ children }: PropsWithChildren<unknown>) {
 	return (
@@ -50,11 +50,11 @@ function InnerApp(): JSX.Element {
 	return (
 		<>
 			<chakra.header
-				pos="sticky"
-				top={0}
 				w="full"
-				bg={bg}
+				pos="sticky"
 				zIndex={2}
+				top={0}
+				bg={bg}
 				ref={headerPortalRef}
 				sx={{
 					"@supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none))":
@@ -94,16 +94,7 @@ export function CatchBoundary(): JSX.Element {
 	const caught = useCatch();
 	console.error("⚠️ Caught:", caught);
 	const { status, statusText } = caught;
-	const messages: {
-		[key: string]: string;
-	} = {
-		401: "Die Authentifizierung ist für den Zugriff fehlgeschlagen 😳",
-		404: "Wir haben überall gesucht 👉👈🥺",
-	};
-	const message =
-		(keys(messages).includes(status.toString()) &&
-			messages[status.toString()]) ||
-		"Unbekannter Fehler - Bei wiederholtem, unvorhergesehenen Auftreten bitte melden 🤯";
+	const message = catchMessage(status);
 
 	return (
 		<Root>
@@ -142,9 +133,9 @@ export function ErrorBoundary({ error }: { error: Error }): JSX.Element {
 						Ein kritischer Fehler ist aufgetreten.
 					</Text>
 					<Code
-						d="block"
 						maxW="lg"
 						my={2}
+						d="block"
 						colorScheme="red"
 						fontSize="sm">
 						{message}

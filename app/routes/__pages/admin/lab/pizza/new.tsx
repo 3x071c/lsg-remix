@@ -88,7 +88,7 @@ export default function NewPizza(): JSX.Element {
 					precision={2}
 					allowMouseWheel
 				/>
-				<SubmitButton>Erstellen</SubmitButton>
+				<SubmitButton mt={2}>Erstellen</SubmitButton>
 			</ValidatedForm>
 			{formError && (
 				<Text maxW="2xl" fontSize="md" color="red.400">

@@ -19,12 +19,12 @@ export function Hero() {
 					<Heading as="h1" size="2xl" d="block">
 						Städt. Louise-Schroeder-Gymnasium
 					</Heading>
-					<Text fontSize="xl" mt={4}>
+					<Text mt={4} fontSize="xl">
 						Naturwissenschaftlich-technologisches und sprachliches
 						Gymnasium in München 🍺
 					</Text>
 					<Text
-						pt={2}
+						mt={2}
 						fontSize="lg"
 						textAlign="center"
 						color={grayColor}>
@@ -32,8 +32,8 @@ export function Hero() {
 					</Text>
 				</Box>
 			</WrapItem>
-			<WrapItem flex="1 1 0" minW={270}>
-				<Box d="flex" boxShadow="2xl" borderRadius="2xl">
+			<WrapItem minW={270} flex="1 1 0">
+				<Box d="flex" borderRadius="2xl" boxShadow="2xl">
 					<Image
 						src={bg}
 						alt="Louise-Schroeder-Gymnasium Außenansicht"

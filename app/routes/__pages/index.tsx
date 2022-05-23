@@ -38,7 +38,7 @@ const getLoaderData = async (): Promise<LoaderData> => {
 export const loader: LoaderFunction = async () =>
 	respond<LoaderData>(await getLoaderData());
 
-export default function Index(): JSX.Element {
+export default function Home(): JSX.Element {
 	const { ticker } = useLoaderResponse<LoaderData>();
 	const grayColor = useColorModeValue("gray.700", "gray.300");
 

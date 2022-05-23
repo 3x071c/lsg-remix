@@ -17,11 +17,12 @@
 		"db/data",
 		"db/zod"
 	],
-	"import": ["@cspell/dict-de-de/cspell-ext.json"],
+	"import": [
+		"@cspell/dict-de-de/cspell-ext.json"
+	],
 	"language": "en,de",
 	"useGitignore": true,
 	"words": [
-		"luxon",
 		"apdisk",
 		"awad",
 		"Cäpt",
@@ -31,6 +32,8 @@
 		"clsx",
 		"csvg",
 		"Cygwin",
+		"dbgenerated",
+		"deduplication",
 		"delf",
 		"DELF",
 		"deps",
@@ -55,6 +58,7 @@
 		"jspm",
 		"kodiak",
 		"lcov",
+		"luxon",
 		"Monokai",
 		"msix",
 		"musin",
@@ -74,13 +78,12 @@
 		"traversy",
 		"tsbuildinfo",
 		"unstyled",
+		"uuid",
 		"vsix",
 		"vuepress",
 		"wqhd",
 		"wscript",
 		"wxga",
-		"zalgo",
-		"uuid",
-		"dbgenerated"
+		"zalgo"
 	]
 }

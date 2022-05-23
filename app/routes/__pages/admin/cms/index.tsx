@@ -206,7 +206,7 @@ export default function CMS(): JSX.Element {
 			<Heading as="h1" size="xl">
 				Content Management
 			</Heading>
-			<Text fontSize="md" mt={2}>
+			<Text mt={2} fontSize="md">
 				Seiten einsehen und bearbeiten
 			</Text>
 			<Statistics data={pageData} />
@@ -217,9 +217,9 @@ export default function CMS(): JSX.Element {
 				trigger={onOpen}
 			/>
 			<PageModal
-				categoryData={categoryData}
 				isOpen={isOpen}
 				onClose={onClose}
+				categoryData={categoryData}
 				errorMessage={formError}
 			/>
 		</chakra.main>

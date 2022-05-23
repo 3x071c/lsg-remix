@@ -165,7 +165,10 @@ export default function CMSPage(): JSX.Element {
 			</HStack>
 			<ValidatedForm validator={PageValidator} method="post">
 				<FormSmartInput
+					name="title"
 					defaultValue={title}
+					label="Der Seitentitel"
+					helper="Wird in der Navigationsleiste und als Überschrift angezeigt"
 					placeholder="❌ Titel"
 					hint="Titel editieren ✍️"
 					height={20}
@@ -177,18 +180,15 @@ export default function CMSPage(): JSX.Element {
 					fontFamily="heading"
 					fontWeight="bold"
 					lineHeight={{ base: 1.2, md: 1 }}
-					label="Der Seitentitel"
-					helper="Wird in der Navigationsleiste und als Überschrift angezeigt"
-					name="title"
 					clean
 				/>
 				{editor && (
 					<HStack
+						spacing={4}
 						w="full"
+						overflowY="auto"
 						mt={2}
 						pb={2}
-						spacing={4}
-						overflowY="auto"
 						borderBottomWidth={1}>
 						<EditorBar editor={editor} />
 					</HStack>
@@ -209,7 +209,7 @@ export default function CMSPage(): JSX.Element {
 				</Prose>
 				<Input type="hidden" name="content" value={content} />
 				<Input type="hidden" name="categoryUUID" value={categoryUUID} />
-				<SubmitButton disabled={disabled}>
+				<SubmitButton mt={2} disabled={disabled}>
 					Änderungen übernehmen
 				</SubmitButton>
 				{formError && (

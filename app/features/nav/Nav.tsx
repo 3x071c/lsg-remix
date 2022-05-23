@@ -48,7 +48,7 @@ export function Nav({ groupedPages, isLoggedIn }: NavbarProps): JSX.Element {
 					</Box>
 				</Link>
 				<Spacer />
-				<HStack textAlign="center" spacing={2} overflowY="auto">
+				<HStack spacing={2} overflowY="auto" textAlign="center">
 					{groupedPages.map(({ uuid, name, pages }) => (
 						<Box key={uuid}>
 							<Popover trigger="hover">
@@ -60,8 +60,8 @@ export function Nav({ groupedPages, isLoggedIn }: NavbarProps): JSX.Element {
 									</Button>
 								</PopoverTrigger>
 								<PopoverContent
-									shadow="md"
 									w="" // fixes oversized popover
+									shadow="md"
 									sx={{
 										"@supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none))":
 											{
@@ -76,10 +76,10 @@ export function Nav({ groupedPages, isLoggedIn }: NavbarProps): JSX.Element {
 											{pages.map(
 												({ uuid: pageId, title }) => (
 													<LinkButton
+														key={pageId}
 														href={`/page/${pageId}`}
 														w="full"
-														variant="ghost"
-														key={pageId}>
+														variant="ghost">
 														{title}
 													</LinkButton>
 												),
@@ -101,8 +101,8 @@ export function Nav({ groupedPages, isLoggedIn }: NavbarProps): JSX.Element {
 				{isLoggedIn && (
 					<NavLink
 						href="/admin"
-						d={{ base: "none", sm: "block" }}
 						mr={4}
+						d={{ base: "none", sm: "block" }}
 						sx={{ "&.active": { display: "none" } }}>
 						<Button>Administration</Button>
 					</NavLink>

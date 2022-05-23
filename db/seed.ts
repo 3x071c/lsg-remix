@@ -97,6 +97,7 @@ export default async function main(): Promise<void> {
 	await prisma.user.create({
 		data: {
 			canAccessCMS: true,
+			canAccessEvents: true,
 			canAccessLab: true,
 			canAccessSchoolib: true,
 			canAccessTicker: true,
