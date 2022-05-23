@@ -11,7 +11,7 @@ export const Link = forwardRef<
 	if (isExternal(href)) {
 		return (
 			<ChakraLink {...props} isExternal href={href} ref={ref}>
-				{children} <ExternalLinkIcon mx="2px" />
+				{children} <ExternalLinkIcon mx={2} />
 			</ChakraLink>
 		);
 	}

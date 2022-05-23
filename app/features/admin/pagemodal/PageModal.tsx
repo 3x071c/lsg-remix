@@ -82,16 +82,16 @@ export function PageModal({
 						type="text"
 						name="title"
 						placeholder="🔤 Titel"
-						helper="Der Name der neuen Seite, welcher u.a. in der Navigationsleiste oben angezeigt wird"
 						label="Der Titel"
+						helper="Der Name der neuen Seite, welcher u.a. in der Navigationsleiste oben angezeigt wird"
 						form="pageForm"
 						formId="pageForm"
 					/>
 					<FormSelect
 						name="categoryUUID"
 						placeholder="✍️ Kategorie auswählen"
-						helper="Die Kategorie der Seite, welche zur Eingliederung u.a. in der Navigationsleiste verwendet wird"
 						label="Die Kategorie"
+						helper="Die Kategorie der Seite, welche zur Eingliederung u.a. in der Navigationsleiste verwendet wird"
 						form="pageForm"
 						formId="pageForm"
 						rightChild={
@@ -108,6 +108,7 @@ export function PageModal({
 					<VStack align="stretch" justify="flex-start" w="full">
 						<SubmitButton
 							w="full"
+							mt={2}
 							form="pageForm"
 							formId="pageForm"
 							onClick={() => setSubmitted(true)}>

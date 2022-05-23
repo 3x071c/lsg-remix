@@ -64,18 +64,18 @@ export default function Ticker(): JSX.Element {
 			<Heading as="h1" size="xl">
 				Ticker - Neu
 			</Heading>
-			<Text fontSize="md" mt={2}>
+			<Text mt={2} fontSize="md">
 				Neuen Ticker veröffentlichen
 			</Text>
 			<ValidatedForm validator={TickerValidator} method="post">
 				<FormInput
 					type="text"
 					name="content"
-					placeholder="✍️ Inhalt"
-					helper="Inhalt des neuen Tickers"
 					label="Der Inhalt"
+					helper="Inhalt des neuen Tickers"
+					placeholder="✍️ Inhalt"
 				/>
-				<SubmitButton>Erstellen</SubmitButton>
+				<SubmitButton mt={2}>Erstellen</SubmitButton>
 			</ValidatedForm>
 			{formError && (
 				<Text maxW="2xl" fontSize="md" color="red.400">

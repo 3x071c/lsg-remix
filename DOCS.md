@@ -52,20 +52,16 @@ After getting the gist of how [Chakra UI](https://chakra-ui.com) works, it might
 
 ### Less is More
 
-Keeping code readable is a top priority for future maintainability and elegance. **It is easy to churn out hundreds of lines of code** in a day, it's hard to achieve the same in a fraction of the size (leading to better performane and readability). Most props and function arguments have usable defaults and should not be set explicitly unless you truly know better! Additionally, relatively new CSS features such as `Flex` may have compatability issues in the client's browser. In the interest of supporting as many devices as possible, refrain from using such features unless there's a specific need for it that can't be accomplished with "old-school" CSS (For example, instead of abusing `HStack`, passing `width: 100%` to children works just as well in many cases).
+Keeping code readable is a top priority for future maintainability and elegance. **It is easy to churn out hundreds of lines of code** in a day, it's hard to achieve the same in a fraction of the size (leading to better performane and readability). Most props and function arguments have usable defaults and should not be set explicitly.
 
 ### Order
 
 Props should be ordered by importance and "distance" from the core component (`p` > `m` > `box-shadow` > `font-weight`).
 
-## On Checks
+## Linting rules >:(
 
-ESLint is setup to report and prevent bad code from finding its way into the codebase. In most cases, if the linter complains, **You're the problem**, not the linting rule. **Ignoring is not a solution**. Asserting is a solution. Casting is a solution. Conditions are a solution. **Google is a solution**.
+ESLint is setup to report and prevent bad code from finding its way into the codebase. In most cases, if the linter complains, **You're the problem**, not the linting rule. **Ignoring is not a solution**. Asserting is a solution. (Safe) Casting is a solution. Conditions are a solution. **Google is a solution**.
 
 ## RTFM
 
-Taking a look at the [Tech Stack](./README.md#tech-stack) might seem overwhelming at first, but after digging deeper the interconnected knowledge they share makes it indispensible to know what you're dealing with. If you don't understand something, **Read The F\*\*\*ing Manual**.
-
-## Learning by Example
-
-This repository already includes a lot of good usage examples for the libraries at play. **Don't reinvent the wheel**. Encapsulate and reuse instead.
+Self-explanatory.

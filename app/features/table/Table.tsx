@@ -86,9 +86,9 @@ export function Table<T extends object>({
 										{...column.getHeaderProps(
 											column.getSortByToggleProps(),
 										)}
+										title="Sortieren"
 										d={column.hidden ? "none" : ""}
-										isNumeric={column.isNumeric}
-										title="Sortieren">
+										isNumeric={column.isNumeric}>
 										{column.render("Header")}
 										<chakra.span pl="4">
 											{column.isSorted ? (

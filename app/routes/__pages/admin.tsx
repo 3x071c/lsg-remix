@@ -115,7 +115,7 @@ const getLoaderData = async (request: Request): Promise<LoaderData> => {
 export const loader: LoaderFunction = async ({ request }) =>
 	respond<LoaderData>(await getLoaderData(request));
 
-export default function Admin(): JSX.Element {
+export default function AdminLayout(): JSX.Element {
 	const { did, firstname, lastname, pages } = useLoaderResponse<LoaderData>();
 	const headerPortal = useContext(HeaderPortalContext);
 	const location = useLocation();

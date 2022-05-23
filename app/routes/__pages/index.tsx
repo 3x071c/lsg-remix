@@ -38,7 +38,7 @@ const getLoaderData = async (): Promise<LoaderData> => {
 export const loader: LoaderFunction = async () =>
 	respond<LoaderData>(await getLoaderData());
 
-export default function Index(): JSX.Element {
+export default function Home(): JSX.Element {
 	const { ticker } = useLoaderResponse<LoaderData>();
 	const grayColor = useColorModeValue("gray.700", "gray.300");
 
@@ -78,7 +78,7 @@ export default function Index(): JSX.Element {
 						Alle demnächst anstehenden Termine des
 						Louise-Schroeder-Gymnasiums:
 					</Text>
-					<LinkButton href="/" mt={4}>
+					<LinkButton href="/events" mt={4}>
 						Zu allen Terminen
 					</LinkButton>
 				</chakra.section>

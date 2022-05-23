@@ -71,7 +71,7 @@ export default function Login(): JSX.Element {
 
 	return (
 		<Center w="100%" minH="100%" p={4}>
-			<chakra.main p={8} rounded="md" bg={background}>
+			<chakra.main p={8} bg={background} rounded="md">
 				<Heading as="h1" textAlign="center">
 					Login
 				</Heading>
@@ -93,8 +93,8 @@ export default function Login(): JSX.Element {
 					<FormControl
 						isRequired
 						isInvalid={!!errors.email}
-						mt={4}
-						isDisabled={loading || isSubmitting}>
+						isDisabled={loading || isSubmitting}
+						mt={4}>
 						<FormLabel htmlFor="email">
 							Ihre E-Mail-Adresse
 						</FormLabel>

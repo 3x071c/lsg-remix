@@ -40,24 +40,27 @@ export default function Callback(): JSX.Element {
 				status={data ? "success" : "error"}
 				w="100%"
 				minH="100%"
+				p={4}
 				flexDirection="column"
 				alignItems="center"
 				justifyContent="center"
-				p={4}
 				textAlign="center">
-				<AlertIcon boxSize="40px" mr={0} />
+				<AlertIcon mr={0} boxSize="40px" />
 				<AlertTitle mt={4} mb={1} fontSize="lg">
 					{data ? "Angemeldet! 💨" : "Ups! 🚨"}
 				</AlertTitle>
-				<AlertDescription maxW="xl">
-					{data
-						? ""
-						: "Etwas ist schiefgelaufen. Probiere die Anmeldung vielleicht später nochmal."}
-				</AlertDescription>
-				<AlertDescription maxW="sm" fontSize="sm">
-					Dieser Tab kann jetzt geschlossen werden (<Kbd>Strg</Kbd> +{" "}
-					<Kbd>W</Kbd>)
-				</AlertDescription>
+				{!data && (
+					<AlertDescription maxW="xl">
+						Etwas ist schiefgelaufen. Probiere die Anmeldung
+						vielleicht später nochmal.
+					</AlertDescription>
+				)}
+				{data && (
+					<AlertDescription maxW="sm" fontSize="sm">
+						Dieser Tab kann jetzt geschlossen werden (
+						<Kbd>Strg</Kbd> + <Kbd>W</Kbd>)
+					</AlertDescription>
+				)}
 				{error && (
 					<AlertDescription maxW="lg">
 						<Code d="block" my={2} colorScheme="red" fontSize="sm">

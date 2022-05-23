@@ -14,7 +14,7 @@ RUN apk add --no-cache --update openssl dumb-init
 
 # Install all package.json dependencies
 FROM base as dev
-WORKDIR /lsg
+WORKDIR /app
 
 # Copy over package.json (and the lockfile) from the base image
 COPY --chown=node package*.json .
@@ -32,22 +32,22 @@ RUN apk del .gyp
 
 # package.json production dependencies (only)
 FROM base as prod
-WORKDIR /lsg
+WORKDIR /app
 
 # Copy over package.json (and the lockfile) from the base image
 COPY --chown=node package*.json .
 # Copy over the node_modules from the previous stage
-COPY --chown=node --from=dev /lsg/node_modules /lsg/node_modules
+COPY --chown=node --from=dev /app/node_modules /app/node_modules
 
 # Prune/Remove all non-production (development) dependencies installed
 RUN npm prune --production
 
 # Build the production app
 FROM base as build
-WORKDIR /lsg
+WORKDIR /app
 
 # Copy over the installed production node_modules from the previous stage
-COPY --chown=node --from=dev /lsg/node_modules /lsg/node_modules
+COPY --chown=node --from=dev /app/node_modules /app/node_modules
 # Copy over all source files from the base image
 COPY --chown=node . .
 
@@ -56,16 +56,16 @@ RUN npm run build
 
 # Tie previous stages together into a tiny production app image
 FROM base as app
-WORKDIR /lsg
+WORKDIR /app
 
 # Copy over the installed production node_modules (again)
-COPY --chown=node --from=prod /lsg/node_modules /lsg/node_modules
+COPY --chown=node --from=prod /app/node_modules /app/node_modules
 # Copy over the generated prisma files
-COPY --chown=node --from=build /lsg/node_modules/.prisma /lsg/node_modules/.prisma
+COPY --chown=node --from=build /app/node_modules/.prisma /app/node_modules/.prisma
 # Copy over the built Remix server files from the previous stage
-COPY --chown=node --from=build /lsg/.remix/server /lsg/.remix/server
+COPY --chown=node --from=build /app/.remix/server /app/.remix/server
 # Copy over the public folder, which contains static resources
-COPY --chown=node --from=build /lsg/public /lsg/public
+COPY --chown=node --from=build /app/public /app/public
 # Copy over all source files, to make the release step work
 COPY --chown=node . .
 

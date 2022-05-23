@@ -87,14 +87,14 @@ export function EventModal({
 							type="text"
 							name="title"
 							placeholder="🔤 Titel"
-							helper="Eine kurze, prägnante Terminbeschreibung, welche zur öffentlichen Information dient"
 							label="Der Titel"
+							helper="Eine kurze, prägnante Terminbeschreibung, welche zur öffentlichen Information dient"
 						/>
 						<FormInput
 							type="datetime-local"
 							name="startsAt"
-							helper="Das Startdatum mit Uhrzeit, welche öffentlich angezeigt wird"
 							label="Von"
+							helper="Das Startdatum mit Uhrzeit, welche öffentlich angezeigt wird"
 							min={DateTime.now()
 								.setLocale(locale)
 								.toFormat("yyyy-MM-dd'T'HH':'mm")}
@@ -102,8 +102,8 @@ export function EventModal({
 						<FormInput
 							type="datetime-local"
 							name="endsAt"
-							helper="Das Enddatum mit Uhrzeit, welche öffentlich angezeigt wird"
 							label="Bis"
+							helper="Das Enddatum mit Uhrzeit, welche öffentlich angezeigt wird"
 							min={DateTime.now()
 								.setLocale(locale)
 								.toFormat("yyyy-MM-dd'T'HH':'mm")}
@@ -113,6 +113,7 @@ export function EventModal({
 						<VStack align="stretch" justify="flex-start" w="full">
 							<SubmitButton
 								w="full"
+								mt={2}
 								onClick={() => setSubmitted(true)}>
 								Erstellen
 							</SubmitButton>

@@ -47,33 +47,35 @@ Impatient? Spin up a GitPod environment in seconds and you're good to go:
 > 10. You may want to reload the GitPod environment before starting to code for the first time using <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> -> "Developer: Reload Window". If the keyboard shortcuts don't work, open the command palette manually by clicking the settings cogwheel in the bottom left corner, then selecting "Command Palette..."
 > 11. You're ready to code and build something awesome. Have fun! 😎
 >
-> When you're done, just close the browser tab/window, and GitPod will terminate your VSCode instance within a few minutes automatically. You can reopen it, and any changes you haven't permanently saved by committing them to this repository yet, within 14 days from the [GitPod dashboard](https://gitpod.io/workspaces). Read the sections below to learn more about Git and contributing to this repository, saving your changes and allowing intuitive collaboration with others. Remember you are encouraged to start developing locally (without the restrictions of a browser and GitPod) once you're ready for it using the guide below.
+> When you're done, just close the browser tab/window, and GitPod will terminate your VSCode instance within a few minutes automatically. You can reopen it, and any changes you haven't permanently saved by committing them to this repository yet, within 14 days from the [GitPod dashboard](https://gitpod.io/workspaces). Read on to learn more.
 
 ## Get Started 💨
 
+> Prerequisites: You understand basic terminal commands, how to teach yourself from online resources and how to get around in a programming environment (Check the [helpful resources](#helpful-resources) section if you're not sure). You run a supported operating system (GNU+Linux, BSD, macOS, Windows) and have a package manager installed (No? [Install Homebrew on macOS](https://brew.sh) or [Install winget on Windows](https://docs.microsoft.com/en-us/windows/package-manager/winget/). GNU+Linux/BSD-based distributions commonly come with a package manager you should already be familiar with)
+
+Open a terminal (you'll probably want to keep this around):
+
+-   (GNU+Linux, BSD) <kbd>⊞ Win</kbd> (App Launcher) -> open `Terminal`/`Konsole`
+-   (macOS) <kbd>⌘</kbd> + <kbd>Space</kbd> -> open `Terminal.app`
+-   (Windows) <kbd>⊞ Win</kbd> + <kbd>R</kbd> -> `cmd` ([m](https://tinyurl.com/nuub2bq)[y](https://tinyurl.com/y2emej63)[ ](https://tinyurl.com/y2lzznux)[c](https://tinyurl.com/y3v8vo5a)[o](https://tinyurl.com/y4qcfkw3)[n](https://tinyurl.com/y5gm9ysv)[d](https://tinyurl.com/y69uplwl)[o](https://tinyurl.com/yygc57ta)[l](https://tinyurl.com/yynoa7ql)[e](https://tinyurl.com/y3shavwn)[n](https://tinyurl.com/yxladmrj)[c](https://tinyurl.com/y3yxymqr)[e](https://tinyurl.com/y2c6alo5)[s](https://tinyurl.com/y5qtqr6p))
+
 Make sure you have the latest version of [Node.js](https://nodejs.org/) and NPM (the Node package manager, which should ship with it) installed:
 
--   (Linux) `$ pacman -S nodejs`
+-   (GNU+Linux, BSD) `$ pacman -S nodejs`
 -   (macOS) `$ brew install node`
 -   (Windows) `$ winget install -e --id OpenJS.NodeJS`
 
-> (The package manager `pacman` is specific to Arch Linux based distributions. Always check your **distribution-specific** Debian/Fedora/Ubuntu/... documentation first, as commands may differ)
+> (The package manager `pacman` is specific to the Arch GNU+Linux distribution. Always check your **distribution-specific** Debian/Fedora/Ubuntu/... documentation first, as commands may differ)
 
 Make sure you have the latest version of [git](https://git-scm.com/) installed, which you will need to use to download our code, share your changes and collaborate with others ([GitHub](https://github.com) is the server provider that stores our code and interfaces with `git`):
 
--   (Linux) `$ pacman -S git`
+-   (GNU+Linux, BSD) `$ pacman -S git`
 -   (macOS) `$ brew install git`
 -   (Windows) `$ winget install -e --id Git.Git`
 
 > If you want to contribute code, you'll probably want to configure git to use your name and email, associating your contributions with your GitHub account:  
 > `git config --global user.name "<your GitHub username>"`  
 > `git config --global user.email "<your GitHub email>"`
-
-Open a terminal (you'll probably want to keep this around):
-
--   (Linux) <kbd>⊞ Win</kbd> (App Launcher) -> open `Terminal`/`Konsole`
--   (macOS) <kbd>⌘</kbd> + <kbd>Space</kbd> -> open `Terminal.app`
--   (Windows) <kbd>⊞ Win</kbd> + <kbd>R</kbd> -> `cmd` ([m](https://tinyurl.com/nuub2bq)[y](https://tinyurl.com/y2emej63)[ ](https://tinyurl.com/y2lzznux)[c](https://tinyurl.com/y3v8vo5a)[o](https://tinyurl.com/y4qcfkw3)[n](https://tinyurl.com/y5gm9ysv)[d](https://tinyurl.com/y69uplwl)[o](https://tinyurl.com/yygc57ta)[l](https://tinyurl.com/yynoa7ql)[e](https://tinyurl.com/y3shavwn)[n](https://tinyurl.com/yxladmrj)[c](https://tinyurl.com/y3yxymqr)[e](https://tinyurl.com/y2c6alo5)[s](https://tinyurl.com/y5qtqr6p))
 
 Clone this repository with git (This will "download" the code and keep a special directory around (`.git`) to track your changes and make collaboration easier):
 
@@ -93,7 +95,7 @@ $ code lsg
 **Make sure to trust the folder and install all recommended extensions** (If you're new to Visual Studio Code, check out the [next section](#recommendations-for-vscode) as well). You can close the automatically opened tabs with the installed extensions.
 
 > Installation instructions for Visual Studio Code:  
-> (Linux) `pacman -S code` (limited OSS version) / `yay -S visual-studio-code-bin` (Research required!)  
+> (GNU+Linux, BSD) `pacman -S code` (limited OSS version) / `yay -S visual-studio-code-bin` (Research required!)  
 > (macOS) `brew install --cask visual-studio-code`  
 > (Windows) `winget install -e --id Microsoft.VisualStudioCode`
 
@@ -109,7 +111,7 @@ Now, you'll need to setup a PostgreSQL database. There are many ways you can get
 
 1. Setup a local PostgreSQL database yourself
 
--   (Linux) `pacman -S postgresql`
+-   (GNU+Linux, BSD) `pacman -S postgresql`
 -   (macOS) `brew install --cask postgres-unofficial`
 -   (Windows) `winget install -e --id PostgreSQL.PostgreSQL`
 
@@ -121,11 +123,11 @@ There are lots of tutorials available online on setting up a PostgreSQL database
 
 (You will need docker though)
 
--   (Linux) `pacman -S docker docker-compose`
+-   (GNU+Linux, BSD) `pacman -S docker docker-compose`
 -   (macOS) `brew install podman docker-compose; podman machine init; podman machine start; alias docker='podman'`
 -   (Windows) ???
 
-> Note: On macOS and Windows, `docker` (a "containerization" solution) does not run natively, but through some kind of VM that provides a Linux environment for docker. A common recommendation here is [Docker Desktop](https://www.docker.com/products/docker-desktop/) by the Docker team (a fine option), though note that it has a very user-restricting license which we can't endorse. [Podman](https://podman.io) is a better alternative if you're ok with [reading a little](https://podman.io/getting-started/installation). You can treat the `podman` command as a drop-in `docker` replacement, and even `alias` it (on UNIX-like systems, that is)
+> Note: On macOS and Windows, `docker` (a "containerization" solution) does not run natively, but through some sort of VM that provides a GNU+Linux, BSD environment for docker. A common recommendation here is [Docker Desktop](https://www.docker.com/products/docker-desktop/) by the Docker team (a fine option), though note that it has a very user-restricting license which we can't endorse. [Podman](https://podman.io) is a better alternative if you're ok with [reading a little](https://podman.io/getting-started/installation). You can treat the `podman` command as a drop-in `docker` replacement, and even `alias` it (on UNIX-like systems, that is)
 
 Make sure to install both docker (or a docker equivalent) AND `docker-compose` to proceed:
 
@@ -145,7 +147,7 @@ $ npm run up
 Create a `.env` file, containing static key-value pairs for environment-specific configuration. The `.env.example` file serves as a good starting point. You'll need your **PostgreSQL connection string** from the previous step here, to tell the app (/prisma) where and how to connect to your database.
 
 > To securely generate a random password on your computer:  
-> (Linux/macOS) `openssl rand -base64 40`  
+> (GNU+Linux, BSD/macOS) `openssl rand -base64 40`  
 > (Windows) ??? (use [this](https://1password.com/password-generator/) instead)
 
 The `MAGIC_*` variables hold the public and private (secret) API keys for [Magic](https://magic.link), our chosen authentication solution. During local development, **Magic** runs in [Test Mode](https://magic.link/docs/introduction/test-mode) - this allows you to use "**test+success@magic.link**" (or `test+fail@magic.link`) to simulate a real-world successful/failed login while bypassing the regular magic link authentication scheme. Consequently, the environment variables may be populated with "dummy" values for development. In production, values from the Magic admin dashboard are provided.
@@ -161,6 +163,8 @@ Spin up a local development server. It will automatically reflect changes in the
 ```console
 $ npm run dev
 ```
+
+> You likely want to show debug messages using the following command instead: `npx cross-env DEBUG='*' npm run dev` If you want to view debug messages in the browser too, follow the instructions [here](https://github.com/debug-js/debug#browser-support) by executing the `localStorage` line in your browser's console (etc.)
 
 Before you start working:
 
@@ -282,7 +286,7 @@ Here are some pointers to completely free, yet incredibly valuable learning reso
 -   [Google's web.dev](https://web.dev/learn/) showcases advanced concepts and guides to intermediate developers
 -   The [Visual Studio Code YouTube channel](https://www.youtube.com/c/Code/videos) contains informative shorts on tips & tricks to optimize productivity with VSCode
 -   The [Remix YouTube channel](https://www.youtube.com/c/Remix-Run/videos) and [Chakra UI YouTube channel](https://www.youtube.com/channel/UC4TmDovH46TB4S0SM0Y4CIg) provide an audiovisual alternative to learn more about these dependencies
--   [Luke Smith](https://www.youtube.com/c/LukeSmithxyz/featured) has some videos focusing on UNIX principles, educating about the usefulness of command-line utilities on operating systems such as macOS and GNU/Linux
+-   [Luke Smith](https://www.youtube.com/c/LukeSmithxyz/featured) has some videos focusing on UNIX principles, educating about the usefulness of command-line utilities on operating systems such as macOS and GNU/GNU+Linux, BSD
 
 Want to contribute a helpful resource for others to learn from? Open an issue!
 

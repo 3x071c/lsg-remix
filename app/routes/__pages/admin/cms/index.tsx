@@ -2,6 +2,7 @@ import type { Column } from "react-table";
 import type { ActionFunction, LoaderFunction } from "remix";
 import { EditIcon, WarningTwoIcon } from "@chakra-ui/icons";
 import { Heading, Text, chakra, useDisclosure } from "@chakra-ui/react";
+import { DateTime } from "luxon";
 import { useCallback, useMemo } from "react";
 import { useCatch } from "remix";
 import { validationError } from "remix-validated-form";
@@ -20,6 +21,7 @@ import {
 import { LinkIconButton } from "~feat/links";
 import { Table } from "~feat/table";
 import { catchMessage } from "~lib/catch";
+import { locale } from "~lib/globals";
 import { prisma, toIndexedObject } from "~lib/prisma";
 import { respond, useActionResponse, useLoaderResponse } from "~lib/response";
 
@@ -146,16 +148,6 @@ export default function CMS(): JSX.Element {
 		),
 		[],
 	);
-	const dateOpts = useMemo(
-		() =>
-			({
-				day: "numeric",
-				dayPeriod: "short",
-				month: "numeric",
-				year: "2-digit",
-			} as const),
-		[],
-	);
 	const columns = useMemo<
 		Column<{
 			updatedAt: Date;
@@ -181,14 +173,18 @@ export default function CMS(): JSX.Element {
 			{
 				accessor: "createdAt",
 				Cell: ({ value }) =>
-					new Date(value).toLocaleString("de", dateOpts),
+					DateTime.fromJSDate(value)
+						.setLocale(locale)
+						.toLocaleString(DateTime.DATETIME_SHORT),
 				disableGlobalFilter: true,
 				Header: "Erstellt am",
 			},
 			{
 				accessor: "updatedAt",
 				Cell: ({ value }) =>
-					new Date(value).toLocaleString("de", dateOpts),
+					DateTime.fromJSDate(value)
+						.setLocale(locale)
+						.toLocaleString(DateTime.DATETIME_SHORT),
 				disableGlobalFilter: true,
 				Header: "Editiert am",
 			},
@@ -202,7 +198,7 @@ export default function CMS(): JSX.Element {
 				isNumeric: true,
 			},
 		],
-		[memoizedWarningIcon, dateOpts, indexedCategoryData, memoizedButton],
+		[memoizedWarningIcon, indexedCategoryData, memoizedButton],
 	);
 
 	return (
@@ -210,7 +206,7 @@ export default function CMS(): JSX.Element {
 			<Heading as="h1" size="xl">
 				Content Management
 			</Heading>
-			<Text fontSize="md" mt={2}>
+			<Text mt={2} fontSize="md">
 				Seiten einsehen und bearbeiten
 			</Text>
 			<Statistics data={pageData} />
@@ -221,9 +217,9 @@ export default function CMS(): JSX.Element {
 				trigger={onOpen}
 			/>
 			<PageModal
-				categoryData={categoryData}
 				isOpen={isOpen}
 				onClose={onClose}
+				categoryData={categoryData}
 				errorMessage={formError}
 			/>
 		</chakra.main>

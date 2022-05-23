@@ -38,24 +38,24 @@ export const loader: LoaderFunction = async ({ request }) =>
 export const pages: {
 	[key: string]: { long: string; short: string; url: string };
 } = {
-	1: {
+	1: { long: "Pizzabestellung", short: "Pizza", url: "/admin/lab/pizza" },
+	2: {
 		long: "Ticket Management Board",
 		short: "Board",
 		url: "/admin/lab/board",
 	},
-	2: { long: "Pizzabestellung", short: "Pizza", url: "/admin/lab/pizza" },
 } as const;
-export default function Index(): JSX.Element {
+export default function Lab(): JSX.Element {
 	return (
 		<chakra.main w="full">
 			<Heading as="h1">Ahoi Cäpt&apos;n 😳</Heading>
 			<Text>Alle internen Admin Lab Projekte:</Text>
 			<SimpleGrid
-				spacing="20px"
-				minChildWidth="200px"
+				minChildWidth={270}
+				spacing={4}
+				placeItems="center"
 				mt={8}
-				mx="auto"
-				placeItems="center">
+				mx="auto">
 				{entries(pages)
 					.filter(([, { short }]) => short !== "Home")
 					.map(([uuid, { long, url }]) => (
@@ -63,13 +63,13 @@ export default function Index(): JSX.Element {
 							key={uuid}
 							w="full"
 							p="5"
-							borderWidth="1px"
+							borderWidth={1}
 							borderRadius="lg">
 							<Flex align="baseline">
 								<Badge
-									borderRadius="full"
 									px="2"
-									colorScheme="teal">
+									colorScheme="teal"
+									borderRadius="full">
 									Sus
 								</Badge>
 							</Flex>
@@ -81,12 +81,12 @@ export default function Index(): JSX.Element {
 								isTruncated>
 								{long}
 							</Text>
-							<Flex justifyContent="flex-end">
+							<Flex justify="flex-end">
 								<LinkButton
 									href={url}
+									rightIcon={<LinkIcon />}
 									size="xs"
-									variant="outline"
-									rightIcon={<LinkIcon />}>
+									variant="outline">
 									Besuchen
 								</LinkButton>
 							</Flex>

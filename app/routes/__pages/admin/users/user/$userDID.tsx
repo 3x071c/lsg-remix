@@ -43,6 +43,7 @@ const getDID = (params: Params) => {
 
 type LoaderData = {
 	canAccessCMS: boolean;
+	canAccessEvents: boolean;
 	canAccessLab: boolean;
 	canAccessLocked: boolean;
 	canAccessSchoolib: boolean;
@@ -52,6 +53,7 @@ type LoaderData = {
 	lastname?: string;
 	message: string;
 	showAccessCMS: boolean;
+	showAccessEvents: boolean;
 	showAccessLab: boolean;
 	showAccessLocked: boolean;
 	showAccessSchoolib: boolean;
@@ -69,6 +71,7 @@ const getLoaderData = async (
 	});
 	const {
 		canAccessCMS: showAccessCMS,
+		canAccessEvents: showAccessEvents,
 		canAccessLab: showAccessLab,
 		canAccessSchoolib: showAccessSchoolib,
 		canAccessTicker: showAccessTicker,
@@ -79,6 +82,7 @@ const getLoaderData = async (
 		if (!user.uuid)
 			return {
 				canAccessCMS: false,
+				canAccessEvents: false,
 				canAccessLab: false,
 				canAccessLocked: true,
 				canAccessSchoolib: false,
@@ -87,6 +91,7 @@ const getLoaderData = async (
 				message:
 					"Willkommen! 👋 Um die Registration abzuschließen, müssen folgende Daten hinterlegt werden:",
 				showAccessCMS: showAccessCMS ?? false,
+				showAccessEvents: showAccessEvents ?? false,
 				showAccessLab: showAccessLab ?? false,
 				showAccessLocked: false,
 				showAccessSchoolib: showAccessSchoolib ?? false,
@@ -103,6 +108,7 @@ const getLoaderData = async (
 	if (!parsed.success) {
 		return {
 			canAccessCMS: target.canAccessCMS ?? false,
+			canAccessEvents: target.canAccessEvents ?? false,
 			canAccessLab: target.canAccessLab ?? false,
 			canAccessLocked: target.locked ?? false,
 			canAccessSchoolib: target.canAccessSchoolib ?? false,
@@ -115,6 +121,7 @@ const getLoaderData = async (
 					? "Willkommen zurück! 🍻 Bitte überprüfen und ergänzen Sie ihre inzwischen unvollständigen Nutzerdaten."
 					: "⚠️ Dieser Nutzer ist unvollständig, vor weiterer Aktivität müssen die Daten ergänzt werden",
 			showAccessCMS: showAccessCMS ?? false,
+			showAccessEvents: showAccessEvents ?? false,
 			showAccessLab: showAccessLab ?? false,
 			showAccessLocked: target.locked !== undefined && did !== user.did,
 			showAccessSchoolib: showAccessSchoolib ?? false,
@@ -124,6 +131,7 @@ const getLoaderData = async (
 	}
 	const {
 		canAccessCMS,
+		canAccessEvents,
 		canAccessLab,
 		canAccessSchoolib,
 		canAccessTicker,
@@ -134,6 +142,7 @@ const getLoaderData = async (
 
 	return {
 		canAccessCMS: canAccessCMS ?? false,
+		canAccessEvents: canAccessEvents ?? false,
 		canAccessLab: canAccessLab ?? false,
 		canAccessLocked,
 		canAccessSchoolib: canAccessSchoolib ?? false,
@@ -143,6 +152,7 @@ const getLoaderData = async (
 		lastname,
 		message: "Einstellungen anpassen und Nutzerdaten aktualisieren",
 		showAccessCMS: showAccessCMS ?? false,
+		showAccessEvents: showAccessEvents ?? false,
 		showAccessLab: showAccessLab ?? false,
 		showAccessLocked: did !== user.did,
 		showAccessSchoolib: showAccessSchoolib ?? false,
@@ -179,6 +189,9 @@ const getActionData = async (
 	const canAccessCMS = user.canAccessCMS
 		? canAccess?.includes("cms")
 		: undefined;
+	const canAccessEvents = user.canAccessEvents
+		? canAccess?.includes("events")
+		: undefined;
 	const canAccessLab = user.canAccessLab
 		? canAccess?.includes("lab")
 		: undefined;
@@ -193,6 +206,7 @@ const getActionData = async (
 
 	const update = {
 		canAccessCMS,
+		canAccessEvents,
 		canAccessLab,
 		canAccessSchoolib,
 		canAccessTicker,
@@ -219,9 +233,10 @@ const getActionData = async (
 export const action: ActionFunction = async ({ request, params }) =>
 	respond<ActionData>(await getActionData(request, params));
 
-export default function AdminUser() {
+export default function UserConfiguration() {
 	const {
 		canAccessCMS,
+		canAccessEvents,
 		canAccessLab,
 		canAccessLocked,
 		canAccessSchoolib,
@@ -230,6 +245,7 @@ export default function AdminUser() {
 		lastname,
 		message,
 		showAccessCMS,
+		showAccessEvents,
 		showAccessLab,
 		showAccessLocked,
 		showAccessSchoolib,
@@ -242,89 +258,98 @@ export default function AdminUser() {
 			<Heading as="h1" size="2xl">
 				Profil
 			</Heading>
-			<Text fontSize="lg" mt={2} mb={4}>
+			<Text mt={2} mb={4} fontSize="lg">
 				{message}
 			</Text>
 			<ValidatedForm validator={UserValidator} method="post">
 				<VStack spacing={4}>
 					<Box w="full">
 						<FormSmartInput
+							name="firstname"
 							defaultValue={firstname}
 							placeholder="❌ Vorname"
-							hint="Editieren ✍️"
-							height={12}
-							maxW={500}
-							p={2}
-							pl={0}
 							label="Ihr Vorname"
 							helper={`${
 								firstname ? "" : "Wurde noch nicht hinterlegt! "
 							}Ihr Vorname dient der Identitätserfassung und einer persönlicheren Nutzererfahrung.`}
-							name="firstname"
+							hint="Editieren ✍️"
+							maxW={500}
+							height={12}
+							p={2}
+							pl={0}
 						/>
 					</Box>
 					<Box w="full">
 						<FormSmartInput
+							name="lastname"
 							defaultValue={lastname}
 							placeholder="❌ Nachname"
-							hint="Editieren ✍️"
-							height={12}
-							maxW={500}
-							p={2}
-							pl={0}
 							label="Ihr Nachname"
 							helper={`${
 								lastname ? "" : "Wurde noch nicht hinterlegt! "
 							}Ihr Nachname dient der Identitätserfassung und einer persönlicheren Nutzererfahrung.`}
-							name="lastname"
+							hint="Editieren ✍️"
+							maxW={500}
+							height={12}
+							p={2}
+							pl={0}
 						/>
 					</Box>
 					<Box w="full">
-						<SubmitButton>Speichern</SubmitButton>
+						<SubmitButton mt={2}>Speichern</SubmitButton>
 					</Box>
-					<SimpleGrid minChildWidth="300px" w="full">
+					<SimpleGrid minChildWidth={300} w="full">
 						{showAccessLocked && (
 							<FormSwitch
-								label="Sperre"
-								helper="Ob dieser Nutzer aus der Benutzung der Applikation gesperrt wurde"
 								name="canAccess"
 								value="locked"
+								label="Sperre"
+								helper="Ob dieser Nutzer aus der Benutzung der Applikation gesperrt wurde"
 								defaultChecked={canAccessLocked}
 							/>
 						)}
 						{showAccessCMS && (
 							<FormSwitch
-								label="CMS Zugriff"
-								helper="Ob dieser Nutzer auf das Content-Management-System zugreifen darf"
 								name="canAccess"
 								value="cms"
+								label="CMS Zugriff"
+								helper="Ob dieser Nutzer auf das Content-Management-System zugreifen darf"
 								defaultChecked={canAccessCMS}
+							/>
+						)}
+						{showAccessEvents && (
+							<FormSwitch
+								name="canAccess"
+								value="cms"
+								label="TERMIN Zugriff"
+								helper="Ob dieser Nutzer Termine publizieren und editieren darf"
+								defaultChecked={canAccessEvents}
 							/>
 						)}
 						{showAccessLab && (
 							<FormSwitch
-								label="LAB Zugriff"
-								helper="Ob dieser Nutzer auf das Admin Lab zugreifen darf"
 								name="canAccess"
 								value="lab"
+								label="LAB Zugriff"
+								helper="Ob dieser Nutzer auf das Admin Lab zugreifen darf"
 								defaultChecked={canAccessLab}
 							/>
 						)}
 						{showAccessSchoolib && (
 							<FormSwitch
-								label="SCHOOLIB Zugriff"
-								helper="Ob dieser Nutzer auf Schoolib zugreifen darf"
 								name="canAccess"
 								value="schoolib"
+								label="SCHOOLIB Zugriff"
+								helper="Ob dieser Nutzer auf Schoolib zugreifen darf"
 								defaultChecked={canAccessSchoolib}
 							/>
 						)}
 						{showAccessTicker && (
 							<FormSwitch
-								label="Ticker Zugriff"
-								helper="Ob dieser Nutzer den Inhalt des Tickers modifizieren darf"
 								name="canAccess"
 								value="ticker"
+								label="TICKER Zugriff"
+								helper="Ob dieser Nutzer den Inhalt des Tickers modifizieren darf"
 								defaultChecked={canAccessTicker}
 							/>
 						)}

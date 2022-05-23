@@ -21,7 +21,6 @@
 	"language": "en,de",
 	"useGitignore": true,
 	"words": [
-		"luxon",
 		"apdisk",
 		"awad",
 		"Cäpt",
@@ -31,6 +30,8 @@
 		"clsx",
 		"csvg",
 		"Cygwin",
+		"dbgenerated",
+		"deduplication",
 		"delf",
 		"DELF",
 		"deps",
@@ -55,6 +56,7 @@
 		"jspm",
 		"kodiak",
 		"lcov",
+		"luxon",
 		"Monokai",
 		"msix",
 		"musin",
@@ -74,13 +76,12 @@
 		"traversy",
 		"tsbuildinfo",
 		"unstyled",
+		"uuid",
 		"vsix",
 		"vuepress",
 		"wqhd",
 		"wscript",
 		"wxga",
-		"zalgo",
-		"uuid",
-		"dbgenerated"
+		"zalgo"
 	]
 }
