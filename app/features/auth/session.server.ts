@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/unbound-method */
+import type { z } from "zod";
 import { createCookieSessionStorage } from "remix";
+import { MagicUser, User } from "~models";
 
 const { AUTH_SECRET } = process.env;
 
@@ -11,7 +13,7 @@ if (!AUTH_SECRET || typeof AUTH_SECRET !== "string") {
 }
 
 /**
- * A session cookie to store insensitive data in.
+ * A session cookie to store insensitive data in (-> See the SessionData type)
  * 🚨 This is only signed, not encrypted. The client can't falsify the value, **but it can be read out!** 🚨
  */
 export const { getSession, commitSession, destroySession } =
@@ -19,10 +21,18 @@ export const { getSession, commitSession, destroySession } =
 		cookie: {
 			httpOnly: true,
 			maxAge: 604800,
-			name: "cms_auth",
+			name: "USER_SESSION",
 			path: "/",
 			sameSite: process.env.NODE_ENV !== "development" ? "strict" : "lax",
 			secrets: [AUTH_SECRET],
 			secure: process.env.NODE_ENV !== "development",
 		},
 	});
+
+export const SessionData = User.merge(
+	MagicUser.pick({
+		did: true /* Add the DID to pass it along in case the User is empty/doesn't exist yet */,
+	}).required(),
+);
+// eslint-disable-next-line @typescript-eslint/no-redeclare -- Zod inferred typings
+export type SessionData = z.infer<typeof SessionData>;

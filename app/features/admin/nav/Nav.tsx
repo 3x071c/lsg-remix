@@ -36,7 +36,7 @@ export function CmsNav({
 		short: string;
 	}[];
 	user?: {
-		did: string;
+		uuid: string;
 		firstname: string;
 		lastname: string;
 	};
@@ -87,7 +87,7 @@ export function CmsNav({
 						<MenuList>
 							<MenuGroup
 								title={`${user.firstname} ${user.lastname}`}>
-								<Link href={`/admin/users/user/${user.did}`}>
+								<Link href={`/admin/users/user/${user.uuid}`}>
 									<MenuItem icon={<SettingsIcon />}>
 										Einstellungen
 									</MenuItem>

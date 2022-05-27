@@ -14,115 +14,132 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+model MagicUser {
+    /// Unique identifier for every record
+    uuid        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    /// The invited user's phone number
+    phoneNumber String?  @unique /// @zod.regex(/^\+[1-9]\d{1,14}$/, { message: "Invalide Telefonnummer" })
+    /// The invited user's email address
+    email       String?  @unique /// @zod.email({ message: "Invalide E-Mail-Adresse" }).max(255, { message: "E-Mail zu lang" })
+    /// The unique DID used by Magic as an identifier for a user, and a specific authentication method
+    did         String?  @unique /// @zod.regex(/^did:ethr:0x[a-fA-F0-9]{40}$/, { message: "Invalide DID von Magic erhalten" })
+    /// The user this DID has been connected to
+    user        User?    @relation("UserMagicUsers", fields: [userUUID], references: [uuid])
+    /// The uuid of the user this authentication method has a relation with
+    userUUID    String?  @db.Uuid
+    /// "Last updated" timestamp (managed automatically)
+    updatedAt   DateTime @default(now()) @updatedAt
+    /// "Created at" timestamp (managed automatically)
+    createdAt   DateTime @default(now())
+}
+
 model User {
-    /// The unique ID of the user
-    uuid              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-    /// The unique DID used by Magic for authentication
-    did               String    @unique /// @zod.regex(/^did:ethr:0x[a-fA-F0-9]{40}$/, { message: "Invalide DID von Magic erhalten" })
-    /// The user's email address
-    email             String    @unique /// @zod.email({ message: "Invalide E-Mail-Adresse" }).min(3, { message: "E-Mail zu kurz" }).max(60, { message: "E-Mail zu lang" })
+    /// Unique identifier for every record
+    uuid              String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    /// All authentication methods connected to this user via Magic
+    magicUsers        MagicUser[] @relation("UserMagicUsers")
     /// The user's first name
     firstname         String /// @zod.min(3, { message: "Vorname zu kurz" }).max(20, { message: "Vorname zu lang" })
     /// The user's last name
     lastname          String /// @zod.min(3, { message: "Nachname zu kurz" }).max(20, { message: "Nachname zu lang" })
     /// Used to lock the user out of the app, i.e. preventing any privileged access
-    locked            Boolean   @default(true)
+    locked            Boolean     @default(true)
     /// (AUTH) CMS Permission
-    canAccessCMS      Boolean   @default(false)
+    canAccessCMS      Boolean     @default(false)
     /// (AUTH) EVENTS Permission
-    canAccessEvents   Boolean   @default(false)
+    canAccessEvents   Boolean     @default(false)
     /// (AUTH) LAB Permission
-    canAccessLab      Boolean   @default(false)
+    canAccessLab      Boolean     @default(false)
     /// (AUTH) SCHOOLIB Permission
-    canAccessSchoolib Boolean   @default(false)
+    canAccessSchoolib Boolean     @default(false)
     /// (AUTH) USER MANAGEMENT Permission
-    canAccessUsers    Boolean   @default(false)
+    canAccessUsers    Boolean     @default(false)
     /// (AUTH) TICKER MANAGEMENT Permission
-    canAccessTicker   Boolean   @default(false)
+    canAccessTicker   Boolean     @default(false)
     /// (LAB) The pizza selection for orders
-    pizza             Pizza?    @relation("UserPizza", fields: [pizzaUUID], references: [uuid])
-    /// (LAB) The foreign key of the pizza selection this user has a relation with
-    pizzaUUID         String?   @db.Uuid
+    pizza             Pizza?      @relation("UserPizza", fields: [pizzaUUID], references: [uuid])
+    /// (LAB) The uuid of the pizza selection this user has a relation with
+    pizzaUUID         String?     @db.Uuid
     /// (LAB) Last time the pizza selection was updated
     pizzaUpdatedAt    DateTime?
     /// (LAB) Pizzas this user created
-    createdPizzas     Pizza[]   @relation("UserCreatedPizzas")
+    createdPizzas     Pizza[]     @relation("UserCreatedPizzas")
     /// (TICKER) Tickers this user created
-    createdTickers    Ticker[]  @relation("UserCreatedTickers")
+    createdTickers    Ticker[]    @relation("UserCreatedTickers")
     /// (EVENTS) Events this user created
-    createdEvents     Event[]   @relation("UserCreatedEvents")
-    /// This timestamp is updated on every mutation automatically
-    updatedAt         DateTime  @default(now()) @updatedAt
-    /// This timestamp is set on creation automatically
-    createdAt         DateTime  @default(now())
+    createdEvents     Event[]     @relation("UserCreatedEvents")
+    /// "Last updated" timestamp (managed automatically)
+    updatedAt         DateTime    @default(now()) @updatedAt
+    /// "Created at" timestamp (managed automatically)
+    createdAt         DateTime    @default(now())
 }
 
 model Page {
-    /// The unique ID of the page
+    /// Unique identifier for every record
     uuid         String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
     /// The page's category
     category     PageCategory @relation(fields: [categoryUUID], references: [uuid])
-    /// The foreign key of the category this page has a relation with
+    /// The uuid of the category this page has a relation with
     categoryUUID String       @db.Uuid
     /// The page's title
     title        String /// @zod.min(3, { message: "Titel zu kurz" }).max(40, { message: "Titel zu lang" })
     /// The page's content
     content      String
-    /// This timestamp is updated on every mutation automatically
+    /// "Last updated" timestamp (managed automatically)
     updatedAt    DateTime     @default(now()) @updatedAt
-    /// This timestamp is set on creation automatically
+    /// "Created at" timestamp (managed automatically)
     createdAt    DateTime     @default(now())
 }
 
 model PageCategory {
-    /// The unique ID of the page category
+    /// Unique identifier for every record
     uuid      String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
     /// The pages that belong to this category
     pages     Page[]
     /// The category name
     name      String /// @zod.min(3, { message: "Name zu kurz" }).max(40, { message: "Name zu lang" })
-    /// This timestamp is updated on every mutation automatically
+    /// "Last updated" timestamp (managed automatically)
     updatedAt DateTime @default(now()) @updatedAt
-    /// This timestamp is set on creation automatically
+    /// "Created at" timestamp (managed automatically)
     createdAt DateTime @default(now())
 }
 
 model Pizza {
-    /// The unique ID of the pizza
+    /// Unique identifier for every record
     uuid          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
     /// All users that have selected this pizza
     users         User[]   @relation("UserPizza")
     /// The pizza name
     name          String   @unique
-    /// The price of the pizza (in cents, because floating point arithmetic drives me nuts)
+    /// The price of the pizza, using the Decimal type (4 digits, precision 2)
     price         Decimal  @db.Decimal(4, 2) /// @zod.positive().max(20)
-    /// This timestamp is updated on every mutation automatically
+    /// "Last updated" timestamp (managed automatically)
     updatedAt     DateTime @default(now()) @updatedAt
-    /// This timestamp is set on creation automatically
+    /// "Created at" timestamp (managed automatically)
     createdAt     DateTime @default(now())
     /// The user that created this pizza
     createdBy     User     @relation("UserCreatedPizzas", fields: [createdByUUID], references: [uuid])
-    /// The foreign key to the UUID of the user this pizza has been created by
+    /// The uuid to the UUID of the user this pizza has been created by
     createdByUUID String   @db.Uuid
 }
 
 model Ticker {
-    /// The unique ID of the ticker item
+    /// Unique identifier for every record
     uuid          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
     /// The ticker content
     content       String /// @zod.min(3, { message: "Ticker zu kurz" }).max(255, { message: "Ticker zu lang" })
-    /// This timestamp is updated on every mutation automatically
+    /// "Last updated" timestamp (managed automatically)
     updatedAt     DateTime @default(now()) @updatedAt
-    /// This timestamp is set on creation automatically
+    /// "Created at" timestamp (managed automatically)
     createdAt     DateTime @default(now())
     /// The user that created this ticker
     createdBy     User     @relation("UserCreatedTickers", fields: [createdByUUID], references: [uuid])
-    /// The foreign key to the UUID of the user this ticker has been created by
+    /// The uuid to the UUID of the user this ticker has been created by
     createdByUUID String   @db.Uuid
 }
 
 model Event {
-    /// The unique ID of the event
+    /// Unique identifier for every record
     uuid          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
     /// The event title
     title         String /// @zod.min(3, { message: "Titel zu kurz" }).max(255, { message: "Titel zu lang" })
@@ -130,12 +147,12 @@ model Event {
     startsAt      DateTime
     /// The event end timestamp
     endsAt        DateTime
-    /// This timestamp is updated on every mutation automatically
+    /// "Last updated" timestamp (managed automatically)
     updatedAt     DateTime @default(now()) @updatedAt
-    /// This timestamp is set on creation automatically
+    /// "Created at" timestamp (managed automatically)
     createdAt     DateTime @default(now())
     /// The user that created this event
     createdBy     User     @relation("UserCreatedEvents", fields: [createdByUUID], references: [uuid])
-    /// The foreign key to the UUID of the user this event has been created by
+    /// The uuid to the UUID of the user this event has been created by
     createdByUUID String   @db.Uuid
 }

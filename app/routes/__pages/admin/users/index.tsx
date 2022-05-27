@@ -19,12 +19,12 @@ import { respond, useLoaderResponse } from "~lib/response";
 
 type TableType = {
 	createdAt: Date;
-	did: string;
 	email: string;
 	firstname: string;
 	lastname: string;
 	locked: boolean;
 	updatedAt: Date;
+	uuid: string;
 };
 
 type LoaderData = {
@@ -33,17 +33,17 @@ type LoaderData = {
 	users: TableType[];
 };
 const getLoaderData = async (request: Request): Promise<LoaderData> => {
-	const [, headers] = await authorize(request, { did: "*" });
+	const [, headers] = await authorize(request, { user: "*" });
 
 	const users = await prisma.user.findMany({
 		select: {
 			createdAt: true,
-			did: true,
 			email: true,
 			firstname: true,
 			lastname: true,
 			locked: true,
 			updatedAt: true,
+			uuid: true,
 		},
 	});
 
@@ -113,7 +113,7 @@ export default function Users() {
 				Header: "Editiert am",
 			},
 			{
-				accessor: "did",
+				accessor: "uuid",
 				Cell: ({ value }) => {
 					return memoizedButton(`/admin/users/user/${value}`);
 				},

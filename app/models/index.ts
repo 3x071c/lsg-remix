@@ -1,3 +1,4 @@
+export * from "./MagicUser";
 export * from "./Event";
 export * from "./Page";
 export * from "./PageCategory";

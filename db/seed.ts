@@ -39,22 +39,20 @@ const present = new Date();
 const seedUsers = async () => {
 	for (let i = 0; i < random(10, 30); i += 1) {
 		const createdAt = seedDate(past, present);
-		const did = `did:ethr:${faker.datatype.hexadecimal(40)}`;
 		let firstname = "";
 		let lastname = "";
-		const email = getUnique(() => {
+		getUnique(() => {
+			/* Unique firstname+lastname combination */
 			firstname = faker.name.firstName();
 			lastname = faker.name.lastName();
-			return faker.internet.email(firstname, lastname);
+			return `${firstname}|${lastname}`;
 		});
 		const updatedAt = seedDate(createdAt, present);
 
-		console.log(`👉 Creating user ${firstname} ${lastname} (${email})`);
+		console.log(`👉 Creating user ${firstname} ${lastname}`);
 		await prisma.user.create({
 			data: {
 				createdAt,
-				did,
-				email,
 				firstname,
 				lastname,
 				updatedAt,
@@ -96,14 +94,17 @@ export default async function main(): Promise<void> {
 	console.log("🧬 Seeding superuser...");
 	await prisma.user.create({
 		data: {
+			authMethods: {
+				create: {
+					did: `did:ethr:0x${"0".repeat(40)}`,
+				},
+			},
 			canAccessCMS: true,
 			canAccessEvents: true,
 			canAccessLab: true,
 			canAccessSchoolib: true,
 			canAccessTicker: true,
 			canAccessUsers: true,
-			did: `did:ethr:0x${"0".repeat(40)}`,
-			email: "test@magic.link",
 			firstname: "Firstname",
 			lastname: "Lastname",
 			locked: false,

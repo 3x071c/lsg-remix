@@ -3,9 +3,7 @@ import { useMemo } from "react";
 import { useActionData } from "remix";
 import { deserialize } from "superjson";
 
-export const useActionResponse = <T>():
-	| Omit<T, "headers">
-	| Record<string, never> => {
+export const useActionResponse = <T>(): Omit<T, "headers"> | never => {
 	const response = useActionData<SuperJSONResult>();
 
 	return useMemo(() => deserialize<T>(response ?? { json: {} }), [response]);

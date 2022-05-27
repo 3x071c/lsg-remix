@@ -2,17 +2,22 @@ import { redirect } from "remix";
 import { magicServer } from "./magic";
 import {
 	getSession,
-	commitSession,
 	destroySession,
-	authorize,
 	revalidate,
 	safeIssuer,
+	authorize,
+	commitSession,
 } from ".";
 
 export async function authenticate(request: Request, token: string) {
 	const did = safeIssuer(token);
 
-	const [, session] = await revalidate(request, did);
+	const [user, session] = await revalidate(request, did);
+
+	/* The user has successfully authenticated with the server, log the client back out */
+	try {
+		await magicServer.users.logoutByIssuer(user.did);
+	} catch (e) {}
 
 	throw redirect("/admin", {
 		headers: {
@@ -22,18 +27,19 @@ export async function authenticate(request: Request, token: string) {
 }
 
 /**
- * Logs the user out by purging his data
+ * Logs the user out by returning a Response that destroys the session
  * @param request The incoming request
- * @returns Redirects to the login
+ * @returns A response that has the appropriate headers set, or redirects to login
  */
 export async function invalidate(request: Request): Promise<Response> {
 	const session = await getSession(request.headers.get("Cookie"));
-	try {
-		const [user] = await authorize(request, { ignore: true });
-		await magicServer.users.logoutByIssuer(user.did);
-	} catch (e) {}
 
-	return redirect("/logout", {
+	await authorize(request, {
+		/* Don't need any user info, nor do we need revalidated headers as we're going to destroy the session anyway. Just make sure that a user is actually signed in. */
+		bypass: true,
+	});
+
+	return redirect("/", {
 		headers: {
 			"Set-Cookie": await destroySession(session),
 		},
