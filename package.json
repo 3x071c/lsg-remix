@@ -182,7 +182,7 @@
 		"browserslist": "4.20.2",
 		"commitizen": "4.2.4",
 		"cross-env": "7.0.3",
-		"cspell": "5.19.7",
+		"cspell": "6.0.0",
 		"cz-conventional-changelog": "3.3.0",
 		"dotenv": "16.0.0",
 		"esbuild": "0.14.36",
