@@ -1,4 +1,5 @@
 import { redirect } from "remix";
+import { prisma } from "~lib/prisma";
 import { magicServer } from "./magic";
 import {
 	getSession,
@@ -7,10 +8,39 @@ import {
 	safeIssuer,
 	authorize,
 	commitSession,
+	safeMetadata,
 } from ".";
 
 export async function authenticate(request: Request, token: string) {
 	const did = safeIssuer(token);
+	const metadata = await safeMetadata(did);
+	const email = metadata.email ?? undefined;
+	const phoneNumber = metadata.phoneNumber ?? undefined;
+
+	const magicUser = await prisma.magicUser.findUnique({
+		select: {
+			did: true,
+			uuid: true,
+		},
+		where: {
+			email,
+			phoneNumber,
+		},
+	});
+	if (!magicUser) throw new Error("Nutzer nicht registriert");
+	const { uuid } = magicUser;
+	if (!magicUser.did)
+		await prisma.magicUser.update({
+			data: {
+				did,
+			},
+			select: {
+				uuid: true,
+			},
+			where: {
+				uuid,
+			},
+		});
 
 	const [user, session] = await revalidate(request, did);
 

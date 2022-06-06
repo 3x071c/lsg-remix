@@ -1,3 +1,4 @@
+import type { MagicUserMetadata } from "@magic-sdk/admin";
 import { magicServer } from "./magic";
 
 const mockedIssuer = `did:ethr:0x${"0".repeat(40)}`;
@@ -41,8 +42,14 @@ export function safeIssuer(token: string) {
  * @param did The issuer/decentralized ID
  * @returns Associated metadata (issuer, email)
  */
-export async function safeMetadata(did: string) {
+export async function safeMetadata(
+	did: string,
+): Promise<Omit<MagicUserMetadata, "publicAddress" | "oauthProvider">> {
 	return process.env.NODE_ENV === "development"
-		? { email: "test@magic.link", issuer: mockedIssuer }
+		? {
+				email: "test@magic.link",
+				issuer: mockedIssuer,
+				phoneNumber: "+4900000000000",
+		  }
 		: magicServer.users.getMetadataByIssuer(did);
 }

@@ -1,36 +1,29 @@
-// stolen from: https://stackoverflow.com/a/69019874
+/**
+ * Returns a type with all readonly notations removed (traverses recursively on an object)
+ */
+type DeepWriteable<T> = T extends Readonly<{
+	-readonly [K in keyof T]: T[K];
+}>
+	? {
+			-readonly [K in keyof T]: DeepWriteable<T[K]>;
+	  }
+	: T; /* Make it work with readonly types (this is not strictly necessary) */
 
-type EntriesType =
-	| [PropertyKey, unknown][]
-	| ReadonlyArray<readonly [PropertyKey, unknown]>;
-
-type DeepWritable<O> = {
-	-readonly [P in keyof O]: DeepWritable<O[P]>;
-};
-type UnionToIntersection<U> = (
-	U extends unknown ? (k: U) => void : never
-) extends (k: infer I) => void
-	? I
+type FromEntries<T> = T extends [infer Keys, unknown][]
+	? { [K in Keys & PropertyKey]: Extract<T[number], [K, unknown]>[1] }
 	: never;
-
-type UnionObjectFromArrayOfPairs<E extends EntriesType> =
-	DeepWritable<E> extends (infer R)[]
-		? R extends [infer key, infer val]
-			? { [prop in key & PropertyKey]: val }
-			: never
-		: never;
-type MergeIntersectingObjects<ObjT> = { [key in keyof ObjT]: ObjT[key] };
-type EntriesToObject<E extends EntriesType> = MergeIntersectingObjects<
-	UnionToIntersection<UnionObjectFromArrayOfPairs<E>>
->;
 
 /**
  * Like Object.fromEntries, but with actually useful typings
  * @param arr The tuple array (`[key, value][]`) to turn into an object
  * @returns Object constructed from the given entries
  */
-export const fromEntries = <E extends EntriesType>(
+export const fromEntries = <
+	E extends
+		| [PropertyKey, unknown][]
+		| ReadonlyArray<readonly [PropertyKey, unknown]>,
+>(
 	entries: E,
-): EntriesToObject<E> => {
-	return Object.fromEntries(entries) as EntriesToObject<E>;
+): FromEntries<DeepWriteable<E>> => {
+	return Object.fromEntries(entries) as FromEntries<DeepWriteable<E>>;
 };

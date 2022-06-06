@@ -2,6 +2,7 @@
 import type { z } from "zod";
 import { createCookieSessionStorage } from "remix";
 import { MagicUser, User } from "~models";
+import { denullishShape } from "~lib/util";
 
 const { AUTH_SECRET } = process.env;
 
@@ -30,9 +31,14 @@ export const { getSession, commitSession, destroySession } =
 	});
 
 export const SessionData = User.merge(
-	MagicUser.pick({
-		did: true /* Add the DID to pass it along in case the User is empty/doesn't exist yet */,
-	}).required(),
+	denullishShape(
+		// Hacky fix to get rid of the zod nullable type
+		MagicUser.pick({
+			did: true /* Add the DID to pass it along in case the User is empty/doesn't exist yet */,
+			email: true,
+			phoneNumber: true,
+		}),
+	),
 );
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- Zod inferred typings
 export type SessionData = z.infer<typeof SessionData>;
