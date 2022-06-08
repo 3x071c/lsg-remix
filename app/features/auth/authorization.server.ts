@@ -138,7 +138,7 @@ export async function authorize<
 					: never,
 				headers,
 			];
-		throw redirect(`/admin/users/user/${did}`, { headers });
+		throw redirect(`/admin/users/user/${uuid ?? "new"}`, { headers });
 	}
 	const {
 		locked,
@@ -172,7 +172,7 @@ export async function authorize<
 
 	if (user && user !== uuid && !canAccessUsers)
 		/* The user isn't allowed to access the configuration of whoever is identified by $user, redirect to his own settings */
-		throw redirect(`/admin/users/user/${did}`, { headers });
+		throw redirect(`/admin/users/user/${uuid!}`, { headers });
 
 	/* All good! 🎉 */
 	return [sessionData.data, headers];

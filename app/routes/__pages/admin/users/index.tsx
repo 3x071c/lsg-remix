@@ -19,7 +19,6 @@ import { respond, useLoaderResponse } from "~lib/response";
 
 type TableType = {
 	createdAt: Date;
-	email: string;
 	firstname: string;
 	lastname: string;
 	locked: boolean;
@@ -38,7 +37,6 @@ const getLoaderData = async (request: Request): Promise<LoaderData> => {
 	const users = await prisma.user.findMany({
 		select: {
 			createdAt: true,
-			email: true,
 			firstname: true,
 			lastname: true,
 			locked: true,
@@ -83,11 +81,6 @@ export default function Users() {
 				accessor: "lastname",
 				Cell: ({ value }) => value || memoizedWarningIcon,
 				Header: "Nachname",
-			},
-			{
-				accessor: "email",
-				Cell: ({ value }) => value || memoizedWarningIcon,
-				Header: "E-Mail",
 			},
 			{
 				accessor: "locked",

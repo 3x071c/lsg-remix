@@ -66,7 +66,6 @@ export const getPages = ({
 };
 
 type LoaderData = {
-	did?: string;
 	firstname?: string;
 	headers: HeadersInit;
 	lastname?: string;
@@ -79,11 +78,12 @@ type LoaderData = {
 		url: string;
 	}[];
 	status: number;
+	uuid?: string;
 };
 const getLoaderData = async (request: Request): Promise<LoaderData> => {
 	const [
 		{
-			did,
+			uuid,
 			firstname,
 			lastname,
 			canAccessCMS,
@@ -104,19 +104,20 @@ const getLoaderData = async (request: Request): Promise<LoaderData> => {
 	});
 
 	return {
-		did,
 		firstname,
 		headers,
 		lastname,
 		pages,
 		status: 200,
+		uuid,
 	};
 };
 export const loader: LoaderFunction = async ({ request }) =>
 	respond<LoaderData>(await getLoaderData(request));
 
 export default function AdminLayout(): JSX.Element {
-	const { did, firstname, lastname, pages } = useLoaderResponse<LoaderData>();
+	const { uuid, firstname, lastname, pages } =
+		useLoaderResponse<LoaderData>();
 	const headerPortal = useContext(HeaderPortalContext);
 	const location = useLocation();
 	const [route, setRoute] = useState<string>(location.pathname);
@@ -131,8 +132,8 @@ export default function AdminLayout(): JSX.Element {
 			<Portal containerRef={headerPortal}>
 				<CmsNav
 					user={
-						did && firstname && lastname
-							? { did, firstname, lastname }
+						uuid && firstname && lastname
+							? { firstname, lastname, uuid }
 							: undefined
 					}
 					pages={pages.filter(

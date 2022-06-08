@@ -13,7 +13,7 @@ import { redirect, useCatch } from "remix";
 import { ValidatedForm, validationError } from "remix-validated-form";
 import { zfd } from "zod-form-data";
 import { User, UserData } from "~models";
-import { authorize, safeMetadata } from "~feat/auth";
+import { authorize } from "~feat/auth";
 import {
 	CatchBoundary as NestedCatchBoundary,
 	ErrorBoundary as NestedErrorBoundary,
@@ -31,14 +31,14 @@ const UserValidatorData = UserData.pick({
 });
 const UserValidator = withZod(UserValidatorData);
 
-const getDID = (params: Params) => {
-	const did = params["userDID"];
-	if (!did)
-		throw new Response("Invalider Seitenaufruf", {
-			status: 400,
+const getUUID = (params: Params) => {
+	const uuid = params["userUUID"];
+	if (!uuid)
+		throw new Response("Dieser Nutzer existiert nicht", {
+			status: 404,
 		});
 
-	return did;
+	return uuid;
 };
 
 type LoaderData = {
@@ -64,10 +64,10 @@ const getLoaderData = async (
 	request: Request,
 	params: Params,
 ): Promise<LoaderData> => {
-	const did = getDID(params);
+	const uuid = getUUID(params);
 	const [user, headers] = await authorize(request, {
 		bypass: true,
-		did,
+		user: uuid,
 	});
 	const {
 		canAccessCMS: showAccessCMS,
@@ -78,7 +78,7 @@ const getLoaderData = async (
 	} = user;
 
 	let target: Partial<User> | null = null;
-	if (did === user.did) {
+	if (!user.uuid || uuid === user.uuid) {
 		if (!user.uuid)
 			return {
 				canAccessCMS: false,
@@ -100,9 +100,9 @@ const getLoaderData = async (
 			};
 		target = user;
 	} else {
-		target = await prisma.user.findUnique({ where: { did } });
+		target = await prisma.user.findUnique({ where: { uuid } });
 	}
-	if (!target) throw redirect(`/admin/users/user/${user.did}`, { headers });
+	if (!target) throw redirect(`/admin/users/user/${user.uuid}`, { headers });
 
 	const parsed = User.safeParse(target);
 	if (!parsed.success) {
@@ -117,13 +117,13 @@ const getLoaderData = async (
 			headers,
 			lastname: target.lastname,
 			message:
-				did === user.did
+				uuid === user.uuid
 					? "Willkommen zurück! 🍻 Bitte überprüfen und ergänzen Sie ihre inzwischen unvollständigen Nutzerdaten."
 					: "⚠️ Dieser Nutzer ist unvollständig, vor weiterer Aktivität müssen die Daten ergänzt werden",
 			showAccessCMS: showAccessCMS ?? false,
 			showAccessEvents: showAccessEvents ?? false,
 			showAccessLab: showAccessLab ?? false,
-			showAccessLocked: target.locked !== undefined && did !== user.did,
+			showAccessLocked: target.locked !== undefined && uuid !== user.uuid,
 			showAccessSchoolib: showAccessSchoolib ?? false,
 			showAccessTicker: showAccessTicker ?? false,
 			status: 200,
@@ -154,7 +154,7 @@ const getLoaderData = async (
 		showAccessCMS: showAccessCMS ?? false,
 		showAccessEvents: showAccessEvents ?? false,
 		showAccessLab: showAccessLab ?? false,
-		showAccessLocked: did !== user.did,
+		showAccessLocked: uuid !== user.uuid,
 		showAccessSchoolib: showAccessSchoolib ?? false,
 		showAccessTicker: showAccessTicker ?? false,
 		status: 200,
@@ -172,14 +172,11 @@ const getActionData = async (
 	request: Request,
 	params: Params,
 ): Promise<ActionData> => {
-	const did = getDID(params);
+	const uuid = getUUID(params);
 	const [user, headers] = await authorize(request, {
-		did,
-		layout: true,
+		bypass: true,
+		user: uuid,
 	});
-	const { email } = await safeMetadata(did);
-	if (!email)
-		return { formError: "This user does not exist", headers, status: 404 };
 
 	const form = await request.formData();
 	const { error, data } = await UserValidator.validate(form);
@@ -196,7 +193,7 @@ const getActionData = async (
 		? canAccess?.includes("lab")
 		: undefined;
 	const canAccessLocked =
-		user.did !== did ? canAccess?.includes("locked") : undefined;
+		user.uuid !== uuid ? canAccess?.includes("locked") : undefined;
 	const canAccessSchoolib = user.canAccessSchoolib
 		? canAccess?.includes("schoolib")
 		: undefined;
@@ -218,12 +215,10 @@ const getActionData = async (
 	await prisma.user.upsert({
 		create: {
 			...update,
-			did,
-			email,
 		},
 		select: { uuid: true },
 		update,
-		where: { did },
+		where: { uuid },
 	});
 
 	throw redirect("/admin/users", {

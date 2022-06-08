@@ -126,7 +126,7 @@ type ActionData = {
 	status: number;
 };
 const getActionData = async (request: Request): Promise<ActionData> => {
-	const [{ did }, headers] = await authorize(request, { lab: true });
+	const [{ uuid }, headers] = await authorize(request, { lab: true });
 
 	const form = await request.formData();
 	const { error, data } = await UserValidator.validate(form);
@@ -138,7 +138,7 @@ const getActionData = async (request: Request): Promise<ActionData> => {
 			uuid: true,
 		},
 		where: {
-			did,
+			uuid,
 		},
 	});
 

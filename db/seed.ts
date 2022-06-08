@@ -94,11 +94,6 @@ export default async function main(): Promise<void> {
 	console.log("🧬 Seeding superuser...");
 	await prisma.user.create({
 		data: {
-			authMethods: {
-				create: {
-					did: `did:ethr:0x${"0".repeat(40)}`,
-				},
-			},
 			canAccessCMS: true,
 			canAccessEvents: true,
 			canAccessLab: true,
@@ -108,6 +103,11 @@ export default async function main(): Promise<void> {
 			firstname: "Firstname",
 			lastname: "Lastname",
 			locked: false,
+			magicUsers: {
+				create: {
+					did: `did:ethr:0x${"0".repeat(40)}`,
+				},
+			},
 		},
 		select: { uuid: true },
 	});
