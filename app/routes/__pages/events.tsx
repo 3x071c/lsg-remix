@@ -1,9 +1,6 @@
-import type { Column } from "react-table";
 import type { ActionFunction, LoaderFunction } from "remix";
-import { WarningTwoIcon } from "@chakra-ui/icons";
 import { Heading, Container, useDisclosure } from "@chakra-ui/react";
 import { DateTime } from "luxon";
-import { useMemo } from "react";
 import { useCatch } from "remix";
 import { validationError } from "remix-validated-form";
 import { EventData } from "~models";
@@ -14,7 +11,7 @@ import {
 } from "~feat/boundaries";
 import { maxContentWidth } from "~feat/chakra";
 import { EventModal, EventValidator } from "~feat/events/eventmodal";
-import { Table } from "~feat/table";
+import { EventTable } from "~feat/table";
 import { catchMessage } from "~lib/catch";
 import { locale, zone } from "~lib/globals";
 import { prisma } from "~lib/prisma";
@@ -108,47 +105,12 @@ export default function Events() {
 	const { formError } = useActionResponse<ActionData>();
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
-	const memoizedWarningIcon = useMemo(() => <WarningTwoIcon />, []);
-	const columns = useMemo<Column<TableType>[]>(
-		() => [
-			{
-				accessor: "title",
-				Cell: ({ value }) => value || memoizedWarningIcon,
-				Header: "Titel",
-			},
-			{
-				accessor: "startsAt",
-				Cell: ({ value }) =>
-					DateTime.fromJSDate(value)
-						.setLocale(locale)
-						.toLocaleString(DateTime.DATETIME_SHORT),
-				disableGlobalFilter: true,
-				Header: "Von",
-			},
-			{
-				accessor: "endsAt",
-				Cell: ({ value }) =>
-					DateTime.fromJSDate(value)
-						.setLocale(locale)
-						.toLocaleString(DateTime.DATETIME_SHORT),
-				disableGlobalFilter: true,
-				Header: "Bis",
-			},
-		],
-		[memoizedWarningIcon],
-	);
-
 	return (
 		<Container w="full" maxW={maxContentWidth} p={4} mx="auto" mt={16}>
 			<Heading as="h1" size="2xl" borderBottomWidth={2}>
 				Termine
 			</Heading>
-			<Table
-				heading="Alle Termine:"
-				columns={columns}
-				data={events}
-				trigger={canAccessEvents ? onOpen : undefined}
-			/>
+			<EventTable events={events} trigger={onOpen} />
 			{canAccessEvents && (
 				<EventModal
 					isOpen={isOpen}

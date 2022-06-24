@@ -6,6 +6,7 @@ import {
 	Container,
 	useColorModeValue,
 } from "@chakra-ui/react";
+import { DateTime } from "luxon";
 import { useCatch } from "remix";
 import {
 	ErrorBoundary as NestedErrorBoundary,
@@ -14,12 +15,20 @@ import {
 import { maxContentWidth } from "~feat/chakra";
 import { Hero, Certificates } from "~feat/home";
 import { LinkButton } from "~feat/links";
+import { EventTable } from "~feat/table";
 import { catchMessage } from "~lib/catch";
 import { prisma } from "~lib/prisma";
 import { respond, useLoaderResponse } from "~lib/response";
 
+type TableType = {
+	startsAt: Date;
+	endsAt: Date;
+	title: string;
+};
+
 type LoaderData = {
 	headers: HeadersInit;
+	events: TableType[];
 	status: number;
 	ticker?: string;
 };
@@ -33,13 +42,29 @@ const getLoaderData = async (): Promise<LoaderData> => {
 		},
 	});
 
-	return { headers: {}, status: 200, ticker: ticker?.content };
+	const events = await prisma.event.findMany({
+		orderBy: {
+			startsAt: "asc",
+		},
+		select: {
+			endsAt: true,
+			startsAt: true,
+			title: true,
+		},
+		where: {
+			endsAt: {
+				gte: DateTime.now().startOf("minute").toJSDate(),
+			},
+		},
+	});
+
+	return { events, headers: {}, status: 200, ticker: ticker?.content };
 };
 export const loader: LoaderFunction = async () =>
 	respond<LoaderData>(await getLoaderData());
 
 export default function Home(): JSX.Element {
-	const { ticker } = useLoaderResponse<LoaderData>();
+	const { events, ticker } = useLoaderResponse<LoaderData>();
 	const grayColor = useColorModeValue("gray.700", "gray.300");
 
 	return (
@@ -78,6 +103,7 @@ export default function Home(): JSX.Element {
 						Alle demnächst anstehenden Termine des
 						Louise-Schroeder-Gymnasiums:
 					</Text>
+					<EventTable events={events} />
 					<LinkButton href="/events" mt={4}>
 						Zu allen Terminen
 					</LinkButton>
