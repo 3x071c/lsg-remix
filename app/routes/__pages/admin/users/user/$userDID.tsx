@@ -174,8 +174,8 @@ const getActionData = async (
 ): Promise<ActionData> => {
 	const did = getDID(params);
 	const [user, headers] = await authorize(request, {
+		bypass: true,
 		did,
-		layout: true,
 	});
 	const { email } = await safeMetadata(did);
 	if (!email)
