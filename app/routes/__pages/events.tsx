@@ -44,6 +44,7 @@ const getLoaderData = async (request: Request): Promise<LoaderData> => {
 			startsAt: true,
 			title: true,
 		},
+		take: 5,
 		where: {
 			endsAt: {
 				gte: DateTime.now().startOf("minute").toJSDate(),

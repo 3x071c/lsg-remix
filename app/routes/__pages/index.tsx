@@ -5,6 +5,7 @@ import {
 	chakra,
 	Container,
 	useColorModeValue,
+	Box,
 } from "@chakra-ui/react";
 import { DateTime } from "luxon";
 import { useCatch } from "remix";
@@ -103,7 +104,9 @@ export default function Home(): JSX.Element {
 						Alle demnächst anstehenden Termine des
 						Louise-Schroeder-Gymnasiums:
 					</Text>
-					<EventTable events={events} />
+					<Box my={8}>
+						<EventTable events={events} />
+					</Box>
 					<LinkButton href="/events" mt={4}>
 						Zu allen Terminen
 					</LinkButton>

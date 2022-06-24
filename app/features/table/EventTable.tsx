@@ -1,6 +1,5 @@
 import type { Column } from "react-table";
 import { WarningTwoIcon } from "@chakra-ui/icons";
-import { Box } from "@chakra-ui/react";
 import { DateTime } from "luxon";
 import { useMemo } from "react";
 import { Table } from "~feat/table";
@@ -50,13 +49,11 @@ export function EventTable({
 	);
 
 	return (
-		<Box my={16}>
-			<Table
-				heading="Alle Termine:"
-				columns={columns}
-				data={events}
-				trigger={trigger}
-			/>
-		</Box>
+		<Table
+			heading="Alle Termine:"
+			columns={columns}
+			data={events}
+			trigger={trigger}
+		/>
 	);
 }
