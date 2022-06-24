@@ -320,7 +320,7 @@ export default function UserConfiguration() {
 						{showAccessEvents && (
 							<FormSwitch
 								name="canAccess"
-								value="cms"
+								value="events"
 								label="TERMIN Zugriff"
 								helper="Ob dieser Nutzer Termine publizieren und editieren darf"
 								defaultChecked={canAccessEvents}
