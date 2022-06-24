@@ -174,8 +174,8 @@ const getActionData = async (
 ): Promise<ActionData> => {
 	const did = getDID(params);
 	const [user, headers] = await authorize(request, {
+		bypass: true,
 		did,
-		layout: true,
 	});
 	const { email } = await safeMetadata(did);
 	if (!email)
@@ -320,7 +320,7 @@ export default function UserConfiguration() {
 						{showAccessEvents && (
 							<FormSwitch
 								name="canAccess"
-								value="cms"
+								value="events"
 								label="TERMIN Zugriff"
 								helper="Ob dieser Nutzer Termine publizieren und editieren darf"
 								defaultChecked={canAccessEvents}
