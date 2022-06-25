@@ -19,6 +19,7 @@ jobs:
     deploy-pr:
         name: PR Preview
         runs-on: ubuntu-latest
+        concurrency: ${{ github.workflow }}
         timeout-minutes: 30
         environment:
             name: "Preview (PR #${{ github.event.number }})"
@@ -54,6 +55,9 @@ jobs:
                         sleep 15
                     else
                         echo "🚨 The deployment failed. Check the logs above."
+                        echo "💤 Logging out..."
+                        flyctl auth logout
+                        echo "✅ Logged out"
                         exit 1
                     fi
                   fi
@@ -63,3 +67,6 @@ jobs:
                   printf '%s' "$APP_STATUS" | jq -r .Deployed | grep -F true
                   printf '%s' "$APP_STATUS" | jq -r .Status | grep -F running
                   echo "::set-output name=url::https://$APP_HOSTNAME"
+                  echo "💤 Logging out..."
+                  flyctl auth logout
+                  echo "✅ Logged out"
