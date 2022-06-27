@@ -159,7 +159,7 @@
 		"@commitlint/cli": "17.0.0",
 		"@commitlint/config-conventional": "17.0.0",
 		"@cspell/dict-de-de": "2.1.0",
-		"@faker-js/faker": "6.1.2",
+		"@faker-js/faker": "7.3.0",
 		"@remix-run/dev": "1.6.1",
 		"@remix-run/eslint-config": "1.6.1",
 		"@secretlint/secretlint-rule-preset-recommend": "5.2.0",
