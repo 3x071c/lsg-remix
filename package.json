@@ -139,7 +139,7 @@
 		"jsdom": "20.0.0",
 		"lodash": "4.17.21",
 		"luxon": "2.4.0",
-		"magic-sdk": "8.1.1",
+		"magic-sdk": "9.0.0",
 		"morgan": "1.10.0",
 		"react": "17.0.2",
 		"react-dom": "17.0.2",
