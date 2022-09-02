@@ -133,7 +133,7 @@
 		"dompurify": "2.3.6",
 		"express": "4.17.3",
 		"framer-motion": "6.3.0",
-		"helmet": "5.0.2",
+		"helmet": "6.0.0",
 		"jotai": "1.6.4",
 		"js-cookie": "3.0.1",
 		"jsdom": "20.0.0",
