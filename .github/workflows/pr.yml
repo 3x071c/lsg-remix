@@ -28,7 +28,7 @@ jobs:
         steps:
             - name: Get Information
               id: branch-info
-              uses: tj-actions/branch-names@v5.2
+              uses: tj-actions/branch-names@v6.1
             - name: Source Branch is not trunk
               if: steps.branch-info.outputs.head_ref_branch == 'trunk'
               run: exit 2
