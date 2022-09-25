@@ -132,7 +132,7 @@
 		"debug": "4.3.4",
 		"dompurify": "2.3.6",
 		"express": "4.17.3",
-		"framer-motion": "6.3.0",
+		"framer-motion": "7.3.6",
 		"helmet": "5.0.2",
 		"jotai": "1.6.4",
 		"js-cookie": "3.0.1",
