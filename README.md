@@ -21,8 +21,7 @@
 
 Thanks for stopping by, but although possibly useful, this code might be outdated by the time you're reading this and does not reflect the project status. You can find the current implementation [here](https://github.com/3x071c/lsg-musin). See you there! 👋
 
-
-> Looking for the old version using Next.js with an Apollo+Nexus GraphQL stack? It's gone now. ([archive](https://github.com/3x071c/lsg-remix/tree/7c377cdef5baddd9dcf5f49985325081f31159e3))
+> Looking for the old version using Next.js with an Apollo+Nexus GraphQL stack? Find it here: ([archive](https://github.com/3x071c/lsg-remix/tree/7c377cdef5baddd9dcf5f49985325081f31159e3))
 
 ## Introduction
 
