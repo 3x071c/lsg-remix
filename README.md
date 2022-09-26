@@ -1,9 +1,9 @@
 <h1 align="center" style="border: none; padding: 0; margin: 0;">📚 Louise-Schroeder-Gymnasium 📝</h1>
 <h3 align="center"style="margin: 10px;">Full-Stack Repository for our School&nbsp;&nbsp;🚌</h3>
 <p align="center" style="margin: 0; padding: 0;">
-  <a href="COPYING"><img src="https://img.shields.io/github/license/3x071c/lsg" alt="GitHub license badge" /></a>
-  <a href="https://github.com/3x071c/lsg/graphs/commit-activity"><img src="https://img.shields.io/github/commit-activity/m/3x071c/lsg" alt="GitHub commit activity badge" /></a>
-  <a href="https://github.com/3x071c/lsg/graphs/commit-activity"><img src="https://img.shields.io/github/last-commit/3x071c/lsg" alt="GitHub last commit badge" /></a>
+  <a href="COPYING"><img src="https://img.shields.io/github/license/3x071c/lsg-remix" alt="GitHub license badge" /></a>
+  <a href="https://github.com/3x071c/lsg-remix/graphs/commit-activity"><img src="https://img.shields.io/github/commit-activity/m/3x071c/lsg-remix" alt="GitHub commit activity badge" /></a>
+  <a href="https://github.com/3x071c/lsg-remix/graphs/commit-activity"><img src="https://img.shields.io/github/last-commit/3x071c/lsg-remix" alt="GitHub last commit badge" /></a>
 </p>
 <hr style="height: 2px; margin: 5px;" />
 <p align="center">
@@ -17,7 +17,12 @@
   <a href="#license">License</a>
 </p>
 
-> Looking for the old version using Next.js with an Apollo+Nexus GraphQL stack? It's gone now. ([archive](https://github.com/3x071c/lsg/tree/7c377cdef5baddd9dcf5f49985325081f31159e3))
+# 🚨 DEPRECATION/ARCHIVAL NOTICE 🚨
+
+Thanks for stopping by, but although possibly useful, this code might be outdated by the time you're reading this and does not reflect the project status. You can find the current implementation [here](https://github.com/3x071c/lsg-musin). See you there! 👋
+
+
+> Looking for the old version using Next.js with an Apollo+Nexus GraphQL stack? It's gone now. ([archive](https://github.com/3x071c/lsg-remix/tree/7c377cdef5baddd9dcf5f49985325081f31159e3))
 
 ## Introduction
 
@@ -31,7 +36,7 @@ You're looking at the source code behind the new [Louise-Schroeder-Gymnasium web
 ## Quickstart
 
 Impatient? Spin up a GitPod environment in seconds and you're good to go:  
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/3x071c/lsg)
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/3x071c/lsg-remix)
 
 > Please provide feedback and take a look at [the guide](#get-started-) below if things break unexpectedly while following these steps carefully:
 >
@@ -81,7 +86,7 @@ Clone this repository with git (This will "download" the code and keep a special
 
 ```console
 $ cd ~/Folder/you/want/to/clone/this/repository/into
-$ git clone https://github.com/3x071c/lsg.git
+$ git clone https://github.com/3x071c/lsg-remix.git
 ```
 
 > Tip: Use <kbd>Tab</kbd> to complete terminal commands and show suggestions
@@ -89,7 +94,7 @@ $ git clone https://github.com/3x071c/lsg.git
 Open the project in [Visual Studio Code](https://code.visualstudio.com/), our recommended IDE (code editor):
 
 ```console
-$ code lsg
+$ code lsg-remix
 ```
 
 **Make sure to trust the folder and install all recommended extensions** (If you're new to Visual Studio Code, check out the [next section](#recommendations-for-vscode) as well). You can close the automatically opened tabs with the installed extensions.
